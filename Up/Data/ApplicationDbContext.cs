@@ -20,7 +20,7 @@ namespace Up.Data
             base.OnModelCreating(builder);
             //	...				
 
-            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constant.Admin, NormalizedName = Constant.Admin.ToUpper() });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.Admin, NormalizedName = Constants.Admin.ToUpper() });
         }
     }
 }

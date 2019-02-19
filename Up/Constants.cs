@@ -1,6 +1,6 @@
 ﻿namespace Up
 {
-    public static class Constant
+    public static class Constants
     {
         public const string Admin = "Admin";
     }

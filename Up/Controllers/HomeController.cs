@@ -17,6 +17,7 @@ namespace Up.Controllers
             return View();
         }
 
+        [Authorize(Roles = Constants.Admin)]
         public IActionResult Privacy()
         {
             return View();
