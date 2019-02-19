@@ -13,5 +13,14 @@ namespace Up.Data
             : base(options)
         {
         }
+
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            //	...				
+
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constant.Admin, NormalizedName = Constant.Admin.ToUpper() });
+        }
     }
 }
