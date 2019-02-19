@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Up.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Up.Services;
 
 namespace Up
 {
@@ -47,6 +48,8 @@ namespace Up
             //services.AddDefaultIdentity<IdentityUser>()
             //    .AddDefaultUI(UIFramework.Bootstrap4)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddScoped<IKhoaHocService, KhoaHocService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
