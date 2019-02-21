@@ -20,5 +20,11 @@ namespace Up.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> GetKhoaHocAsync()
+        {
+            var model = await _khoaHocService.GetKhoaHocAsync();
+            return Json(model);
+        }
     }
 }

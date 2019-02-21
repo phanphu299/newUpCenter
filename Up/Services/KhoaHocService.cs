@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,11 +23,11 @@ namespace Up.Services
                 .Where(x => x.IsDisabled == false)
                 .Select(x => new KhoaHocViewModel {
                     CreatedBy = x.CreatedBy,
-                    CreatedDate = x.CreatedDate,
+                    CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
                     KhoaHocId = x.KhoaHocId,
                     Name = x.Name,
                     UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate
+                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy"):""
                 })
                 .ToListAsync();
         }
