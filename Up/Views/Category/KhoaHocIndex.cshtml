@@ -62,7 +62,7 @@
                         <td>
                             <v-edit-dialog :return-value.sync="props.item.name"
                                            lazy
-                                           v-on:save="onUpdate(props.item.name)">
+                                           v-on:save="onUpdate(props.item)">
                                 {{ props.item.name }}
                                 <v-text-field slot="input"
                                               v-model="props.item.name"
