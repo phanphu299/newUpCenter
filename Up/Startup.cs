@@ -50,6 +50,7 @@ namespace Up
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddScoped<IKhoaHocService, KhoaHocService>();
+            services.AddScoped<IQuanHeService, QuanHeService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

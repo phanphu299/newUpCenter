@@ -16,6 +16,7 @@ namespace Up.Data
         }
 
         public DbSet<KhoaHoc> KhoaHocs { get; set; }
+        public DbSet<QuanHe> QuanHes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
