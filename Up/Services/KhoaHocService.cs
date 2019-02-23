@@ -71,6 +71,9 @@ namespace Up.Services
 
         public async Task<bool> UpdateKhoaHocAsync(Guid KhoaHocId, string Name, string LoggedEmployee)
         {
+            if (string.IsNullOrWhiteSpace(Name))
+                return false;
+
             var item = await _context.KhoaHocs
                                     .Where(x => x.KhoaHocId == KhoaHocId)
                                     .SingleOrDefaultAsync();

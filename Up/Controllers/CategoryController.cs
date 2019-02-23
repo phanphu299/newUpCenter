@@ -74,5 +74,28 @@ namespace Up.Controllers
 
             return Ok(200);
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteKhoaHocAsync([FromBody]Models.KhoaHocViewModel model)
+        {
+            if (model.KhoaHocId == Guid.Empty)
+            {
+                return RedirectToAction("KhoaHocIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("KhoaHocIndex");
+            }
+
+            var successful = await _khoaHocService.DeleteKhoaHocAsync(model.KhoaHocId, currentUser.Email);
+            if (!successful)
+            {
+                return BadRequest("Xóa lỗi !!!");
+            }
+
+            return Ok(200);
+        }
     }
 }

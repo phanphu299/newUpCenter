@@ -6,10 +6,12 @@
         color: '',
         timeout: 3000,
         snackbar: false,
+        deleteDialog: false,
         dialog: false,
         alert: false,
         search: '',
         newItem: '',
+        itemToDelete: {},
         headers: [
             {
                 text: 'Action',
@@ -71,14 +73,16 @@
                         method: 'post',
                         url: '/category/CreateKhoaHocAsync',
                         data: {
-                            Name: this.newItem
+                            Name: that.newItem
                         }
                     })
                     .then(function (response) {
+                        console.log(response);
                         that.khoaHocItems.splice(0, 0, response.data);
                         that.snackbar = true;
                         that.messageText = 'Thêm mới thành công !!!';
                         that.color = 'success';
+                        that.newItem = '';
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -87,6 +91,32 @@
                         that.color = 'error';
                     });
             }
+        },
+
+        async onDelete(item) {
+            console.log(item)
+            let that = this;
+            await axios({
+                method: 'delete',
+                url: '/category/DeleteKhoaHocAsync',
+                data: {
+                    KhoaHocId: item.khoaHocId
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    that.khoaHocItems.splice(that.khoaHocItems.indexOf(item), 1);
+                    that.snackbar = true;
+                    that.messageText = 'Xóa thành công !!!';
+                    that.color = 'success';
+                    that.deleteDialog = false;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Xóa lỗi: ' + error;
+                    that.color = 'error';
+                });
         }
     }
 });
