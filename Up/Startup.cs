@@ -51,6 +51,8 @@ namespace Up
 
             services.AddScoped<IKhoaHocService, KhoaHocService>();
             services.AddScoped<IQuanHeService, QuanHeService>();
+            services.AddScoped<INgayHocService, NgayHocService>();
+            services.AddScoped<IGioHocService, GioHocService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

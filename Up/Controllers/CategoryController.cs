@@ -9,12 +9,16 @@ namespace Up.Controllers
     public class CategoryController : Controller
     {
         private readonly IKhoaHocService _khoaHocService;
+        private readonly IGioHocService _gioHocService;
+        private readonly INgayHocService _ngayHocService;
         private readonly IQuanHeService _quanHeService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public CategoryController(IKhoaHocService khoaHocService, IQuanHeService quanHeService, UserManager<IdentityUser> userManager)
+        public CategoryController(IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, UserManager<IdentityUser> userManager)
         {
             _khoaHocService = khoaHocService;
+            _gioHocService = gioHocService;
+            _ngayHocService = ngayHocService;
             _quanHeService = quanHeService;
             _userManager = userManager;
         }
@@ -169,6 +173,164 @@ namespace Up.Controllers
             }
 
             var successful = await _quanHeService.DeleteQuanHeAsync(model.QuanHeId, currentUser.Email);
+            if (!successful)
+            {
+                return BadRequest("Xóa lỗi !!!");
+            }
+
+            return Ok(200);
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        public async Task<IActionResult> NgayHocIndex()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetNgayHocAsync()
+        {
+            var model = await _ngayHocService.GetNgayHocAsync();
+            return Json(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateNgayHocAsync([FromBody]Models.NgayHocViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("NgayHocIndex");
+            }
+
+            var successful = await _ngayHocService.CreateNgayHocAsync(model.Name, currentUser.Email);
+            if (successful == null)
+            {
+                return BadRequest("Thêm mới lỗi !!!");
+            }
+
+            return Json(successful);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateNgayHocAsync([FromBody]Models.NgayHocViewModel model)
+        {
+            if (model.NgayHocId == Guid.Empty)
+            {
+                return RedirectToAction("NgayHocIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("NgayHocIndex");
+            }
+
+            var successful = await _ngayHocService.UpdateNgayHocAsync(model.NgayHocId, model.Name, currentUser.Email);
+            if (!successful)
+            {
+                return BadRequest("Cập nhật lỗi !!!");
+            }
+
+            return Ok(200);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteNgayHocAsync([FromBody]Models.NgayHocViewModel model)
+        {
+            if (model.NgayHocId == Guid.Empty)
+            {
+                return RedirectToAction("NgayHocIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("NgayHocIndex");
+            }
+
+            var successful = await _ngayHocService.DeleteNgayHocAsync(model.NgayHocId, currentUser.Email);
+            if (!successful)
+            {
+                return BadRequest("Xóa lỗi !!!");
+            }
+
+            return Ok(200);
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        public async Task<IActionResult> GioHocIndex()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetGioHocAsync()
+        {
+            var model = await _gioHocService.GetGioHocAsync();
+            return Json(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateGioHocAsync([FromBody]Models.GioHocViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("GioHocIndex");
+            }
+
+            var successful = await _gioHocService.CreateGioHocAsync(model.Name, currentUser.Email);
+            if (successful == null)
+            {
+                return BadRequest("Thêm mới lỗi !!!");
+            }
+
+            return Json(successful);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateGioHocAsync([FromBody]Models.GioHocViewModel model)
+        {
+            if (model.GioHocId == Guid.Empty)
+            {
+                return RedirectToAction("GioHocIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("GioHocIndex");
+            }
+
+            var successful = await _gioHocService.UpdateGioHocAsync(model.GioHocId, model.Name, currentUser.Email);
+            if (!successful)
+            {
+                return BadRequest("Cập nhật lỗi !!!");
+            }
+
+            return Ok(200);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteGioHocAsync([FromBody]Models.GioHocViewModel model)
+        {
+            if (model.GioHocId == Guid.Empty)
+            {
+                return RedirectToAction("GioHocIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("GioHocIndex");
+            }
+
+            var successful = await _gioHocService.DeleteGioHocAsync(model.GioHocId, currentUser.Email);
             if (!successful)
             {
                 return BadRequest("Xóa lỗi !!!");
