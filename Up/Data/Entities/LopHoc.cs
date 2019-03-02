@@ -12,6 +12,7 @@ namespace Up.Data.Entities
         public Guid KhoaHocId { get; set; }
         public Guid NgayHocId { get; set; }
         public Guid GioHocId { get; set; }
+        public Guid HocPhiId { get; set; }
         public DateTime NgayKhaiGiang { get; set; }
         public DateTime? NgayKetThuc { get; set; }
         public DateTime CreatedDate { get; set; }

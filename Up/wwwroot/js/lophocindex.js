@@ -36,6 +36,7 @@
             { text: 'Khóa Học', value: 'khoaHoc', align: 'left', sortable: false },
             { text: 'Ngày Học', value: 'ngayHoc', align: 'left', sortable: false },
             { text: 'Giờ Học', value: 'gioHoc', align: 'left', sortable: false },
+            { text: 'Học Phí', value: 'hocPhi', align: 'left', sortable: false },
             { text: 'Hủy Lớp', value: 'isCanceled', align: 'left', sortable: false },
             { text: 'Tốt Nghiệp', value: 'isGraduated', align: 'left', sortable: false },
             { text: 'Ngày Khai Giảng', value: 'ngayKhaiGiang', align: 'left', sortable: false },
@@ -48,7 +49,8 @@
         khoaHocItems: [],
         itemKhoaHoc: [],
         itemGioHoc: [],
-        itemNgayHoc: []
+        itemNgayHoc: [],
+        itemHocPhi: []
     },
     async beforeCreate() {
         let that = this;
@@ -83,6 +85,14 @@
             .catch(function (error) {
                 console.log(error);
             });
+
+        await axios.get('/category/GetHocPhiAsync')
+            .then(function (response) {
+                that.itemHocPhi = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     },
 
     methods: {
@@ -101,6 +111,7 @@
                         KhoaHocId: item.khoaHocId,
                         GioHocId: item.gioHocId,
                         NgayHocId: item.ngayHocId,
+                        HocPhiId: item.hocPhiId,
                         NgayKhaiGiang: item.ngayKhaiGiang,
                         NgayKetThuc: item.ngayKetThuc,
                         IsCanceled: item.isCanceled,
@@ -153,6 +164,7 @@
                         KhoaHocId: that.newItem.khoaHoc,
                         GioHocId: that.newItem.gioHoc,
                         NgayHocId: that.newItem.ngayHoc,
+                        HocPhiId: that.newItem.hocPhi,
                         NgayKhaiGiang: that.newItem.ngayKhaiGiang
                     }
                 })
@@ -175,6 +187,10 @@
                         that.color = 'error';
                     });
             }
+        },
+
+        formatNumber(val) {
+            return val.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
         },
 
         async onDelete(item) {

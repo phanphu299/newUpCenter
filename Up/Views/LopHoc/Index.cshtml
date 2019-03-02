@@ -52,6 +52,14 @@
                                         </v-flex>
 
                                         <v-flex xs12 sm6>
+                                            <v-select :items="itemHocPhi"
+                                                      item-text="gia"
+                                                      item-value="hocPhiId"
+                                                      v-model="newItem.hocPhi"
+                                                      label="Chọn Học Phí *">
+                                            </v-select>
+                                        </v-flex>
+                                        <v-flex xs12 sm6>
                                             <v-menu v-model="isShowDatePicker"
                                                     :close-on-content-click="false"
                                                     :nudge-right="40"
@@ -67,8 +75,6 @@
                                                               readonly></v-text-field>
                                                 <v-date-picker locale="vi-vn" v-model="newItem.ngayKhaiGiang" v-on:input="isShowDatePicker = false"></v-date-picker>
                                             </v-menu>
-                                        </v-flex>
-                                        <v-flex xs12 sm6>
                                         </v-flex>
                                     </v-layout>
                                 </v-container>
@@ -136,7 +142,7 @@
                                 </v-card>
                             </v-dialog>
 
-                            
+
 
                             <v-dialog v-model="dialogEdit" persistent max-width="600px">
                                 <v-btn flat icon color="primary" slot="activator" v-on:click="mappingEditItem(props.item)">
@@ -215,9 +221,17 @@
                                                 </v-flex>
 
                                                 <v-flex xs12 sm6>
-                                                    <v-switch v-model="itemToEdit.isCanceled" color="success" label="Hủy Lớp"></v-switch>
+                                                    <v-select :items="itemHocPhi"
+                                                              item-text="gia"
+                                                              item-value="hocPhiId"
+                                                              v-model="itemToEdit.hocPhiId"
+                                                              label="Chọn Học Phí *">
+                                                    </v-select>
                                                 </v-flex>
 
+                                                <v-flex xs12 sm6>
+                                                    <v-switch v-model="itemToEdit.isCanceled" color="success" label="Hủy Lớp"></v-switch>
+                                                </v-flex>
                                                 <v-flex xs12 sm6>
                                                     <v-switch v-model="itemToEdit.isGraduated" color="success" label="Tốt Nghiệp"></v-switch>
                                                 </v-flex>
@@ -246,6 +260,7 @@
                         <td>{{ props.item.khoaHoc }}</td>
                         <td>{{ props.item.ngayHoc }}</td>
                         <td>{{ props.item.gioHoc }}</td>
+                        <td>{{ formatNumber(props.item.hocPhi) }}</td>
                         <td><v-switch v-model="props.item.isCanceled" color="success" readonly></v-switch></td>
                         <td><v-switch v-model="props.item.isGraduated" color="success" readonly></v-switch></td>
                         <td>{{ props.item.ngayKhaiGiang }}</td>

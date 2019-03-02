@@ -18,7 +18,7 @@ namespace Up.Services
             _context = context;
         }
 
-        public async Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId, Guid GioHocId, DateTime NgayKhaiGiang, string LoggedEmployee)
+        public async Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId, Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name) || KhoaHocId == null || NgayHocId == null || GioHocId == null || NgayKhaiGiang == null)
                 return null;
@@ -30,6 +30,7 @@ namespace Up.Services
             lopHoc.NgayKhaiGiang = NgayKhaiGiang;
             lopHoc.NgayHocId = NgayHocId;
             lopHoc.GioHocId = GioHocId;
+            lopHoc.HocPhiId = HocPhiId;
             lopHoc.CreatedBy = LoggedEmployee;
             lopHoc.CreatedDate = DateTime.Now;
 
@@ -53,6 +54,8 @@ namespace Up.Services
                 CreatedDate = lopHoc.CreatedDate.ToString("dd/MM/yyyy"),
                 IsCanceled = lopHoc.IsCanceled,
                 IsGraduated = lopHoc.IsGraduated,
+                HocPhiId = lopHoc.HocPhiId,
+                HocPhi = _context.HocPhis.Find(lopHoc.HocPhiId).Gia,
                 KhoaHoc = _context.KhoaHocs.Find(lopHoc.KhoaHocId).Name,
                 NgayKetThuc = lopHoc.NgayKetThuc != null ? ((DateTime)lopHoc.NgayKetThuc).ToString("dd/MM/yyyy") : ""
             };
@@ -77,7 +80,7 @@ namespace Up.Services
         public async Task<List<LopHocViewModel>> GetLopHocAsync()
         {
             return await _context.LopHocs
-                .Where(x => x.IsDisabled == false || (x.IsDisabled == true && x.IsCanceled == true) || (x.IsDisabled == true && x.IsGraduated == true))
+                .Where(x => x.IsDisabled == false)
                 .Select(x => new LopHocViewModel
                 {
                     CreatedBy = x.CreatedBy,
@@ -92,6 +95,8 @@ namespace Up.Services
                     LopHocId = x.LopHocId,
                     NgayHocId = x.NgayHocId,
                     NgayHoc = x.NgayHoc.Name,
+                    HocPhiId = x.HocPhiId,
+                    HocPhi = x.HocPhi.Gia,
                     NgayKhaiGiang = x.NgayKhaiGiang.ToString("dd/MM/yyyy"),
                     NgayKetThuc = x.NgayKetThuc != null ? ((DateTime)x.NgayKetThuc).ToString("dd/MM/yyyy") : "",
                     UpdatedBy = x.UpdatedBy,
@@ -101,9 +106,9 @@ namespace Up.Services
         }
 
         public async Task<LopHocViewModel> UpdateLopHocAsync(Guid LopHocId, string Name, Guid KhoaHocId, Guid NgayHocId,
-            Guid GioHocId, DateTime NgayKhaiGiang, DateTime? NgayKetThuc, bool HuyLop, bool TotNghiep, string LoggedEmployee)
+            Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, DateTime? NgayKetThuc, bool HuyLop, bool TotNghiep, string LoggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name) || KhoaHocId == null || NgayHocId == null || GioHocId == null || NgayKhaiGiang == null)
+            if (string.IsNullOrWhiteSpace(Name) || KhoaHocId == null || NgayHocId == null || GioHocId == null || NgayKhaiGiang == null || HocPhiId == null)
                 return null;
 
             var item = await _context.LopHocs
@@ -121,6 +126,7 @@ namespace Up.Services
             item.UpdatedDate = DateTime.Now;
             item.IsCanceled = HuyLop;
             item.IsGraduated = TotNghiep;
+            item.HocPhiId = HocPhiId;
 
             if (NgayKetThuc != null)
                 item.NgayKetThuc = NgayKetThuc;
@@ -138,6 +144,8 @@ namespace Up.Services
                     KhoaHocId = item.KhoaHocId,
                     CreatedBy = item.CreatedBy,
                     GioHoc = _context.GioHocs.Find(item.GioHocId).Name,
+                    HocPhiId = item.HocPhiId,
+                    HocPhi = _context.HocPhis.Find(item.HocPhiId).Gia,
                     CreatedDate = item.CreatedDate.ToString("dd/MM/yyyy"),
                     IsCanceled = item.IsCanceled,
                     IsGraduated = item.IsGraduated,
