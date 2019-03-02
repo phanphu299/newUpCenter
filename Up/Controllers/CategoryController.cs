@@ -82,6 +82,11 @@ namespace Up.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteKhoaHocAsync([FromBody]Models.KhoaHocViewModel model)
         {
+            if(await _khoaHocService.IsCanDeleteAsync(model.KhoaHocId))
+            {
+                return BadRequest("Hãy xóa những lớp học thuộc khóa học này trước !!!");
+            }
+
             if (model.KhoaHocId == Guid.Empty)
             {
                 return RedirectToAction("KhoaHocIndex");
@@ -240,6 +245,11 @@ namespace Up.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteNgayHocAsync([FromBody]Models.NgayHocViewModel model)
         {
+            if (await _ngayHocService.IsCanDeleteAsync(model.NgayHocId))
+            {
+                return BadRequest("Hãy xóa những lớp học thuộc ngày học này trước !!!");
+            }
+
             if (model.NgayHocId == Guid.Empty)
             {
                 return RedirectToAction("NgayHocIndex");
@@ -322,6 +332,11 @@ namespace Up.Controllers
             if (model.GioHocId == Guid.Empty)
             {
                 return RedirectToAction("GioHocIndex");
+            }
+
+            if (await _gioHocService.IsCanDeleteAsync(model.GioHocId))
+            {
+                return BadRequest("Hãy xóa những lớp học thuộc giờ học này trước !!!");
             }
 
             var currentUser = await _userManager.GetUserAsync(User);

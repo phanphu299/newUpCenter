@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Up.Data;
 
 namespace Up.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190224040329_AddLopHocs")]
+    partial class AddLopHocs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +47,8 @@ namespace Up.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "823d908d-b8ae-48c9-8b86-21051161a68f",
-                            ConcurrencyStamp = "df9ff11f-1092-4b30-90bc-f6a6f5dea59c",
+                            Id = "369bdd73-75db-4e19-9a3d-b45373ebcaef",
+                            ConcurrencyStamp = "454c8836-1099-4093-8f6f-dbffd9699ba3",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -256,7 +258,7 @@ namespace Up.Data.Migrations
 
                     b.Property<Guid>("NgayHocId");
 
-                    b.Property<DateTime?>("NgayKetThuc");
+                    b.Property<DateTime>("NgayKetThuc");
 
                     b.Property<DateTime>("NgayKhaiGiang");
 

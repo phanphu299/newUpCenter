@@ -69,6 +69,14 @@ namespace Up.Services
                 .ToListAsync();
         }
 
+        public async Task<bool> IsCanDeleteAsync(Guid NgayHocId)
+        {
+            var item = await _context.NgayHocs
+                                    .Where(x => x.NgayHocId == NgayHocId)
+                                    .SingleOrDefaultAsync();
+            return item.LopHocs.Any();
+        }
+
         public async Task<bool> UpdateNgayHocAsync(Guid NgayHocId, string Name, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))

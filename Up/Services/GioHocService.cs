@@ -69,6 +69,14 @@ namespace Up.Services
                 .ToListAsync();
         }
 
+        public async Task<bool> IsCanDeleteAsync(Guid GioHocId)
+        {
+            var item = await _context.GioHocs
+                                    .Where(x => x.GioHocId == GioHocId)
+                                    .SingleOrDefaultAsync();
+            return item.LopHocs.Any();
+        }
+
         public async Task<bool> UpdateGioHocAsync(Guid GioHocId, string Name, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
