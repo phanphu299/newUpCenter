@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Up.Data.Entities
 {
@@ -25,5 +22,6 @@ namespace Up.Data.Entities
         public KhoaHoc KhoaHoc { get; set; }
         public GioHoc GioHoc { get; set; }
         public NgayHoc NgayHoc { get; set; }
+        public HocPhi HocPhi { get; set; }
     }
 }

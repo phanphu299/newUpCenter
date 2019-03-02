@@ -12,14 +12,16 @@ namespace Up.Controllers
         private readonly IGioHocService _gioHocService;
         private readonly INgayHocService _ngayHocService;
         private readonly IQuanHeService _quanHeService;
+        private readonly IHocPhiService _hocPhiService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public CategoryController(IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, UserManager<IdentityUser> userManager)
+        public CategoryController(IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, IHocPhiService hocPhiService, UserManager<IdentityUser> userManager)
         {
             _khoaHocService = khoaHocService;
             _gioHocService = gioHocService;
             _ngayHocService = ngayHocService;
             _quanHeService = quanHeService;
+            _hocPhiService = hocPhiService;
             _userManager = userManager;
         }
 
@@ -346,6 +348,90 @@ namespace Up.Controllers
             }
 
             var successful = await _gioHocService.DeleteGioHocAsync(model.GioHocId, currentUser.Email);
+            if (!successful)
+            {
+                return BadRequest("Xóa lỗi !!!");
+            }
+
+            return Ok(200);
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        public async Task<IActionResult> HocPhiIndex()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetHocPhiAsync()
+        {
+            var model = await _hocPhiService.GetHocPhiAsync();
+            return Json(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateHocPhiAsync([FromBody]Models.HocPhiViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("HocPhiIndex");
+            }
+
+            var successful = await _hocPhiService.CreateHocPhiAsync(model.Gia, currentUser.Email);
+            if (successful == null)
+            {
+                return BadRequest("Thêm mới lỗi !!!");
+            }
+
+            return Json(successful);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateHocPhiAsync([FromBody]Models.HocPhiViewModel model)
+        {
+            if (model.HocPhiId == Guid.Empty)
+            {
+                return RedirectToAction("HocPhiIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("HocPhiIndex");
+            }
+
+            var successful = await _hocPhiService.UpdateHocPhiAsync(model.HocPhiId, model.Gia, currentUser.Email);
+            if (!successful)
+            {
+                return BadRequest("Cập nhật lỗi !!!");
+            }
+
+            return Ok(200);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteHocPhiAsync([FromBody]Models.HocPhiViewModel model)
+        {
+            if (model.HocPhiId == Guid.Empty)
+            {
+                return RedirectToAction("HocPhiIndex");
+            }
+
+            //if (await _hocPhiService.IsCanDeleteAsync(model.HocPhiId))
+            //{
+            //    return BadRequest("Hãy xóa những lớp học có học phí này trước !!!");
+            //}
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("HocPhiIndex");
+            }
+
+            var successful = await _hocPhiService.DeleteHocPhiAsync(model.HocPhiId, currentUser.Email);
             if (!successful)
             {
                 return BadRequest("Xóa lỗi !!!");
