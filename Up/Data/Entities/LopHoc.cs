@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Up.Data.Entities
 {
@@ -24,5 +25,6 @@ namespace Up.Data.Entities
         public GioHoc GioHoc { get; set; }
         public NgayHoc NgayHoc { get; set; }
         public HocPhi HocPhi { get; set; }
+        public ICollection<LopHoc_Sach> LopHoc_Sachs { get; set; }
     }
 }

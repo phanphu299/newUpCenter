@@ -13,15 +13,17 @@ namespace Up.Controllers
         private readonly INgayHocService _ngayHocService;
         private readonly IQuanHeService _quanHeService;
         private readonly IHocPhiService _hocPhiService;
+        private readonly ISachService _sachService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public CategoryController(IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, IHocPhiService hocPhiService, UserManager<IdentityUser> userManager)
+        public CategoryController(IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, IHocPhiService hocPhiService, ISachService sachService, UserManager<IdentityUser> userManager)
         {
             _khoaHocService = khoaHocService;
             _gioHocService = gioHocService;
             _ngayHocService = ngayHocService;
             _quanHeService = quanHeService;
             _hocPhiService = hocPhiService;
+            _sachService = sachService;
             _userManager = userManager;
         }
 
@@ -432,6 +434,85 @@ namespace Up.Controllers
             }
 
             var successful = await _hocPhiService.DeleteHocPhiAsync(model.HocPhiId, currentUser.Email);
+            if (!successful)
+            {
+                return BadRequest("Xóa lỗi !!!");
+            }
+
+            return Ok(200);
+        }
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        public async Task<IActionResult> SachIndex()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSachAsync()
+        {
+            var model = await _sachService.GetSachAsync();
+            return Json(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSachAsync([FromBody]Models.SachViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("SachIndex");
+            }
+
+            var successful = await _sachService.CreateSachAsync(model.Name, model.Gia, currentUser.Email);
+            if (successful == null)
+            {
+                return BadRequest("Thêm mới lỗi !!!");
+            }
+
+            return Json(successful);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateSachAsync([FromBody]Models.SachViewModel model)
+        {
+            if (model.SachId == Guid.Empty)
+            {
+                return RedirectToAction("SachIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("SachIndex");
+            }
+
+            var successful = await _sachService.UpdateSachAsync(model.SachId, model.Name, model.Gia, currentUser.Email);
+            if (!successful)
+            {
+                return BadRequest("Cập nhật lỗi !!!");
+            }
+
+            return Ok(200);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSachAsync([FromBody]Models.SachViewModel model)
+        {
+            if (model.SachId == Guid.Empty)
+            {
+                return RedirectToAction("SachIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("SachIndex");
+            }
+
+            var successful = await _sachService.DeleteSachAsync(model.SachId, currentUser.Email);
             if (!successful)
             {
                 return BadRequest("Xóa lỗi !!!");
