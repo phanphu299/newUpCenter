@@ -18,7 +18,7 @@ namespace Up.Services
             _context = context;
         }
 
-        public async Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId, Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, string LoggedEmployee)
+        public async Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId, Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, Guid[] SachIds, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name) || KhoaHocId == null || NgayHocId == null || GioHocId == null || NgayKhaiGiang == null)
                 return null;
@@ -40,6 +40,23 @@ namespace Up.Services
             if (saveResult != 1)
                 return null;
 
+            if(SachIds.Length > 0)
+            {
+                foreach(Guid item in SachIds)
+                {
+                    LopHoc_Sach lopHoc_Sach = new LopHoc_Sach();
+                    lopHoc_Sach.LopHoc_SachId = new Guid();
+                    lopHoc_Sach.LopHocId = lopHoc.LopHocId;
+                    lopHoc_Sach.SachId = item;
+                    lopHoc_Sach.CreatedBy = LoggedEmployee;
+                    lopHoc_Sach.CreatedDate = DateTime.Now;
+
+                    _context.LopHoc_Sachs.Add(lopHoc_Sach);
+                }
+
+                var saveResult2 = await _context.SaveChangesAsync();
+            }
+
             return new LopHocViewModel
             {
                 LopHocId = lopHoc.LopHocId,
@@ -57,7 +74,13 @@ namespace Up.Services
                 HocPhiId = lopHoc.HocPhiId,
                 HocPhi = _context.HocPhis.Find(lopHoc.HocPhiId).Gia,
                 KhoaHoc = _context.KhoaHocs.Find(lopHoc.KhoaHocId).Name,
-                NgayKetThuc = lopHoc.NgayKetThuc != null ? ((DateTime)lopHoc.NgayKetThuc).ToString("dd/MM/yyyy") : ""
+                NgayKetThuc = lopHoc.NgayKetThuc != null ? ((DateTime)lopHoc.NgayKetThuc).ToString("dd/MM/yyyy") : "",
+                SachList = lopHoc.LopHoc_Sachs.Select(x => new SachViewModel
+                {
+                    SachId = x.SachId,
+                    Gia = x.Sach.Gia,
+                    Name = x.Sach.Name
+                }).ToList()
             };
         }
 
@@ -100,7 +123,13 @@ namespace Up.Services
                     NgayKhaiGiang = x.NgayKhaiGiang.ToString("dd/MM/yyyy"),
                     NgayKetThuc = x.NgayKetThuc != null ? ((DateTime)x.NgayKetThuc).ToString("dd/MM/yyyy") : "",
                     UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
+                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
+                    SachList = x.LopHoc_Sachs.Select(p => new SachViewModel
+                    {
+                        SachId = p.SachId,
+                        Gia = p.Sach.Gia,
+                        Name = p.Sach.Name
+                    }).ToList()
                 })
                 .ToListAsync();
         }

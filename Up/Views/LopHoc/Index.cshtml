@@ -76,6 +76,25 @@
                                                 <v-date-picker locale="vi-vn" v-model="newItem.ngayKhaiGiang" v-on:input="isShowDatePicker = false"></v-date-picker>
                                             </v-menu>
                                         </v-flex>
+                                        <v-flex xs12 sm6>
+                                            <v-select v-model="newItem.sach"
+                                                      :items="itemSach"
+                                                      item-text="name"
+                                                      item-value="sachId"
+                                                      attach
+                                                      chips
+                                                      label="Chọn Sách"
+                                                      multiple>
+                                                <template v-slot:selection="data">
+                                                    <v-chip :selected="data.selected"
+                                                            color="green"
+                                                            text-color="white">
+                                                        <strong>{{ data.item.name }}</strong>&nbsp;
+                                                        <span>({{ formatNumber(data.item.gia) }})</span>
+                                                    </v-chip>
+                                                </template>
+                                            </v-select>
+                                        </v-flex>
                                     </v-layout>
                                 </v-container>
                                 <small>* bắt buộc</small>
@@ -257,6 +276,16 @@
 
                         </td>
                         <td>{{ props.item.name }}</td>
+                        <td>
+                            <v-tooltip top v-if="props.item.sachList.length > 0">
+                                <template v-slot:activator="{ on }">
+                                    <v-icon color="grey lighten-1" dark v-on="on">library_books</v-icon>
+                                </template>
+                                <div v-for="sach in props.item.sachList">
+                                    <span>{{ sach.name }} - {{ formatNumber(sach.gia) }}</span>
+                                </div>
+                            </v-tooltip>
+                        </td>
                         <td>{{ props.item.khoaHoc }}</td>
                         <td>{{ props.item.ngayHoc }}</td>
                         <td>{{ props.item.gioHoc }}</td>

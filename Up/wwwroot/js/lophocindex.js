@@ -20,6 +20,7 @@
             khoaHoc: "",
             ngayHoc: "",
             gioHoc: "",
+            sach: [],
             ngayKhaiGiang: new Date().toISOString().substr(0, 10)
         },
         itemToDelete: {},
@@ -33,6 +34,7 @@
                 value: ''
             },
             { text: 'Tên Lớp Học', value: 'name', align: 'left', sortable: false },
+            { text: 'Sách', value: '', align: 'left', sortable: false },
             { text: 'Khóa Học', value: 'khoaHoc', align: 'left', sortable: false },
             { text: 'Ngày Học', value: 'ngayHoc', align: 'left', sortable: false },
             { text: 'Giờ Học', value: 'gioHoc', align: 'left', sortable: false },
@@ -50,7 +52,8 @@
         itemKhoaHoc: [],
         itemGioHoc: [],
         itemNgayHoc: [],
-        itemHocPhi: []
+        itemHocPhi: [],
+        itemSach: []
     },
     async beforeCreate() {
         let that = this;
@@ -89,6 +92,14 @@
         await axios.get('/category/GetHocPhiAsync')
             .then(function (response) {
                 that.itemHocPhi = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        await axios.get('/category/GetSachAsync')
+            .then(function (response) {
+                that.itemSach = response.data;
             })
             .catch(function (error) {
                 console.log(error);
@@ -165,7 +176,8 @@
                         GioHocId: that.newItem.gioHoc,
                         NgayHocId: that.newItem.ngayHoc,
                         HocPhiId: that.newItem.hocPhi,
-                        NgayKhaiGiang: that.newItem.ngayKhaiGiang
+                        NgayKhaiGiang: that.newItem.ngayKhaiGiang,
+                        SachIds: that.newItem.sach
                     }
                 })
                     .then(function (response) {

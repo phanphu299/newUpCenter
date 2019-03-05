@@ -42,7 +42,7 @@ namespace Up.Controllers
 
             DateTime _ngayKhaiGiang = Convert.ToDateTime(model.NgayKhaiGiang, System.Globalization.CultureInfo.InvariantCulture);
 
-            var successful = await _lopHocService.CreateLopHocAsync(model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang, currentUser.Email);
+            var successful = await _lopHocService.CreateLopHocAsync(model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang, model.SachIds, currentUser.Email);
             if (successful == null)
             {
                 return BadRequest("Thêm mới lỗi !!!");

@@ -102,7 +102,8 @@
                         that.snackbar = true;
                         that.messageText = 'Thêm mới thành công !!!';
                         that.color = 'success';
-                        that.newItem = '';
+                        that.newItem.name = '';
+                        that.newItem.gia = '';
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -114,7 +115,6 @@
         },
 
         async onDelete(item) {
-            console.log(item)
             let that = this;
             await axios({
                 method: 'delete',
