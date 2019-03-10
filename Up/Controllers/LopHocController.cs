@@ -65,13 +65,22 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            var successful = await _lopHocService.DeleteLopHocAsync(model.LopHocId, currentUser.Email);
-            if (!successful)
-            {
-                return BadRequest("Xóa lỗi !!!");
-            }
+            //var successful = await _lopHocService.DeleteLopHocAsync(model.LopHocId, currentUser.Email);
+            //if (!successful)
+            //{
+            //    return StatusCode(400, "There was a problem saving record in the database. Please try again.");
+            //}
 
-            return Ok(200);
+            //return Ok(200);
+
+            var modelTest = await _lopHocService.GetLopHocAsync();
+            var Result = new Models.ResultModel
+            {
+                Status = "OK",
+                Message = "OK",
+                Result = modelTest
+            };
+            return Json(Result);
         }
 
         [HttpPut]

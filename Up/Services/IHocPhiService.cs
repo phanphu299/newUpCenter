@@ -11,6 +11,5 @@ namespace Up.Services
         Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string LoggedEmployee);
         Task<bool> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string LoggedEmployee);
         Task<bool> DeleteHocPhiAsync(Guid HocPhiId, string LoggedEmployee);
-        Task<bool> IsCanDeleteAsync(Guid HocPhiId);
     }
 }

@@ -57,31 +57,38 @@ namespace Up.Services
                 var saveResult2 = await _context.SaveChangesAsync();
             }
 
-            return new LopHocViewModel
+            try
             {
-                LopHocId = lopHoc.LopHocId,
-                GioHocId = lopHoc.GioHocId,
-                NgayHocId = lopHoc.NgayHocId,
-                NgayHoc = _context.NgayHocs.Find(lopHoc.NgayHocId).Name,
-                Name = lopHoc.Name,
-                NgayKhaiGiang = lopHoc.NgayKhaiGiang.ToString("dd/MM/yyyy"),
-                KhoaHocId = lopHoc.KhoaHocId,
-                CreatedBy = lopHoc.CreatedBy,
-                GioHoc = _context.GioHocs.Find(lopHoc.GioHocId).Name,
-                CreatedDate = lopHoc.CreatedDate.ToString("dd/MM/yyyy"),
-                IsCanceled = lopHoc.IsCanceled,
-                IsGraduated = lopHoc.IsGraduated,
-                HocPhiId = lopHoc.HocPhiId,
-                HocPhi = _context.HocPhis.Find(lopHoc.HocPhiId).Gia,
-                KhoaHoc = _context.KhoaHocs.Find(lopHoc.KhoaHocId).Name,
-                NgayKetThuc = lopHoc.NgayKetThuc != null ? ((DateTime)lopHoc.NgayKetThuc).ToString("dd/MM/yyyy") : "",
-                SachList = lopHoc.LopHoc_Sachs.Select(x => new SachViewModel
+                return new LopHocViewModel
                 {
-                    SachId = x.SachId,
-                    Gia = x.Sach.Gia,
-                    Name = x.Sach.Name
-                }).ToList()
-            };
+                    LopHocId = lopHoc.LopHocId,
+                    GioHocId = lopHoc.GioHocId,
+                    NgayHocId = lopHoc.NgayHocId,
+                    NgayHoc = _context.NgayHocs.Find(lopHoc.NgayHocId).Name,
+                    Name = lopHoc.Name,
+                    NgayKhaiGiang = lopHoc.NgayKhaiGiang.ToString("dd/MM/yyyy"),
+                    KhoaHocId = lopHoc.KhoaHocId,
+                    CreatedBy = lopHoc.CreatedBy,
+                    GioHoc = _context.GioHocs.Find(lopHoc.GioHocId).Name,
+                    CreatedDate = lopHoc.CreatedDate.ToString("dd/MM/yyyy"),
+                    IsCanceled = lopHoc.IsCanceled,
+                    IsGraduated = lopHoc.IsGraduated,
+                    HocPhiId = lopHoc.HocPhiId,
+                    HocPhi = _context.HocPhis.Find(lopHoc.HocPhiId).Gia,
+                    KhoaHoc = _context.KhoaHocs.Find(lopHoc.KhoaHocId).Name,
+                    NgayKetThuc = lopHoc.NgayKetThuc != null ? ((DateTime)lopHoc.NgayKetThuc).ToString("dd/MM/yyyy") : "",
+                    SachList = _context.LopHoc_Sachs.Where(x => x.LopHocId == lopHoc.LopHocId).Select(x => new SachViewModel
+                    {
+                        SachId = x.SachId,
+                        Gia = x.Sach.Gia,
+                        Name = x.Sach.Name
+                    }).ToList()
+                };
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<bool> DeleteLopHocAsync(Guid LopHocId, string LoggedEmployee)
@@ -91,6 +98,12 @@ namespace Up.Services
                                     .SingleOrDefaultAsync();
 
             if (item == null) return false;
+
+            var _lopHoc_Sach = await _context.LopHoc_Sachs
+                                            .Where(x => x.LopHocId == item.LopHocId)
+                                            .ToListAsync();
+
+            _context.LopHoc_Sachs.RemoveRange(_lopHoc_Sach);
 
             item.IsDisabled = true;
             item.UpdatedBy = LoggedEmployee;
@@ -124,6 +137,7 @@ namespace Up.Services
                     NgayKetThuc = x.NgayKetThuc != null ? ((DateTime)x.NgayKetThuc).ToString("dd/MM/yyyy") : "",
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
+                    SachIds = x.LopHoc_Sachs.Select(p => p.SachId).ToArray(),
                     SachList = x.LopHoc_Sachs.Select(p => new SachViewModel
                     {
                         SachId = p.SachId,

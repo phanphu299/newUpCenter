@@ -51,13 +51,32 @@ namespace Up.Controllers
                 return RedirectToAction("KhoaHocIndex");
             }
 
-            var successful = await _khoaHocService.CreateKhoaHocAsync(model.Name, currentUser.Email);
-            if (successful == null)
-            {
-                return BadRequest("Thêm mới lỗi !!!");
-            }
+            try {
+                var successful = await _khoaHocService.CreateKhoaHocAsync(model.Name, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Thêm mới lỗi !!!"
+                    });
+                }
 
-            return Json(successful);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Thêm mới thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpPut]
@@ -74,23 +93,37 @@ namespace Up.Controllers
                 return RedirectToAction("KhoaHocIndex");
             }
 
-            var successful = await _khoaHocService.UpdateKhoaHocAsync(model.KhoaHocId, model.Name, currentUser.Email);
-            if (!successful)
+            try
             {
-                return BadRequest("Cập nhật lỗi !!!");
-            }
+                var successful = await _khoaHocService.UpdateKhoaHocAsync(model.KhoaHocId, model.Name, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
 
-            return Ok(200);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteKhoaHocAsync([FromBody]Models.KhoaHocViewModel model)
         {
-            if(await _khoaHocService.IsCanDeleteAsync(model.KhoaHocId))
-            {
-                return BadRequest("Hãy xóa những lớp học thuộc khóa học này trước !!!");
-            }
-
             if (model.KhoaHocId == Guid.Empty)
             {
                 return RedirectToAction("KhoaHocIndex");
@@ -102,13 +135,32 @@ namespace Up.Controllers
                 return RedirectToAction("KhoaHocIndex");
             }
 
-            var successful = await _khoaHocService.DeleteKhoaHocAsync(model.KhoaHocId, currentUser.Email);
-            if (!successful)
+            try
             {
-                return BadRequest("Xóa lỗi !!!");
-            }
+                var successful = await _khoaHocService.DeleteKhoaHocAsync(model.KhoaHocId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa lỗi !!!"
+                    });
+                }
 
-            return Ok(200);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<IActionResult> QuanHeIndex()
@@ -135,13 +187,33 @@ namespace Up.Controllers
                 return RedirectToAction("QuanHeIndex");
             }
 
-            var successful = await _quanHeService.CreateQuanHeAsync(model.Name, currentUser.Email);
-            if (successful == null)
+            try
             {
-                return BadRequest("Thêm mới lỗi !!!");
-            }
+                var successful = await _quanHeService.CreateQuanHeAsync(model.Name, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Thêm mới lỗi !!!"
+                    });
+                }
 
-            return Json(successful);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Thêm mới thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpPut]
@@ -158,13 +230,32 @@ namespace Up.Controllers
                 return RedirectToAction("QuanHeIndex");
             }
 
-            var successful = await _quanHeService.UpdateQuanHeAsync(model.QuanHeId, model.Name, currentUser.Email);
-            if (!successful)
+            try
             {
-                return BadRequest("Cập nhật lỗi !!!");
-            }
+                var successful = await _quanHeService.UpdateQuanHeAsync(model.QuanHeId, model.Name, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
 
-            return Ok(200);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpDelete]
@@ -180,14 +271,33 @@ namespace Up.Controllers
             {
                 return RedirectToAction("QuanHeIndex");
             }
-
-            var successful = await _quanHeService.DeleteQuanHeAsync(model.QuanHeId, currentUser.Email);
-            if (!successful)
+            
+            try
             {
-                return BadRequest("Xóa lỗi !!!");
-            }
+                var successful = await _quanHeService.DeleteQuanHeAsync(model.QuanHeId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa lỗi !!!"
+                    });
+                }
 
-            return Ok(200);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<IActionResult> NgayHocIndex()
@@ -213,14 +323,34 @@ namespace Up.Controllers
             {
                 return RedirectToAction("NgayHocIndex");
             }
-
-            var successful = await _ngayHocService.CreateNgayHocAsync(model.Name, currentUser.Email);
-            if (successful == null)
+            
+            try
             {
-                return BadRequest("Thêm mới lỗi !!!");
-            }
+                var successful = await _ngayHocService.CreateNgayHocAsync(model.Name, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Thêm mới lỗi !!!"
+                    });
+                }
 
-            return Json(successful);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Thêm mới thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpPut]
@@ -236,24 +366,38 @@ namespace Up.Controllers
             {
                 return RedirectToAction("NgayHocIndex");
             }
-
-            var successful = await _ngayHocService.UpdateNgayHocAsync(model.NgayHocId, model.Name, currentUser.Email);
-            if (!successful)
+            
+            try
             {
-                return BadRequest("Cập nhật lỗi !!!");
-            }
+                var successful = await _ngayHocService.UpdateNgayHocAsync(model.NgayHocId, model.Name, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
 
-            return Ok(200);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteNgayHocAsync([FromBody]Models.NgayHocViewModel model)
         {
-            if (await _ngayHocService.IsCanDeleteAsync(model.NgayHocId))
-            {
-                return BadRequest("Hãy xóa những lớp học thuộc ngày học này trước !!!");
-            }
-
             if (model.NgayHocId == Guid.Empty)
             {
                 return RedirectToAction("NgayHocIndex");
@@ -265,13 +409,32 @@ namespace Up.Controllers
                 return RedirectToAction("NgayHocIndex");
             }
 
-            var successful = await _ngayHocService.DeleteNgayHocAsync(model.NgayHocId, currentUser.Email);
-            if (!successful)
+            try
             {
-                return BadRequest("Xóa lỗi !!!");
-            }
+                var successful = await _ngayHocService.DeleteNgayHocAsync(model.NgayHocId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa lỗi !!!"
+                    });
+                }
 
-            return Ok(200);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<IActionResult> GioHocIndex()
@@ -298,13 +461,33 @@ namespace Up.Controllers
                 return RedirectToAction("GioHocIndex");
             }
 
-            var successful = await _gioHocService.CreateGioHocAsync(model.Name, currentUser.Email);
-            if (successful == null)
+            try
             {
-                return BadRequest("Thêm mới lỗi !!!");
-            }
+                var successful = await _gioHocService.CreateGioHocAsync(model.Name, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Thêm mới lỗi !!!"
+                    });
+                }
 
-            return Json(successful);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Thêm mới thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpPut]
@@ -321,13 +504,32 @@ namespace Up.Controllers
                 return RedirectToAction("GioHocIndex");
             }
 
-            var successful = await _gioHocService.UpdateGioHocAsync(model.GioHocId, model.Name, currentUser.Email);
-            if (!successful)
+            try
             {
-                return BadRequest("Cập nhật lỗi !!!");
-            }
+                var successful = await _gioHocService.UpdateGioHocAsync(model.GioHocId, model.Name, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
 
-            return Ok(200);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpDelete]
@@ -338,24 +540,38 @@ namespace Up.Controllers
                 return RedirectToAction("GioHocIndex");
             }
 
-            if (await _gioHocService.IsCanDeleteAsync(model.GioHocId))
-            {
-                return BadRequest("Hãy xóa những lớp học thuộc giờ học này trước !!!");
-            }
-
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
                 return RedirectToAction("GioHocIndex");
             }
 
-            var successful = await _gioHocService.DeleteGioHocAsync(model.GioHocId, currentUser.Email);
-            if (!successful)
+            try
             {
-                return BadRequest("Xóa lỗi !!!");
-            }
+                var successful = await _gioHocService.DeleteGioHocAsync(model.GioHocId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa lỗi !!!"
+                    });
+                }
 
-            return Ok(200);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<IActionResult> HocPhiIndex()
@@ -382,13 +598,33 @@ namespace Up.Controllers
                 return RedirectToAction("HocPhiIndex");
             }
 
-            var successful = await _hocPhiService.CreateHocPhiAsync(model.Gia, currentUser.Email);
-            if (successful == null)
+            try
             {
-                return BadRequest("Thêm mới lỗi !!!");
-            }
+                var successful = await _hocPhiService.CreateHocPhiAsync(model.Gia, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Thêm mới lỗi !!!"
+                    });
+                }
 
-            return Json(successful);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Thêm mới thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpPut]
@@ -405,13 +641,32 @@ namespace Up.Controllers
                 return RedirectToAction("HocPhiIndex");
             }
 
-            var successful = await _hocPhiService.UpdateHocPhiAsync(model.HocPhiId, model.Gia, currentUser.Email);
-            if (!successful)
+            try
             {
-                return BadRequest("Cập nhật lỗi !!!");
-            }
+                var successful = await _hocPhiService.UpdateHocPhiAsync(model.HocPhiId, model.Gia, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
 
-            return Ok(200);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpDelete]
@@ -421,25 +676,39 @@ namespace Up.Controllers
             {
                 return RedirectToAction("HocPhiIndex");
             }
-
-            //if (await _hocPhiService.IsCanDeleteAsync(model.HocPhiId))
-            //{
-            //    return BadRequest("Hãy xóa những lớp học có học phí này trước !!!");
-            //}
-
+            
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
                 return RedirectToAction("HocPhiIndex");
             }
 
-            var successful = await _hocPhiService.DeleteHocPhiAsync(model.HocPhiId, currentUser.Email);
-            if (!successful)
+            try
             {
-                return BadRequest("Xóa lỗi !!!");
-            }
+                var successful = await _hocPhiService.DeleteHocPhiAsync(model.HocPhiId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa lỗi !!!"
+                    });
+                }
 
-            return Ok(200);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<IActionResult> SachIndex()
@@ -466,13 +735,33 @@ namespace Up.Controllers
                 return RedirectToAction("SachIndex");
             }
 
-            var successful = await _sachService.CreateSachAsync(model.Name, model.Gia, currentUser.Email);
-            if (successful == null)
+            try
             {
-                return BadRequest("Thêm mới lỗi !!!");
-            }
+                var successful = await _sachService.CreateSachAsync(model.Name, model.Gia, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Thêm mới lỗi !!!"
+                    });
+                }
 
-            return Json(successful);
+                return Json(new Models.ResultModel 
+                {
+                    Status = "OK",
+                    Message = "Thêm mới thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpPut]
@@ -489,13 +778,32 @@ namespace Up.Controllers
                 return RedirectToAction("SachIndex");
             }
 
-            var successful = await _sachService.UpdateSachAsync(model.SachId, model.Name, model.Gia, currentUser.Email);
-            if (!successful)
+            try
             {
-                return BadRequest("Cập nhật lỗi !!!");
-            }
+                var successful = await _sachService.UpdateSachAsync(model.SachId, model.Name, model.Gia, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
 
-            return Ok(200);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpDelete]
@@ -511,14 +819,33 @@ namespace Up.Controllers
             {
                 return RedirectToAction("SachIndex");
             }
-
-            var successful = await _sachService.DeleteSachAsync(model.SachId, currentUser.Email);
-            if (!successful)
+            
+            try
             {
-                return BadRequest("Xóa lỗi !!!");
-            }
+                var successful = await _sachService.DeleteSachAsync(model.SachId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa lỗi !!!"
+                    });
+                }
 
-            return Ok(200);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
     }
 }

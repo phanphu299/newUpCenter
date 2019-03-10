@@ -21,7 +21,7 @@ namespace Up.Services
         public async Task<KhoaHocViewModel> CreateKhoaHocAsync(string Name, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                return null;
+                throw new Exception("Tên Khóa Học không được để trống !!!");
 
             KhoaHoc khoaHoc = new KhoaHoc();
             khoaHoc.KhoaHocId = new Guid();
@@ -33,17 +33,21 @@ namespace Up.Services
 
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
-                return null;
+                throw new Exception("Lỗi khi lưu Khóa Học !!!");
             return new KhoaHocViewModel { KhoaHocId = khoaHoc.KhoaHocId, Name = khoaHoc.Name, CreatedBy = khoaHoc.CreatedBy, CreatedDate = khoaHoc.CreatedDate.ToString("dd/MM/yyyy") };
         }
 
         public async Task<bool> DeleteKhoaHocAsync(Guid KhoaHocId, string LoggedEmployee)
         {
-            var item = await _context.KhoaHocs
-                                    .Where(x => x.KhoaHocId == KhoaHocId)
-                                    .SingleOrDefaultAsync();
+            var lopHoc = await _context.LopHocs.Where(x => x.KhoaHocId == KhoaHocId).ToListAsync();
+            if (lopHoc.Any())
+                throw new Exception("Hãy xóa những lớp học thuộc khóa học này trước !!!");
 
-            if (item == null) return false;
+            var item = await _context.KhoaHocs
+                                    .FindAsync(KhoaHocId);
+
+            if (item == null)
+                throw new Exception("Không tìm thấy Khóa Học !!!");
 
             item.IsDisabled = true;
             item.UpdatedBy = LoggedEmployee;
@@ -69,24 +73,17 @@ namespace Up.Services
                 .ToListAsync();
         }
 
-        public async Task<bool> IsCanDeleteAsync(Guid KhoaHocId)
-        {
-            var item = await _context.KhoaHocs
-                                    .Where(x => x.KhoaHocId == KhoaHocId)
-                                    .SingleOrDefaultAsync();
-            return item.LopHocs.Any();
-        }
-
         public async Task<bool> UpdateKhoaHocAsync(Guid KhoaHocId, string Name, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                return false;
+                throw new Exception("Tên Khóa Học không được để trống !!!");
 
             var item = await _context.KhoaHocs
                                     .Where(x => x.KhoaHocId == KhoaHocId)
                                     .SingleOrDefaultAsync();
 
-            if (item == null) return false;
+            if (item == null)
+                throw new Exception("Không tìm thấy Khóa Học !!!");
 
             item.Name = Name;
             item.UpdatedBy = LoggedEmployee;

@@ -59,18 +59,25 @@
                     HocPhiId: item.hocPhiId
                 }
             })
-                .then(function (response) {
-                    console.log(response);
+            .then(function (response) {
+                console.log(response);
+                if (response.data.status === "OK") {
                     that.snackbar = true;
                     that.messageText = 'Cập nhật thành công !!!';
                     that.color = 'success';
-                })
-                .catch(function (error) {
-                    console.log(error);
+                }
+                else {
                     that.snackbar = true;
-                    that.messageText = 'Cập nhật lỗi: ' + error;
+                    that.messageText = response.data.message;
                     that.color = 'error';
-                });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                that.snackbar = true;
+                that.messageText = 'Cập nhật lỗi: ' + error;
+                that.color = 'error';
+            });
         },
 
         async onSave(item) {
@@ -92,25 +99,31 @@
                         Gia: that.newItem
                     }
                 })
-                    .then(function (response) {
-                        console.log(response);
-                        that.khoaHocItems.splice(0, 0, response.data);
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.khoaHocItems.splice(0, 0, response.data.result);
                         that.snackbar = true;
                         that.messageText = 'Thêm mới thành công !!!';
                         that.color = 'success';
                         that.newItem = '';
-                    })
-                    .catch(function (error) {
-                        console.log(error);
+                    }
+                    else {
                         that.snackbar = true;
-                        that.messageText = 'Thêm mới lỗi: ' + error;
+                        that.messageText = response.data.message;
                         that.color = 'error';
-                    });
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Thêm mới lỗi: ' + error;
+                    that.color = 'error';
+                });
             }
         },
 
         async onDelete(item) {
-            console.log(item)
             let that = this;
             await axios({
                 method: 'delete',
@@ -119,20 +132,27 @@
                     HocPhiId: item.hocPhiId
                 }
             })
-                .then(function (response) {
-                    console.log(response);
+            .then(function (response) {
+                console.log(response);
+                if (response.data.status === "OK") {
                     that.khoaHocItems.splice(that.khoaHocItems.indexOf(item), 1);
                     that.snackbar = true;
                     that.messageText = 'Xóa thành công !!!';
                     that.color = 'success';
                     that.deleteDialog = false;
-                })
-                .catch(function (error) {
-                    console.log(error);
+                }
+                else {
                     that.snackbar = true;
-                    that.messageText = 'Xóa lỗi: ' + error;
+                    that.messageText = response.data.message;
                     that.color = 'error';
-                });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                that.snackbar = true;
+                that.messageText = 'Xóa lỗi: ' + error;
+                that.color = 'error';
+            });
         }
     }
 });

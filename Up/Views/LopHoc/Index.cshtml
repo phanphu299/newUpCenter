@@ -247,6 +247,25 @@
                                                               label="Chọn Học Phí *">
                                                     </v-select>
                                                 </v-flex>
+                                                <v-flex xs12 sm6>
+                                                    <v-select v-model="itemToEdit.SachIds"
+                                                              :items="itemSach"
+                                                              item-text="name"
+                                                              item-value="sachId"
+                                                              attach
+                                                              chips
+                                                              label="Chọn Sách"
+                                                              multiple>
+                                                        <template v-slot:selection="data">
+                                                            <v-chip :selected="data.selected"
+                                                                    color="green"
+                                                                    text-color="white">
+                                                                <strong>{{ data.item }}</strong>&nbsp;
+                                                                
+                                                            </v-chip>
+                                                        </template>
+                                                    </v-select>
+                                                </v-flex>
 
                                                 <v-flex xs12 sm6>
                                                     <v-switch v-model="itemToEdit.isCanceled" color="success" label="Hủy Lớp"></v-switch>

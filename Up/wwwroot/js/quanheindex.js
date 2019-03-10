@@ -50,9 +50,16 @@
             })
                 .then(function (response) {
                     console.log(response);
-                    that.snackbar = true;
-                    that.messageText = 'Cập nhật thành công !!!';
-                    that.color = 'success';
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Cập nhật thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -78,11 +85,18 @@
                 })
                     .then(function (response) {
                         console.log(response);
-                        that.khoaHocItems.splice(0, 0, response.data);
-                        that.snackbar = true;
-                        that.messageText = 'Thêm mới thành công !!!';
-                        that.color = 'success';
-                        that.newItem = '';
+                        if (response.data.status === "OK") {
+                            that.khoaHocItems.splice(0, 0, response.data.result);
+                            that.snackbar = true;
+                            that.messageText = 'Thêm mới thành công !!!';
+                            that.color = 'success';
+                            that.newItem = '';
+                        }
+                        else {
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'error';
+                        }
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -94,7 +108,6 @@
         },
 
         async onDelete(item) {
-            console.log(item)
             let that = this;
             await axios({
                 method: 'delete',
@@ -105,11 +118,18 @@
             })
                 .then(function (response) {
                     console.log(response);
-                    that.khoaHocItems.splice(that.khoaHocItems.indexOf(item), 1);
-                    that.snackbar = true;
-                    that.messageText = 'Xóa thành công !!!';
-                    that.color = 'success';
-                    that.deleteDialog = false;
+                    if (response.data.status === "OK") {
+                        that.khoaHocItems.splice(that.khoaHocItems.indexOf(item), 1);
+                        that.snackbar = true;
+                        that.messageText = 'Xóa thành công !!!';
+                        that.color = 'success';
+                        that.deleteDialog = false;
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);

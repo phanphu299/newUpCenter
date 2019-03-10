@@ -21,7 +21,7 @@ namespace Up.Services
         public async Task<QuanHeViewModel> CreateQuanHeAsync(string Name, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                return null;
+                throw new Exception("Tên Quan Hệ không được để trống !!!");
 
             QuanHe quanHe = new QuanHe();
             quanHe.QuanHeId = new Guid();
@@ -33,7 +33,7 @@ namespace Up.Services
 
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
-                return null;
+                throw new Exception("Lỗi khi lưu Quan Hệ !!!");
             return new QuanHeViewModel { QuanHeId = quanHe.QuanHeId, Name = quanHe.Name, CreatedBy = quanHe.CreatedBy, CreatedDate = quanHe.CreatedDate.ToString("dd/MM/yyyy") };
         }
 
@@ -43,7 +43,8 @@ namespace Up.Services
                                     .Where(x => x.QuanHeId == QuanHeId)
                                     .SingleOrDefaultAsync();
 
-            if (item == null) return false;
+            if (item == null)
+                throw new Exception("Không tìm thấy Quan Hệ !!!");
 
             item.IsDisabled = true;
             item.UpdatedBy = LoggedEmployee;
@@ -72,13 +73,14 @@ namespace Up.Services
         public async Task<bool> UpdateQuanHeAsync(Guid QuanHeId, string Name, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                return false;
+                throw new Exception("Tên Quan Hệ không được để trống !!!");
 
             var item = await _context.QuanHes
                                     .Where(x => x.QuanHeId == QuanHeId)
                                     .SingleOrDefaultAsync();
 
-            if (item == null) return false;
+            if (item == null)
+                throw new Exception("Không tìm thấy Quan Hệ !!!");
 
             item.Name = Name;
             item.UpdatedBy = LoggedEmployee;

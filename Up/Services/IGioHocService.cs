@@ -11,6 +11,5 @@ namespace Up.Services
         Task<GioHocViewModel> CreateGioHocAsync(string Name, string LoggedEmployee);
         Task<bool> UpdateGioHocAsync(Guid GioHocId, string Name, string LoggedEmployee);
         Task<bool> DeleteGioHocAsync(Guid GioHocId, string LoggedEmployee);
-        Task<bool> IsCanDeleteAsync(Guid GioHocId);
     }
 }

@@ -21,7 +21,7 @@ namespace Up.Services
         public async Task<SachViewModel> CreateSachAsync(string Name, double Gia, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                return null;
+                throw new Exception("Tên Sách không được để trống !!!");
 
             Sach sach = new Sach();
             sach.SachId = new Guid();
@@ -34,7 +34,7 @@ namespace Up.Services
 
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
-                return null;
+                throw new Exception("Lỗi khi lưu Sách !!!");
             return new SachViewModel { SachId = sach.SachId, Name = sach.Name, Gia = sach.Gia, CreatedBy = sach.CreatedBy, CreatedDate = sach.CreatedDate.ToString("dd/MM/yyyy") };
         }
 
@@ -44,7 +44,13 @@ namespace Up.Services
                                     .Where(x => x.SachId == SachId)
                                     .SingleOrDefaultAsync();
 
-            if (item == null) return false;
+            if (item == null)
+                throw new Exception("Không tìm thấy Khóa Học !!!");
+
+            var _lopHoc_Sach = await _context.LopHoc_Sachs
+                                            .Where(x => x.SachId == item.SachId)
+                                            .ToListAsync();
+            _context.LopHoc_Sachs.RemoveRange(_lopHoc_Sach);
 
             item.IsDisabled = true;
             item.UpdatedBy = LoggedEmployee;
@@ -74,13 +80,14 @@ namespace Up.Services
         public async Task<bool> UpdateSachAsync(Guid SachId, string Name, double Gia, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                return false;
+                throw new Exception("Tên Sách không được để trống !!!");
 
             var item = await _context.Sachs
                                     .Where(x => x.SachId == SachId)
                                     .SingleOrDefaultAsync();
 
-            if (item == null) return false;
+            if (item == null)
+                throw new Exception("Không tìm thấy Sách !!!");
 
             item.Name = Name;
             item.Gia = Gia;

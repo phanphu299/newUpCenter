@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Up.Data.Entities
 {
@@ -12,7 +13,9 @@ namespace Up.Data.Entities
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
 
+        [ForeignKey("LopHocId")]
         public LopHoc LopHoc { get; set; }
+        [ForeignKey("SachId")]
         public Sach Sach { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace Up.Services
         public async Task<GioHocViewModel> CreateGioHocAsync(string Name, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                return null;
+                throw new Exception("Tên Giờ Học không được để trống !!!");
 
             GioHoc gioHoc = new GioHoc();
             gioHoc.GioHocId = new Guid();
@@ -33,17 +33,22 @@ namespace Up.Services
 
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
-                return null;
+                throw new Exception("Lỗi khi lưu Giờ Học !!!");
             return new GioHocViewModel { GioHocId = gioHoc.GioHocId, Name = gioHoc.Name, CreatedBy = gioHoc.CreatedBy, CreatedDate = gioHoc.CreatedDate.ToString("dd/MM/yyyy") };
         }
 
         public async Task<bool> DeleteGioHocAsync(Guid GioHocId, string LoggedEmployee)
         {
+            var lopHoc = await _context.LopHocs.Where(x => x.GioHocId == GioHocId).ToListAsync();
+            if (lopHoc.Any())
+                throw new Exception("Hãy xóa những lớp học thuộc giờ học này trước !!!");
+
             var item = await _context.GioHocs
                                     .Where(x => x.GioHocId == GioHocId)
                                     .SingleOrDefaultAsync();
 
-            if (item == null) return false;
+            if (item == null)
+                throw new Exception("Không tìm thấy Giờ Học !!!");
 
             item.IsDisabled = true;
             item.UpdatedBy = LoggedEmployee;
@@ -69,24 +74,17 @@ namespace Up.Services
                 .ToListAsync();
         }
 
-        public async Task<bool> IsCanDeleteAsync(Guid GioHocId)
-        {
-            var item = await _context.GioHocs
-                                    .Where(x => x.GioHocId == GioHocId)
-                                    .SingleOrDefaultAsync();
-            return item.LopHocs.Any();
-        }
-
         public async Task<bool> UpdateGioHocAsync(Guid GioHocId, string Name, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                return false;
+                throw new Exception("Tên Giờ Học không được để trống !!!");
 
             var item = await _context.GioHocs
                                     .Where(x => x.GioHocId == GioHocId)
                                     .SingleOrDefaultAsync();
 
-            if (item == null) return false;
+            if (item == null)
+                throw new Exception("Không tìm thấy Giờ Học !!!");
 
             item.Name = Name;
             item.UpdatedBy = LoggedEmployee;

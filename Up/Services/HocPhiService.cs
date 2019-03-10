@@ -30,17 +30,22 @@ namespace Up.Services
 
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
-                return null;
+                throw new Exception("Lỗi khi lưu Học Phí !!!");
             return new HocPhiViewModel { HocPhiId = hocPhi.HocPhiId, Gia = hocPhi.Gia, CreatedBy = hocPhi.CreatedBy, CreatedDate = hocPhi.CreatedDate.ToString("dd/MM/yyyy") };
         }
 
         public async Task<bool> DeleteHocPhiAsync(Guid HocPhiId, string LoggedEmployee)
         {
+            var lopHoc = await _context.LopHocs.Where(x => x.HocPhiId == HocPhiId).ToListAsync();
+            if (lopHoc.Any())
+                throw new Exception("Hãy xóa những lớp học có học phí này trước !!!");
+
             var item = await _context.HocPhis
                                     .Where(x => x.HocPhiId == HocPhiId)
                                     .SingleOrDefaultAsync();
 
-            if (item == null) return false;
+            if (item == null)
+                throw new Exception("Không tìm thấy Học Phí !!!");
 
             item.IsDisabled = true;
             item.UpdatedBy = LoggedEmployee;
@@ -66,21 +71,14 @@ namespace Up.Services
                 .ToListAsync();
         }
 
-        public async Task<bool> IsCanDeleteAsync(Guid HocPhiId)
-        {
-            var item = await _context.HocPhis
-                                    .Where(x => x.HocPhiId == HocPhiId)
-                                    .SingleOrDefaultAsync();
-            return item.LopHocs.Any();
-        }
-
         public async Task<bool> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string LoggedEmployee)
         {
             var item = await _context.HocPhis
                                     .Where(x => x.HocPhiId == HocPhiId)
                                     .SingleOrDefaultAsync();
 
-            if (item == null) return false;
+            if (item == null)
+                throw new Exception("Không tìm thấy Học Phí !!!");
 
             item.Gia = Gia;
             item.UpdatedBy = LoggedEmployee;
