@@ -26,7 +26,6 @@ namespace Up.Services
                     throw new Exception("Tên Lớp Học, Khóa Học, Ngày Học, Giờ Học, Ngày Khai Giảng không được để trống !!!");
 
                 LopHoc lopHoc = new LopHoc();
-                lopHoc.GioHocId = new Guid();
                 lopHoc.Name = Name;
                 lopHoc.KhoaHocId = KhoaHocId;
                 lopHoc.NgayKhaiGiang = NgayKhaiGiang;

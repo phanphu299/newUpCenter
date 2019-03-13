@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Up.Data.Entities
 {
@@ -11,5 +12,7 @@ namespace Up.Data.Entities
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
+
+        public ICollection<HocVien> HocViens { get; set; }
     }
 }

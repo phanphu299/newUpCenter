@@ -20,6 +20,7 @@ namespace Up.Data
         public DbSet<Sach> Sachs { get; set; }
         public DbSet<LopHoc_Sach> LopHoc_Sachs { get; set; }
         public DbSet<LopHoc> LopHocs { get; set; }
+        public DbSet<HocVien> HocViens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -48,6 +49,12 @@ namespace Up.Data
                 .HasOne(p => p.HocPhi)
                 .WithMany(b => b.LopHocs)
                 .HasForeignKey(p => p.HocPhiId);
+
+            // HOCVIEN RELATIONSHIPS
+            builder.Entity<HocVien>()
+                .HasOne(p => p.QuanHe)
+                .WithMany(b => b.HocViens)
+                .HasForeignKey(p => p.QuanHeId);
         }
     }
 }
