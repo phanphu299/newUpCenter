@@ -20,45 +20,40 @@ namespace Up.Services
 
         public async Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId, Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, Guid[] SachIds, string LoggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name) || KhoaHocId == null || NgayHocId == null || GioHocId == null || NgayKhaiGiang == null)
-                return null;
-
-            LopHoc lopHoc = new LopHoc();
-            lopHoc.GioHocId = new Guid();
-            lopHoc.Name = Name;
-            lopHoc.KhoaHocId = KhoaHocId;
-            lopHoc.NgayKhaiGiang = NgayKhaiGiang;
-            lopHoc.NgayHocId = NgayHocId;
-            lopHoc.GioHocId = GioHocId;
-            lopHoc.HocPhiId = HocPhiId;
-            lopHoc.CreatedBy = LoggedEmployee;
-            lopHoc.CreatedDate = DateTime.Now;
-
-            _context.LopHocs.Add(lopHoc);
-
-            var saveResult = await _context.SaveChangesAsync();
-            if (saveResult != 1)
-                return null;
-
-            if(SachIds.Length > 0)
-            {
-                foreach(Guid item in SachIds)
-                {
-                    LopHoc_Sach lopHoc_Sach = new LopHoc_Sach();
-                    lopHoc_Sach.LopHoc_SachId = new Guid();
-                    lopHoc_Sach.LopHocId = lopHoc.LopHocId;
-                    lopHoc_Sach.SachId = item;
-                    lopHoc_Sach.CreatedBy = LoggedEmployee;
-                    lopHoc_Sach.CreatedDate = DateTime.Now;
-
-                    _context.LopHoc_Sachs.Add(lopHoc_Sach);
-                }
-
-                var saveResult2 = await _context.SaveChangesAsync();
-            }
-
             try
             {
+                if (string.IsNullOrWhiteSpace(Name) || KhoaHocId == null || NgayHocId == null || GioHocId == null || NgayKhaiGiang == null)
+                    throw new Exception("Tên Lớp Học, Khóa Học, Ngày Học, Giờ Học, Ngày Khai Giảng không được để trống !!!");
+
+                LopHoc lopHoc = new LopHoc();
+                lopHoc.GioHocId = new Guid();
+                lopHoc.Name = Name;
+                lopHoc.KhoaHocId = KhoaHocId;
+                lopHoc.NgayKhaiGiang = NgayKhaiGiang;
+                lopHoc.NgayHocId = NgayHocId;
+                lopHoc.GioHocId = GioHocId;
+                lopHoc.HocPhiId = HocPhiId;
+                lopHoc.CreatedBy = LoggedEmployee;
+                lopHoc.CreatedDate = DateTime.Now;
+
+                _context.LopHocs.Add(lopHoc);
+
+                if (SachIds.Length > 0)
+                {
+                    foreach (Guid item in SachIds)
+                    {
+                        LopHoc_Sach lopHoc_Sach = new LopHoc_Sach();
+                        lopHoc_Sach.LopHoc_SachId = new Guid();
+                        lopHoc_Sach.LopHocId = lopHoc.LopHocId;
+                        lopHoc_Sach.SachId = item;
+                        lopHoc_Sach.CreatedBy = LoggedEmployee;
+                        lopHoc_Sach.CreatedDate = DateTime.Now;
+
+                        _context.LopHoc_Sachs.Add(lopHoc_Sach);
+                    }
+                }
+                await _context.SaveChangesAsync();
+
                 return new LopHocViewModel
                 {
                     LopHocId = lopHoc.LopHocId,
@@ -82,35 +77,45 @@ namespace Up.Services
                         SachId = x.SachId,
                         Gia = x.Sach.Gia,
                         Name = x.Sach.Name
-                    }).ToList()
+                    }).ToList(),
+                    SachIds = SachIds
                 };
             }
-            catch(Exception ex)
+            catch (Exception exception)
             {
-                throw new Exception(ex.Message);
+                throw new Exception("Lỗi khi tạo mới: " + exception.Message);
             }
         }
 
         public async Task<bool> DeleteLopHocAsync(Guid LopHocId, string LoggedEmployee)
         {
-            var item = await _context.LopHocs
+            try
+            {
+                var item = await _context.LopHocs
                                     .Where(x => x.LopHocId == LopHocId)
                                     .SingleOrDefaultAsync();
 
-            if (item == null) return false;
+                if (item == null)
+                    throw new Exception("Không tìm thấy Lớp Học !!!");
 
-            var _lopHoc_Sach = await _context.LopHoc_Sachs
-                                            .Where(x => x.LopHocId == item.LopHocId)
-                                            .ToListAsync();
+                var _lopHoc_Sach = await _context.LopHoc_Sachs
+                                                .Where(x => x.LopHocId == item.LopHocId)
+                                                .ToListAsync();
 
-            _context.LopHoc_Sachs.RemoveRange(_lopHoc_Sach);
+                if (_lopHoc_Sach.Any())
+                    _context.LopHoc_Sachs.RemoveRange(_lopHoc_Sach);
 
-            item.IsDisabled = true;
-            item.UpdatedBy = LoggedEmployee;
-            item.UpdatedDate = DateTime.Now;
+                item.IsDisabled = true;
+                item.UpdatedBy = LoggedEmployee;
+                item.UpdatedDate = DateTime.Now;
 
-            var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Lỗi khi xóa : " + exception.Message);
+            }
         }
 
         public async Task<List<LopHocViewModel>> GetLopHocAsync()
@@ -149,33 +154,58 @@ namespace Up.Services
         }
 
         public async Task<LopHocViewModel> UpdateLopHocAsync(Guid LopHocId, string Name, Guid KhoaHocId, Guid NgayHocId,
-            Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, DateTime? NgayKetThuc, bool HuyLop, bool TotNghiep, string LoggedEmployee)
+            Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, DateTime? NgayKetThuc,
+            bool HuyLop, bool TotNghiep, Guid[] SachIds, string LoggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name) || KhoaHocId == null || NgayHocId == null || GioHocId == null || NgayKhaiGiang == null || HocPhiId == null)
-                return null;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(Name) || KhoaHocId == null || NgayHocId == null || GioHocId == null || NgayKhaiGiang == null || HocPhiId == null)
+                    throw new Exception("Tên Lớp Học, Khóa Học, Ngày Học, Giờ Học, Ngày Khai Giảng không được để trống !!!");
 
-            var item = await _context.LopHocs
-                                    .Where(x => x.LopHocId == LopHocId)
-                                    .SingleOrDefaultAsync();
+                var item = await _context.LopHocs
+                                        .Where(x => x.LopHocId == LopHocId)
+                                        .SingleOrDefaultAsync();
 
-            if (item == null) return null;
+                if (item == null)
+                    throw new Exception("Không tìm thấy Lớp Học !!!");
 
-            item.Name = Name;
-            item.KhoaHocId = KhoaHocId;
-            item.NgayHocId = NgayHocId;
-            item.GioHocId = GioHocId;
-            item.NgayKhaiGiang = NgayKhaiGiang;
-            item.UpdatedBy = LoggedEmployee;
-            item.UpdatedDate = DateTime.Now;
-            item.IsCanceled = HuyLop;
-            item.IsGraduated = TotNghiep;
-            item.HocPhiId = HocPhiId;
+                item.Name = Name;
+                item.KhoaHocId = KhoaHocId;
+                item.NgayHocId = NgayHocId;
+                item.GioHocId = GioHocId;
+                item.NgayKhaiGiang = NgayKhaiGiang;
+                item.UpdatedBy = LoggedEmployee;
+                item.UpdatedDate = DateTime.Now;
+                item.IsCanceled = HuyLop;
+                item.IsGraduated = TotNghiep;
+                item.HocPhiId = HocPhiId;
 
-            if (NgayKetThuc != null)
-                item.NgayKetThuc = NgayKetThuc;
+                if (NgayKetThuc != null)
+                    item.NgayKetThuc = NgayKetThuc;
 
-            var saveResult = await _context.SaveChangesAsync();
-            if (saveResult == 1)
+                var _lopHoc_Sach = await _context.LopHoc_Sachs
+                                                    .Where(x => x.LopHocId == item.LopHocId)
+                                                    .ToListAsync();
+
+                if (_lopHoc_Sach.Any())
+                    _context.LopHoc_Sachs.RemoveRange(_lopHoc_Sach);
+
+                if (SachIds.Length > 0)
+                {
+                    foreach (Guid sach in SachIds)
+                    {
+                        LopHoc_Sach lopHoc_Sach = new LopHoc_Sach();
+                        lopHoc_Sach.LopHoc_SachId = new Guid();
+                        lopHoc_Sach.LopHocId = item.LopHocId;
+                        lopHoc_Sach.SachId = sach;
+                        lopHoc_Sach.CreatedBy = LoggedEmployee;
+                        lopHoc_Sach.CreatedDate = DateTime.Now;
+
+                        _context.LopHoc_Sachs.Add(lopHoc_Sach);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
                 return new LopHocViewModel
                 {
                     LopHocId = item.LopHocId,
@@ -193,10 +223,19 @@ namespace Up.Services
                     IsCanceled = item.IsCanceled,
                     IsGraduated = item.IsGraduated,
                     KhoaHoc = _context.KhoaHocs.Find(item.KhoaHocId).Name,
-                    NgayKetThuc = item.NgayKetThuc != null ? ((DateTime)item.NgayKetThuc).ToString("dd/MM/yyyy") : ""
+                    SachIds = SachIds,
+                    NgayKetThuc = item.NgayKetThuc != null ? ((DateTime)item.NgayKetThuc).ToString("dd/MM/yyyy") : "",
+                    SachList = item.LopHoc_Sachs.Select(x => new SachViewModel {
+                        Gia = x.Sach.Gia,
+                        Name = x.Sach.Name,
+                        SachId = x.SachId
+                    }).ToList()
                 };
-            else
-                return null;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Cập nhật lỗi: " + exception.Message);
+            }
         }
     }
 }

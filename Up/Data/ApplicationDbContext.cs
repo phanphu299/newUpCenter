@@ -27,6 +27,27 @@ namespace Up.Data
             //	...				
 
             builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.Admin, NormalizedName = Constants.Admin.ToUpper() });
+
+            // LOPHOC RELATIONSHIPS
+            builder.Entity<LopHoc>()
+                .HasOne(p => p.KhoaHoc)
+                .WithMany(b => b.LopHocs)
+                .HasForeignKey(p => p.KhoaHocId);
+
+            builder.Entity<LopHoc>()
+                .HasOne(p => p.NgayHoc)
+                .WithMany(b => b.LopHocs)
+                .HasForeignKey(p => p.NgayHocId);
+
+            builder.Entity<LopHoc>()
+                .HasOne(p => p.GioHoc)
+                .WithMany(b => b.LopHocs)
+                .HasForeignKey(p => p.GioHocId);
+
+            builder.Entity<LopHoc>()
+                .HasOne(p => p.HocPhi)
+                .WithMany(b => b.LopHocs)
+                .HasForeignKey(p => p.HocPhiId);
         }
     }
 }

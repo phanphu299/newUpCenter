@@ -39,16 +39,36 @@ namespace Up.Controllers
             {
                 return RedirectToAction("Index");
             }
-
-            DateTime _ngayKhaiGiang = Convert.ToDateTime(model.NgayKhaiGiang, System.Globalization.CultureInfo.InvariantCulture);
-
-            var successful = await _lopHocService.CreateLopHocAsync(model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang, model.SachIds, currentUser.Email);
-            if (successful == null)
+            
+            try
             {
-                return BadRequest("Thêm mới lỗi !!!");
-            }
+                DateTime _ngayKhaiGiang = Convert.ToDateTime(model.NgayKhaiGiang, System.Globalization.CultureInfo.InvariantCulture);
 
-            return Json(successful);
+                var successful = await _lopHocService.CreateLopHocAsync(model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang, model.SachIds, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Thêm mới lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Thêm mới thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpDelete]
@@ -65,22 +85,32 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            //var successful = await _lopHocService.DeleteLopHocAsync(model.LopHocId, currentUser.Email);
-            //if (!successful)
-            //{
-            //    return StatusCode(400, "There was a problem saving record in the database. Please try again.");
-            //}
-
-            //return Ok(200);
-
-            var modelTest = await _lopHocService.GetLopHocAsync();
-            var Result = new Models.ResultModel
+            try
             {
-                Status = "OK",
-                Message = "OK",
-                Result = modelTest
-            };
-            return Json(Result);
+                var successful = await _lopHocService.DeleteLopHocAsync(model.LopHocId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpPut]
@@ -97,18 +127,40 @@ namespace Up.Controllers
                 return RedirectToAction("LopHocIndex");
             }
 
-            DateTime _ngayKhaiGiang = Convert.ToDateTime(model.NgayKhaiGiang, System.Globalization.CultureInfo.InvariantCulture);
-            DateTime? _ngayKetThuc = null;
-            if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
-                _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
-
-            var successful = await _lopHocService.UpdateLopHocAsync(model.LopHocId, model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang, _ngayKetThuc, model.IsCanceled, model.IsGraduated, currentUser.Email);
-            if (successful == null)
+            try
             {
-                return Json("Cập nhật lỗi !!!");
-            }
+                DateTime _ngayKhaiGiang = Convert.ToDateTime(model.NgayKhaiGiang, System.Globalization.CultureInfo.InvariantCulture);
+                DateTime? _ngayKetThuc = null;
+                if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
+                    _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
 
-            return Json(successful);
+                var successful = await _lopHocService.UpdateLopHocAsync(model.LopHocId, model.Name,
+                    model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang,
+                    _ngayKetThuc, model.IsCanceled, model.IsGraduated, model.SachIds, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
     }
 }

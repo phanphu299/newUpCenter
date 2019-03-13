@@ -108,6 +108,7 @@
 
     methods: {
         async onUpdate(item) {
+            console.log(item)
             let that = this;
             if (item.name === '' || item.khoaHocId === '' || item.ngayHocId === '' || item.gioHocId === '') {
                 this.alertEdit = true;
@@ -126,23 +127,32 @@
                         NgayKhaiGiang: item.ngayKhaiGiang,
                         NgayKetThuc: item.ngayKetThuc,
                         IsCanceled: item.isCanceled,
-                        IsGraduated: item.isGraduated
+                        IsGraduated: item.isGraduated,
+                        SachIds: item.sachIds
                     }
                 })
-                    .then(function (response) {
-                        Object.assign(that.khoaHocItems[that.editedIndex], response.data);
+                .then(function (response) {
+                    if (response.data.status === "OK") {
+                        Object.assign(that.khoaHocItems[that.editedIndex], response.data.result);
                         that.snackbar = true;
                         that.messageText = 'Cập nhật thành công !!!';
                         that.color = 'success';
                         that.dialogEdit = false;
-                    })
-                    .catch(function (error) {
-                        console.log(error);
+                    }
+                    else {
                         that.snackbar = true;
-                        that.messageText = 'Cập nhật lỗi: ' + error;
+                        that.messageText = response.data.message;
                         that.color = 'error';
                         that.dialogEdit = false;
-                    });
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Cập nhật lỗi: ' + error;
+                    that.color = 'error';
+                    that.dialogEdit = false;
+                });
             }
         },
 
@@ -180,9 +190,10 @@
                         SachIds: that.newItem.sach
                     }
                 })
-                    .then(function (response) {
-                        console.log(response);
-                        that.khoaHocItems.splice(0, 0, response.data);
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.khoaHocItems.splice(0, 0, response.data.result);
                         that.snackbar = true;
                         that.messageText = 'Thêm mới thành công !!!';
                         that.color = 'success';
@@ -191,13 +202,19 @@
                         that.newItem.gioHoc = '';
                         that.newItem.ngayHoc = '';
                         that.newItem.ngayKhaiGiang = new Date().toISOString().substr(0, 10);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
+                    }
+                    else {
                         that.snackbar = true;
-                        that.messageText = 'Thêm mới lỗi: ' + error;
+                        that.messageText = response.data.message;
                         that.color = 'error';
-                    });
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Thêm mới lỗi: ' + error;
+                    that.color = 'error';
+                });
             }
         },
 
@@ -214,20 +231,26 @@
                     LopHocId: item.lopHocId
                 }
             })
-                .then(function (response) {
-                    console.log(response);
+            .then(function (response) {
+                if (response.data.status === "OK") {
                     that.khoaHocItems.splice(that.khoaHocItems.indexOf(item), 1);
                     that.snackbar = true;
                     that.messageText = 'Xóa thành công !!!';
                     that.color = 'success';
                     that.deleteDialog = false;
-                })
-                .catch(function (error) {
-                    console.log(error);
+                }
+                else {
                     that.snackbar = true;
-                    that.messageText = 'Xóa lỗi: ' + error;
+                    that.messageText = response.data.message;
                     that.color = 'error';
-                });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                that.snackbar = true;
+                that.messageText = 'Xóa lỗi: ' + error;
+                that.color = 'error';
+            });
         }
     }
 });

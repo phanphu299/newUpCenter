@@ -7,6 +7,11 @@
 
             <v-card>
                 <v-card-title>
+                    <v-btn color="success"
+                           class="white--text">
+                        Thêm Từ Excel
+                        <v-icon right dark>attach_file</v-icon>
+                    </v-btn>
                     <v-dialog v-model="dialog" persistent max-width="600px">
                         <v-btn color="primary"
                                slot="activator"
@@ -248,7 +253,7 @@
                                                     </v-select>
                                                 </v-flex>
                                                 <v-flex xs12 sm6>
-                                                    <v-select v-model="itemToEdit.SachIds"
+                                                    <v-select v-model="itemToEdit.sachIds"
                                                               :items="itemSach"
                                                               item-text="name"
                                                               item-value="sachId"
@@ -260,8 +265,9 @@
                                                             <v-chip :selected="data.selected"
                                                                     color="green"
                                                                     text-color="white">
-                                                                <strong>{{ data.item }}</strong>&nbsp;
-                                                                
+                                                                <strong>{{ data.item.name }}</strong>&nbsp;
+                                                                <span>({{ formatNumber(data.item.gia) }})</span>
+
                                                             </v-chip>
                                                         </template>
                                                     </v-select>
@@ -301,8 +307,8 @@
                                     <v-icon color="grey lighten-1" dark v-on="on">library_books</v-icon>
                                 </template>
                                 <div v-for="sach in props.item.sachList">
-                                    <span>{{ sach.name }} - {{ formatNumber(sach.gia) }}</span>
-                                </div>
+                                    <strong>{{ sach.name }}</strong><span> - {{ formatNumber(sach.gia) }}</span>
+</div>
                             </v-tooltip>
                         </td>
                         <td>{{ props.item.khoaHoc }}</td>
