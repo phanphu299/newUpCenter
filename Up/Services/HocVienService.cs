@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -72,19 +73,111 @@ namespace Up.Services
             }
         }
 
-        public Task<bool> DeleteHocVienAsync(Guid HocVienId, string LoggedEmployee)
+        public async Task<bool> DeleteHocVienAsync(Guid HocVienId, string LoggedEmployee)
         {
-            throw new NotImplementedException();
+            //var hocVien = await _context.HocViens.Where(x => x.HocVienId == HocVienId).ToListAsync();
+            //if (lopHoc.Any())
+            //    throw new Exception("Hãy xóa những lớp học có học phí này trước !!!");
+
+            var item = await _context.HocViens
+                                    .Where(x => x.HocVienId == HocVienId)
+                                    .SingleOrDefaultAsync();
+
+            if (item == null)
+                throw new Exception("Không tìm thấy Học Viên !!!");
+
+            item.IsDisabled = true;
+            item.UpdatedBy = LoggedEmployee;
+            item.UpdatedDate = DateTime.Now;
+
+            var saveResult = await _context.SaveChangesAsync();
+            return saveResult == 1;
         }
 
-        public Task<List<HocVienViewModel>> GetHocVienAsync()
+        public async Task<List<HocVienViewModel>> GetHocVienAsync()
         {
-            throw new NotImplementedException();
+            return await _context.HocViens
+                .Where(x => x.IsDisabled == false)
+                .Select(x => new HocVienViewModel
+                {
+                    CreatedBy = x.CreatedBy,
+                    CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
+                    EnglishName  = x.EnglishName,
+                    FacebookAccount = x.FacebookAccount,
+                    FullName = x.FullName,
+                    HocVienId = x.HocVienId,
+                    IsAppend = x.IsAppend,
+                    IsDisabled = x.IsDisabled,
+                    NgaySinh = x.NgaySinh.ToString("dd/MM/yyyy"),
+                    ParentFacebookAccount = x.ParentFacebookAccount,
+                    ParentFullName = x.ParentFullName,
+                    ParentPhone = x.ParentPhone,
+                    Phone = x.Phone,
+                    QuanHe = x.QuanHe.Name,
+                    QuanHeId = x.QuanHeId,
+                    UpdatedBy = x.UpdatedBy,
+                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
+                })
+                .ToListAsync();
         }
 
-        public Task<bool> UpdateHocVienAsync(Guid HocVienId, string Name, string LoggedEmployee)
+        public async Task<HocVienViewModel> UpdateHocVienAsync(Guid HocVienId, string FullName, string Phone, string FacebookAccount,
+           string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid QuanHeId, string EnglishName,
+           DateTime NgaySinh, bool IsAppend, string LoggedEmployee)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(FullName) || QuanHeId == null || string.IsNullOrWhiteSpace(Phone)
+                    || string.IsNullOrWhiteSpace(FacebookAccount) || string.IsNullOrWhiteSpace(ParentFullName) 
+                    || string.IsNullOrWhiteSpace(ParentPhone) || string.IsNullOrWhiteSpace(ParentFacebookAccount) 
+                    || string.IsNullOrWhiteSpace(EnglishName) || NgaySinh == null)
+                    throw new Exception("Tên Học Viên, Quan Hệ, SĐT, FB, Tên Phụ Huynh, Quan Hệ, SĐT Phụ Huynh, FB Phụ Huynh, Ngày Khai Giảng không được để trống !!!");
+
+                var item = await _context.HocViens
+                                        .Where(x => x.HocVienId == HocVienId)
+                                        .SingleOrDefaultAsync();
+
+                if (item == null)
+                    throw new Exception("Không tìm thấy Học Viên!!!");
+
+                item.FullName = FullName;
+                item.QuanHeId = QuanHeId;
+                item.Phone = Phone;
+                item.FacebookAccount = FacebookAccount;
+                item.ParentFullName = ParentFullName;
+                item.ParentPhone = ParentPhone;
+                item.ParentFacebookAccount = ParentFacebookAccount;
+                item.EnglishName = EnglishName;
+                item.NgaySinh = NgaySinh;
+                item.UpdatedBy = LoggedEmployee;
+                item.UpdatedDate = DateTime.Now;
+                item.IsAppend = IsAppend;
+
+                await _context.SaveChangesAsync();
+                return new HocVienViewModel
+                {
+                    FullName = item.FullName,
+                    NgaySinh = item.NgaySinh.ToString("dd/MM/yyyy"),
+                    EnglishName = item.EnglishName,
+                    ParentFacebookAccount = item.ParentFacebookAccount,
+                    ParentPhone = item.ParentPhone,
+                    IsAppend = item.IsAppend,
+                    HocVienId = item.HocVienId,
+                    ParentFullName = item.ParentFullName,
+                    FacebookAccount = item.FacebookAccount,
+                    Phone = item.Phone,
+                    QuanHeId = item.QuanHeId,
+                    UpdatedBy = item.UpdatedBy,
+                    UpdatedDate = item.UpdatedDate?.ToString("dd/MM/yyyy"),
+                    QuanHe = _context.QuanHes.Find(item.QuanHeId).Name,
+                    CreatedBy = item.CreatedBy,
+                    CreatedDate = item.CreatedDate.ToString("dd/MM/yyyy"),
+                };
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Cập nhật lỗi: " + exception.Message);
+            }
         }
     }
 }

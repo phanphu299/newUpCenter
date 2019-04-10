@@ -224,11 +224,13 @@ namespace Up.Services
                     KhoaHoc = _context.KhoaHocs.Find(item.KhoaHocId).Name,
                     SachIds = SachIds,
                     NgayKetThuc = item.NgayKetThuc != null ? ((DateTime)item.NgayKetThuc).ToString("dd/MM/yyyy") : "",
-                    SachList = item.LopHoc_Sachs.Select(x => new SachViewModel {
-                        Gia = x.Sach.Gia,
-                        Name = x.Sach.Name,
-                        SachId = x.SachId
-                    }).ToList()
+                    SachList = _context.LopHoc_Sachs
+                                        .Where(x => x.LopHocId == item.LopHocId)
+                                        .Select(x => new SachViewModel {
+                                            Gia = x.Sach.Gia,
+                                            Name = x.Sach.Name,
+                                            SachId = x.SachId
+                                        }).ToList()
                 };
             }
             catch (Exception exception)

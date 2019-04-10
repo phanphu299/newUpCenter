@@ -1,19 +1,21 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Up.Services;
 
 namespace Up.Controllers
 {
-    public class LopHocController : Controller
+    public class HocVienController : Controller
     {
-        private readonly ILopHocService _lopHocService;
+        private readonly IHocVienService _hocVienService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public LopHocController(ILopHocService lopHocService, UserManager<IdentityUser> userManager)
+        public HocVienController(IHocVienService hocVienService, UserManager<IdentityUser> userManager)
         {
-            _lopHocService = lopHocService;
+            _hocVienService = hocVienService;
             _userManager = userManager;
         }
 
@@ -25,26 +27,27 @@ namespace Up.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetLopHocAsync()
+        public async Task<IActionResult> GetHocVienAsync()
         {
-            var model = await _lopHocService.GetLopHocAsync();
+            var model = await _hocVienService.GetHocVienAsync();
             return Json(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateLopHocAsync([FromBody]Models.LopHocViewModel model)
+        public async Task<IActionResult> CreateHocVienAsync([FromBody]Models.HocVienViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
                 return RedirectToAction("Index");
             }
-            
+
             try
             {
-                DateTime _ngayKhaiGiang = Convert.ToDateTime(model.NgayKhaiGiang, System.Globalization.CultureInfo.InvariantCulture);
+                DateTime _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
 
-                var successful = await _lopHocService.CreateLopHocAsync(model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang, model.SachIds, currentUser.Email);
+                var successful = await _hocVienService.CreateHocVienAsync(model.FullName, model.Phone, model.FacebookAccount, model.ParentFullName,
+                    model.ParentPhone, model.ParentFacebookAccount, model.QuanHeId, model.EnglishName, _ngaySinh, model.IsAppend, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -72,9 +75,9 @@ namespace Up.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteLopHocAsync([FromBody]Models.LopHocViewModel model)
+        public async Task<IActionResult> DeleteHocVienAsync([FromBody]Models.HocVienViewModel model)
         {
-            if (model.LopHocId == Guid.Empty)
+            if (model.HocVienId == Guid.Empty)
             {
                 return RedirectToAction("Index");
             }
@@ -87,7 +90,7 @@ namespace Up.Controllers
 
             try
             {
-                var successful = await _lopHocService.DeleteLopHocAsync(model.LopHocId, currentUser.Email);
+                var successful = await _hocVienService.DeleteHocVienAsync(model.HocVienId, currentUser.Email);
                 if (!successful)
                 {
                     return Json(new Models.ResultModel
@@ -114,9 +117,9 @@ namespace Up.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateLopHocAsync([FromBody]Models.LopHocViewModel model)
+        public async Task<IActionResult> UpdateHocVienAsync([FromBody]Models.HocVienViewModel model)
         {
-            if (model.LopHocId == Guid.Empty)
+            if (model.HocVienId == Guid.Empty)
             {
                 return RedirectToAction("Index");
             }
@@ -129,14 +132,11 @@ namespace Up.Controllers
 
             try
             {
-                DateTime _ngayKhaiGiang = Convert.ToDateTime(model.NgayKhaiGiang, System.Globalization.CultureInfo.InvariantCulture);
-                DateTime? _ngayKetThuc = null;
-                if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
-                    _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
-
-                var successful = await _lopHocService.UpdateLopHocAsync(model.LopHocId, model.Name,
-                    model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang,
-                    _ngayKetThuc, model.IsCanceled, model.IsGraduated, model.SachIds, currentUser.Email);
+                DateTime _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
+                
+                var successful = await _hocVienService.UpdateHocVienAsync(model.HocVienId, model.FullName, model.Phone,
+                   model.FacebookAccount, model.ParentFullName, model.ParentPhone, model.ParentFacebookAccount, model.QuanHeId,
+                   model.EnglishName, _ngaySinh, model.IsAppend, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
