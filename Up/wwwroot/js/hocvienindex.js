@@ -84,16 +84,16 @@
                     method: 'put',
                     url: '/HocVien/UpdateHocVienAsync',
                     data: {
+                        HocVienId: item.hocVienId,
                         FullName: item.fullName,
                         EnglishName: item.englishName,
                         Phone: item.phone,
                         FacebookAccount: item.facebookAccount,
                         ParentFullName: item.parentFullName,
-                        QuanHeId: item.quanHe,
+                        QuanHeId: item.quanHeId,
                         NgaySinh: item.ngaySinh,
                         ParentPhone: item.parentPhone,
                         IsAppend: item.isAppend,
-                        IsGraduated: item.isGraduated,
                         ParentFacebookAccount: item.parentFacebookAccount
                     }
                 })
