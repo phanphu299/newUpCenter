@@ -15,6 +15,7 @@ namespace Up.Data.Entities
         public Guid NgayHocId { get; set; }
         public Guid GioHocId { get; set; }
         public Guid HocPhiId { get; set; }
+        public Guid GiaoVienId { get; set; }
         public DateTime NgayKhaiGiang { get; set; }
         public DateTime? NgayKetThuc { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -30,6 +31,8 @@ namespace Up.Data.Entities
         public NgayHoc NgayHoc { get; set; }
         [ForeignKey("HocPhiId")]
         public HocPhi HocPhi { get; set; }
+        [ForeignKey("GiaoVienId")]
+        public GiaoVien GiaoVien { get; set; }
         public ICollection<LopHoc_Sach> LopHoc_Sachs { get; set; }
     }
 }
