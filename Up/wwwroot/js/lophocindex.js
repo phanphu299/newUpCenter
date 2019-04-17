@@ -20,6 +20,7 @@
             khoaHoc: "",
             ngayHoc: "",
             gioHoc: "",
+            giaoVien: "",
             sach: [],
             ngayKhaiGiang: new Date().toISOString().substr(0, 10)
         },
@@ -35,6 +36,7 @@
             },
             { text: 'Tên Lớp Học', value: 'name', align: 'left', sortable: false },
             { text: 'Sách', value: '', align: 'left', sortable: false },
+            { text: 'Giáo Viên', value: 'giaoVien', align: 'left', sortable: false },
             { text: 'Khóa Học', value: 'khoaHoc', align: 'left', sortable: false },
             { text: 'Ngày Học', value: 'ngayHoc', align: 'left', sortable: false },
             { text: 'Giờ Học', value: 'gioHoc', align: 'left', sortable: false },
@@ -53,7 +55,8 @@
         itemGioHoc: [],
         itemNgayHoc: [],
         itemHocPhi: [],
-        itemSach: []
+        itemSach: [],
+        itemGiaoVien: []
     },
     async beforeCreate() {
         let that = this;
@@ -104,13 +107,21 @@
             .catch(function (error) {
                 console.log(error);
             });
+
+        await axios.get('/GiaoVien/GetGiaoVienAsync')
+            .then(function (response) {
+                that.itemGiaoVien = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     },
 
     methods: {
         async onUpdate(item) {
             console.log(item)
             let that = this;
-            if (item.name === '' || item.khoaHocId === '' || item.ngayHocId === '' || item.gioHocId === '') {
+            if (item.name === '' || item.khoaHocId === '' || item.ngayHocId === '' || item.gioHocId === '' || item.giaoVienId === '') {
                 this.alertEdit = true;
             }
             else {
@@ -124,6 +135,7 @@
                         GioHocId: item.gioHocId,
                         NgayHocId: item.ngayHocId,
                         HocPhiId: item.hocPhiId,
+                        GiaoVienId: item.giaoVienId,
                         NgayKhaiGiang: item.ngayKhaiGiang,
                         NgayKetThuc: item.ngayKetThuc,
                         IsCanceled: item.isCanceled,
@@ -171,7 +183,7 @@
         },
 
         async onSave(item) {
-            if (this.newItem.name === '' || this.newItem.khoaHoc === '' || this.newItem.ngayHoc === '' || this.newItem.gioHoc === '') {
+            if (this.newItem.name === '' || this.newItem.khoaHoc === '' || this.newItem.ngayHoc === '' || this.newItem.gioHoc === '' || this.newItem.giaoVien === '') {
                 this.alert = true;
             }
             else {
@@ -187,7 +199,8 @@
                         NgayHocId: that.newItem.ngayHoc,
                         HocPhiId: that.newItem.hocPhi,
                         NgayKhaiGiang: that.newItem.ngayKhaiGiang,
-                        SachIds: that.newItem.sach
+                        SachIds: that.newItem.sach,
+                        GiaoVienId: that.newItem.giaoVien
                     }
                 })
                 .then(function (response) {

@@ -76,7 +76,15 @@
                                             </v-menu>
                                         </v-flex>
 
-                                        <v-flex xs12 sm12>
+                                        <v-flex xs12 sm4>
+                                            <v-select :items="itemGiaoVien"
+                                                      item-text="name"
+                                                      item-value="giaoVienId"
+                                                      v-model="newItem.giaoVien"
+                                                      label="Chọn Giáo Viên *">
+                                            </v-select>
+                                        </v-flex>
+                                        <v-flex xs12 sm8>
                                             <v-select v-model="newItem.sach"
                                                       :items="itemSach"
                                                       item-text="name"
@@ -127,9 +135,9 @@
                     <template slot="items" slot-scope="props">
                         <td class="justify-center layout px-0">
 
-                            <v-btn flat icon 
-                                   color="red" 
-                                   v-on:click.stop="deleteDialog = true" 
+                            <v-btn flat icon
+                                   color="red"
+                                   v-on:click.stop="deleteDialog = true"
                                    v-on:click="itemToDelete = props.item">
                                 <v-icon>delete</v-icon>
                             </v-btn>
@@ -153,6 +161,7 @@
                                 </div>
                             </v-tooltip>
                         </td>
+                        <td>{{ props.item.giaoVien }}</td>
                         <td>{{ props.item.khoaHoc }}</td>
                         <td>{{ props.item.ngayHoc }}</td>
                         <td>{{ props.item.gioHoc }}</td>
@@ -297,7 +306,15 @@
                                 <v-switch v-model="itemToEdit.isGraduated" color="success" label="Tốt Nghiệp"></v-switch>
                             </v-flex>
 
-                            <v-flex xs12 sm12>
+                            <v-flex xs12 sm4>
+                                <v-select :items="itemGiaoVien"
+                                          item-text="name"
+                                          item-value="giaoVienId"
+                                          v-model="itemToEdit.giaoVienId"
+                                          label="Chọn Giáo Viên *">
+                                </v-select>
+                            </v-flex>
+                            <v-flex xs12 sm8>
                                 <v-select v-model="itemToEdit.sachIds"
                                           :items="itemSach"
                                           item-text="name"

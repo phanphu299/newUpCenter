@@ -153,7 +153,15 @@
                             that.snackbar = true;
                             that.messageText = 'Thêm mới thành công !!!';
                             that.color = 'success';
-                            that.newItem = '';
+                            that.newItem.name = '';
+                            that.newItem.phone = '';
+                            that.newItem.teachingRate = 0;
+                            that.newItem.tutoringRate = 0;
+                            that.newItem.basicSalary = 0;
+                            that.newItem.facebookAccount = '';
+                            that.newItem.diaChi = '';
+                            that.newItem.initialName = '';
+                            that.newItem.cmnd = '';
                         }
                         else {
                             that.snackbar = true;
