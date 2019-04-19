@@ -1,7 +1,8 @@
-﻿using System;
-
-namespace Up.Models
+﻿namespace Up.Models
 {
+    using System;
+    using System.Collections.Generic;
+
     public class HocVienViewModel
     {
         public Guid HocVienId { get; set; }
@@ -17,6 +18,8 @@ namespace Up.Models
         public string EnglishName { get; set; }
         public bool IsAppend { get; set; }
         public bool IsDisabled { get; set; }
+        public List<LopHocViewModel> LopHocList { get; set; }
+        public Guid[] LopHocIds { get; set; }
         public string CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedDate { get; set; }

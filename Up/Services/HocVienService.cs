@@ -20,7 +20,7 @@ namespace Up.Services
 
         public async Task<HocVienViewModel> CreateHocVienAsync(string FullName, string Phone, string FacebookAccount, 
             string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid QuanHeId, 
-            string EnglishName, DateTime NgaySinh, bool IsAppend, string LoggedEmployee)
+            string EnglishName, DateTime NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee)
         {
             try
             {
@@ -46,6 +46,21 @@ namespace Up.Services
 
                 _context.HocViens.Add(hocVien);
 
+                if (LopHocIds.Length > 0)
+                {
+                    foreach (Guid item in LopHocIds)
+                    {
+                        HocVien_LopHoc hocVien_LopHoc = new HocVien_LopHoc();
+                        hocVien_LopHoc.HocVien_LopHocId = new Guid();
+                        hocVien_LopHoc.HocVienId = hocVien.HocVienId;
+                        hocVien_LopHoc.LopHocId = item;
+                        hocVien_LopHoc.CreatedBy = LoggedEmployee;
+                        hocVien_LopHoc.CreatedDate = DateTime.Now;
+
+                        _context.HocVien_LopHocs.Add(hocVien_LopHoc);
+                    }
+                }
+
                 await _context.SaveChangesAsync();
 
                 return new HocVienViewModel
@@ -65,6 +80,12 @@ namespace Up.Services
                     Phone = hocVien.Phone,
                     HocVienId = hocVien.HocVienId,
                     QuanHe = _context.QuanHes.FindAsync(hocVien.QuanHeId).Result.Name,
+                    LopHocList = await _context.HocVien_LopHocs.Where(x => x.HocVienId == hocVien.HocVienId).Select(x => new LopHocViewModel
+                    {
+                        LopHocId = x.LopHocId,
+                        Name = x.LopHoc.Name
+                    }).ToListAsync(),
+                    LopHocIds = LopHocIds
                 };
             }
             catch (Exception exception)
@@ -116,14 +137,20 @@ namespace Up.Services
                     QuanHe = x.QuanHe.Name,
                     QuanHeId = x.QuanHeId,
                     UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
+                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
+                    LopHocIds = x.HocVien_LopHocs.Select(p => p.LopHocId).ToArray(),
+                    LopHocList = x.HocVien_LopHocs.Select(p => new LopHocViewModel
+                    {
+                        LopHocId = p.LopHocId,
+                        Name = p.LopHoc.Name
+                    }).ToList()
                 })
                 .ToListAsync();
         }
 
         public async Task<HocVienViewModel> UpdateHocVienAsync(Guid HocVienId, string FullName, string Phone, string FacebookAccount,
            string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid QuanHeId, string EnglishName,
-           DateTime NgaySinh, bool IsAppend, string LoggedEmployee)
+           DateTime NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee)
         {
             try
             {
@@ -153,6 +180,28 @@ namespace Up.Services
                 item.UpdatedDate = DateTime.Now;
                 item.IsAppend = IsAppend;
 
+                var _hocVien_LopHoc = await _context.HocVien_LopHocs
+                                                    .Where(x => x.HocVienId == item.HocVienId)
+                                                    .ToListAsync();
+
+                if (_hocVien_LopHoc.Any())
+                    _context.HocVien_LopHocs.RemoveRange(_hocVien_LopHoc);
+
+                if (LopHocIds.Length > 0)
+                {
+                    foreach (Guid lophoc in LopHocIds)
+                    {
+                        HocVien_LopHoc hocVien_LopHoc = new HocVien_LopHoc();
+                        hocVien_LopHoc.HocVienId = new Guid();
+                        hocVien_LopHoc.HocVienId = item.HocVienId;
+                        hocVien_LopHoc.LopHocId = lophoc;
+                        hocVien_LopHoc.CreatedBy = LoggedEmployee;
+                        hocVien_LopHoc.CreatedDate = DateTime.Now;
+
+                        _context.HocVien_LopHocs.Add(hocVien_LopHoc);
+                    }
+                }
+
                 await _context.SaveChangesAsync();
                 return new HocVienViewModel
                 {
@@ -172,6 +221,14 @@ namespace Up.Services
                     QuanHe = _context.QuanHes.FindAsync(item.QuanHeId).Result.Name,
                     CreatedBy = item.CreatedBy,
                     CreatedDate = item.CreatedDate.ToString("dd/MM/yyyy"),
+                    LopHocIds = LopHocIds,
+                    LopHocList = await _context.HocVien_LopHocs
+                                        .Where(x => x.HocVienId == item.HocVienId)
+                                        .Select(x => new LopHocViewModel
+                                        {
+                                            Name = x.LopHoc.Name,
+                                            LopHocId = x.LopHocId
+                                        }).ToListAsync()
                 };
             }
             catch (Exception exception)

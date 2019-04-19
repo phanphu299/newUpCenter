@@ -79,6 +79,25 @@
                                         <v-flex xs12 sm4>
                                             <v-switch v-model="newItem.isAppend" color="success" label="Chèn"></v-switch>
                                         </v-flex>
+                                        <v-flex xs12 sm8>
+                                            <v-select v-model="newItem.lopHoc"
+                                                      :items="itemLopHoc"
+                                                      item-text="name"
+                                                      item-value="lopHocId"
+                                                      attach
+                                                      chips
+                                                      label="Chọn Lớp Học"
+                                                      multiple>
+                                                <template v-slot:selection="data">
+                                                    <v-chip :selected="data.selected"
+                                                            color="green"
+                                                            text-color="white">
+                                                        <span>({{ data.item.name }})</span>
+
+                                                    </v-chip>
+                                                </template>
+                                            </v-select>
+                                        </v-flex>
                                     </v-layout>
                                 </v-container>
                                 <small>* bắt buộc</small>
@@ -127,6 +146,16 @@
 
                         </td>
                         <td>{{ props.item.fullName }}</td>
+                        <td>
+                            <v-tooltip top v-if="props.item.lopHocList.length > 0">
+                                <template v-slot:activator="{ on }">
+                                    <v-icon color="grey lighten-1" dark v-on="on">class</v-icon>
+                                </template>
+                                <div v-for="lop in props.item.lopHocList">
+                                    <strong>{{ lop.name }}</strong>
+                                </div>
+                            </v-tooltip>
+                        </td>
                         <td>{{ props.item.ngaySinh }}</td>
                         <td>{{ props.item.englishName }}</td>
                         <td>{{ props.item.phone }}</td>
@@ -243,8 +272,25 @@
                             <v-flex xs12 sm4>
                                 <v-switch v-model="itemToEdit.isAppend" color="success" label="Chèn"></v-switch>
                             </v-flex>
+                            <v-flex xs12 sm8>
+                                <v-select v-model="itemToEdit.lopHocIds"
+                                          :items="itemLopHoc"
+                                          item-text="name"
+                                          item-value="lopHocId"
+                                          attach
+                                          chips
+                                          label="Chọn Lớp Học"
+                                          multiple>
+                                    <template v-slot:selection="data">
+                                        <v-chip :selected="data.selected"
+                                                color="green"
+                                                text-color="white">
+                                            <span>({{ data.item.name }})</span>
 
-
+                                        </v-chip>
+                                    </template>
+                                </v-select>
+                            </v-flex>
                         </v-layout>
                     </v-container>
                     <small>* bắt buộc</small>

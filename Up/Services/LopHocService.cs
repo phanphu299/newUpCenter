@@ -1,14 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Up.Data;
-using Up.Data.Entities;
-using Up.Models;
-
-namespace Up.Services
+﻿namespace Up.Services
 {
+    using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Up.Data;
+    using Up.Data.Entities;
+    using Up.Models;
+
     public class LopHocService : ILopHocService
     {
         private readonly ApplicationDbContext _context;
@@ -118,6 +118,18 @@ namespace Up.Services
             {
                 throw new Exception("Lỗi khi xóa : " + exception.Message);
             }
+        }
+
+        public async Task<List<LopHocViewModel>> GetAvailableLopHocAsync()
+        {
+            return await _context.LopHocs
+                .Where(x => x.IsDisabled == false && x.IsCanceled == false && x.IsGraduated == false)
+                .Select(x => new LopHocViewModel
+                {
+                    Name = x.Name,
+                    LopHocId = x.LopHocId
+                })
+                .ToListAsync();
         }
 
         public async Task<List<LopHocViewModel>> GetLopHocAsync()

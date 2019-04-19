@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Up.Data.Entities
+﻿namespace Up.Data.Entities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class LopHoc
     {
         public Guid LopHocId { get; set; }
@@ -34,5 +34,6 @@ namespace Up.Data.Entities
         [ForeignKey("GiaoVienId")]
         public GiaoVien GiaoVien { get; set; }
         public ICollection<LopHoc_Sach> LopHoc_Sachs { get; set; }
+        public ICollection<LopHoc_DiemDanh> LopHoc_DiemDanhs { get; set; }
     }
 }

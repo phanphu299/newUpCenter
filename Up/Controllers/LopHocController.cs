@@ -31,6 +31,13 @@ namespace Up.Controllers
             return Json(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAvailableLopHocAsync()
+        {
+            var model = await _lopHocService.GetAvailableLopHocAsync();
+            return Json(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateLopHocAsync([FromBody]Models.LopHocViewModel model)
         {

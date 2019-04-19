@@ -10,10 +10,10 @@ namespace Up.Services
         Task<List<HocVienViewModel>> GetHocVienAsync();
         Task<HocVienViewModel> CreateHocVienAsync(string FullName, string Phone, string FacebookAccount,
            string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid QuanHeId, string EnglishName,
-           DateTime NgaySinh, bool IsAppend, string LoggedEmployee);
+           DateTime NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee);
         Task<HocVienViewModel> UpdateHocVienAsync(Guid HocVienId, string FullName, string Phone, string FacebookAccount,
            string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid QuanHeId, string EnglishName,
-           DateTime NgaySinh, bool IsAppend, string LoggedEmployee);
+           DateTime NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee);
         Task<bool> DeleteHocVienAsync(Guid HocVienId, string LoggedEmployee);
     }
 }

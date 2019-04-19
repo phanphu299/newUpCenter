@@ -19,9 +19,11 @@ namespace Up.Data
         public DbSet<HocPhi> HocPhis { get; set; }
         public DbSet<Sach> Sachs { get; set; }
         public DbSet<LopHoc_Sach> LopHoc_Sachs { get; set; }
+        public DbSet<HocVien_LopHoc> HocVien_LopHocs { get; set; }
         public DbSet<LopHoc> LopHocs { get; set; }
         public DbSet<HocVien> HocViens { get; set; }
         public DbSet<GiaoVien> GiaoViens { get; set; }
+        public DbSet<LopHoc_DiemDanh> LopHoc_DiemDanhs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

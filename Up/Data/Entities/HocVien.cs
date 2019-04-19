@@ -1,8 +1,10 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-
+﻿
 namespace Up.Data.Entities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class HocVien
     {
         public Guid HocVienId { get; set; }
@@ -24,5 +26,7 @@ namespace Up.Data.Entities
 
         [ForeignKey("QuanHeId")]
         public QuanHe QuanHe { get; set; }
+        public ICollection<LopHoc_DiemDanh> LopHoc_DiemDanhs { get; set; }
+        public ICollection<HocVien_LopHoc> HocVien_LopHocs { get; set; }
     }
 }

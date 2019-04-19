@@ -8,6 +8,7 @@ namespace Up.Services
     public interface ILopHocService
     {
         Task<List<LopHocViewModel>> GetLopHocAsync();
+        Task<List<LopHocViewModel>> GetAvailableLopHocAsync();
         Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId,
             Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, Guid[] SachIds, Guid GiaoVienId, string LoggedEmployee);
 

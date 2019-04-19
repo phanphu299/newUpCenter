@@ -23,6 +23,7 @@
             parentPhone: "",
             quanHe: "",
             parentFacebookAccount: "",
+            lopHoc: [],
             isAppend: false,
             ngaySinh: new Date().toISOString().substr(0, 10)
         },
@@ -37,6 +38,7 @@
                 value: ''
             },
             { text: 'Họ Tên', value: 'fullName', align: 'left', sortable: false },
+            { text: 'Lớp Học', value: '', align: 'left', sortable: false },
             { text: 'Ngày Sinh', value: 'ngaySinh', align: 'left', sortable: false },
             { text: 'English Name', value: 'englishName', align: 'left', sortable: false },
             { text: 'SĐT', value: 'phone', align: 'left', sortable: false },
@@ -52,7 +54,8 @@
             { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: false }
         ],
         khoaHocItems: [],
-        itemQuanHe: []
+        itemQuanHe: [],
+        itemLopHoc: []
     },
     async beforeCreate() {
         let that = this;
@@ -67,6 +70,14 @@
         await axios.get('/category/GetQuanHeAsync')
             .then(function (response) {
                 that.itemQuanHe = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        await axios.get('/LopHoc/GetAvailableLopHocAsync')
+            .then(function (response) {
+                that.itemLopHoc = response.data;
             })
             .catch(function (error) {
                 console.log(error);
@@ -94,7 +105,8 @@
                         NgaySinh: item.ngaySinh,
                         ParentPhone: item.parentPhone,
                         IsAppend: item.isAppend,
-                        ParentFacebookAccount: item.parentFacebookAccount
+                        ParentFacebookAccount: item.parentFacebookAccount,
+                        LopHocIds: item.lopHocIds
                     }
                 })
                     .then(function (response) {
@@ -153,7 +165,8 @@
                         ParentFullName: that.newItem.parentFullName,
                         ParentFacebookAccount: that.newItem.parentFacebookAccount,
                         QuanHeId: that.newItem.quanHe,
-                        IsAppend: that.newItem.isAppend
+                        IsAppend: that.newItem.isAppend,
+                        LopHocIds: that.newItem.lopHoc
                     }
                 })
                     .then(function (response) {
