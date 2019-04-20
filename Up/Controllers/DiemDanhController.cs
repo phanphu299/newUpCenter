@@ -31,7 +31,7 @@
             return Json(model);
         }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> DiemDanhTungHocVienAsync([FromBody]Models.LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty || model.HocVienId == Guid.Empty)
@@ -77,7 +77,7 @@
             }
         }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> DiemDanhTatCaAsync([FromBody]Models.LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty)

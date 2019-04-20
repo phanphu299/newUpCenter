@@ -44,7 +44,11 @@
                             </v-menu>
                         </v-flex>
                         <v-flex xs12 sm4 class="text-xs-center">
-                            <v-btn :disabled="selectedLopHoc==''" color="success">Điểm Danh Có Mặt Cả Lớp</v-btn>
+                            <v-btn :disabled="selectedLopHoc==''" 
+                                   color="info"
+                                   v-on:click="DiemDanhCaLop()">
+                                Điểm Danh Có Mặt Cả Lớp
+                            </v-btn>
                         </v-flex>
                     </v-layout>
                 </v-card-title>
@@ -53,15 +57,17 @@
                              grid-list-lg>
                     <v-layout row wrap>
                         <v-flex xs12 sm6 md4 lg4
-                                v-for="item in hocVienList">
-                            <v-card color="amber accent-1" class="dark--text">
+                                v-for="item in hocVienList" :key="item.hocVienId">
+                            <v-card color="orange lighten-5" class="dark--text">
                                 <v-card-title primary-title>
                                     <div>
                                         <div class="headline">{{ item.fullName }}</div>
                                     </div>
                                 </v-card-title>
                                 <v-card-actions>
-                                    <v-btn flat>Listen now</v-btn>
+                                    <v-btn color="success">Có Mặt</v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="error">Vắng</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-flex>
