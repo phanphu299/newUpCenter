@@ -56,40 +56,11 @@
                               :search="search">
                     <template slot="items" slot-scope="props">
                         <td>
-                            <v-dialog v-model="deleteDialog"
-                                      width="500">
-                                <v-btn flat icon slot="activator" color="red" v-on:click="itemToDelete = props.item">
-                                    <v-icon>delete</v-icon>
-                                </v-btn>
-
-                                <v-card>
-                                    <v-card-title class="headline error lighten-2 white--text"
-                                                  primary-title>
-                                        Xác Nhận
-                                    </v-card-title>
-
-                                    <v-card-text>
-                                        Bạn có chắc xóa '{{ itemToDelete.name }}'?
-                                    </v-card-text>
-
-                                    <v-divider></v-divider>
-
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
-
-                                        <v-btn color="secondary"
-                                               flat
-                                               v-on:click="deleteDialog = false">
-                                            Đóng
-                                        </v-btn>
-
-                                        <v-btn color="error white--text"
-                                               v-on:click="onDelete(itemToDelete)">
-                                            Xóa
-                                        </v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
+                            <v-btn flat icon slot="activator" color="red"
+                                   v-on:click.stop="deleteDialog = true"
+                                   v-on:click="itemToDelete = props.item">
+                                <v-icon>delete</v-icon>
+                            </v-btn>
                         </td>
                         <td>
                             <v-edit-dialog :return-value.sync="props.item.name"
@@ -125,6 +96,38 @@
                 </v-data-table>
             </v-card>
         </div>
+
+        @*DELETE DIALOG*@
+        <v-dialog v-model="deleteDialog"
+                  width="500">
+            <v-card>
+                <v-card-title class="headline error lighten-2 white--text"
+                              primary-title>
+                    Xác Nhận
+                </v-card-title>
+
+                <v-card-text>
+                    Bạn có chắc xóa '{{ itemToDelete.name }}'?
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+
+                    <v-btn color="secondary"
+                           flat
+                           v-on:click="deleteDialog = false">
+                        Đóng
+                    </v-btn>
+
+                    <v-btn color="error white--text"
+                           v-on:click="onDelete(itemToDelete)">
+                        Xóa
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
 
         <v-snackbar v-model="snackbar"
                     :color="color"

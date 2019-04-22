@@ -22,6 +22,13 @@
         {
             if (LopHocId == null || isOff == null || NgayDiemDanh == null)
                 throw new Exception("Lỗi khi Điểm Danh!!!");
+
+            var isExisting = _context.LopHoc_DiemDanhs
+                                    .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh)
+                                    .ToListAsync();
+            if(isExisting.Result.Any())
+                throw new Exception("Lớp học đã được điểm danh ngày " + NgayDiemDanh.ToShortDateString());
+
             var hocViens = GetHocVienByLopHoc(LopHocId);
 
             foreach(var item in hocViens.Result)
