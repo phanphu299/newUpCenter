@@ -166,8 +166,8 @@
                         <td>{{ props.item.ngayHoc }}</td>
                         <td>{{ props.item.gioHoc }}</td>
                         <td>{{ formatNumber(props.item.hocPhi) }}</td>
-                        <td><v-switch v-model="props.item.isCanceled" color="success" readonly></v-switch></td>
-                        <td><v-switch v-model="props.item.isGraduated" color="success" readonly></v-switch></td>
+                        <td><v-switch v-model="props.item.isCanceled" color="success" hide-details v-on:change="onToggleCanceled(props.item.lopHocId)"></v-switch></td>
+                        <td><v-switch v-model="props.item.isGraduated" color="success" hide-details v-on:change="onToggleGraduated(props.item.lopHocId)"></v-switch></td>
                         <td>{{ props.item.ngayKhaiGiang }}</td>
                         <td>{{ props.item.ngayKetThuc }}</td>
 
@@ -299,12 +299,6 @@
                                           label="Chọn Học Phí *">
                                 </v-select>
                             </v-flex>
-                            <v-flex xs12 sm4>
-                                <v-switch v-model="itemToEdit.isCanceled" color="success" label="Hủy Lớp"></v-switch>
-                            </v-flex>
-                            <v-flex xs12 sm4>
-                                <v-switch v-model="itemToEdit.isGraduated" color="success" label="Tốt Nghiệp"></v-switch>
-                            </v-flex>
 
                             <v-flex xs12 sm4>
                                 <v-select :items="itemGiaoVien"
@@ -314,7 +308,7 @@
                                           label="Chọn Giáo Viên *">
                                 </v-select>
                             </v-flex>
-                            <v-flex xs12 sm8>
+                            <v-flex xs12 sm12>
                                 <v-select v-model="itemToEdit.sachIds"
                                           :items="itemSach"
                                           item-text="name"

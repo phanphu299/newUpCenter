@@ -36,7 +36,7 @@
             },
             { text: 'Tên Lớp Học', value: 'name', align: 'left', sortable: false },
             { text: 'Sách', value: '', align: 'left', sortable: false },
-            { text: 'Giáo Viên', value: 'giaoVien', align: 'left', sortable: false },
+            { text: 'Giáo Viên Chủ Nhiệm', value: 'giaoVien', align: 'left', sortable: false },
             { text: 'Khóa Học', value: 'khoaHoc', align: 'left', sortable: false },
             { text: 'Ngày Học', value: 'ngayHoc', align: 'left', sortable: false },
             { text: 'Giờ Học', value: 'gioHoc', align: 'left', sortable: false },
@@ -119,7 +119,6 @@
 
     methods: {
         async onUpdate(item) {
-            console.log(item)
             let that = this;
             if (item.name === '' || item.khoaHocId === '' || item.ngayHocId === '' || item.gioHocId === '' || item.giaoVienId === '') {
                 this.alertEdit = true;
@@ -166,6 +165,68 @@
                     that.dialogEdit = false;
                 });
             }
+        },
+
+        async onToggleCanceled(item) {
+            let that = this;
+            console.log(item);
+
+            await axios({
+                method: 'put',
+                url: '/LopHoc/UpdateHuyLopAsync',
+                data: {
+                    LopHocId: item
+                }
+            })
+            .then(function (response) {
+                if (response.data.status === "OK") {
+                    that.snackbar = true;
+                    that.messageText = 'Cập nhật thành công !!!';
+                    that.color = 'success';
+                }
+                else {
+                    that.snackbar = true;
+                    that.messageText = response.data.message;
+                    that.color = 'error';
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                that.snackbar = true;
+                that.messageText = 'Cập nhật lỗi: ' + error;
+                that.color = 'error';
+            });
+        },
+
+        async onToggleGraduated(item) {
+            let that = this;
+            console.log(item);
+
+            await axios({
+                method: 'put',
+                url: '/LopHoc/UpdateTotNghiepAsync',
+                data: {
+                    LopHocId: item
+                }
+            })
+                .then(function (response) {
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Cập nhật thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Cập nhật lỗi: ' + error;
+                    that.color = 'error';
+                });
         },
 
         mappingEditItem(item) {

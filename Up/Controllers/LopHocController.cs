@@ -143,8 +143,94 @@ namespace Up.Controllers
 
                 var successful = await _lopHocService.UpdateLopHocAsync(model.LopHocId, model.Name,
                     model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang,
-                    _ngayKetThuc, model.IsCanceled, model.IsGraduated, model.SachIds, model.GiaoVienId, currentUser.Email);
+                    _ngayKetThuc, model.SachIds, model.GiaoVienId, currentUser.Email);
                 if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateTotNghiepAsync([FromBody]Models.LopHocViewModel model)
+        {
+            if (model.LopHocId == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                var successful = await _lopHocService.ToggleTotNghiepAsync(model.LopHocId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateHuyLopAsync([FromBody]Models.LopHocViewModel model)
+        {
+            if (model.LopHocId == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                var successful = await _lopHocService.ToggleHuyLopAsync(model.LopHocId, currentUser.Email);
+                if (!successful)
                 {
                     return Json(new Models.ResultModel
                     {

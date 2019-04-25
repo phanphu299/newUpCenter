@@ -14,7 +14,11 @@ namespace Up.Services
 
         Task<LopHocViewModel> UpdateLopHocAsync(Guid LopHocId, string Name, Guid KhoaHocId,
             Guid NgayHocId, Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang,
-            DateTime? NgayKetThuc, bool HuyLop, bool TotNghiep, Guid[] SachIds, Guid GiaoVienId, string LoggedEmployee);
+            DateTime? NgayKetThuc, Guid[] SachIds, Guid GiaoVienId, string LoggedEmployee);
+
+        Task<bool> ToggleHuyLopAsync(Guid LopHocId, string LoggedEmployee);
+
+        Task<bool> ToggleTotNghiepAsync(Guid LopHocId, string LoggedEmployee);
 
         Task<bool> DeleteLopHocAsync(Guid LopHocId, string LoggedEmployee);
     }

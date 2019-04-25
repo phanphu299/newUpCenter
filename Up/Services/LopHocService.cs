@@ -169,9 +169,52 @@
                 .ToListAsync();
         }
 
+        public async Task<bool> ToggleHuyLopAsync(Guid LopHocId, string LoggedEmployee)
+        {
+            try
+            {
+                var item = await _context.LopHocs
+                                         .Where(x => x.LopHocId == LopHocId)
+                                         .SingleOrDefaultAsync();
+
+                item.IsCanceled = !item.IsCanceled;
+                item.UpdatedBy = LoggedEmployee;
+                item.UpdatedDate = DateTime.Now;
+
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch(Exception exception)
+            {
+                throw new Exception("Cập nhật lỗi: " + exception.Message);
+            }
+        }
+
+        public async Task<bool> ToggleTotNghiepAsync(Guid LopHocId, string LoggedEmployee)
+        {
+            try
+            {
+                var item = await _context.LopHocs
+                                         .Where(x => x.LopHocId == LopHocId)
+                                         .SingleOrDefaultAsync();
+
+                item.IsGraduated = !item.IsGraduated;
+                item.UpdatedBy = LoggedEmployee;
+                item.UpdatedDate = DateTime.Now;
+
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Cập nhật lỗi: " + exception.Message);
+            }
+        }
+
         public async Task<LopHocViewModel> UpdateLopHocAsync(Guid LopHocId, string Name, Guid KhoaHocId, Guid NgayHocId,
-            Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, DateTime? NgayKetThuc,
-            bool HuyLop, bool TotNghiep, Guid[] SachIds, Guid GiaoVienId, string LoggedEmployee)
+            Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, DateTime? NgayKetThuc, Guid[] SachIds, Guid GiaoVienId, string LoggedEmployee)
         {
             try
             {
@@ -193,8 +236,6 @@
                 item.NgayKhaiGiang = NgayKhaiGiang;
                 item.UpdatedBy = LoggedEmployee;
                 item.UpdatedDate = DateTime.Now;
-                item.IsCanceled = HuyLop;
-                item.IsGraduated = TotNghiep;
                 item.HocPhiId = HocPhiId;
 
                 if (NgayKetThuc != null)
