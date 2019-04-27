@@ -115,6 +115,49 @@ namespace Up.Controllers
         }
 
         [HttpPut]
+        public async Task<IActionResult> UpdateChenAsync([FromBody]Models.HocVienViewModel model)
+        {
+            if (model.HocVienId == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                var successful = await _hocVienService.ToggleChenAsync(model.HocVienId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpPut]
         public async Task<IActionResult> UpdateHocVienAsync([FromBody]Models.HocVienViewModel model)
         {
             if (model.HocVienId == Guid.Empty)
@@ -134,7 +177,7 @@ namespace Up.Controllers
                 
                 var successful = await _hocVienService.UpdateHocVienAsync(model.HocVienId, model.FullName, model.Phone,
                    model.FacebookAccount, model.ParentFullName, model.ParentPhone, model.ParentFacebookAccount, model.QuanHeId,
-                   model.EnglishName, _ngaySinh, model.IsAppend, model.LopHocIds, currentUser.Email);
+                   model.EnglishName, _ngaySinh, model.LopHocIds, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel

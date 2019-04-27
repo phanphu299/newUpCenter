@@ -176,6 +176,8 @@
                 var item = await _context.LopHocs
                                          .Where(x => x.LopHocId == LopHocId)
                                          .SingleOrDefaultAsync();
+                if (item == null)
+                    throw new Exception("Không tìm thấy Lớp Học !!!");
 
                 item.IsCanceled = !item.IsCanceled;
                 item.UpdatedBy = LoggedEmployee;
@@ -198,6 +200,8 @@
                 var item = await _context.LopHocs
                                          .Where(x => x.LopHocId == LopHocId)
                                          .SingleOrDefaultAsync();
+                if (item == null)
+                    throw new Exception("Không tìm thấy Lớp Học !!!");
 
                 item.IsGraduated = !item.IsGraduated;
                 item.UpdatedBy = LoggedEmployee;

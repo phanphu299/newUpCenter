@@ -13,7 +13,9 @@ namespace Up.Services
            DateTime NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee);
         Task<HocVienViewModel> UpdateHocVienAsync(Guid HocVienId, string FullName, string Phone, string FacebookAccount,
            string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid QuanHeId, string EnglishName,
-           DateTime NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee);
+           DateTime NgaySinh, Guid[] LopHocIds, string LoggedEmployee);
         Task<bool> DeleteHocVienAsync(Guid HocVienId, string LoggedEmployee);
+
+        Task<bool> ToggleChenAsync(Guid HocVienId, string LoggedEmployee);
     }
 }

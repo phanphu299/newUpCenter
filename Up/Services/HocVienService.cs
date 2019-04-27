@@ -148,9 +148,33 @@ namespace Up.Services
                 .ToListAsync();
         }
 
+        public async Task<bool> ToggleChenAsync(Guid HocVienId, string LoggedEmployee)
+        {
+            try
+            {
+                var item = await _context.HocViens
+                                        .Where(x => x.HocVienId == HocVienId)
+                                        .SingleOrDefaultAsync();
+
+                if (item == null)
+                    throw new Exception("Không tìm thấy Học Viên!!!");
+                
+                item.IsAppend = !item.IsAppend;
+                item.UpdatedBy = LoggedEmployee;
+                item.UpdatedDate = DateTime.Now;
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Cập nhật lỗi: " + exception.Message);
+            }
+        }
+
         public async Task<HocVienViewModel> UpdateHocVienAsync(Guid HocVienId, string FullName, string Phone, string FacebookAccount,
            string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid QuanHeId, string EnglishName,
-           DateTime NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee)
+           DateTime NgaySinh, Guid[] LopHocIds, string LoggedEmployee)
         {
             try
             {
@@ -178,7 +202,6 @@ namespace Up.Services
                 item.NgaySinh = NgaySinh;
                 item.UpdatedBy = LoggedEmployee;
                 item.UpdatedDate = DateTime.Now;
-                item.IsAppend = IsAppend;
 
                 var _hocVien_LopHoc = await _context.HocVien_LopHocs
                                                     .Where(x => x.HocVienId == item.HocVienId)

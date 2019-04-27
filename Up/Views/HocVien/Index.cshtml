@@ -164,7 +164,7 @@
                         <td>{{ props.item.parentPhone }}</td>
                         <td>{{ props.item.quanHe }}</td>
                         <td>{{ props.item.parentFacebookAccount }}</td>
-                        <td><v-switch v-model="props.item.isAppend" color="success" hide-details></v-switch></td>
+                        <td><v-switch v-model="props.item.isAppend" color="success" hide-details v-on:change="onToggleAppend(props.item.hocVienId)"></v-switch></td>
                         <td>{{ props.item.createdDate }}</td>
                         <td>{{ props.item.createdBy }}</td>
                         <td>{{ props.item.updatedDate }}</td>
@@ -269,10 +269,7 @@
                                 <v-text-field label="SĐT Phụ Huynh *" required v-model="itemToEdit.parentPhone"></v-text-field>
                             </v-flex>
 
-                            <v-flex xs12 sm4>
-                                <v-switch v-model="itemToEdit.isAppend" color="success" label="Chèn"></v-switch>
-                            </v-flex>
-                            <v-flex xs12 sm8>
+                            <v-flex xs12 sm12>
                                 <v-select v-model="itemToEdit.lopHocIds"
                                           :items="itemLopHoc"
                                           item-text="name"

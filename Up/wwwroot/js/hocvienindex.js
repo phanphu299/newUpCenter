@@ -104,7 +104,6 @@
                         QuanHeId: item.quanHeId,
                         NgaySinh: item.ngaySinh,
                         ParentPhone: item.parentPhone,
-                        IsAppend: item.isAppend,
                         ParentFacebookAccount: item.parentFacebookAccount,
                         LopHocIds: item.lopHocIds
                     }
@@ -134,13 +133,42 @@
             }
         },
 
+        async onToggleAppend (item) {
+            let that = this;
+            await axios({
+                method: 'put',
+                url: '/HocVien/UpdateChenAsync',
+                data: {
+                    HocVienId: item
+                }
+            })
+            .then(function (response) {
+                if (response.data.status === "OK") {
+                    that.snackbar = true;
+                    that.messageText = 'Cập nhật thành công !!!';
+                    that.color = 'success';
+                }
+                else {
+                    that.snackbar = true;
+                    that.messageText = response.data.message;
+                    that.color = 'error';
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                that.snackbar = true;
+                that.messageText = 'Cập nhật lỗi: ' + error;
+                that.color = 'error';
+            });
+        },
+
         mappingEditItem(item) {
             this.editedIndex = this.khoaHocItems.indexOf(item);
             this.itemToEdit = Object.assign({}, item);
 
             let [dayKG, monthKG, yearKG] = this.itemToEdit.ngaySinh.split('/');
             this.itemToEdit.ngaySinh = yearKG + '-' + monthKG + '-' + dayKG;
-            
+
         },
 
         async onSave(item) {
