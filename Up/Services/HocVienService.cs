@@ -19,15 +19,14 @@ namespace Up.Services
         }
 
         public async Task<HocVienViewModel> CreateHocVienAsync(string FullName, string Phone, string FacebookAccount, 
-            string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid QuanHeId, 
+            string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid? QuanHeId, 
             string EnglishName, DateTime NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(FullName) || QuanHeId == null || string.IsNullOrWhiteSpace(Phone) ||
-                    string.IsNullOrWhiteSpace(FacebookAccount) || string.IsNullOrWhiteSpace(ParentFullName) || string.IsNullOrWhiteSpace(ParentPhone) ||
-                    string.IsNullOrWhiteSpace(ParentFacebookAccount) || string.IsNullOrWhiteSpace(EnglishName) || NgaySinh == null)
-                    throw new Exception("Tên Học Viên, Phone, Fb, Tên Phụ Huynh, Phone Của Phụ Huynh, Fb Của Phụ Huynh, Tên Tiếng Anh, Ngày Sinh, Quan Hệ " +
+                if (string.IsNullOrWhiteSpace(FullName) || string.IsNullOrWhiteSpace(Phone) ||
+                    string.IsNullOrWhiteSpace(EnglishName) || NgaySinh == null)
+                    throw new Exception("Tên Học Viên, Phone, Fb, Tên Tiếng Anh, Ngày Sinh " +
                         "không được để trống !!!");
 
                 HocVien hocVien = new HocVien();
@@ -79,7 +78,7 @@ namespace Up.Services
                     ParentPhone = hocVien.ParentPhone,
                     Phone = hocVien.Phone,
                     HocVienId = hocVien.HocVienId,
-                    QuanHe = _context.QuanHes.FindAsync(hocVien.QuanHeId).Result.Name,
+                    QuanHe = _context.QuanHes.FindAsync(hocVien.QuanHeId).Result == null ? "" : _context.QuanHes.FindAsync(hocVien.QuanHeId).Result.Name,
                     LopHocList = await _context.HocVien_LopHocs.Where(x => x.HocVienId == hocVien.HocVienId).Select(x => new LopHocViewModel
                     {
                         LopHocId = x.LopHocId,
@@ -173,16 +172,15 @@ namespace Up.Services
         }
 
         public async Task<HocVienViewModel> UpdateHocVienAsync(Guid HocVienId, string FullName, string Phone, string FacebookAccount,
-           string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid QuanHeId, string EnglishName,
+           string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid? QuanHeId, string EnglishName,
            DateTime NgaySinh, Guid[] LopHocIds, string LoggedEmployee)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(FullName) || QuanHeId == null || string.IsNullOrWhiteSpace(Phone)
-                    || string.IsNullOrWhiteSpace(FacebookAccount) || string.IsNullOrWhiteSpace(ParentFullName) 
-                    || string.IsNullOrWhiteSpace(ParentPhone) || string.IsNullOrWhiteSpace(ParentFacebookAccount) 
+                if (string.IsNullOrWhiteSpace(FullName) || string.IsNullOrWhiteSpace(Phone)
+                    || string.IsNullOrWhiteSpace(FacebookAccount) 
                     || string.IsNullOrWhiteSpace(EnglishName) || NgaySinh == null)
-                    throw new Exception("Tên Học Viên, Quan Hệ, SĐT, FB, Tên Phụ Huynh, Quan Hệ, SĐT Phụ Huynh, FB Phụ Huynh, Ngày Khai Giảng không được để trống !!!");
+                    throw new Exception("Tên Học Viên, SĐT, FB, Ngày Khai Giảng không được để trống !!!");
 
                 var item = await _context.HocViens
                                         .Where(x => x.HocVienId == HocVienId)

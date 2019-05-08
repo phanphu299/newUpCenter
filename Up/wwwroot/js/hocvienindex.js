@@ -87,7 +87,8 @@
     methods: {
         async onUpdate(item) {
             let that = this;
-            if (item.fullName === '' || item.englishName === '' || item.Phone === '' || item.facebookAccount === '') {
+            if (this.newItem.fullName === '' || this.newItem.englishName === '' || this.newItem.phone === '' ||
+                this.newItem.facebookAccount === '' || this.newItem.ngaySinh === '') {
                 this.alertEdit = true;
             }
             else {
@@ -173,8 +174,7 @@
 
         async onSave(item) {
             if (this.newItem.fullName === '' || this.newItem.englishName === '' || this.newItem.phone === '' ||
-                this.newItem.facebookAccount === '' || this.newItem.parentPhone === '' || this.newItem.ngaySinh === '' ||
-                this.newItem.parentFullName === '' || this.newItem.parentFacebookAccount === '' || this.newItem.quanHe === '' || this.newItem.isAppend === '') {
+                this.newItem.facebookAccount === '' || this.newItem.ngaySinh === '') {
                 this.alert = true;
             }
             else {
