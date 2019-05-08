@@ -22,7 +22,34 @@
                                 <v-container grid-list-md>
                                     <v-layout wrap>
                                         <v-flex xs12>
-                                            <v-text-field :rules='rules' prefix="VNĐ" label="Học Phí *" required v-model="newItem" v-on:keyup.enter="onSave"></v-text-field>
+                                            <v-text-field :rules='rules' prefix="VNĐ" label="Học Phí *" required v-model="newItem.gia" v-on:keyup.enter="onSave"></v-text-field>
+                                        </v-flex>
+                                    </v-layout>
+
+                                    <v-layout wrap>
+                                        <v-flex xs12>
+                                            <v-menu v-model="isShowDatePicker"
+                                                    :close-on-content-click="false"
+                                                    :nudge-right="40"
+                                                    lazy
+                                                    transition="scale-transition"
+                                                    offset-y
+                                                    full-width
+                                                    min-width="290px">
+                                                <v-text-field slot="activator"
+                                                              v-model="newItem.ngayApDung"
+                                                              label="Ngày Áp Dụng"
+                                                              prepend-icon="event"
+                                                              readonly></v-text-field>
+                                                <v-date-picker locale="vi-vn" v-model="newItem.ngayApDung" v-on:input="isShowDatePicker = false"></v-date-picker>
+                                            </v-menu>
+                                        </v-flex>
+                                    </v-layout>
+
+
+                                    <v-layout wrap>
+                                        <v-flex xs12>
+                                            <v-text-field label="Ghi Chú" required v-model="newItem.ghiChu" v-on:keyup.enter="onSave"></v-text-field>
                                         </v-flex>
                                     </v-layout>
                                 </v-container>
@@ -60,19 +87,17 @@
                                    v-on:click="itemToDelete = props.item">
                                 <v-icon>delete</v-icon>
                             </v-btn>
+
+                            <v-btn color="primary"
+                                   flat icon
+                                   v-on:click.stop="dialogEdit = true"
+                                   v-on:click="mappingEditItem(props.item)">
+                                <v-icon>edit</v-icon>
+                            </v-btn>
                         </td>
-                        <td>
-                            <v-edit-dialog :return-value.sync="props.item.gia"
-                                           lazy
-                                           v-on:save="onUpdate(props.item)">
-                                {{ formatNumber(props.item.gia) }}
-                                <v-text-field slot="input"
-                                              v-model="props.item.gia"
-                                              :rules="[mustNumber]"
-                                              label="Edit"
-                                              single-line></v-text-field>
-                            </v-edit-dialog>
-                        </td>
+                        <td>{{ formatNumber(props.item.gia) }}</td>
+                        <td>{{ props.item.ngayApDung }}</td>
+                        <td>{{ props.item.ghiChu }}</td>
                         <td>{{ props.item.createdDate }}</td>
                         <td>{{ props.item.createdBy }}</td>
                         <td>{{ props.item.updatedDate }}</td>
@@ -117,6 +142,60 @@
             </v-card>
         </v-dialog>
 
+        @*Edit dialog*@
+        <v-dialog v-model="dialogEdit"
+                  max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Cập Nhật Học Phí'{{ itemToEdit.gia }}'</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container grid-list-md>
+                        <v-layout wrap>
+
+                            <v-flex xs12 sm4>
+                                <v-text-field label="Giá *" required v-model="itemToEdit.gia"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm4>
+                                <v-text-field label="Ghi Chú *" required v-model="itemToEdit.ghiChu"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm4>
+                                <v-menu v-model="isShowDatePicker2"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        lazy
+                                        transition="scale-transition"
+                                        offset-y
+                                        full-width
+                                        min-width="290px">
+                                    <v-text-field slot="activator"
+                                                  v-model="itemToEdit.ngayApDung"
+                                                  label="Ngày Áp Dụng"
+                                                  prepend-icon="event"
+                                                  readonly></v-text-field>
+                                    <v-date-picker locale="vi-vn" v-model="itemToEdit.ngayApDung" v-on:input="isShowDatePicker2 = false"></v-date-picker>
+                                </v-menu>
+                            </v-flex>
+                            
+                        </v-layout>
+                    </v-container>
+                    <small>* bắt buộc</small>
+                    <v-alert v-model="alertEdit"
+                             dismissible
+                             color="warning"
+                             icon="priority_high"
+                             outline>
+                        Không được bỏ trống
+                    </v-alert>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="secondary darken-1" flat v-on:click="dialogEdit = false">Đóng</v-btn>
+                    <v-btn color="blue darken-1 white--text" v-on:click="onUpdate(itemToEdit)">Lưu</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
         <v-snackbar v-model="snackbar"
                     :color="color"
                     :timeout="timeout"
@@ -144,5 +223,9 @@
         text-decoration-style: dashed;
         text-decoration-line: underline;
         text-decoration-color: #0088cc;
+    }
+
+    td, th {
+        padding: unset;
     }
 </style>

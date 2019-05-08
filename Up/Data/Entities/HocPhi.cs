@@ -8,6 +8,8 @@ namespace Up.Data.Entities
         public Guid HocPhiId { get; set; }
         public double Gia { get; set; }
         public bool IsDisabled { get; set; }
+        public string GhiChu { get; set; }
+        public DateTime? NgayApDung { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }

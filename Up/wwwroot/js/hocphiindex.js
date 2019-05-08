@@ -6,8 +6,10 @@
         color: '',
         timeout: 3000,
         snackbar: false,
+        dialogEdit: false,
         deleteDialog: false,
         alertMessage: '',
+        alertEdit: false,
         rules: [
             v => /^[0-9]*$/.test(v) || "Chỉ được nhập số"
         ],
@@ -15,7 +17,11 @@
         dialog: false,
         alert: false,
         search: '',
-        newItem: '',
+        newItem: {
+            gia: '',
+            ghiChu: '',
+            ngayApDung: new Date().toISOString().substr(0, 10)
+        },
         itemToDelete: {},
         headers: [
             {
@@ -24,13 +30,19 @@
                 sortable: false,
                 value: ''
             },
-            { text: 'Học Phí', value: 'gia', align: 'left', sortable: false },
+            { text: 'Học Phí', value: 'gia', align: 'left', sortable: false },            
+            { text: 'Ngày Áp Dụng', value: 'ngayApDung', align: 'left', sortable: false },
+            { text: 'Ghi Chú', value: 'ghiChu', align: 'left', sortable: false },
             { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: false },
             { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: false },
             { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: false },
             { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: false }
         ],
-        khoaHocItems: []
+        khoaHocItems: [],
+        isShowDatePicker: false,
+        isShowDatePicker2: false,
+        itemToEdit: {},
+        editedIndex: -1
     },
 
     async beforeCreate() {
@@ -51,41 +63,62 @@
 
         async onUpdate(item) {
             let that = this;
-            await axios({
-                method: 'put',
-                url: '/category/UpdateHocPhiAsync',
-                data: {
-                    Gia: item.gia,
-                    HocPhiId: item.hocPhiId
-                }
-            })
-            .then(function (response) {
-                console.log(response);
-                if (response.data.status === "OK") {
+            if (item.gia === '' || item.hocPhiId === '') {
+                this.alertEdit = true;
+            }
+            else {
+                await axios({
+                    method: 'put',
+                    url: '/category/UpdateHocPhiAsync',
+                    data: {
+                        Gia: item.gia,
+                        HocPhiId: item.hocPhiId,
+                        GhiChu: item.ghiChu,
+                        NgayApDung: item.ngayApDung
+                    }
+                })
+                .then(function (response) {
+                    if (response.data.status === "OK") {
+                        console.log(response);
+                        Object.assign(that.khoaHocItems[that.editedIndex], response.data.result);
+                        that.snackbar = true;
+                        that.messageText = 'Cập nhật thành công !!!';
+                        that.color = 'success';
+                        that.dialogEdit = false;
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                        that.dialogEdit = false;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
                     that.snackbar = true;
-                    that.messageText = 'Cập nhật thành công !!!';
-                    that.color = 'success';
-                }
-                else {
-                    that.snackbar = true;
-                    that.messageText = response.data.message;
+                    that.messageText = 'Cập nhật lỗi: ' + error;
                     that.color = 'error';
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-                that.snackbar = true;
-                that.messageText = 'Cập nhật lỗi: ' + error;
-                that.color = 'error';
-            });
+                    that.dialogEdit = false;
+                });
+            }
         },
 
+        mappingEditItem(item) {
+            this.editedIndex = this.khoaHocItems.indexOf(item);
+            this.itemToEdit = Object.assign({}, item);
+
+            if (this.itemToEdit.ngayApDung !== "") {
+                let [dayKG, monthKG, yearKG] = this.itemToEdit.ngayApDung.split('/');
+                this.itemToEdit.ngayApDung = yearKG + '-' + monthKG + '-' + dayKG;
+            }
+        },
+        
         async onSave(item) {
-            if (this.newItem === '') {
+            if (this.newItem.gia === '') {
                 this.alertMessage = "Không được bỏ trống";
                 this.alert = true;
             }
-            else if (isNaN(this.newItem)) {
+            else if (isNaN(this.newItem.gia)) {
                 this.alertMessage = "Chỉ được nhập số";
                 this.alert = true;
             }
@@ -96,7 +129,9 @@
                     method: 'post',
                     url: '/category/CreateHocPhiAsync',
                     data: {
-                        Gia: that.newItem
+                        Gia: that.newItem.gia,
+                        GhiChu: that.newItem.ghiChu,
+                        NgayApDung: that.newItem.ngayApDung
                     }
                 })
                 .then(function (response) {
@@ -106,7 +141,8 @@
                         that.snackbar = true;
                         that.messageText = 'Thêm mới thành công !!!';
                         that.color = 'success';
-                        that.newItem = '';
+                        that.newItem.gia = 0;
+                        that.newItem.ghiChu = '';
                     }
                     else {
                         that.snackbar = true;

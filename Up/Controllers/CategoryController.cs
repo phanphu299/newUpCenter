@@ -600,7 +600,9 @@ namespace Up.Controllers
 
             try
             {
-                var successful = await _hocPhiService.CreateHocPhiAsync(model.Gia, currentUser.Email);
+                DateTime _ngayApDung = Convert.ToDateTime(model.NgayApDung, System.Globalization.CultureInfo.InvariantCulture);
+
+                var successful = await _hocPhiService.CreateHocPhiAsync(model.Gia, model.GhiChu, _ngayApDung, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -643,8 +645,9 @@ namespace Up.Controllers
 
             try
             {
-                var successful = await _hocPhiService.UpdateHocPhiAsync(model.HocPhiId, model.Gia, currentUser.Email);
-                if (!successful)
+                DateTime _ngayApDung = Convert.ToDateTime(model.NgayApDung, System.Globalization.CultureInfo.InvariantCulture);
+                var successful = await _hocPhiService.UpdateHocPhiAsync(model.HocPhiId, model.Gia, model.GhiChu, _ngayApDung, currentUser.Email);
+                if (successful == null)
                 {
                     return Json(new Models.ResultModel
                     {
@@ -656,7 +659,8 @@ namespace Up.Controllers
                 return Json(new Models.ResultModel
                 {
                     Status = "OK",
-                    Message = "Cập nhật thành công !!!"
+                    Message = "Cập nhật thành công !!!",
+                    Result = successful
                 });
             }
             catch (Exception exception)
