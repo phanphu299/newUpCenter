@@ -52,16 +52,27 @@
             if (LopHocId == null || HocVienId == null || isOff == null || NgayDiemDanh == null)
                 throw new Exception("Lỗi khi Điểm Danh!!!");
 
-            LopHoc_DiemDanh lopHoc_DiemDanh = new LopHoc_DiemDanh();
-            lopHoc_DiemDanh.NgayDiemDanh = NgayDiemDanh;
-            lopHoc_DiemDanh.IsOff = isOff;
-            lopHoc_DiemDanh.LopHocId = LopHocId;
-            lopHoc_DiemDanh.HocVienId = HocVienId;
-            lopHoc_DiemDanh.CreatedBy = LoggedEmployee;
-            lopHoc_DiemDanh.CreatedDate = DateTime.Now;
+            var diemDanh = await _context.LopHoc_DiemDanhs
+                                    .Where(x => x.LopHocId == LopHocId && x.HocVienId == HocVienId)
+                                    .SingleOrDefaultAsync();
 
-            _context.LopHoc_DiemDanhs.Add(lopHoc_DiemDanh);
+            if(diemDanh != null)
+            {
+                diemDanh.IsOff = isOff;
+            }
+            else
+            {
+                LopHoc_DiemDanh lopHoc_DiemDanh = new LopHoc_DiemDanh();
+                lopHoc_DiemDanh.NgayDiemDanh = NgayDiemDanh;
+                lopHoc_DiemDanh.IsOff = isOff;
+                lopHoc_DiemDanh.LopHocId = LopHocId;
+                lopHoc_DiemDanh.HocVienId = HocVienId;
+                lopHoc_DiemDanh.CreatedBy = LoggedEmployee;
+                lopHoc_DiemDanh.CreatedDate = DateTime.Now;
 
+                _context.LopHoc_DiemDanhs.Add(lopHoc_DiemDanh);
+            }
+            
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
                 throw new Exception("Lỗi khi Điểm Danh!!!");
@@ -77,6 +88,7 @@
                                 .Select(x => new HocVienViewModel
                                 {
                                     FullName = x.HocVien.FullName,
+                                    EnglishName = x.HocVien.EnglishName,
                                     HocVienId = x.HocVienId,
                                 })
                                 .ToListAsync();

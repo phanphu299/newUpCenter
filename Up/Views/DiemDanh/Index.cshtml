@@ -7,7 +7,7 @@
 
             <v-card>
                 <v-card-title>
-                    <v-layout>
+                    <v-layout wrap>
                         <v-flex xs12 sm4>
                             <v-select v-model="selectedLopHoc"
                                       :items="itemLopHoc"
@@ -44,32 +44,48 @@
                             </v-menu>
                         </v-flex>
                         <v-flex xs12 sm4 class="text-xs-center">
-                            <v-btn :disabled="selectedLopHoc==''" 
+                            <v-btn :disabled="selectedLopHoc==''"
                                    color="info"
                                    v-on:click="DiemDanhCaLop()">
                                 Điểm Danh Có Mặt Cả Lớp
                             </v-btn>
                         </v-flex>
                     </v-layout>
+                    <v-spacer></v-spacer>
+                    <v-text-field v-model="search"
+                                  append-icon="search"
+                                  label="Tìm Kiếm"
+                                  single-line
+                                  v-if="hocVienList.length > 0"
+                                  hide-details></v-text-field>
                 </v-card-title>
 
-                <v-container fluid v-if="hocVienList.length > 0"
-                             grid-list-lg>
-                    <v-layout row wrap>
-                        <v-flex xs12
-                                v-for="item in hocVienList" :key="item.hocVienId">
-                            <v-card color="orange lighten-5" class="dark--text">
-                                <v-card-title primary-title>
-                                    <div>
-                                        <div class="headline">{{ item.fullName }}</div>
-                                    </div>
-                                </v-card-title>
-                                <v-card-actions>
-                                    <v-btn color="success">Có Mặt</v-btn>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="error">Vắng</v-btn>
-                                </v-card-actions>
-                            </v-card>
+                <v-container fluid v-if="hocVienList.length > 0">
+                    <v-layout wrap>
+                        <v-flex>
+                            <v-data-table :headers="headers"
+                                          :items="hocVienList"
+                                          :search="search">
+                                <template slot="items" slot-scope="props">
+
+                                    <td><b>{{ props.item.fullName }}</b></td>
+                                    <td><b>{{ props.item.englishName }}</b></td>
+                                    <td class="justify-center">
+                                        <v-btn outline fab dark color="primary" v-on:click="onCoMat(props.item)">
+                                            <v-icon dark>check</v-icon>
+                                        </v-btn>
+                                    </td>
+                                    <td class="justify-center">
+                                        <v-btn outline fab dark color="error" v-on:click="onVang(props.item)">
+                                            <v-icon dark>close</v-icon>
+                                        </v-btn>
+                                    </td>
+
+                                </template>
+                                <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                                    Không tìm thấy "{{ search }}".
+                                </v-alert>
+                            </v-data-table>
                         </v-flex>
                     </v-layout>
                 </v-container>

@@ -12,7 +12,24 @@
         ngayDiemDanh: new Date().toISOString().substr(0, 10),
         itemLopHoc: [],
         isShowDatePicker: false,
-        hocVienList: []
+        hocVienList: [],
+        search: '',
+        headers: [
+            { text: 'Học Viên', value: 'fullName', align: 'left', sortable: true },
+            { text: 'English Name', value: 'englishName', align: 'left', sortable: true },
+            {
+                text: 'Có Mặt',
+                align: 'left',
+                sortable: false,
+                value: ''
+            },
+            {
+                text: 'Vắng',
+                align: 'left',
+                sortable: false,
+                value: ''
+            }
+        ]
     },
     async beforeCreate() {
         let that = this;
@@ -66,6 +83,72 @@
                 that.messageText = 'Điểm danh lỗi: ' + error;
                 that.color = 'error';
             });
+        },
+
+        async onCoMat(item) {
+            let that = this;
+            await axios({
+                method: 'post',
+                url: '/DiemDanh/DiemDanhTungHocVienAsync',
+                data: {
+                    LopHocId: this.selectedLopHoc,
+                    NgayDiemDanh: this.ngayDiemDanh,
+                    IsOff: false,
+                    HocVienId: item.hocVienId
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Điểm danh có mặt thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Điểm danh lỗi: ' + error;
+                    that.color = 'error';
+                });
+        },
+
+        async onVang(item) {
+            let that = this;
+            await axios({
+                method: 'post',
+                url: '/DiemDanh/DiemDanhTungHocVienAsync',
+                data: {
+                    LopHocId: this.selectedLopHoc,
+                    NgayDiemDanh: this.ngayDiemDanh,
+                    IsOff: true,
+                    HocVienId: item.hocVienId
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Điểm danh vắng thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Điểm danh lỗi: ' + error;
+                    that.color = 'error';
+                });
         }
     }
 });
