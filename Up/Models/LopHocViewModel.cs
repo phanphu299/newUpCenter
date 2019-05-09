@@ -20,7 +20,8 @@ namespace Up.Models
         public Guid NgayHocId { get; set; }
         public string NgayHoc { get; set; }
         public Guid GioHocId { get; set; }
-        public string GioHoc { get; set; }
+        public string GioHocFrom { get; set; }
+        public string GioHocTo { get; set; }
         public Guid HocPhiId { get; set; }
         public double HocPhi { get; set; }
         public Guid GiaoVienId { get; set; }

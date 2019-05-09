@@ -8,8 +8,8 @@ namespace Up.Services
     public interface IGioHocService
     {
         Task<List<GioHocViewModel>> GetGioHocAsync();
-        Task<GioHocViewModel> CreateGioHocAsync(string Name, string LoggedEmployee);
-        Task<bool> UpdateGioHocAsync(Guid GioHocId, string Name, string LoggedEmployee);
+        Task<GioHocViewModel> CreateGioHocAsync(string From, string To, string LoggedEmployee);
+        Task<GioHocViewModel> UpdateGioHocAsync(Guid GioHocId, string From, string To, string LoggedEmployee);
         Task<bool> DeleteGioHocAsync(Guid GioHocId, string LoggedEmployee);
     }
 }

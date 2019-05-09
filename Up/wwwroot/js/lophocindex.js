@@ -19,7 +19,8 @@
             name: "",
             khoaHoc: "",
             ngayHoc: "",
-            gioHoc: "",
+            gioHocFrom: "",
+            gioHocTo: "",
             giaoVien: "",
             sach: [],
             ngayKhaiGiang: new Date().toISOString().substr(0, 10)
@@ -118,6 +119,11 @@
     },
 
     methods: {
+        DisplayGioHoc: function (value) {
+            console.log(value);
+            return value.from + " - " + value.to;
+        },
+
         async onUpdate(item) {
             let that = this;
             if (item.name === '' || item.khoaHocId === '' || item.ngayHocId === '' || item.gioHocId === '' || item.giaoVienId === '') {

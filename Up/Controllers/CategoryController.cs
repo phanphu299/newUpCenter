@@ -463,7 +463,7 @@ namespace Up.Controllers
 
             try
             {
-                var successful = await _gioHocService.CreateGioHocAsync(model.Name, currentUser.Email);
+                var successful = await _gioHocService.CreateGioHocAsync(model.From, model.To, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -506,8 +506,8 @@ namespace Up.Controllers
 
             try
             {
-                var successful = await _gioHocService.UpdateGioHocAsync(model.GioHocId, model.Name, currentUser.Email);
-                if (!successful)
+                var successful = await _gioHocService.UpdateGioHocAsync(model.GioHocId, model.From, model.To, currentUser.Email);
+                if (successful == null)
                 {
                     return Json(new Models.ResultModel
                     {
@@ -519,7 +519,8 @@ namespace Up.Controllers
                 return Json(new Models.ResultModel
                 {
                     Status = "OK",
-                    Message = "Cập nhật thành công !!!"
+                    Message = "Cập nhật thành công !!!",
+                    Result = successful
                 });
             }
             catch (Exception exception)

@@ -6,12 +6,19 @@
         color: '',
         timeout: 3000,
         snackbar: false,
-        deleteDialog: false,
         dialog: false,
+        deleteDialog: false,
+        dialogEdit: false,
         alert: false,
+        alertEdit: false,
         search: '',
-        newItem: '',
+        newItem: {
+            from: '',
+            to: ''
+        },
         itemToDelete: {},
+        itemToEdit: {},
+        editedIndex: -1,
         headers: [
             {
                 text: 'Action',
@@ -19,7 +26,8 @@
                 sortable: false,
                 value: ''
             },
-            { text: 'Giờ Học', value: 'name', align: 'left', sortable: false },
+            { text: 'Giờ Bắt Đầu', value: 'from', align: 'left', sortable: false },
+            { text: 'Giờ Kết Thúc', value: 'to', align: 'left', sortable: false },
             { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: false },
             { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: false },
             { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: false },
@@ -44,21 +52,25 @@
                 method: 'put',
                 url: '/category/UpdateGioHocAsync',
                 data: {
-                    Name: item.name,
+                    From: item.from,
+                    To: item.to,
                     GioHocId: item.gioHocId
                 }
             })
             .then(function (response) {
                 console.log(response);
                 if (response.data.status === "OK") {
+                    Object.assign(that.khoaHocItems[that.editedIndex], response.data.result);
                     that.snackbar = true;
                     that.messageText = 'Cập nhật thành công !!!';
                     that.color = 'success';
+                    that.dialogEdit = false;
                 }
                 else {
                     that.snackbar = true;
                     that.messageText = response.data.message;
                     that.color = 'error';
+                    that.dialogEdit = false;
                 }
             })
             .catch(function (error) {
@@ -66,11 +78,17 @@
                 that.snackbar = true;
                 that.messageText = 'Cập nhật lỗi: ' + error;
                 that.color = 'error';
+                that.dialogEdit = false;
             });
         },
 
+        mappingEditItem(item) {
+            this.editedIndex = this.khoaHocItems.indexOf(item);
+            this.itemToEdit = Object.assign({}, item);
+        },
+
         async onSave(item) {
-            if (this.newItem === '') {
+            if (this.newItem.from === '' || this.newItem.to === '') {
                 this.alert = true;
             }
             else {
@@ -80,7 +98,8 @@
                     method: 'post',
                     url: '/category/CreateGioHocAsync',
                     data: {
-                        Name: that.newItem
+                        From: that.newItem.from,
+                        To: that.newItem.to
                     }
                 })
                 .then(function (response) {
@@ -90,7 +109,8 @@
                         that.snackbar = true;
                         that.messageText = 'Thêm mới thành công !!!';
                         that.color = 'success';
-                        that.newItem = '';
+                        that.newItem.from = '';
+                        that.newItem.to = '';
                     }
                     else {
                         that.snackbar = true;

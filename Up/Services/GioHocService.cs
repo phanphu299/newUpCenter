@@ -18,14 +18,15 @@
             _context = context;
         }
 
-        public async Task<GioHocViewModel> CreateGioHocAsync(string Name, string LoggedEmployee)
+        public async Task<GioHocViewModel> CreateGioHocAsync(string From, string To, string LoggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name))
-                throw new Exception("Tên Giờ Học không được để trống !!!");
+            if (string.IsNullOrWhiteSpace(From) || string.IsNullOrWhiteSpace(To))
+                throw new Exception("Giờ Học không được để trống !!!");
 
             GioHoc gioHoc = new GioHoc();
             gioHoc.GioHocId = new Guid();
-            gioHoc.Name = Name;
+            gioHoc.From = From;
+            gioHoc.To = To;
             gioHoc.CreatedBy = LoggedEmployee;
             gioHoc.CreatedDate = DateTime.Now;
 
@@ -34,7 +35,7 @@
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
                 throw new Exception("Lỗi khi lưu Giờ Học !!!");
-            return new GioHocViewModel { GioHocId = gioHoc.GioHocId, Name = gioHoc.Name, CreatedBy = gioHoc.CreatedBy, CreatedDate = gioHoc.CreatedDate.ToString("dd/MM/yyyy") };
+            return new GioHocViewModel { GioHocId = gioHoc.GioHocId, To = gioHoc.To, From = gioHoc.From, CreatedBy = gioHoc.CreatedBy, CreatedDate = gioHoc.CreatedDate.ToString("dd/MM/yyyy") };
         }
 
         public async Task<bool> DeleteGioHocAsync(Guid GioHocId, string LoggedEmployee)
@@ -67,17 +68,18 @@
                     CreatedBy = x.CreatedBy,
                     CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
                     GioHocId = x.GioHocId,
-                    Name = x.Name,
+                    From = x.From,
+                    To = x.To,
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
                 })
                 .ToListAsync();
         }
 
-        public async Task<bool> UpdateGioHocAsync(Guid GioHocId, string Name, string LoggedEmployee)
+        public async Task<GioHocViewModel> UpdateGioHocAsync(Guid GioHocId, string From, string To, string LoggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name))
-                throw new Exception("Tên Giờ Học không được để trống !!!");
+            if (string.IsNullOrWhiteSpace(From) || string.IsNullOrWhiteSpace(To))
+                throw new Exception("Giờ Học không được để trống !!!");
 
             var item = await _context.GioHocs
                                     .Where(x => x.GioHocId == GioHocId)
@@ -86,12 +88,22 @@
             if (item == null)
                 throw new Exception("Không tìm thấy Giờ Học !!!");
 
-            item.Name = Name;
+            item.From = From;
+            item.To = To;
             item.UpdatedBy = LoggedEmployee;
             item.UpdatedDate = DateTime.Now;
 
             var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+            return new GioHocViewModel
+            {
+                From = item.From,
+                To = item.To,
+                CreatedBy = item.CreatedBy,
+                UpdatedBy = item.UpdatedBy,
+                GioHocId = item.GioHocId,
+                UpdatedDate = item.UpdatedDate != null ? ((DateTime)item.UpdatedDate).ToString("dd/MM/yyyy") : "",
+                CreatedDate = item.CreatedDate != null ? ((DateTime)item.CreatedDate).ToString("dd/MM/yyyy") : ""
+            };
         }
     }
 }

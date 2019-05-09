@@ -44,7 +44,7 @@
 
                                         <v-flex xs12 sm4>
                                             <v-select :items="itemGioHoc"
-                                                      item-text="name"
+                                                      :item-text="DisplayGioHoc"
                                                       item-value="gioHocId"
                                                       v-model="newItem.gioHoc"
                                                       label="Chọn Giờ Học *">
@@ -164,7 +164,7 @@
                         <td>{{ props.item.giaoVien }}</td>
                         <td>{{ props.item.khoaHoc }}</td>
                         <td>{{ props.item.ngayHoc }}</td>
-                        <td>{{ props.item.gioHoc }}</td>
+                        <td>{{ props.item.gioHocFrom }} - {{ props.item.gioHocTo }}</td>
                         <td>{{ formatNumber(props.item.hocPhi) }}</td>
                         <td><v-switch v-model="props.item.isCanceled" color="success" hide-details v-on:change="onToggleCanceled(props.item.lopHocId)"></v-switch></td>
                         <td><v-switch v-model="props.item.isGraduated" color="success" hide-details v-on:change="onToggleGraduated(props.item.lopHocId)"></v-switch></td>
@@ -250,7 +250,7 @@
 
                             <v-flex xs12 sm4>
                                 <v-select :items="itemGioHoc"
-                                          item-text="name"
+                                          :item-text="DisplayGioHoc"
                                           item-value="gioHocId"
                                           v-model="itemToEdit.gioHocId"
                                           label="Chọn Giờ Học *">
