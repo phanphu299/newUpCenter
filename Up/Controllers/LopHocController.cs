@@ -38,6 +38,13 @@ namespace Up.Controllers
             return Json(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetLopHocByHocVienIdAsync(Guid HocVienId)
+        {
+            var model = await _lopHocService.GetLopHocByHocVienIdAsync(HocVienId);
+            return Json(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateLopHocAsync([FromBody]Models.LopHocViewModel model)
         {

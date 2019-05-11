@@ -130,19 +130,44 @@
                     <template slot="items" slot-scope="props">
                         <td class="justify-center layout px-0">
 
-                            <v-btn flat icon
-                                   color="red"
-                                   v-on:click.stop="deleteDialog = true"
-                                   v-on:click="itemToDelete = props.item">
-                                <v-icon>delete</v-icon>
-                            </v-btn>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn flat icon
+                                           color="red"
+                                           v-on="on"
+                                           v-on:click.stop="deleteDialog = true"
+                                           v-on:click="itemToDelete = props.item">
+                                        <v-icon>delete</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Xóa</strong>
+                            </v-tooltip>
 
-                            <v-btn flat icon
-                                   color="primary"
-                                   v-on:click.stop="dialogEdit = true"
-                                   v-on:click="mappingEditItem(props.item)">
-                                <v-icon>edit</v-icon>
-                            </v-btn>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn flat icon
+                                           color="primary"
+                                           v-on="on"
+                                           v-on:click.stop="dialogEdit = true"
+                                           v-on:click="mappingEditItem(props.item)">
+                                        <v-icon>edit</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Sửa</strong>
+                            </v-tooltip>
+
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn flat icon
+                                           color="success"
+                                           v-on="on"
+                                           v-on:click.stop="dialogDiemDanh = true"
+                                           v-on:click="mappingDiemDanhItem(props.item)">
+                                        <v-icon>info</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Xem Điểm Danh</strong>
+                            </v-tooltip>
 
                         </td>
                         <td>{{ props.item.fullName }}</td>
@@ -303,6 +328,47 @@
                     <v-spacer></v-spacer>
                     <v-btn color="secondary darken-1" flat v-on:click="dialogEdit = false">Đóng</v-btn>
                     <v-btn color="blue darken-1 white--text" v-on:click="onUpdate(itemToEdit)">Lưu</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+
+        @*DiemDanh Dialog*@
+        <v-dialog v-model="dialogDiemDanh" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Lịch Sử Điểm Danh Học Viên '{{ itemToDiemDanh.fullName }}'</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container grid-list-md>
+                        <v-layout wrap>
+
+                            <v-flex xs12 sm4>
+                                <v-select v-model="selectedLopHoc"
+                                          :items="itemDiemDanh"
+                                          item-text="name"
+                                          item-value="lopHocId"
+                                          attach
+                                          chips
+                                          label="Chọn Lớp Học"
+                                          v-on:change="GetLopHocByHocVien">
+                                    <template v-slot:selection="data">
+                                        <v-chip :selected="data.selected"
+                                                color="green"
+                                                text-color="white">
+                                            <span>{{ data.item.name }}</span>
+                                        </v-chip>
+                                    </template>
+                                </v-select>
+                            </v-flex>
+
+                            
+                        </v-layout>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="secondary darken-1" flat v-on:click="dialogDiemDanh = false">Đóng</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>

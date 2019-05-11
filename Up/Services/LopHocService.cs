@@ -171,6 +171,18 @@
                 .ToListAsync();
         }
 
+        public async Task<List<LopHocViewModel>> GetLopHocByHocVienIdAsync(Guid HocVienId)
+        {
+            return await _context.LopHocs
+                .Where(x => x.HocVien_LopHocs.Any(m => m.HocVienId == HocVienId))
+                .Select(x => new LopHocViewModel
+                {
+                    Name = x.Name,
+                    LopHocId = x.LopHocId
+                })
+                .ToListAsync();
+        }
+
         public async Task<bool> ToggleHuyLopAsync(Guid LopHocId, string LoggedEmployee)
         {
             try

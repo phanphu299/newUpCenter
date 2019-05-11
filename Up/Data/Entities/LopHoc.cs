@@ -35,5 +35,6 @@
         public GiaoVien GiaoVien { get; set; }
         public ICollection<LopHoc_Sach> LopHoc_Sachs { get; set; }
         public ICollection<LopHoc_DiemDanh> LopHoc_DiemDanhs { get; set; }
+        public ICollection<HocVien_LopHoc> HocVien_LopHocs { get; set; }
     }
 }

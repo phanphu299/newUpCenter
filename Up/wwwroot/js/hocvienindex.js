@@ -9,6 +9,7 @@
         deleteDialog: false,
         dialog: false,
         dialogEdit: false,
+        dialogDiemDanh: false,
         alert: false,
         alertEdit: false,
         isShowDatePicker: false,
@@ -29,6 +30,7 @@
         },
         itemToDelete: {},
         itemToEdit: {},
+        itemToDiemDanh: {},
         editedIndex: -1,
         headers: [
             {
@@ -55,7 +57,9 @@
         ],
         khoaHocItems: [],
         itemQuanHe: [],
-        itemLopHoc: []
+        itemLopHoc: [],
+        itemDiemDanh: [],
+        selectedLopHoc: {}
     },
     async beforeCreate() {
         let that = this;
@@ -172,6 +176,20 @@
 
         },
 
+        mappingDiemDanhItem(item) {
+            this.editedIndex = this.khoaHocItems.indexOf(item);
+            this.itemToDiemDanh = Object.assign({}, item);
+
+            let that = this;
+            axios.get('/LopHoc/GetLopHocByHocVienIdAsync?HocVienId=' + item.hocVienId)
+                .then(function (response) {
+                    that.itemDiemDanh = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
         async onSave(item) {
             if (this.newItem.fullName === '' || this.newItem.englishName === '' || this.newItem.phone === '' ||
                 this.newItem.facebookAccount === '' || this.newItem.ngaySinh === '') {
@@ -254,6 +272,11 @@
                     that.messageText = 'Xóa lỗi: ' + error;
                     that.color = 'error';
                 });
+        },
+
+        async GetLopHocByHocVien() {
+            let that = this;
+            
         }
     }
 });
