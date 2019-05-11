@@ -85,6 +85,37 @@
             });
         },
 
+        async LopNghi() {
+            let that = this;
+            await axios({
+                method: 'post',
+                url: '/DiemDanh/LopNghiAsync',
+                data: {
+                    LopHocId: this.selectedLopHoc,
+                    NgayDiemDanh: this.ngayDiemDanh
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Điểm danh thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Điểm danh lỗi: ' + error;
+                    that.color = 'error';
+                });
+        },
+
         async onCoMat(item) {
             let that = this;
             await axios({

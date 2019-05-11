@@ -8,7 +8,7 @@
             <v-card>
                 <v-card-title>
                     <v-layout wrap>
-                        <v-flex xs12 sm4>
+                        <v-flex xs12 sm3>
                             <v-select v-model="selectedLopHoc"
                                       :items="itemLopHoc"
                                       item-text="name"
@@ -26,7 +26,7 @@
                                 </template>
                             </v-select>
                         </v-flex>
-                        <v-flex xs12 sm4>
+                        <v-flex xs12 sm3>
                             <v-menu v-model="isShowDatePicker"
                                     :close-on-content-click="false"
                                     :nudge-right="40"
@@ -43,14 +43,22 @@
                                 <v-date-picker locale="vi-vn" v-model="ngayDiemDanh" v-on:input="isShowDatePicker = false"></v-date-picker>
                             </v-menu>
                         </v-flex>
-                        <v-flex xs12 sm4 class="text-xs-center">
+                        <v-flex xs12 sm3 class="text-xs-center">
                             <v-btn :disabled="selectedLopHoc==''"
                                    color="info"
                                    v-on:click="DiemDanhCaLop()">
-                                Điểm Danh Có Mặt Cả Lớp
+                                Có Mặt Cả Lớp
+                            </v-btn>
+                        </v-flex>
+                        <v-flex xs12 sm3 class="text-xs-center">
+                            <v-btn :disabled="selectedLopHoc==''"
+                                   color="error"
+                                   v-on:click="LopNghi()">
+                                Lớp Nghỉ
                             </v-btn>
                         </v-flex>
                     </v-layout>
+                    <br />
                     <v-spacer></v-spacer>
                     <v-text-field v-model="search"
                                   append-icon="search"

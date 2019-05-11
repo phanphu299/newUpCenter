@@ -10,6 +10,7 @@
         public Guid HocVienId { get; set; }
         public string HocVien { get; set; }
         public bool IsOff { get; set; }
+        public bool? IsDuocNghi { get; set; }
         public string NgayDiemDanh { get; set; }
         public string CreatedDate { get; set; }
         public string CreatedBy { get; set; }

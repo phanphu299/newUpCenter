@@ -79,6 +79,36 @@
             return true;
         }
 
+        public async Task<bool> DuocNghi(Guid LopHocId, DateTime NgayDiemDanh, string LoggedEmployee)
+        {
+            if (LopHocId == null || NgayDiemDanh == null)
+                throw new Exception("Lỗi khi Cho Lớp Học Nghỉ!!!");
+
+            var isExisting = _context.LopHoc_DiemDanhs
+                                    .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh)
+                                    .ToListAsync();
+            if (isExisting.Result.Any())
+                throw new Exception("Lớp học đã được điểm danh ngày " + NgayDiemDanh.ToShortDateString());
+
+            var hocViens = GetHocVienByLopHoc(LopHocId);
+
+            foreach (var item in hocViens.Result)
+            {
+                LopHoc_DiemDanh lopHoc_DiemDanh = new LopHoc_DiemDanh();
+                lopHoc_DiemDanh.NgayDiemDanh = NgayDiemDanh;
+                lopHoc_DiemDanh.IsOff = true;
+                lopHoc_DiemDanh.IsDuocNghi = true;
+                lopHoc_DiemDanh.LopHocId = LopHocId;
+                lopHoc_DiemDanh.HocVienId = item.HocVienId;
+                lopHoc_DiemDanh.CreatedBy = LoggedEmployee;
+                lopHoc_DiemDanh.CreatedDate = DateTime.Now;
+                _context.LopHoc_DiemDanhs.Add(lopHoc_DiemDanh);
+            }
+
+            var saveResult = await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<List<HocVienViewModel>> GetHocVienByLopHoc(Guid LopHocId)
         {
             if (LopHocId == null)

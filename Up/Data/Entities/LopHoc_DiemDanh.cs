@@ -14,6 +14,7 @@
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
+        public bool? IsDuocNghi { get; set; }
 
         [ForeignKey("LopHocId")]
         public LopHoc LopHoc { get; set; }
