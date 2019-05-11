@@ -11,5 +11,6 @@
         Task<bool> DiemDanhTungHocVienAsync(Guid LopHocId, Guid HocVienId, bool isOff, DateTime NgayDiemDanh, string LoggedEmployee);
         Task<bool> DiemDanhTatCaAsync(Guid LopHocId, bool isOff, DateTime NgayDiemDanh, string LoggedEmployee);
         Task<bool> DuocNghi(Guid LopHocId, DateTime NgayDiemDanh, string LoggedEmployee);
+        Task<List<DiemDanhViewModel>> GetDiemDanhByHocVienAndLopHoc(Guid HocVienId, Guid LopHocId);
     }
 }

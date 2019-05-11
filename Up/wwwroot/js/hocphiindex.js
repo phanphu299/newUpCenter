@@ -30,13 +30,13 @@
                 sortable: false,
                 value: ''
             },
-            { text: 'Học Phí', value: 'gia', align: 'left', sortable: false },            
-            { text: 'Ngày Áp Dụng', value: 'ngayApDung', align: 'left', sortable: false },
-            { text: 'Ghi Chú', value: 'ghiChu', align: 'left', sortable: false },
-            { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: false },
-            { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: false },
-            { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: false },
-            { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: false }
+            { text: 'Học Phí', value: 'gia', align: 'left', sortable: true },            
+            { text: 'Ngày Áp Dụng', value: 'ngayApDung', align: 'left', sortable: true },
+            { text: 'Ghi Chú', value: 'ghiChu', align: 'left', sortable: true },
+            { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: true },
+            { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: true },
+            { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: true },
+            { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: true }
         ],
         khoaHocItems: [],
         isShowDatePicker: false,

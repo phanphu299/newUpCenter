@@ -26,12 +26,12 @@
                 sortable: false,
                 value: ''
             },
-            { text: 'Giờ Bắt Đầu', value: 'from', align: 'left', sortable: false },
-            { text: 'Giờ Kết Thúc', value: 'to', align: 'left', sortable: false },
-            { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: false },
-            { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: false },
-            { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: false },
-            { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: false }
+            { text: 'Giờ Bắt Đầu', value: 'from', align: 'left', sortable: true },
+            { text: 'Giờ Kết Thúc', value: 'to', align: 'left', sortable: true },
+            { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: true },
+            { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: true },
+            { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: true },
+            { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: true }
         ],
         khoaHocItems: []
     },

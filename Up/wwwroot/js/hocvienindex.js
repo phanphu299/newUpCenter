@@ -39,23 +39,29 @@
                 sortable: false,
                 value: ''
             },
-            { text: 'Họ Tên', value: 'fullName', align: 'left', sortable: false },
+            { text: 'Họ Tên', value: 'fullName', align: 'left', sortable: true },
             { text: 'Lớp Học', value: '', align: 'left', sortable: false },
-            { text: 'Ngày Sinh', value: 'ngaySinh', align: 'left', sortable: false },
-            { text: 'English Name', value: 'englishName', align: 'left', sortable: false },
-            { text: 'SĐT', value: 'phone', align: 'left', sortable: false },
-            { text: 'Facebook', value: 'facebookAccount', align: 'left', sortable: false },
-            { text: 'Họ Tên Phụ Huynh', value: 'parentFullName', align: 'left', sortable: false },
-            { text: 'SĐT Phụ Huynh', value: 'parentPhone', align: 'left', sortable: false },
-            { text: 'Quan Hệ', value: 'quanHe', align: 'left', sortable: false },
-            { text: 'Facebook Phụ Huynh', value: 'parentFacebookAccount', align: 'left', sortable: false },
-            { text: 'Chèn', value: 'isAppend', align: 'left', sortable: false },
-            { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: false },
-            { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: false },
-            { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: false },
-            { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: false }
+            { text: 'Ngày Sinh', value: 'ngaySinh', align: 'left', sortable: true },
+            { text: 'English Name', value: 'englishName', align: 'left', sortable: true },
+            { text: 'SĐT', value: 'phone', align: 'left', sortable: true },
+            { text: 'Facebook', value: 'facebookAccount', align: 'left', sortable: true },
+            { text: 'Họ Tên Phụ Huynh', value: 'parentFullName', align: 'left', sortable: true },
+            { text: 'SĐT Phụ Huynh', value: 'parentPhone', align: 'left', sortable: true },
+            { text: 'Quan Hệ', value: 'quanHe', align: 'left', sortable: true },
+            { text: 'Facebook Phụ Huynh', value: 'parentFacebookAccount', align: 'left', sortable: true },
+            { text: 'Chèn', value: 'isAppend', align: 'left', sortable: true },
+            { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: true },
+            { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: true },
+            { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: true },
+            { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: true }
+        ],
+        headersDiemDanh: [
+            { text: 'Ngày Học', value: 'ngayDiemDanh', align: 'left', sortable: false },
+            { text: 'Vắng', value: '', align: 'left', sortable: false },
+            { text: 'Lớp Được Nghỉ', value: '', align: 'left', sortable: false }
         ],
         khoaHocItems: [],
+        diemDanhItems: [],
         itemQuanHe: [],
         itemLopHoc: [],
         itemDiemDanh: [],
@@ -179,6 +185,7 @@
         mappingDiemDanhItem(item) {
             this.editedIndex = this.khoaHocItems.indexOf(item);
             this.itemToDiemDanh = Object.assign({}, item);
+            this.selectedLopHoc = '';   
 
             let that = this;
             axios.get('/LopHoc/GetLopHocByHocVienIdAsync?HocVienId=' + item.hocVienId)
@@ -274,9 +281,15 @@
                 });
         },
 
-        async GetLopHocByHocVien() {
+        async GetDiemDanhByHocVien() {
             let that = this;
-            
+            await axios.get('/DiemDanh/GetDiemDanhByHocVienAndLopHocAsync?HocVienId=' + that.itemToDiemDanh.hocVienId + '&LopHocId=' + that.selectedLopHoc)
+                .then(function (response) {
+                    that.diemDanhItems = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
     }
 });

@@ -109,6 +109,25 @@
             return true;
         }
 
+        public async Task<List<DiemDanhViewModel>> GetDiemDanhByHocVienAndLopHoc(Guid HocVienId, Guid LopHocId)
+        {
+            if (HocVienId == null)
+                throw new Exception("Không tìm thấy Học Viên!");
+
+            if (LopHocId == null)
+                throw new Exception("Không tìm thấy Lớp Học!");
+
+            return await _context.LopHoc_DiemDanhs.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId )
+                                .OrderByDescending(x => x.NgayDiemDanh)
+                                .Select(x => new DiemDanhViewModel
+                                {
+                                    IsDuocNghi = x.IsDuocNghi,
+                                    IsOff = x.IsOff,
+                                    NgayDiemDanh = x.NgayDiemDanh.ToString("dd/MM/yyyy")
+                                })
+                                .ToListAsync();
+        }
+
         public async Task<List<HocVienViewModel>> GetHocVienByLopHoc(Guid LopHocId)
         {
             if (LopHocId == null)
