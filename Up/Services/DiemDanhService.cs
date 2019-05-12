@@ -128,6 +128,23 @@
                                 .ToListAsync();
         }
 
+        public async Task<List<DiemDanhViewModel>> GetDiemDanhByLopHoc(Guid LopHocId)
+        {
+            if (LopHocId == null)
+                throw new Exception("Không tìm thấy Lớp Học!");
+
+            return await _context.LopHoc_DiemDanhs.Where(x => x.LopHocId == LopHocId)
+                                .OrderByDescending(x => x.NgayDiemDanh)
+                                .Select(x => new DiemDanhViewModel
+                                {
+                                    IsDuocNghi = x.IsDuocNghi,
+                                    IsOff = x.IsOff,
+                                    NgayDiemDanh = x.NgayDiemDanh.ToString("dd/MM/yyyy"),
+                                    HocVien = x.HocVien.FullName
+                                })
+                                .ToListAsync();
+        }
+
         public async Task<List<HocVienViewModel>> GetHocVienByLopHoc(Guid LopHocId)
         {
             if (LopHocId == null)

@@ -38,6 +38,13 @@
             return Json(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetDiemDanhByLopHocAsync(Guid LopHocId)
+        {
+            var model = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId);
+            return Json(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> DiemDanhTungHocVienAsync([FromBody]Models.LopHoc_DiemDanhViewModel model)
         {

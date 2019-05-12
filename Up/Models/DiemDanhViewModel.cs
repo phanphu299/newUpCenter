@@ -5,5 +5,6 @@
         public string NgayDiemDanh { get; set; }
         public bool IsOff { get; set; }
         public bool? IsDuocNghi { get; set; }
+        public string HocVien { get; set; }
     }
 }

@@ -184,8 +184,7 @@
 
         mappingDiemDanhItem(item) {
             this.editedIndex = this.khoaHocItems.indexOf(item);
-            this.itemToDiemDanh = Object.assign({}, item);
-            this.selectedLopHoc = '';   
+            this.itemToDiemDanh = Object.assign({}, item);   
 
             let that = this;
             axios.get('/LopHoc/GetLopHocByHocVienIdAsync?HocVienId=' + item.hocVienId)

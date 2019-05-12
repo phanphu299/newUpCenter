@@ -55,11 +55,18 @@
                               :search="search">
                     <template slot="items" slot-scope="props">
                         <td>
-                            <v-btn flat icon slot="activator" color="red"
-                                   v-on:click.stop="deleteDialog = true"
-                                   v-on:click="itemToDelete = props.item">
-                                <v-icon>delete</v-icon>
-                            </v-btn>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn flat icon slot="activator"
+                                           v-on="on"
+                                           color="red"
+                                           v-on:click.stop="deleteDialog = true"
+                                           v-on:click="itemToDelete = props.item">
+                                        <v-icon>delete</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Xóa</strong>
+                            </v-tooltip>
                         </td>
                         <td>
                             <v-edit-dialog :return-value.sync="props.item.name"

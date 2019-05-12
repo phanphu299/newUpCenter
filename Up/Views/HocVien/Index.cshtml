@@ -342,7 +342,7 @@
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-layout wrap>
-
+                            
                             <v-flex xs12 sm4>
                                 <v-select v-model="selectedLopHoc"
                                           :items="itemDiemDanh"
@@ -365,8 +365,8 @@
                             <v-flex>
                                 <v-data-table :headers="headersDiemDanh"
                                               :items="diemDanhItems"
-                                              v-if="selectedLopHoc!=''"
-                                              :search="search">
+                                              v-if="diemDanhItems.length > 0"
+                                              :search="searchDiemDanh">
                                     <template slot="items" slot-scope="props">
                                         <td>{{ props.item.ngayDiemDanh}}</td>
                                         <td><v-switch v-model="props.item.isOff" color="error" hide-details readonly></v-switch></td>
@@ -384,7 +384,7 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="secondary darken-1" flat v-on:click="dialogDiemDanh = false; diemDanhItems = []">Đóng</v-btn>
+                    <v-btn color="secondary darken-1" flat v-on:click="dialogDiemDanh = false; diemDanhItems = []; selectedLopHoc = {}">Đóng</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>

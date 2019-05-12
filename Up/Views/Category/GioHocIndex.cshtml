@@ -61,18 +61,32 @@
                               :search="search">
                     <template slot="items" slot-scope="props">
                         <td>
-                            <v-btn flat icon slot="activator" color="red"
-                                   v-on:click.stop="deleteDialog = true"
-                                   v-on:click="itemToDelete = props.item">
-                                <v-icon>delete</v-icon>
-                            </v-btn>
 
-                            <v-btn color="primary"
-                                   flat icon
-                                   v-on:click.stop="dialogEdit = true"
-                                   v-on:click="mappingEditItem(props.item)">
-                                <v-icon>edit</v-icon>
-                            </v-btn>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn flat icon slot="activator"
+                                           v-on="on"
+                                           color="red"
+                                           v-on:click.stop="deleteDialog = true"
+                                           v-on:click="itemToDelete = props.item">
+                                        <v-icon>delete</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Xóa</strong>
+                            </v-tooltip>
+
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn color="primary"
+                                           flat icon
+                                           v-on="on"
+                                           v-on:click.stop="dialogEdit = true"
+                                           v-on:click="mappingEditItem(props.item)">
+                                        <v-icon>edit</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Sửa</strong>
+                            </v-tooltip>
                         </td>
                         <td>{{ props.item.from }}</td>
                         <td>{{ props.item.to }}</td>
@@ -99,7 +113,7 @@
                 </v-card-title>
 
                 <v-card-text>
-                    Bạn có chắc xóa '{{ itemToDelete.name }}'?
+                    Bạn có chắc xóa ?
                 </v-card-text>
 
                 <v-divider></v-divider>

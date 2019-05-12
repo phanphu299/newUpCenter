@@ -135,19 +135,44 @@
                     <template slot="items" slot-scope="props">
                         <td class="justify-center layout px-0">
 
-                            <v-btn flat icon
-                                   color="red"
-                                   v-on:click.stop="deleteDialog = true"
-                                   v-on:click="itemToDelete = props.item">
-                                <v-icon>delete</v-icon>
-                            </v-btn>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn flat icon slot="activator"
+                                           v-on="on"
+                                           color="red"
+                                           v-on:click.stop="deleteDialog = true"
+                                           v-on:click="itemToDelete = props.item">
+                                        <v-icon>delete</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Xóa</strong>
+                            </v-tooltip>
 
-                            <v-btn color="primary"
-                                   flat icon
-                                   v-on:click.stop="dialogEdit = true"
-                                   v-on:click="mappingEditItem(props.item)">
-                                <v-icon>edit</v-icon>
-                            </v-btn>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn color="primary"
+                                           flat icon
+                                           v-on="on"
+                                           v-on:click.stop="dialogEdit = true"
+                                           v-on:click="mappingEditItem(props.item)">
+                                        <v-icon>edit</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Sửa</strong>
+                            </v-tooltip>
+
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn flat icon
+                                           color="success"
+                                           v-on="on"
+                                           v-on:click.stop="dialogDiemDanh = true"
+                                           v-on:click="mappingDiemDanhItem(props.item)">
+                                        <v-icon>info</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Xem Điểm Danh</strong>
+                            </v-tooltip>
 
                         </td>
                         <td>{{ props.item.name }}</td>
@@ -347,7 +372,46 @@
             </v-card>
         </v-dialog>
 
+        @*DiemDanh Dialog*@
+        <v-dialog v-model="dialogDiemDanh" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Lịch Sử Điểm Danh Lớp '{{ itemToDiemDanh.name }}'</span>
+                </v-card-title>
 
+                <v-card-text>
+                    <v-container>
+                        
+                        <v-layout wrap>
+                            <v-text-field v-model="searchDiemDanh"
+                                          append-icon="search"
+                                          label="Tìm Kiếm"
+                                          single-line
+                                          v-if="diemDanhItems.length > 0"
+                                          hide-details></v-text-field>
+                            <v-data-table :headers="headersDiemDanh"
+                                          :items="diemDanhItems"
+                                          v-if="diemDanhItems.length > 0"
+                                          :search="searchDiemDanh">
+                                <template slot="items" slot-scope="props">
+                                    <td>{{ props.item.hocVien}}</td>
+                                    <td>{{ props.item.ngayDiemDanh}}</td>
+                                    <td><v-switch v-model="props.item.isOff" color="error" hide-details readonly></v-switch></td>
+                                    <td><v-switch v-model="props.item.isDuocNghi" color="error" hide-details readonly></v-switch></td>
+                                </template>
+                                <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                                    Không tìm thấy "{{ search }}".
+                                </v-alert>
+                            </v-data-table>
+                        </v-layout>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="secondary darken-1" flat v-on:click="dialogDiemDanh = false; diemDanhItems = [];">Đóng</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
 
         <v-snackbar v-model="snackbar"
                     :color="color"

@@ -9,12 +9,14 @@
         deleteDialog: false,
         dialog: false,
         dialogEdit: false,
+        dialogDiemDanh: false,
         alert: false,
         alertEdit: false,
         isShowDatePicker: false,
         isShowDatePicker2: false,
         isShowDatePicker3: false,
         search: '',
+        searchDiemDanh: '',
         newItem: {
             name: "",
             khoaHoc: "",
@@ -26,6 +28,7 @@
             ngayKhaiGiang: new Date().toISOString().substr(0, 10)
         },
         itemToDelete: {},
+        itemToDiemDanh: {},
         itemToEdit: {},
         editedIndex: -1,
         headers: [
@@ -51,13 +54,20 @@
             { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: true },
             { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: true }
         ],
+        headersDiemDanh: [
+            { text: 'Học Viên', value: 'hocVien', align: 'left', sortable: false },
+            { text: 'Ngày Học', value: 'ngayDiemDanh', align: 'left', sortable: false },
+            { text: 'Vắng', value: '', align: 'left', sortable: false },
+            { text: 'Lớp Được Nghỉ', value: '', align: 'left', sortable: false }
+        ],
         khoaHocItems: [],
         itemKhoaHoc: [],
         itemGioHoc: [],
         itemNgayHoc: [],
         itemHocPhi: [],
         itemSach: [],
-        itemGiaoVien: []
+        itemGiaoVien: [],
+        diemDanhItems: []
     },
     async beforeCreate() {
         let that = this;
@@ -247,6 +257,20 @@
                 let [dayKT, monthKT, yearKT] = this.itemToEdit.ngayKetThuc.split('/');
                 this.itemToEdit.ngayKetThuc = yearKT + '-' + monthKT + '-' + dayKT;
             }
+        },
+
+        mappingDiemDanhItem(item) {
+            this.editedIndex = this.khoaHocItems.indexOf(item);
+            this.itemToDiemDanh = Object.assign({}, item);
+
+            let that = this;
+            axios.get('/DiemDanh/GetDiemDanhByLopHocAsync?LopHocId=' + item.lopHocId)
+                .then(function (response) {
+                    that.diemDanhItems = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
 
         async onSave(item) {
