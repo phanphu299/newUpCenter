@@ -1,9 +1,11 @@
-﻿namespace Up.Models
+﻿
+namespace Up.Models
 {
     using System;
-    public class QuanHeViewModel
+
+    public class LoaiGiaoVienViewModel
     {
-        public Guid QuanHeId { get; set; }
+        public Guid LoaiGiaoVienId { get; set; }
         public string Name { get; set; }
         public string CreatedDate { get; set; }
         public string CreatedBy { get; set; }

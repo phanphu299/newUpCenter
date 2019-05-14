@@ -1,14 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Up.Data;
-using Up.Data.Entities;
-using Up.Models;
-
-namespace Up.Services
+﻿namespace Up.Services
 {
+    using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Up.Data;
+    using Up.Data.Entities;
+    using Up.Models;
     public class QuanHeService : IQuanHeService
     {
         private readonly ApplicationDbContext _context;
@@ -39,6 +38,10 @@ namespace Up.Services
 
         public async Task<bool> DeleteQuanHeAsync(Guid QuanHeId, string LoggedEmployee)
         {
+            var hocVien = await _context.HocViens.Where(x => x.QuanHeId == QuanHeId).ToListAsync();
+            if (hocVien.Any())
+                throw new Exception("Hãy xóa những học viên có quan hệ này trước !!!");
+
             var item = await _context.QuanHes
                                     .Where(x => x.QuanHeId == QuanHeId)
                                     .SingleOrDefaultAsync();

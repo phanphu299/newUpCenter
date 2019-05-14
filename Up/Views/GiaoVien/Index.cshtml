@@ -50,6 +50,15 @@
                                         <v-flex xs12 sm4>
                                             <v-text-field label="CMND *" required v-model="newItem.cmnd" v-on:keyup.enter="onSave"></v-text-field>
                                         </v-flex>
+
+                                        <v-flex xs12 sm4>
+                                            <v-select :items="itemLoaiGiaoVien"
+                                                      item-text="name"
+                                                      item-value="loaiGiaoVienId"
+                                                      v-model="newItem.loaiGiaoVien"
+                                                      label="Chọn Loại Giáo Viên *">
+                                            </v-select>
+                                        </v-flex>
                                     </v-layout>
                                 </v-container>
                                 <small>* bắt buộc</small>
@@ -110,6 +119,7 @@
 
                         </td>
                         <td>{{ props.item.name }}</td>
+                        <td>{{ props.item.loaiGiaoVien }}</td>
                         <td>{{ props.item.phone }}</td>
                         <td>{{ props.item.teachingRate }}</td>
                         <td>{{ props.item.tutoringRate }}</td>
@@ -201,6 +211,15 @@
                             </v-flex>
                             <v-flex xs12 sm4>
                                 <v-text-field label="CMND *" required v-model="itemToEdit.cmnd" v-on:keyup.enter="onSave"></v-text-field>
+                            </v-flex>
+
+                            <v-flex xs12 sm4>
+                                <v-select :items="itemLoaiGiaoVien"
+                                          item-text="name"
+                                          item-value="loaiGiaoVienId"
+                                          v-model="itemToEdit.loaiGiaoVienId"
+                                          label="Chọn Loại Giáo Viên *">
+                                </v-select>
                             </v-flex>
                         </v-layout>
                     </v-container>

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Up.Data.Entities
+﻿namespace Up.Data.Entities
 {
+    using System;
+    using System.Collections.Generic;
+
     public class NgayHoc
     {
         public Guid NgayHocId { get; set; }

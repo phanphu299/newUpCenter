@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Up.Data;
 
 namespace Up.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190512160803_AddLoaiGiaoVien")]
+    partial class AddLoaiGiaoVien
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +47,8 @@ namespace Up.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3d984675-a447-4c25-9fa6-769e069485bb",
-                            ConcurrencyStamp = "dde3c0af-5eb3-4f73-aa8a-f4e1434835c5",
+                            Id = "e43efa91-9af4-4484-9cef-366808342b2a",
+                            ConcurrencyStamp = "7ea09ddf-797f-486b-ab5f-3144aa4ed869",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -210,7 +212,7 @@ namespace Up.Data.Migrations
 
                     b.Property<bool>("IsDisabled");
 
-                    b.Property<Guid>("LoaiGiaoVienId");
+                    b.Property<Guid?>("LoaiGiaoVienId");
 
                     b.Property<string>("Name");
 
@@ -618,8 +620,7 @@ namespace Up.Data.Migrations
                 {
                     b.HasOne("Up.Data.Entities.LoaiGiaoVien", "LoaiGiaoVien")
                         .WithMany("GiaoViens")
-                        .HasForeignKey("LoaiGiaoVienId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("LoaiGiaoVienId");
                 });
 
             modelBuilder.Entity("Up.Data.Entities.HocVien", b =>

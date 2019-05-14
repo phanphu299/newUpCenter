@@ -6,6 +6,8 @@ namespace Up.Models
     {
         public Guid GiaoVienId { get; set; }
         public string Name { get; set; }
+        public Guid LoaiGiaoVienId { get; set; }
+        public string LoaiGiaoVien { get; set; }
         public string Phone { get; set; }
         public double TeachingRate { get; set; }
         public double TutoringRate { get; set; }

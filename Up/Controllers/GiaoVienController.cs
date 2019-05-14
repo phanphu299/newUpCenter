@@ -42,7 +42,7 @@
 
             try
             {
-                var successful = await _giaoVienService.CreateGiaoVienAsync(model.Name, model.Phone, model.TeachingRate, model.TutoringRate,
+                var successful = await _giaoVienService.CreateGiaoVienAsync(model.Name, model.LoaiGiaoVienId, model.Phone, model.TeachingRate, model.TutoringRate,
                     model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName, model.CMND, currentUser.Email);
                 if (successful == null)
                 {
@@ -128,7 +128,7 @@
 
             try
             {
-                var successful = await _giaoVienService.UpdateGiaoVienAsync(model.GiaoVienId, model.Name, model.Phone, model.TeachingRate, model.TutoringRate,
+                var successful = await _giaoVienService.UpdateGiaoVienAsync(model.GiaoVienId, model.Name, model.LoaiGiaoVienId, model.Phone, model.TeachingRate, model.TutoringRate,
                     model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName, model.CMND, currentUser.Email);
                 if (successful == null)
                 {

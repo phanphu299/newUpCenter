@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Up.Models;
-
-namespace Up.Services
+﻿namespace Up.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Up.Models;
+
     public interface IQuanHeService
     {
         Task<List<QuanHeViewModel>> GetQuanHeAsync();

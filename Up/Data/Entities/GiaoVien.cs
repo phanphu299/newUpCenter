@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Up.Data.Entities
+﻿namespace Up.Data.Entities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class GiaoVien
     {
         public Guid GiaoVienId { get; set; }
@@ -20,7 +21,12 @@ namespace Up.Data.Entities
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
+        public Guid LoaiGiaoVienId { get; set; }
+
+        [ForeignKey("LoaiGiaoVienId")]
+        public LoaiGiaoVien LoaiGiaoVien { get; set; }
 
         public ICollection<LopHoc> LopHocs { get; set; }
+
     }
 }

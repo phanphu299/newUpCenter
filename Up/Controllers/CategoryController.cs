@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
-using Up.Services;
-
-namespace Up.Controllers
+﻿namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using System;
+    using System.Threading.Tasks;
+    using Up.Services;
+
     public class CategoryController : Controller
     {
         private readonly IKhoaHocService _khoaHocService;
@@ -14,9 +14,10 @@ namespace Up.Controllers
         private readonly IQuanHeService _quanHeService;
         private readonly IHocPhiService _hocPhiService;
         private readonly ISachService _sachService;
+        private readonly ILoaiGiaoVienService _loaiGiaoVienService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public CategoryController(IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, IHocPhiService hocPhiService, ISachService sachService, UserManager<IdentityUser> userManager)
+        public CategoryController(IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, IHocPhiService hocPhiService, ISachService sachService, ILoaiGiaoVienService loaiGiaoVienService, UserManager<IdentityUser> userManager)
         {
             _khoaHocService = khoaHocService;
             _gioHocService = gioHocService;
@@ -24,6 +25,7 @@ namespace Up.Controllers
             _quanHeService = quanHeService;
             _hocPhiService = hocPhiService;
             _sachService = sachService;
+            _loaiGiaoVienService = loaiGiaoVienService;
             _userManager = userManager;
         }
 
@@ -828,6 +830,145 @@ namespace Up.Controllers
             try
             {
                 var successful = await _sachService.DeleteSachAsync(model.SachId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        public async Task<IActionResult> LoaiGiaoVienIndex()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLoaiGiaoVienAsync()
+        {
+            var model = await _loaiGiaoVienService.GetLoaiGiaoVienAsync();
+            return Json(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateLoaiGiaoVienAsync([FromBody]Models.LoaiGiaoVienViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("LoaiGiaoVienIndex");
+            }
+
+            try
+            {
+                var successful = await _loaiGiaoVienService.CreateLoaiGiaoVienAsync(model.Name, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Thêm mới lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Thêm mới thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateLoaiGiaoVienAsync([FromBody]Models.LoaiGiaoVienViewModel model)
+        {
+            if (model.LoaiGiaoVienId == Guid.Empty)
+            {
+                return RedirectToAction("LoaiGiaoVienIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("LoaiGiaoVienIndex");
+            }
+
+            try
+            {
+                var successful = await _loaiGiaoVienService.UpdateLoaiGiaoVienAsync(model.LoaiGiaoVienId, model.Name, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteLoaiGiaoVienAsync([FromBody]Models.LoaiGiaoVienViewModel model)
+        {
+            if (model.LoaiGiaoVienId == Guid.Empty)
+            {
+                return RedirectToAction("LoaiGiaoVienIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("LoaiGiaoVienIndex");
+            }
+
+            try
+            {
+                var successful = await _loaiGiaoVienService.DeleteLoaiGiaoVienAsync(model.LoaiGiaoVienId, currentUser.Email);
                 if (!successful)
                 {
                     return Json(new Models.ResultModel

@@ -21,7 +21,8 @@
             facebookAccount: '',
             diaChi: '',
             initialName: '',
-            cmnd: ''
+            cmnd: '',
+            loaiGiaoVien: ''
         },
         itemToDelete: {},
         itemToEdit: {},
@@ -35,6 +36,7 @@
                 value: ''
             },
             { text: 'Tên Giáo Viên', value: 'name', align: 'left', sortable: true },
+            { text: 'Loại Giáo Viên', value: 'loaiGiaoVien', align: 'left', sortable: true },
             { text: 'Số Điện Thoại', value: 'phone', align: 'left', sortable: true },
             { text: 'Teaching Rate', value: 'teachingRate', align: 'left', sortable: true },
             { text: 'Tutoring Rate', value: 'tutoringRate', align: 'left', sortable: true },
@@ -49,12 +51,21 @@
             { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: true }
         ],
         khoaHocItems: [],
+        itemLoaiGiaoVien: []
     },
     async beforeCreate() {
         let that = this;
-        await axios.get('/giaovien/GetGiaoVienAsync')
+        await axios.get('/GiaoVien/GetGiaoVienAsync')
             .then(function (response) {
                 that.khoaHocItems = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        await axios.get('/Category/GetLoaiGiaoVienAsync')
+            .then(function (response) {
+                that.itemLoaiGiaoVien = response.data;
             })
             .catch(function (error) {
                 console.log(error);
@@ -90,7 +101,8 @@
                         FacebookAccount: item.facebookAccount,
                         DiaChi: item.diaChi,
                         InitialName: item.initialName,
-                        CMND: item.cmnd
+                        CMND: item.cmnd,
+                        LoaiGiaoVienId: item.loaiGiaoVienId
                     }
                 })
                 .then(function (response) {
@@ -143,7 +155,8 @@
                         FacebookAccount: that.newItem.facebookAccount,
                         DiaChi: that.newItem.diaChi,
                         InitialName: that.newItem.initialName,
-                        CMND: that.newItem.cmnd
+                        CMND: that.newItem.cmnd,
+                        LoaiGiaoVienId: that.newItem.loaiGiaoVien
                     }
                 })
                     .then(function (response) {

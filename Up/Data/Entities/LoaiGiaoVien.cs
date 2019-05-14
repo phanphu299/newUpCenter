@@ -1,12 +1,11 @@
-﻿
-namespace Up.Data.Entities
+﻿namespace Up.Data.Entities
 {
     using System;
     using System.Collections.Generic;
 
-    public class KhoaHoc
+    public class LoaiGiaoVien
     {
-        public Guid KhoaHocId { get; set; }
+        public Guid LoaiGiaoVienId { get; set; }
         public string Name { get; set; }
         public bool IsDisabled { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -14,6 +13,6 @@ namespace Up.Data.Entities
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
 
-        public ICollection<LopHoc> LopHocs { get; set; }
+        public ICollection<GiaoVien> GiaoViens { get; set; }
     }
 }
