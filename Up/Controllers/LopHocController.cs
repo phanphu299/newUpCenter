@@ -39,6 +39,13 @@ namespace Up.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetGraduatedAndCanceledLopHocAsync()
+        {
+            var model = await _lopHocService.GetGraduatedAndCanceledLopHocAsync();
+            return Json(model);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetLopHocByHocVienIdAsync(Guid HocVienId)
         {
             var model = await _lopHocService.GetLopHocByHocVienIdAsync(HocVienId);

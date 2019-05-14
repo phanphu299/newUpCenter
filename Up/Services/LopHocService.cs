@@ -133,6 +133,18 @@
                 .ToListAsync();
         }
 
+        public async Task<List<LopHocViewModel>> GetGraduatedAndCanceledLopHocAsync()
+        {
+            return await _context.LopHocs
+                .Where(x => x.IsDisabled == false && (x.IsCanceled == true || x.IsGraduated == true))
+                .Select(x => new LopHocViewModel
+                {
+                    Name = x.Name,
+                    LopHocId = x.LopHocId
+                })
+                .ToListAsync();
+        }
+
         public async Task<List<LopHocViewModel>> GetLopHocAsync()
         {
             return await _context.LopHocs

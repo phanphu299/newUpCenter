@@ -10,6 +10,7 @@
         dialog: false,
         dialogEdit: false,
         dialogDiemDanh: false,
+        dialogThemLop: false,
         alert: false,
         alertEdit: false,
         isShowDatePicker: false,
@@ -31,6 +32,7 @@
         itemToDelete: {},
         itemToEdit: {},
         itemToDiemDanh: {},
+        itemToThemLop: {},
         editedIndex: -1,
         headers: [
             {
@@ -65,7 +67,9 @@
         itemQuanHe: [],
         itemLopHoc: [],
         itemDiemDanh: [],
-        selectedLopHoc: {}
+        itemThemLop: [],
+        selectedLopHoc: {},
+        selectedArrayLopHoc: []
     },
     async beforeCreate() {
         let that = this;
@@ -194,6 +198,25 @@
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+
+        mappingThemLopItem(item) {
+            this.editedIndex = this.khoaHocItems.indexOf(item);
+            this.itemToThemLop = Object.assign({}, item);
+            console.log('tét');
+            let that = this;
+            axios.get('/LopHoc/GetGraduatedAndCanceledLopHocAsync')
+                .then(function (response) {
+                    console.log(response);
+                    that.itemThemLop = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
+        async onThemLop(item) {
+            console.log(item);
         },
 
         async onSave(item) {

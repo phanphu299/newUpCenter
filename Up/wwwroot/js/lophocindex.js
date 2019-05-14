@@ -158,28 +158,28 @@
                         SachIds: item.sachIds
                     }
                 })
-                .then(function (response) {
-                    if (response.data.status === "OK") {
-                        Object.assign(that.khoaHocItems[that.editedIndex], response.data.result);
+                    .then(function (response) {
+                        if (response.data.status === "OK") {
+                            Object.assign(that.khoaHocItems[that.editedIndex], response.data.result);
+                            that.snackbar = true;
+                            that.messageText = 'Cập nhật thành công !!!';
+                            that.color = 'success';
+                            that.dialogEdit = false;
+                        }
+                        else {
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'error';
+                            that.dialogEdit = false;
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
                         that.snackbar = true;
-                        that.messageText = 'Cập nhật thành công !!!';
-                        that.color = 'success';
-                        that.dialogEdit = false;
-                    }
-                    else {
-                        that.snackbar = true;
-                        that.messageText = response.data.message;
+                        that.messageText = 'Cập nhật lỗi: ' + error;
                         that.color = 'error';
                         that.dialogEdit = false;
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    that.snackbar = true;
-                    that.messageText = 'Cập nhật lỗi: ' + error;
-                    that.color = 'error';
-                    that.dialogEdit = false;
-                });
+                    });
             }
         },
 
@@ -194,24 +194,24 @@
                     LopHocId: item
                 }
             })
-            .then(function (response) {
-                if (response.data.status === "OK") {
+                .then(function (response) {
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Cập nhật thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
                     that.snackbar = true;
-                    that.messageText = 'Cập nhật thành công !!!';
-                    that.color = 'success';
-                }
-                else {
-                    that.snackbar = true;
-                    that.messageText = response.data.message;
+                    that.messageText = 'Cập nhật lỗi: ' + error;
                     that.color = 'error';
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-                that.snackbar = true;
-                that.messageText = 'Cập nhật lỗi: ' + error;
-                that.color = 'error';
-            });
+                });
         },
 
         async onToggleGraduated(item) {
@@ -294,31 +294,33 @@
                         GiaoVienId: that.newItem.giaoVien
                     }
                 })
-                .then(function (response) {
-                    console.log(response);
-                    if (response.data.status === "OK") {
-                        that.khoaHocItems.splice(0, 0, response.data.result);
+                    .then(function (response) {
+                        console.log(response);
+                        if (response.data.status === "OK") {
+                            that.khoaHocItems.splice(0, 0, response.data.result);
+                            that.snackbar = true;
+                            that.messageText = 'Thêm mới thành công !!!';
+                            that.color = 'success';
+                            that.newItem.name = '';
+                            that.newItem.khoaHoc = '';
+                            that.newItem.gioHoc = '';
+                            that.newItem.ngayHoc = '';
+                            that.newItem.ngayKhaiGiang = new Date().toISOString().substr(0, 10);
+                            that.newItem.giaoVien = "";
+                            that.newItem.sach = [];
+                        }
+                        else {
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'error';
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
                         that.snackbar = true;
-                        that.messageText = 'Thêm mới thành công !!!';
-                        that.color = 'success';
-                        that.newItem.name = '';
-                        that.newItem.khoaHoc = '';
-                        that.newItem.gioHoc = '';
-                        that.newItem.ngayHoc = '';
-                        that.newItem.ngayKhaiGiang = new Date().toISOString().substr(0, 10);
-                    }
-                    else {
-                        that.snackbar = true;
-                        that.messageText = response.data.message;
+                        that.messageText = 'Thêm mới lỗi: ' + error;
                         that.color = 'error';
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    that.snackbar = true;
-                    that.messageText = 'Thêm mới lỗi: ' + error;
-                    that.color = 'error';
-                });
+                    });
             }
         },
 
@@ -335,26 +337,26 @@
                     LopHocId: item.lopHocId
                 }
             })
-            .then(function (response) {
-                if (response.data.status === "OK") {
-                    that.khoaHocItems.splice(that.khoaHocItems.indexOf(item), 1);
+                .then(function (response) {
+                    if (response.data.status === "OK") {
+                        that.khoaHocItems.splice(that.khoaHocItems.indexOf(item), 1);
+                        that.snackbar = true;
+                        that.messageText = 'Xóa thành công !!!';
+                        that.color = 'success';
+                        that.deleteDialog = false;
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
                     that.snackbar = true;
-                    that.messageText = 'Xóa thành công !!!';
-                    that.color = 'success';
-                    that.deleteDialog = false;
-                }
-                else {
-                    that.snackbar = true;
-                    that.messageText = response.data.message;
+                    that.messageText = 'Xóa lỗi: ' + error;
                     that.color = 'error';
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-                that.snackbar = true;
-                that.messageText = 'Xóa lỗi: ' + error;
-                that.color = 'error';
-            });
+                });
         }
     }
 });
