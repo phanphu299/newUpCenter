@@ -18,6 +18,36 @@ namespace Up.Services
             _context = context;
         }
 
+        public async Task<bool> AddToUnavailableClassAsync(List<Guid> LopHocId, Guid HocVienId, string LoggedEmployee)
+        {
+            try
+            {
+                var oldHocVien_LopHoc = _context.HocVien_LopHocs
+                .Where(x => LopHocId.Contains(x.LopHocId) && x.HocVienId == HocVienId);
+
+                if (oldHocVien_LopHoc.Any())
+                    _context.HocVien_LopHocs.RemoveRange(oldHocVien_LopHoc);
+
+                foreach (var item in LopHocId)
+                {
+                    HocVien_LopHoc hocVien_LopHoc = new HocVien_LopHoc();
+                    hocVien_LopHoc.LopHocId = item;
+                    hocVien_LopHoc.HocVienId = HocVienId;
+                    hocVien_LopHoc.CreatedBy = LoggedEmployee;
+                    hocVien_LopHoc.CreatedDate = DateTime.Now;
+
+                    _context.HocVien_LopHocs.Add(hocVien_LopHoc);
+                }
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch(Exception exception)
+            {
+                throw new Exception("Lỗi thêm học viên vào lớp học cũ: " + exception.Message);
+            }
+        }
+
         public async Task<HocVienViewModel> CreateHocVienAsync(string FullName, string Phone, string FacebookAccount, 
             string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid? QuanHeId, 
             string EnglishName, DateTime NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee)
@@ -202,7 +232,7 @@ namespace Up.Services
                 item.UpdatedDate = DateTime.Now;
 
                 var _hocVien_LopHoc = await _context.HocVien_LopHocs
-                                                    .Where(x => x.HocVienId == item.HocVienId)
+                                                    .Where(x => x.HocVienId == item.HocVienId && x.LopHoc.IsCanceled == false && x.LopHoc.IsDisabled == false && x.LopHoc.IsGraduated == false)
                                                     .ToListAsync();
 
                 if (_hocVien_LopHoc.Any())

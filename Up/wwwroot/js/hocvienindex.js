@@ -203,11 +203,10 @@
         mappingThemLopItem(item) {
             this.editedIndex = this.khoaHocItems.indexOf(item);
             this.itemToThemLop = Object.assign({}, item);
-            console.log('tét');
+
             let that = this;
             axios.get('/LopHoc/GetGraduatedAndCanceledLopHocAsync')
                 .then(function (response) {
-                    console.log(response);
                     that.itemThemLop = response.data;
                 })
                 .catch(function (error) {
@@ -216,7 +215,37 @@
         },
 
         async onThemLop(item) {
-            console.log(item);
+            this.dialogThemLop = false;
+            let that = this;
+            await axios({
+                method: 'post',
+                url: '/HocVien/AddHocVienToLopCuAsync',
+                data: {
+                    LopHocId: that.selectedArrayLopHoc,
+                    HocVienId: item.hocVienId
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.khoaHocItems.splice(0, 0, response.data.result);
+                        that.snackbar = true;
+                        that.messageText = 'Thêm mới thành công !!!';
+                        that.color = 'success';
+                        that.selectedArrayLopHoc = [];
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Thêm mới lỗi: ' + error;
+                    that.color = 'error';
+                });
         },
 
         async onSave(item) {

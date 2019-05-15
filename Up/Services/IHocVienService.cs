@@ -17,5 +17,7 @@ namespace Up.Services
         Task<bool> DeleteHocVienAsync(Guid HocVienId, string LoggedEmployee);
 
         Task<bool> ToggleChenAsync(Guid HocVienId, string LoggedEmployee);
+
+        Task<bool> AddToUnavailableClassAsync(List<Guid> LopHocId, Guid HocVienId, string LoggedEmployee);
     }
 }
