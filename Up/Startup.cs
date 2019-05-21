@@ -60,6 +60,7 @@ namespace Up
             services.AddScoped<IGiaoVienService, GiaoVienService>();
             services.AddScoped<IDiemDanhService, DiemDanhService>();
             services.AddScoped<ILoaiGiaoVienService, LoaiGiaoVienService>();
+            services.AddScoped<IThongKeService, ThongKeService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
