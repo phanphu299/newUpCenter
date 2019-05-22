@@ -9,10 +9,9 @@
         public List<int> QuocTe { get; set; }
     }
 
-    public class ThongKeHocVienModel
+    public class ThongKeModel
     {
         public string Label { get; set; }
-        public string BackgroundColor { get; set; }
         public int Data { get; set; }
 
     }

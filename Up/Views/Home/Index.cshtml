@@ -80,47 +80,18 @@
                         </h4>
                         <div class="row">
                             <div class="col s12">
-                                <v-tabs v-model="tab"
-                                        color="cyan"
-                                        grow>
-                                    <v-tabs-slider color="yellow"></v-tabs-slider>
 
-                                    <v-tab color="white">
-                                        Học Viên
-                                    </v-tab>
-                                    <v-tab color="white">
-                                        Giáo Viên
-                                    </v-tab>
-                                    <v-tab color="white">
-                                        Doanh Thu
-                                    </v-tab>
-                                </v-tabs>
+                                <div class="col s12 m6 l6">
+                                    <header style="color:#1976d2">Học Viên</header>
+                                    <line-chart v-if="loadedHocVien"
+                                                :chartdata="chartdataHocVien" />
+                                </div>
+                                <div class="col s12 m6 l6">
+                                    <header style="color:#1976d2">Giáo Viên</header>
+                                    <line-chart v-if="loadedGiaoVien"
+                                                :chartdata="chartdataGiaoVien" />
+                                </div>
 
-                                <v-tabs-items v-model="tab">
-                                    <v-tab-item>
-                                        <v-card flat>
-                                            <v-card-text>
-                                                <line-chart v-if="loaded"
-                                                            :chartdata="chartdata"
-                                                            :options="options" />
-                                            </v-card-text>
-                                        </v-card>
-                                    </v-tab-item>
-                                    <v-tab-item>
-                                        <v-card flat>
-                                            <v-card-text>
-                                                1
-                                            </v-card-text>
-                                        </v-card>
-                                    </v-tab-item>
-                                    <v-tab-item>
-                                        <v-card flat>
-                                            <v-card-text>
-                                                2
-                                            </v-card-text>
-                                        </v-card>
-                                    </v-tab-item>
-                                </v-tabs-items>
                             </div>
                         </div>
                     </div>

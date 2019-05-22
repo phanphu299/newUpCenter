@@ -1,5 +1,4 @@
-﻿
-namespace Up.Services
+﻿namespace Up.Services
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -10,5 +9,9 @@ namespace Up.Services
         Task<List<HocVienViewModel>> GetHocVienGiaoTiepAsync();
         Task<List<HocVienViewModel>> GetHocVienThieuNhiAsync();
         Task<List<HocVienViewModel>> GetHocVienCCQuocTeAsync();
+
+        Task<List<GiaoVienViewModel>> GetGiaoVienFullTimeAsync();
+        Task<List<GiaoVienViewModel>> GetGiaoVienPartTimeAsync();
+        Task<List<GiaoVienViewModel>> GetGiaoVienNuocNgoaiAsync();
     }
 }
