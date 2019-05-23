@@ -87,9 +87,10 @@ var vue = new Vue({
             ]
         },
 
-
-        length: 3,
-        window: 0
+        thongKeTong: {
+            hocVien: 0,
+            giaoVien: 0
+        }
 
     },
 
@@ -115,6 +116,15 @@ var vue = new Vue({
                     that.chartdataGiaoVien.datasets[1].data = response.data.partTime;
                     that.chartdataGiaoVien.datasets[2].data = response.data.quocTe;
                     that.loadedGiaoVien = true;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+            await axios.get('/ThongKe/GetTongGiaoVienVaHocVienAsync')
+                .then(function (response) {
+                    that.thongKeTong.hocVien = response.data.hocVien;
+                    that.thongKeTong.giaoVien = response.data.giaoVien;
                 })
                 .catch(function (error) {
                     console.log(error);

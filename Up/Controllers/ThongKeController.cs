@@ -135,5 +135,15 @@
                 PartTime = listPartTime
             });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTongGiaoVienVaHocVienAsync()
+        {
+            return Json(new ThongKeTongViewModel
+            {
+                HocVien = await _thongKeService.GetTongHocVienAsync(),
+                GiaoVien = await _thongKeService.GetTongGiaoVienAsync()
+            });
+        }
     }
 }

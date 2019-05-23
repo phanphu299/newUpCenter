@@ -13,5 +13,8 @@
         Task<List<GiaoVienViewModel>> GetGiaoVienFullTimeAsync();
         Task<List<GiaoVienViewModel>> GetGiaoVienPartTimeAsync();
         Task<List<GiaoVienViewModel>> GetGiaoVienNuocNgoaiAsync();
+
+        Task<int> GetTongGiaoVienAsync();
+        Task<int> GetTongHocVienAsync();
     }
 }

@@ -161,5 +161,29 @@
                 throw new Exception(exception.Message);
             }
         }
+
+        public async Task<int> GetTongGiaoVienAsync()
+        {
+            try
+            {
+                return await _context.GiaoViens.Where(x => x.IsDisabled == false).CountAsync();
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+        }
+
+        public async Task<int> GetTongHocVienAsync()
+        {
+            try
+            {
+                return await _context.HocViens.Where(x => x.IsDisabled == false).CountAsync();
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+        }
     }
 }
