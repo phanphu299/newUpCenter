@@ -172,6 +172,19 @@
                             <v-tooltip top>
                                 <template v-slot:activator="{ on }">
                                     <v-btn flat icon
+                                           color="warning"
+                                           v-on="on"
+                                           v-on:click.stop="dialogNgayHoc = true"
+                                           v-on:click="mappingNgayHocItem(props.item)">
+                                        <v-icon>calendar_today</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Thêm Ngày Bắt Đầu Và Kết Thúc</strong>
+                            </v-tooltip>
+
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn flat icon
                                            color="secondary"
                                            v-on="on"
                                            v-on:click.stop="dialogThemLop = true"
@@ -345,6 +358,88 @@
             </v-card>
         </v-dialog>
 
+        @*NgayHoc Dialog*@
+        <v-dialog v-model="dialogNgayHoc" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Thêm Ngày Bắt Đầu Và Kết Thúc Cho Học Viên '{{ itemToNgayHoc.fullName }}'</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container grid-list-md>
+                        <v-layout wrap>
+
+                            <v-flex xs12 sm4>
+                                <v-select v-model="selectedLopHoc"
+                                          :items="itemNgayHoc"
+                                          item-text="name"
+                                          item-value="lopHocId"
+                                          attach
+                                          chips
+                                          label="Chọn Lớp Học"
+                                          v-on:change="GetNgayHocByHocVien">
+                                    <template v-slot:selection="data">
+                                        <v-chip :selected="data.selected"
+                                                color="green"
+                                                text-color="white">
+                                            <span>{{ data.item.name }}</span>
+                                        </v-chip>
+                                    </template>
+                                </v-select>
+                            </v-flex>
+
+                            <v-flex xs12 sm4>
+                                <v-menu v-model="isShowDatePickerBatDau"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        lazy
+                                        transition="scale-transition"
+                                        offset-y
+                                        full-width
+                                        min-width="290px">
+                                    <v-text-field slot="activator"
+                                                  v-model="ngayHocItem.ngayBatDau"
+                                                  label="Ngày Bắt Đầu *"
+                                                  prepend-icon="event"
+                                                  readonly></v-text-field>
+                                    <v-date-picker locale="vi-vn" v-model="ngayHocItem.ngayBatDau" v-on:input="isShowDatePickerBatDau = false"></v-date-picker>
+                                </v-menu>
+                            </v-flex>
+
+                            <v-flex xs12 sm4>
+                                <v-menu v-model="isShowDatePickerKetThuc"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        lazy
+                                        transition="scale-transition"
+                                        offset-y
+                                        full-width
+                                        min-width="290px">
+                                    <v-text-field slot="activator"
+                                                  v-model="ngayHocItem.ngayKetThuc"
+                                                  label="Ngày Kết Thúc"
+                                                  prepend-icon="event"
+                                                  readonly></v-text-field>
+                                    <v-date-picker locale="vi-vn" v-model="ngayHocItem.ngayKetThuc" v-on:input="isShowDatePickerKetThuc = false"></v-date-picker>
+                                </v-menu>
+                            </v-flex>
+
+                        </v-layout>
+                    </v-container>
+                    <v-alert v-model="alertNgayHoc"
+                             dismissible
+                             color="warning"
+                             icon="priority_high"
+                             outline>
+                        Không được bỏ trống ngày bắt đầu hoặc lớp học
+                    </v-alert>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="secondary darken-1" flat v-on:click="dialogNgayHoc = false; selectedLopHoc = {}">Đóng</v-btn>
+                    <v-btn color="blue darken-1 white--text" v-on:click="onThemNgayHoc(itemToNgayHoc)">Lưu</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
 
         @*DiemDanh Dialog*@
         <v-dialog v-model="dialogDiemDanh" persistent max-width="600px">

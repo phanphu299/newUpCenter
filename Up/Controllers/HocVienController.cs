@@ -1,20 +1,21 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Up.Services;
-
-namespace Up.Controllers
+﻿namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using System;
+    using System.Threading.Tasks;
+    using Up.Services;
+
     public class HocVienController : Controller
     {
         private readonly IHocVienService _hocVienService;
+        private readonly INgayHocService _ngayHocService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public HocVienController(IHocVienService hocVienService, UserManager<IdentityUser> userManager)
+        public HocVienController(IHocVienService hocVienService, INgayHocService ngayHocService, UserManager<IdentityUser> userManager)
         {
             _hocVienService = hocVienService;
+            _ngayHocService = ngayHocService;
             _userManager = userManager;
         }
 
@@ -29,6 +30,13 @@ namespace Up.Controllers
         public async Task<IActionResult> GetHocVienAsync()
         {
             var model = await _hocVienService.GetHocVienAsync();
+            return Json(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetHocVien_LopHocByHocVienAsync(Guid HocVienId, Guid LopHocId)
+        {
+            var model = await _ngayHocService.GetHocVien_NgayHocByHocVienAsync(HocVienId, LopHocId);
             return Json(model);
         }
 
@@ -48,6 +56,49 @@ namespace Up.Controllers
                 var successful = await _hocVienService.CreateHocVienAsync(model.FullName, model.Phone, model.FacebookAccount, model.ParentFullName,
                     model.ParentPhone, model.ParentFacebookAccount, model.QuanHeId, model.EnglishName, _ngaySinh, model.IsAppend, model.LopHocIds, currentUser.Email);
                 if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Thêm mới lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Thêm mới thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateUpdateHocVien_ngayHocAsync([FromBody]Models.HocVien_NgayHocViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                DateTime _ngayBatDau = Convert.ToDateTime(model.NgayBatDau, System.Globalization.CultureInfo.InvariantCulture);
+                DateTime? _ngayKetThuc = null; 
+                if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
+                    _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
+
+                var successful = await _ngayHocService.CreateUpdateHocVien_NgayHocAsync(model.HocVienId, model.LopHocId, _ngayBatDau, _ngayKetThuc, currentUser.Email);
+                if (!successful)
                 {
                     return Json(new Models.ResultModel
                     {

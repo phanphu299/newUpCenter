@@ -10,11 +10,15 @@
         dialog: false,
         dialogEdit: false,
         dialogDiemDanh: false,
+        dialogNgayHoc: false,
         dialogThemLop: false,
         alert: false,
         alertEdit: false,
+        alertNgayHoc: false,
         isShowDatePicker: false,
         isShowDatePicker2: false,
+        isShowDatePickerBatDau: false,
+        isShowDatePickerKetThuc: false,
         search: '',
         newItem: {
             fullName: "",
@@ -32,6 +36,7 @@
         itemToDelete: {},
         itemToEdit: {},
         itemToDiemDanh: {},
+        itemToNgayHoc: {},
         itemToThemLop: {},
         editedIndex: -1,
         headers: [
@@ -64,10 +69,15 @@
         ],
         khoaHocItems: [],
         diemDanhItems: [],
+        ngayHocItem: {
+            ngayBatDau: "",
+            ngayKetThuc: ""
+        },
         itemQuanHe: [],
         itemLopHoc: [],
         itemDiemDanh: [],
         itemThemLop: [],
+        itemNgayHoc: [],
         selectedLopHoc: {},
         selectedArrayLopHoc: []
     },
@@ -214,6 +224,23 @@
                 });
         },
 
+        mappingNgayHocItem(item) {
+            this.editedIndex = this.khoaHocItems.indexOf(item);
+            this.itemToNgayHoc = Object.assign({}, item);
+            this.selectedLopHoc = null;
+            this.ngayHocItem.ngayBatDau = "";
+            this.ngayHocItem.ngayKetThuc = "";
+
+            let that = this;
+            axios.get('/LopHoc/GetLopHocByHocVienIdAsync?HocVienId=' + item.hocVienId)
+                .then(function (response) {
+                    that.itemNgayHoc = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
         async onThemLop(item) {
             this.dialogThemLop = false;
             let that = this;
@@ -246,6 +273,47 @@
                     that.messageText = 'Thêm mới lỗi: ' + error;
                     that.color = 'error';
                 });
+        },
+
+        async onThemNgayHoc(item) {
+            if (this.ngayHocItem.ngayBatDau !== "" && this.selectedLopHoc !== null) {
+                this.dialogNgayHoc = false;
+                let that = this;
+                await axios({
+                    method: 'post',
+                    url: '/HocVien/CreateUpdateHocVien_ngayHocAsync',
+                    data: {
+                        LopHocId: that.selectedLopHoc,
+                        HocVienId: item.hocVienId,
+                        NgayBatDau: that.ngayHocItem.ngayBatDau,
+                        NgayKetThuc: that.ngayHocItem.ngayKetThuc
+                    }
+                })
+                    .then(function (response) {
+                        console.log(response);
+                        if (response.data.status === "OK") {
+                            that.khoaHocItems.splice(0, 0, response.data.result);
+                            that.snackbar = true;
+                            that.messageText = 'Thêm mới thành công !!!';
+                            that.color = 'success';
+                            that.selectedArrayLopHoc = [];
+                        }
+                        else {
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'error';
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        that.snackbar = true;
+                        that.messageText = 'Thêm mới lỗi: ' + error;
+                        that.color = 'error';
+                    });
+            }
+            else {
+                this.alertNgayHoc = true;
+            }
         },
 
         async onSave(item) {
@@ -337,6 +405,30 @@
             await axios.get('/DiemDanh/GetDiemDanhByHocVienAndLopHocAsync?HocVienId=' + that.itemToDiemDanh.hocVienId + '&LopHocId=' + that.selectedLopHoc)
                 .then(function (response) {
                     that.diemDanhItems = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
+        async GetNgayHocByHocVien() {
+            let that = this;
+            await axios.get('/HocVien/GetHocVien_LopHocByHocVienAsync?HocVienId=' + that.itemToNgayHoc.hocVienId + '&LopHocId=' + that.selectedLopHoc)
+                .then(function (response) {
+                    if (response.data !== null) {
+                        that.ngayHocItem = response.data;
+                        let [dayKG, monthKG, yearKG] = that.ngayHocItem.ngayBatDau.split('/');
+                        that.ngayHocItem.ngayBatDau = yearKG + '-' + monthKG + '-' + dayKG;
+
+                        if (that.ngayHocItem.ngayKetThuc !== "") {
+                            let [dayKG2, monthKG2, yearKG2] = that.ngayHocItem.ngayKetThuc.split('/');
+                            that.ngayHocItem.ngayKetThuc = yearKG2 + '-' + monthKG2 + '-' + dayKG2;
+                        }
+                    }
+                    else {
+                        this.ngayHocItem.ngayBatDau = "";
+                        this.ngayHocItem.ngayKetThuc = "";
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);

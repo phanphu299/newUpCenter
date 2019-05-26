@@ -1,14 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Up.Data;
-using Up.Data.Entities;
-using Up.Models;
-
-namespace Up.Services
+﻿namespace Up.Services
 {
+    using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Up.Data;
+    using Up.Data.Entities;
+    using Up.Models;
+
     public class NgayHocService: INgayHocService
     {
         private readonly ApplicationDbContext _context;
@@ -37,6 +37,34 @@ namespace Up.Services
             return new NgayHocViewModel { NgayHocId = ngayHoc.NgayHocId, Name = ngayHoc.Name, CreatedBy = ngayHoc.CreatedBy, CreatedDate = ngayHoc.CreatedDate.ToString("dd/MM/yyyy") };
         }
 
+        public async Task<bool> CreateUpdateHocVien_NgayHocAsync(Guid HocVienId, Guid LopHocId, DateTime NgayBatDau, DateTime? NgayKetThuc, string LoggedEmployee)
+        {
+            var hocVien_NgayHoc = await _context.HocVien_NgayHocs.FirstOrDefaultAsync(x => x.LopHocId == LopHocId && x.HocVienId == HocVienId);
+            if (hocVien_NgayHoc != null)
+            {
+                hocVien_NgayHoc.NgayBatDau = NgayBatDau;
+                hocVien_NgayHoc.NgayKetThuc = NgayKetThuc;
+                hocVien_NgayHoc.UpdatedBy = LoggedEmployee;
+                hocVien_NgayHoc.UpdatedDate = DateTime.Now;
+            }
+            else
+            {
+                HocVien_NgayHoc HV_NgayHoc = new HocVien_NgayHoc();
+                HV_NgayHoc.HocVien_NgayHocId = new Guid();
+                HV_NgayHoc.HocVienId = HocVienId;
+                HV_NgayHoc.LopHocId = LopHocId;
+                HV_NgayHoc.NgayBatDau = NgayBatDau;
+                HV_NgayHoc.NgayKetThuc = NgayKetThuc;
+                HV_NgayHoc.CreatedBy = LoggedEmployee;
+                HV_NgayHoc.CreatedDate = DateTime.Now;
+
+                _context.HocVien_NgayHocs.Add(HV_NgayHoc);
+            }
+
+            var saveResult = await _context.SaveChangesAsync();
+            return saveResult == 1;
+        }
+
         public async Task<bool> DeleteNgayHocAsync(Guid NgayHocId, string LoggedEmployee)
         {
             var lopHoc = await _context.LopHocs.Where(x => x.NgayHocId == NgayHocId).ToListAsync();
@@ -56,6 +84,23 @@ namespace Up.Services
 
             var saveResult = await _context.SaveChangesAsync();
             return saveResult == 1;
+        }
+
+        public async Task<HocVien_NgayHocViewModel> GetHocVien_NgayHocByHocVienAsync(Guid HocVienId, Guid LopHocId)
+        {
+            if (HocVienId == null)
+                throw new Exception("Không tìm thấy Học Viên!");
+
+            if (LopHocId == null)
+                throw new Exception("Không tìm thấy Lớp Học!");
+
+            return await _context.HocVien_NgayHocs.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId)
+                                .Select(x => new HocVien_NgayHocViewModel
+                                {
+                                    NgayBatDau = x.NgayBatDau.ToString("dd/MM/yyyy"),
+                                    NgayKetThuc = x.NgayKetThuc == null? "":x.NgayKetThuc.Value.ToString("dd/MM/yyyy")
+                                })
+                                .FirstOrDefaultAsync();
         }
 
         public async Task<List<NgayHocViewModel>> GetNgayHocAsync()
