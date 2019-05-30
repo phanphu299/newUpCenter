@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Linq;
 
 namespace Up.Data
 {
@@ -20,6 +21,15 @@ namespace Up.Data
                 {
                     userManager.AddToRoleAsync(user, Constants.Admin).Wait();
                 }
+            }
+            else
+            {
+                var isAdmin = userManager.IsInRoleAsync(userManager.FindByEmailAsync("huynhquan.nguyen@gmail.com").Result, Constants.Admin);
+                if (!isAdmin.Result)
+                {
+                    userManager.AddToRoleAsync(userManager.FindByEmailAsync("huynhquan.nguyen@gmail.com").Result, Constants.Admin).Wait();
+                }
+                   
             }
         }
     }

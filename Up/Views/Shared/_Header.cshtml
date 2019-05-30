@@ -15,21 +15,26 @@
             <!-- profile-dropdown -->
             <ul id="profile-dropdown" class="dropdown-content">
                 @*<li>
-                    <a href="index.html#" class="grey-text text-darken-1">
-                        <i class="material-icons">face</i> Profile
-                    </a>
-                </li>
+                        <a href="index.html#" class="grey-text text-darken-1">
+                            <i class="material-icons">face</i> Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.html#" class="grey-text text-darken-1">
+                            <i class="material-icons">settings</i> Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.html#" class="grey-text text-darken-1">
+                            <i class="material-icons">live_help</i> Help
+                        </a>
+                    </li>
+                    <li class="divider"></li>*@
                 <li>
-                    <a href="index.html#" class="grey-text text-darken-1">
-                        <i class="material-icons">settings</i> Settings
+                    <a asp-area="" asp-controller="Setting" asp-action="AccountIndexAsync" class="grey-text text-darken-1">
+                        <i class="material-icons">people</i> Tài Khoản
                     </a>
                 </li>
-                <li>
-                    <a href="index.html#" class="grey-text text-darken-1">
-                        <i class="material-icons">live_help</i> Help
-                    </a>
-                </li>
-                <li class="divider"></li>*@
                 <li>
                     <a id="change-password" asp-area="Identity" asp-page="/Account/Manage/ChangePassword" class="grey-text text-darken-1">
                         <i class="material-icons">settings</i> Đổi mật khẩu
@@ -39,8 +44,7 @@
                     <a href="javascript:void()" onclick="document.getElementById('log-out-form').submit();" class="grey-text text-darken-1">
                         <i class="material-icons">keyboard_tab</i> Thoát
                     </a>
-                    <form id="log-out-form" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    </form>
+                    <form id="log-out-form" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"></form>
                 </li>
             </ul>
         </div>
