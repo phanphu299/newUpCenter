@@ -8,18 +8,21 @@ namespace Up.Controllers
     using System.Linq;
     using System.Threading.Tasks;
     using Up.Models;
+    using Up.Services;
 
     [Authorize(Roles = Constants.Admin)]
     public class SettingController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly ISettingService _settingService;
 
-        public SettingController(UserManager<IdentityUser> userManager)
+        public SettingController(UserManager<IdentityUser> userManager, ISettingService settingService)
         {
             _userManager = userManager;
+            _settingService = settingService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> AccountIndexAsync()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
@@ -27,22 +30,15 @@ namespace Up.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AccountIndexAsync()
+        public async Task<IActionResult> GetAccountAsync()
         {
-            var admins = (await _userManager
-                .GetUsersInRoleAsync(Constants.Admin))
-                .ToArray();
-
-            var everyone = await _userManager.Users
-                .ToArrayAsync();
-
             var model = new ManageUsersViewModel
             {
-                Administrators = admins,
-                Everyone = everyone
+                Administrators = _settingService.GetAdminsAsync().Result,
+                Everyone = _settingService.GetAllUsersAsync().Result
             };
 
-            return View(model);
+            return Json(model);
         }
     }
 }

@@ -1,11 +1,18 @@
 ﻿namespace Up.Models
 {
-    using Microsoft.AspNetCore.Identity;
+    using System.Collections.Generic;
 
     public class ManageUsersViewModel
     {
-        public IdentityUser[] Administrators { get; set; }
+        public List<AccountInfo> Administrators { get; set; }
 
-        public IdentityUser[] Everyone { get; set; }
+        public List<AccountInfo> Everyone { get; set; }
+    }
+
+    public class AccountInfo
+    {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public IEnumerable<string> Roles { get; set; }
     }
 }

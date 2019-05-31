@@ -1,45 +1,113 @@
-﻿@model ManageUsersViewModel
+﻿
+<div id="AccountIndex">
+    <v-app>
+        <div class="container">
+            <div class="col s10 m6 l6">
+                <h5 class="breadcrumbs-title">{{ title }}</h5>
+            </div>
 
-@{
-    ViewData["Title"] = "Manage users";
-}
+            <v-card>
+                <v-card-title>
+                    <h5 class="breadcrumbs-title font-weight-black font-italic">Admins</h5>
+                    <v-spacer></v-spacer>
+                    <v-text-field v-model="searchAdmin"
+                                  append-icon="search"
+                                  label="Tìm Kiếm"
+                                  single-line
+                                  hide-details></v-text-field>
+                </v-card-title>
+                <v-data-table :headers="headers"
+                              :items="adminItems"
+                              :search="searchAdmin">
+                    <template slot="items" slot-scope="props">
+                        <td></td>
+                        <td>{{ props.item.email }}</td>
 
-<h2>@ViewData["Title"]</h2>
+                    </template>
+                    <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                        Không tìm thấy "{{ searchAdmin }}".
+                    </v-alert>
+                </v-data-table>
+            </v-card>
+            <br />
+            <v-card>
+                <v-card-title>
+                    <h5 class="breadcrumbs-title font-weight-black font-italic">Everyone</h5>
+                    <v-spacer></v-spacer>
+                    <v-text-field v-model="searchUser"
+                                  append-icon="search"
+                                  label="Tìm Kiếm"
+                                  single-line
+                                  hide-details></v-text-field>
+                </v-card-title>
+                <v-data-table :headers="headers"
+                              :items="userItems"
+                              :search="searchUser">
+                    <template slot="items" slot-scope="props">
+                        <td class="justify-center layout px-0">
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn flat icon v-on="on"
+                                           color="red">
+                                        <v-icon>lock</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Khóa</strong>
+                            </v-tooltip>
 
-<h3>Administrators</h3>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn color="primary" v-on="on"
+                                           flat icon>
+                                        <v-icon>check</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Kích Hoạt</strong>
+                            </v-tooltip>
 
-<table class="table">
-    <thead>
-        <tr>
-            <td>Id</td>
-            <td>Email</td>
-        </tr>
-    </thead>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn flat icon v-on="on"
+                                           color="success">
+                                        <v-icon>autorenew</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Reset Mật Khẩu</strong>
+                            </v-tooltip>
+                        </td>
+                        <td>{{ props.item.email }}</td>
+                        <td>
+                            <v-tooltip top v-if="props.item.roles.length > 0">
+                                <template v-slot:activator="{ on }">
+                                    <v-icon color="grey lighten-1" dark v-on="on">security</v-icon>
+                                </template>
+                                <div v-for="role in props.item.roles">
+                                    <strong>{{ role }}</strong>
+                                </div>
+                            </v-tooltip>
+                        </td>
 
-    @foreach (var user in Model.Administrators)
-    {
-        <tr>
-            <td>@user.Id</td>
-            <td>@user.Email</td>
-        </tr>
+                    </template>
+                    <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                        Không tìm thấy "{{ searchUser }}".
+                    </v-alert>
+                </v-data-table>
+            </v-card>
+        </div>
+    </v-app>
+</div>
+<style>
+    .v-input__slot:before, .v-input__slot:after {
+        display: none
     }
-</table>
 
-<h3>Everyone</h3>
-
-<table class="table">
-    <thead>
-        <tr>
-            <td>Id</td>
-            <td>Email</td>
-        </tr>
-    </thead>
-
-    @foreach (var user in Model.Everyone)
-    {
-        <tr>
-            <td>@user.Id</td>
-            <td>@user.Email</td>
-        </tr>
+    .v-small-dialog a {
+        text-decoration-style: dashed;
+        text-decoration-line: underline;
+        text-decoration-color: #0088cc;
     }
-</table>
+</style>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="~/js/accountindex.js" type="text/javascript"></script>
+
