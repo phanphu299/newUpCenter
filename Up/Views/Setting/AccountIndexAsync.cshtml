@@ -58,6 +58,7 @@
                             <v-tooltip top>
                                 <template v-slot:activator="{ on }">
                                     <v-btn flat icon v-on="on"
+                                            v-on:click="Khoa(props.item.id)"
                                            color="red">
                                         <v-icon>lock</v-icon>
                                     </v-btn>
@@ -68,6 +69,7 @@
                             <v-tooltip top>
                                 <template v-slot:activator="{ on }">
                                     <v-btn color="primary" v-on="on"
+                                            v-on:click="KichHoat(props.item.id)"
                                            flat icon>
                                         <v-icon>check</v-icon>
                                     </v-btn>

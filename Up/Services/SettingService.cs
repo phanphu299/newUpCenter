@@ -3,6 +3,7 @@ namespace Up.Services
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -20,6 +21,23 @@ namespace Up.Services
             _userManager = userManager;
         }
 
+        public async Task<bool> ActiveAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new System.Exception("Tài khoản không tồn tại!");
+            }
+
+            user.LockoutEnd = null;
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                throw new System.Exception("Lỗi khi kích hoạt tài khoản!");
+            }
+            return true;
+        }
+
         public async Task<bool> ChangePasswordAsync(string userId, string newPassword = "M@tkhau@123")
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -32,6 +50,23 @@ namespace Up.Services
             if (!result.Succeeded)
             {
                 throw new System.Exception("Lỗi khi reset!");
+            }
+            return true;
+        }
+
+        public async Task<bool> DisableAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new System.Exception("Tài khoản không tồn tại!");
+            }
+            DateTime dateTime = new DateTime(9999, 12, 20);
+            user.LockoutEnd = new System.DateTimeOffset(dateTime);
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                throw new System.Exception("Lỗi khi khóa tài khoản!");
             }
             return true;
         }

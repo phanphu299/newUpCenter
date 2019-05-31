@@ -85,5 +85,89 @@ namespace Up.Controllers
                 });
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> KichHoatTaiKhoanAsync(string Id)
+        {
+            if (string.IsNullOrWhiteSpace(Id))
+            {
+                return RedirectToAction("AccountIndexAsync");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("AccountIndexAsync");
+            }
+
+            try
+            {
+                var successful = await _settingService.ActiveAsync(Id);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Kích hoạt tài khoản lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Kích hoạt tài khoản thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> KhoaTaiKhoanAsync(string Id)
+        {
+            if (string.IsNullOrWhiteSpace(Id))
+            {
+                return RedirectToAction("AccountIndexAsync");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("AccountIndexAsync");
+            }
+
+            try
+            {
+                var successful = await _settingService.DisableAsync(Id);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Khóa tài khoản lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Khóa tài khoản thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
     }
 }
