@@ -22,6 +22,16 @@
                     <template slot="items" slot-scope="props">
                         <td></td>
                         <td>{{ props.item.email }}</td>
+                        <td>
+                            <v-tooltip top v-if="props.item.roles.length > 0">
+                                <template v-slot:activator="{ on }">
+                                    <v-icon color="grey lighten-1" dark v-on="on">security</v-icon>
+                                </template>
+                                <div v-for="role in props.item.roles">
+                                    <strong>{{ role }}</strong>
+                                </div>
+                            </v-tooltip>
+                        </td>
 
                     </template>
                     <v-alert slot="no-results" :value="true" color="error" icon="warning">
@@ -68,11 +78,22 @@
                             <v-tooltip top>
                                 <template v-slot:activator="{ on }">
                                     <v-btn flat icon v-on="on"
+                                           v-on:click="ResetMatKhau(props.item.id)"
                                            color="success">
                                         <v-icon>autorenew</v-icon>
                                     </v-btn>
                                 </template>
                                 <strong>Reset Mật Khẩu</strong>
+                            </v-tooltip>
+
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-btn flat icon v-on="on"
+                                           color="warning">
+                                        <v-icon>edit</v-icon>
+                                    </v-btn>
+                                </template>
+                                <strong>Cập Nhật Role</strong>
                             </v-tooltip>
                         </td>
                         <td>{{ props.item.email }}</td>
@@ -93,6 +114,19 @@
                     </v-alert>
                 </v-data-table>
             </v-card>
+
+            <v-snackbar v-model="snackbar"
+                        :color="color"
+                        :timeout="timeout"
+                        top
+                        right>
+                {{ messageText }}
+                <v-btn dark
+                       flat
+                       v-on:click="snackbar = false">
+                    Close
+                </v-btn>
+            </v-snackbar>
         </div>
     </v-app>
 </div>

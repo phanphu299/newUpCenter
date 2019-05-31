@@ -9,5 +9,6 @@ namespace Up.Services
     {
         Task<List<AccountInfo>> GetAdminsAsync();
         Task<List<AccountInfo>> GetAllUsersAsync();
+        Task<bool> ChangePasswordAsync(string userId, string newPassword = "M@tkhau@123");
     }
 }

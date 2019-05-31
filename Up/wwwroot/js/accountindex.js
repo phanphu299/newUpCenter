@@ -33,6 +33,27 @@
             });
     },
     methods: {
-        
+        async ResetMatKhau(id) {
+            let that = this;
+            await axios.get('/Setting/ResetMatKhauAsync?Id=' + id)
+                .then(function (response) {
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Reset thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Reset lỗi: ' + error;
+                    that.color = 'error';
+                });
+        }
     }
 });

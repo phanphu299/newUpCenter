@@ -20,6 +20,22 @@ namespace Up.Services
             _userManager = userManager;
         }
 
+        public async Task<bool> ChangePasswordAsync(string userId, string newPassword = "M@tkhau@123")
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new System.Exception("Tài khoản không tồn tại!");
+            }
+            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, newPassword);
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                throw new System.Exception("Lỗi khi reset!");
+            }
+            return true;
+        }
+
         public async Task<List<AccountInfo>> GetAdminsAsync()
         {
             var admins = (await _userManager
@@ -32,7 +48,7 @@ namespace Up.Services
                 adminList.Add(new AccountInfo
                 {
                     Email = item.Email,
-                    Id = item.Email,
+                    Id = item.Id,
                     Roles = _userManager.GetRolesAsync(item).Result
                 });
             }
@@ -51,7 +67,7 @@ namespace Up.Services
                 userList.Add(new AccountInfo
                 {
                     Email = item.Email,
-                    Id = item.Email,
+                    Id = item.Id,
                     Roles = _userManager.GetRolesAsync(item).Result
                 });
             }
