@@ -5,41 +5,6 @@
             <div class="col s10 m6 l6">
                 <h5 class="breadcrumbs-title">{{ title }}</h5>
             </div>
-
-            <v-card>
-                <v-card-title>
-                    <h5 class="breadcrumbs-title font-weight-black font-italic">Admins</h5>
-                    <v-spacer></v-spacer>
-                    <v-text-field v-model="searchAdmin"
-                                  append-icon="search"
-                                  label="Tìm Kiếm"
-                                  single-line
-                                  hide-details></v-text-field>
-                </v-card-title>
-                <v-data-table :headers="headers"
-                              :items="adminItems"
-                              :search="searchAdmin">
-                    <template slot="items" slot-scope="props">
-                        <td></td>
-                        <td>{{ props.item.email }}</td>
-                        <td>
-                            <v-tooltip top v-if="props.item.roles.length > 0">
-                                <template v-slot:activator="{ on }">
-                                    <v-icon color="grey lighten-1" dark v-on="on">security</v-icon>
-                                </template>
-                                <div v-for="role in props.item.roles">
-                                    <strong>{{ role }}</strong>
-                                </div>
-                            </v-tooltip>
-                        </td>
-
-                    </template>
-                    <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                        Không tìm thấy "{{ searchAdmin }}".
-                    </v-alert>
-                </v-data-table>
-            </v-card>
-            <br />
             <v-card>
                 <v-card-title>
                     <h5 class="breadcrumbs-title font-weight-black font-italic">Everyone</h5>
@@ -58,7 +23,7 @@
                             <v-tooltip top>
                                 <template v-slot:activator="{ on }">
                                     <v-btn flat icon v-on="on"
-                                            v-on:click="Khoa(props.item.id)"
+                                           v-on:click="Khoa(props.item.id)"
                                            color="red">
                                         <v-icon>lock</v-icon>
                                     </v-btn>
@@ -69,7 +34,7 @@
                             <v-tooltip top>
                                 <template v-slot:activator="{ on }">
                                     <v-btn color="primary" v-on="on"
-                                            v-on:click="KichHoat(props.item.id)"
+                                           v-on:click="KichHoat(props.item.id)"
                                            flat icon>
                                         <v-icon>check</v-icon>
                                     </v-btn>
@@ -91,12 +56,15 @@
                             <v-tooltip top>
                                 <template v-slot:activator="{ on }">
                                     <v-btn flat icon v-on="on"
-                                           color="warning">
+                                           color="warning"
+                                           v-on:click.stop="dialogEditRole = true"
+                                           v-on:click="mappingEditRoleItem(props.item)">
                                         <v-icon>edit</v-icon>
                                     </v-btn>
                                 </template>
                                 <strong>Cập Nhật Role</strong>
                             </v-tooltip>
+
                         </td>
                         <td>{{ props.item.email }}</td>
                         <td>
@@ -116,6 +84,48 @@
                     </v-alert>
                 </v-data-table>
             </v-card>
+
+
+            @*Edit Dialog*@
+            <v-dialog v-model="dialogEditRole" persistent max-width="600px">
+                <v-card>
+                    <v-card-title>
+                        <span class="headline">Cập Nhật Role Cho '{{ itemToEditRole.email }}'</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container grid-list-md>
+                            <v-layout wrap>
+
+                                <v-flex xs12 sm12>
+                                    <v-select 
+                                              v-model="itemToEditRole.roleIds"
+                                              :items="itemRoles"
+                                              item-text="role"
+                                              item-value="id"
+                                              attach
+                                              chips
+                                              label="Chọn Role"
+                                              multiple>
+                                        <template v-slot:selection="data">
+                                            <v-chip :selected="data.selected"
+                                                    color="green"
+                                                    text-color="white">
+                                                <span>({{ data.item.role }})</span>
+
+                                            </v-chip>
+                                        </template>
+                                    </v-select>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="secondary darken-1" flat v-on:click="dialogEditRole = false">Đóng</v-btn>
+                        <v-btn color="blue darken-1 white--text" v-on:click="onUpdateRole(itemToEditRole)">Lưu</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
 
             <v-snackbar v-model="snackbar"
                         :color="color"

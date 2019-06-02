@@ -6,7 +6,6 @@
         color: '',
         timeout: 3000,
         snackbar: false,
-        searchAdmin: '',
         searchUser: '',
         headers: [
             {
@@ -18,21 +17,36 @@
             { text: 'Email', value: 'email', align: 'left', sortable: true },
             { text: 'Roles', value: 'roles', align: 'left', sortable: true }
         ],
-        adminItems: [],
-        userItems: []
+        userItems: [],
+        dialogEditRole: false,
+        itemToEditRole: {},
+        editedIndex: -1,
+        itemRoles: []
     },
     async beforeCreate() {
         let that = this;
         await axios.get('/Setting/GetAccountAsync')
             .then(function (response) {
-                that.adminItems = response.data.administrators;
-                that.userItems = response.data.everyone;
+                that.userItems = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        
+        await axios.get('/Setting/GetRolesAsync')
+            .then(function (response) {
+                that.itemRoles = response.data;
             })
             .catch(function (error) {
                 console.log(error);
             });
     },
     methods: {
+        mappingEditRoleItem(item) {
+            this.editedIndex = this.userItems.indexOf(item);
+            this.itemToEditRole = Object.assign({}, item);
+        },
+
         async ResetMatKhau(id) {
             let that = this;
             await axios.get('/Setting/ResetMatKhauAsync?Id=' + id)
@@ -100,6 +114,40 @@
                     that.messageText = 'Khóa tài khoản lỗi: ' + error;
                     that.color = 'error';
                 });
+        },
+
+        async onUpdateRole(item) {
+            var that = this;
+            await axios({
+                method: 'put',
+                url: '/Setting/UpdateRoleAsync',
+                data: {
+                    Id: item.id,
+                    RoleIds: item.roleIds
+                }
+            })
+            .then(function (response) {
+                if (response.data.status === "OK") {
+                    Object.assign(that.userItems[that.editedIndex], response.data.result);
+                    that.snackbar = true;
+                    that.messageText = 'Cập nhật thành công !!!';
+                    that.color = 'success';
+                    that.dialogEditRole = false;
+                }
+                else {
+                    that.snackbar = true;
+                    that.messageText = response.data.message;
+                    that.color = 'error';
+                    that.dialogEditRole = false;
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                that.snackbar = true;
+                that.messageText = 'Cập nhật lỗi: ' + error;
+                that.color = 'error';
+                that.dialogEditRole = false;
+            });
         }
     }
 });

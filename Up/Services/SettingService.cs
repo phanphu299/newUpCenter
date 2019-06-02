@@ -21,12 +21,12 @@ namespace Up.Services
             _userManager = userManager;
         }
 
-        public async Task<bool> ActiveAsync(string userId)
+        public async Task<bool> ActiveAsync(string UserId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(UserId);
             if (user == null)
             {
-                throw new System.Exception("Tài khoản không tồn tại!");
+                throw new Exception("Tài khoản không tồn tại!");
             }
 
             user.LockoutEnd = null;
@@ -38,25 +38,55 @@ namespace Up.Services
             return true;
         }
 
-        public async Task<bool> ChangePasswordAsync(string userId, string newPassword = "M@tkhau@123")
+        public async Task<AccountInfo> AddRolesToUserAsync(string UserId, List<string> RoleIds)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(UserId);
+            var newRoles = await _context.Roles.Where(x => RoleIds.Contains(x.Id)).Select(x => x.Name).ToListAsync();
+
             if (user == null)
             {
-                throw new System.Exception("Tài khoản không tồn tại!");
+                throw new Exception("Tài khoản không tồn tại!");
             }
-            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, newPassword);
+
+            var oldRoleIds = _context.UserRoles.Where(x => x.UserId == UserId)
+                                    .Select(x => x.RoleId)
+                                    .ToList();
+
+            if(oldRoleIds.Any())
+            {
+                var oldRoles = await _context.Roles.Where(x => oldRoleIds.Contains(x.Id)).Select(x => x.Name).ToListAsync();
+                await _userManager.RemoveFromRolesAsync(user, oldRoles);
+            }
+
+            await _userManager.AddToRolesAsync(user, newRoles);
+
+            return new AccountInfo {
+                Email = user.Email,
+                Id = user.Id,
+                Roles = _userManager.GetRolesAsync(user).Result,
+                RoleIds = _context.UserRoles.Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToList()
+            };
+        }
+
+        public async Task<bool> ChangePasswordAsync(string UserId, string NewPassword = "M@tkhau@123")
+        {
+            var user = await _userManager.FindByIdAsync(UserId);
+            if (user == null)
+            {
+                throw new Exception("Tài khoản không tồn tại!");
+            }
+            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, NewPassword);
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
-                throw new System.Exception("Lỗi khi reset!");
+                throw new Exception("Lỗi khi reset!");
             }
             return true;
         }
 
-        public async Task<bool> DisableAsync(string userId)
+        public async Task<bool> DisableAsync(string UserId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(UserId);
             if (user == null)
             {
                 throw new System.Exception("Tài khoản không tồn tại!");
@@ -91,6 +121,15 @@ namespace Up.Services
             return adminList;
         }
 
+        public async Task<List<RoleViewModel>> GetAllRolesAsync()
+        {
+            return await _context.Roles.Select(x => new RoleViewModel
+            {
+                Id = x.Id,
+                Role = x.Name
+            }).ToListAsync();
+        }
+
         public async Task<List<AccountInfo>> GetAllUsersAsync()
         {
             var everyone = await _userManager.Users
@@ -103,7 +142,8 @@ namespace Up.Services
                 {
                     Email = item.Email,
                     Id = item.Id,
-                    Roles = _userManager.GetRolesAsync(item).Result
+                    Roles = _userManager.GetRolesAsync(item).Result,
+                    RoleIds = _context.UserRoles.Where(x => x.UserId == item.Id).Select(x => x.RoleId).ToList()
                 });
             }
 

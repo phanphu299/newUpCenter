@@ -33,15 +33,8 @@ namespace Up.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAccountAsync()
         {
-            var admin = await _settingService.GetAdminsAsync();
             var everyOne = await _settingService.GetAllUsersAsync();
-            var model = new ManageUsersViewModel
-            {
-                Administrators = admin,
-                Everyone = everyOne
-            };
-
-            return Json(model);
+            return Json(everyOne);
         }
 
         [HttpGet]
@@ -158,6 +151,56 @@ namespace Up.Controllers
                 {
                     Status = "OK",
                     Message = "Khóa tài khoản thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRolesAsync()
+        {
+            var model = await _settingService.GetAllRolesAsync();
+            return Json(model);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateRoleAsync([FromBody]AccountInfo model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Id))
+            {
+                return RedirectToAction("AccountIndexAsync");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("AccountIndexAsync");
+            }
+
+            try
+            {
+                var successful = await _settingService.AddRolesToUserAsync(model.Id, model.RoleIds.ToList());
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!",
+                    Result = successful
                 });
             }
             catch (Exception exception)
