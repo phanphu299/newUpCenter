@@ -993,5 +993,142 @@
                 });
             }
         }
+        /// /////////////////////////////////////////////////////////////////////////////////////////////////////
+        public async Task<IActionResult> StaticExpenseIndex()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            return View();
+        }
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetQuanHeAsync()
+        //{
+        //    var model = await _quanHeService.GetQuanHeAsync();
+        //    return Json(model);
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> CreateQuanHeAsync([FromBody]Models.QuanHeViewModel model)
+        //{
+        //    var currentUser = await _userManager.GetUserAsync(User);
+        //    if (currentUser == null)
+        //    {
+        //        return RedirectToAction("QuanHeIndex");
+        //    }
+
+        //    try
+        //    {
+        //        var successful = await _quanHeService.CreateQuanHeAsync(model.Name, currentUser.Email);
+        //        if (successful == null)
+        //        {
+        //            return Json(new Models.ResultModel
+        //            {
+        //                Status = "Failed",
+        //                Message = "Thêm mới lỗi !!!"
+        //            });
+        //        }
+
+        //        return Json(new Models.ResultModel
+        //        {
+        //            Status = "OK",
+        //            Message = "Thêm mới thành công !!!",
+        //            Result = successful
+        //        });
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        return Json(new Models.ResultModel
+        //        {
+        //            Status = "Failed",
+        //            Message = exception.Message
+        //        });
+        //    }
+        //}
+
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateQuanHeAsync([FromBody]Models.QuanHeViewModel model)
+        //{
+        //    if (model.QuanHeId == Guid.Empty)
+        //    {
+        //        return RedirectToAction("QuanHeIndex");
+        //    }
+
+        //    var currentUser = await _userManager.GetUserAsync(User);
+        //    if (currentUser == null)
+        //    {
+        //        return RedirectToAction("QuanHeIndex");
+        //    }
+
+        //    try
+        //    {
+        //        var successful = await _quanHeService.UpdateQuanHeAsync(model.QuanHeId, model.Name, currentUser.Email);
+        //        if (!successful)
+        //        {
+        //            return Json(new Models.ResultModel
+        //            {
+        //                Status = "Failed",
+        //                Message = "Cập nhật lỗi !!!"
+        //            });
+        //        }
+
+        //        return Json(new Models.ResultModel
+        //        {
+        //            Status = "OK",
+        //            Message = "Cập nhật thành công !!!"
+        //        });
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        return Json(new Models.ResultModel
+        //        {
+        //            Status = "Failed",
+        //            Message = exception.Message
+        //        });
+        //    }
+        //}
+
+        //[HttpDelete]
+        //public async Task<IActionResult> DeleteQuanHeAsync([FromBody]Models.QuanHeViewModel model)
+        //{
+        //    if (model.QuanHeId == Guid.Empty)
+        //    {
+        //        return RedirectToAction("QuanHeIndex");
+        //    }
+
+        //    var currentUser = await _userManager.GetUserAsync(User);
+        //    if (currentUser == null)
+        //    {
+        //        return RedirectToAction("QuanHeIndex");
+        //    }
+
+        //    try
+        //    {
+        //        var successful = await _quanHeService.DeleteQuanHeAsync(model.QuanHeId, currentUser.Email);
+        //        if (!successful)
+        //        {
+        //            return Json(new Models.ResultModel
+        //            {
+        //                Status = "Failed",
+        //                Message = "Xóa lỗi !!!"
+        //            });
+        //        }
+
+        //        return Json(new Models.ResultModel
+        //        {
+        //            Status = "OK",
+        //            Message = "Xóa thành công !!!"
+        //        });
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        return Json(new Models.ResultModel
+        //        {
+        //            Status = "Failed",
+        //            Message = exception.Message
+        //        });
+        //    }
+        //}
     }
 }

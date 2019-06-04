@@ -112,7 +112,9 @@ namespace Up.Services
                     LopHocList = await _context.HocVien_LopHocs.Where(x => x.HocVienId == hocVien.HocVienId).Select(x => new LopHocViewModel
                     {
                         LopHocId = x.LopHocId,
-                        Name = x.LopHoc.Name
+                        Name = x.LopHoc.Name,
+                        IsCanceled = x.LopHoc.IsCanceled,
+                        IsGraduated = x.LopHoc.IsGraduated
                     }).ToListAsync(),
                     LopHocIds = LopHocIds
                 };
@@ -171,7 +173,9 @@ namespace Up.Services
                     LopHocList = x.HocVien_LopHocs.Select(p => new LopHocViewModel
                     {
                         LopHocId = p.LopHocId,
-                        Name = p.LopHoc.Name
+                        Name = p.LopHoc.Name,
+                        IsGraduated = p.LopHoc.IsGraduated,
+                        IsCanceled = p.LopHoc.IsCanceled
                     }).ToList()
                 })
                 .ToListAsync();

@@ -203,7 +203,7 @@
                                     <v-icon color="grey lighten-1" dark v-on="on">class</v-icon>
                                 </template>
                                 <div v-for="lop in props.item.lopHocList">
-                                    <strong>{{ lop.name }}</strong>
+                                    <strong>{{ lop.name }}</strong><v-icon v-if="lop.isCanceled || lop.isGraduated" color="grey lighten-1">report</v-icon>
                                 </div>
                             </v-tooltip>
                         </td>
