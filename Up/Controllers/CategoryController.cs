@@ -15,9 +15,10 @@
         private readonly IHocPhiService _hocPhiService;
         private readonly ISachService _sachService;
         private readonly ILoaiGiaoVienService _loaiGiaoVienService;
+        private readonly IChiPhiCoDinhService _chiPhiCoDinhService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public CategoryController(IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, IHocPhiService hocPhiService, ISachService sachService, ILoaiGiaoVienService loaiGiaoVienService, UserManager<IdentityUser> userManager)
+        public CategoryController(IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, IHocPhiService hocPhiService, ISachService sachService, ILoaiGiaoVienService loaiGiaoVienService, IChiPhiCoDinhService chiPhiCoDinhService, UserManager<IdentityUser> userManager)
         {
             _khoaHocService = khoaHocService;
             _gioHocService = gioHocService;
@@ -26,6 +27,7 @@
             _hocPhiService = hocPhiService;
             _sachService = sachService;
             _loaiGiaoVienService = loaiGiaoVienService;
+            _chiPhiCoDinhService = chiPhiCoDinhService;
             _userManager = userManager;
         }
 
@@ -1002,133 +1004,134 @@
             return View();
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetQuanHeAsync()
-        //{
-        //    var model = await _quanHeService.GetQuanHeAsync();
-        //    return Json(model);
-        //}
+        [HttpGet]
+        public async Task<IActionResult> GetStaticExpenseAsync()
+        {
+            var model = await _chiPhiCoDinhService.GetChiPhiCoDinhAsync();
+            return Json(model);
+        }
 
-        //[HttpPost]
-        //public async Task<IActionResult> CreateQuanHeAsync([FromBody]Models.QuanHeViewModel model)
-        //{
-        //    var currentUser = await _userManager.GetUserAsync(User);
-        //    if (currentUser == null)
-        //    {
-        //        return RedirectToAction("QuanHeIndex");
-        //    }
+        [HttpPost]
+        public async Task<IActionResult> CreateStaticExpenseAsync([FromBody]Models.ChiPhiCoDinhViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("StaticExpenseIndex");
+            }
 
-        //    try
-        //    {
-        //        var successful = await _quanHeService.CreateQuanHeAsync(model.Name, currentUser.Email);
-        //        if (successful == null)
-        //        {
-        //            return Json(new Models.ResultModel
-        //            {
-        //                Status = "Failed",
-        //                Message = "Thêm mới lỗi !!!"
-        //            });
-        //        }
+            try
+            {
+                var successful = await _chiPhiCoDinhService.CreateChiPhiCoDinhAsync(model.Gia, model.Name, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Thêm mới lỗi !!!"
+                    });
+                }
 
-        //        return Json(new Models.ResultModel
-        //        {
-        //            Status = "OK",
-        //            Message = "Thêm mới thành công !!!",
-        //            Result = successful
-        //        });
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        return Json(new Models.ResultModel
-        //        {
-        //            Status = "Failed",
-        //            Message = exception.Message
-        //        });
-        //    }
-        //}
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Thêm mới thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
 
-        //[HttpPut]
-        //public async Task<IActionResult> UpdateQuanHeAsync([FromBody]Models.QuanHeViewModel model)
-        //{
-        //    if (model.QuanHeId == Guid.Empty)
-        //    {
-        //        return RedirectToAction("QuanHeIndex");
-        //    }
+        [HttpPut]
+        public async Task<IActionResult> UpdateStaticExpenseAsync([FromBody]Models.ChiPhiCoDinhViewModel model)
+        {
+            if (model.ChiPhiCoDinhId == Guid.Empty)
+            {
+                return RedirectToAction("StaticExpenseIndex");
+            }
 
-        //    var currentUser = await _userManager.GetUserAsync(User);
-        //    if (currentUser == null)
-        //    {
-        //        return RedirectToAction("QuanHeIndex");
-        //    }
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("StaticExpenseIndex");
+            }
 
-        //    try
-        //    {
-        //        var successful = await _quanHeService.UpdateQuanHeAsync(model.QuanHeId, model.Name, currentUser.Email);
-        //        if (!successful)
-        //        {
-        //            return Json(new Models.ResultModel
-        //            {
-        //                Status = "Failed",
-        //                Message = "Cập nhật lỗi !!!"
-        //            });
-        //        }
+            try
+            {
+                var successful = await _chiPhiCoDinhService.UpdateChiPhiCoDinhAsync(model.ChiPhiCoDinhId, model.Gia, model.Name, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
 
-        //        return Json(new Models.ResultModel
-        //        {
-        //            Status = "OK",
-        //            Message = "Cập nhật thành công !!!"
-        //        });
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        return Json(new Models.ResultModel
-        //        {
-        //            Status = "Failed",
-        //            Message = exception.Message
-        //        });
-        //    }
-        //}
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
 
-        //[HttpDelete]
-        //public async Task<IActionResult> DeleteQuanHeAsync([FromBody]Models.QuanHeViewModel model)
-        //{
-        //    if (model.QuanHeId == Guid.Empty)
-        //    {
-        //        return RedirectToAction("QuanHeIndex");
-        //    }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteStaticExpenseAsync([FromBody]Models.ChiPhiCoDinhViewModel model)
+        {
+            if (model.ChiPhiCoDinhId == Guid.Empty)
+            {
+                return RedirectToAction("StaticExpenseIndex");
+            }
 
-        //    var currentUser = await _userManager.GetUserAsync(User);
-        //    if (currentUser == null)
-        //    {
-        //        return RedirectToAction("QuanHeIndex");
-        //    }
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("StaticExpenseIndex");
+            }
 
-        //    try
-        //    {
-        //        var successful = await _quanHeService.DeleteQuanHeAsync(model.QuanHeId, currentUser.Email);
-        //        if (!successful)
-        //        {
-        //            return Json(new Models.ResultModel
-        //            {
-        //                Status = "Failed",
-        //                Message = "Xóa lỗi !!!"
-        //            });
-        //        }
+            try
+            {
+                var successful = await _chiPhiCoDinhService.DeleteChiPhiCoDinhAsync(model.ChiPhiCoDinhId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa lỗi !!!"
+                    });
+                }
 
-        //        return Json(new Models.ResultModel
-        //        {
-        //            Status = "OK",
-        //            Message = "Xóa thành công !!!"
-        //        });
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        return Json(new Models.ResultModel
-        //        {
-        //            Status = "Failed",
-        //            Message = exception.Message
-        //        });
-        //    }
-        //}
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
     }
 }

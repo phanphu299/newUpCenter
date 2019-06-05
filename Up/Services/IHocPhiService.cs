@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Up.Models;
-
+﻿
 namespace Up.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Up.Models;
+
     public interface IHocPhiService
     {
         Task<List<HocPhiViewModel>> GetHocPhiAsync();

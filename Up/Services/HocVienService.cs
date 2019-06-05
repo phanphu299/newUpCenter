@@ -282,7 +282,9 @@ namespace Up.Services
                                         .Select(x => new LopHocViewModel
                                         {
                                             Name = x.LopHoc.Name,
-                                            LopHocId = x.LopHocId
+                                            LopHocId = x.LopHocId,
+                                            IsCanceled = x.LopHoc.IsCanceled,
+                                            IsGraduated = x.LopHoc.IsGraduated
                                         }).ToListAsync()
                 };
             }
