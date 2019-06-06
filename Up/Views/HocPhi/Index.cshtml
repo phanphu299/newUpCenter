@@ -1,0 +1,75 @@
+﻿<div id="HocPhiIndex">
+    <v-app>
+        <div class="container">
+            <div class="col s10 m6 l6">
+                <h5 class="breadcrumbs-title">{{ title }}</h5>
+            </div>
+
+            <v-card>
+                <v-card-title>
+                    <v-layout wrap>
+                        <v-flex xs12 sm3>
+                            <v-select v-model="selectedLopHoc"
+                                      :items="itemLopHoc"
+                                      item-text="name"
+                                      item-value="lopHocId"
+                                      attach
+                                      chips
+                                      label="Chọn Lớp Học"
+                                      v-on:change="GetHocVienByLopHoc">
+                                <template v-slot:selection="data">
+                                    <v-chip :selected="data.selected"
+                                            color="green"
+                                            text-color="white">
+                                        <span>{{ data.item.name }}</span>
+                                    </v-chip>
+                                </template>
+                            </v-select>
+                        </v-flex>
+
+                        <v-flex xs12 sm3>
+                            <v-select :items="itemThang"
+                                      label="Chọn Tháng"></v-select>
+                        </v-flex>
+
+                        <v-flex xs12 sm3>
+                            <v-select :items="itemNam"
+                                      label="Chọn Năm"></v-select>
+                        </v-flex>
+
+            </v-card>
+        </div>
+
+        <v-snackbar v-model="snackbar"
+                    :color="color"
+                    :timeout="timeout"
+                    top
+                    right>
+            {{ messageText }}
+            <v-btn dark
+                   flat
+                   v-on:click="snackbar = false">
+                Close
+            </v-btn>
+        </v-snackbar>
+    </v-app>
+</div>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="~/js/tinhhocphiindex.js" type="text/javascript"></script>
+
+<style>
+    .v-input__slot:before, .v-input__slot:after {
+        display: none
+    }
+
+    .v-small-dialog a {
+        text-decoration-style: dashed;
+        text-decoration-line: underline;
+        text-decoration-color: #0088cc;
+    }
+
+    td, th {
+        padding: unset;
+    }
+</style>

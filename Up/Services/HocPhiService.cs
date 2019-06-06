@@ -1,14 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Up.Data;
-using Up.Data.Entities;
-using Up.Models;
-
+﻿
 namespace Up.Services
 {
+    using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Up.Data;
+    using Up.Data.Entities;
+    using Up.Models;
+
     public class HocPhiService : IHocPhiService
     {
         private readonly ApplicationDbContext _context;
@@ -80,6 +81,56 @@ namespace Up.Services
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
                 })
                 .ToListAsync();
+        }
+
+        public async Task<int> TinhSoNgayHocAsync(Guid LopHocId, int month, int year)
+        {
+            var item = await _context.LopHocs
+                                    .Include(x => x.NgayHoc)
+                                    .Where(x => x.LopHocId == LopHocId)
+                                    .SingleOrDefaultAsync();
+
+            var ngayHoc = item.NgayHoc.Name.Split('-');
+            int tongNgayHoc = 0;
+
+            foreach(string el in ngayHoc)
+            {
+                switch (el.Trim())
+                {
+                    case "2":
+                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Monday).Count();
+                        break;
+                    case "3":
+                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Tuesday).Count();
+                        break;
+                    case "4":
+                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Wednesday).Count();
+                        break;
+                    case "5":
+                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Thursday).Count();
+                        break;
+                    case "6":
+                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Friday).Count();
+                        break;
+                    case "7":
+                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Saturday).Count();
+                        break;
+                    default:
+                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Sunday).Count();
+                        break;
+                }
+            }
+
+            return tongNgayHoc;
+        }
+
+        private static IEnumerable<int> DaysInMonth(int year, int month, DayOfWeek dow)
+        {
+            DateTime monthStart = new DateTime(year, month, 1);
+            return Enumerable.Range(0, DateTime.DaysInMonth(year, month))
+                .Select(day => monthStart.AddDays(day))
+                .Where(date => date.DayOfWeek == dow)
+                .Select(date => date.Day);
         }
 
         public async Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee)
