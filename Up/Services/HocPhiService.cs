@@ -161,5 +161,65 @@ namespace Up.Services
                 NgayApDung = item.NgayApDung != null ? ((DateTime)item.NgayApDung).ToString("dd/MM/yyyy") : ""
             };
         }
+
+        public async Task<int> TinhSoNgayDuocChoNghiAsync(Guid LopHocId, int month, int year)
+        {
+            if(month == 1)
+            {
+                month = 12;
+                year--;
+            }
+            else
+            {
+                month--;
+            }
+
+            var ngayChoNghi = await _context.LopHoc_DiemDanhs
+                                            .Where(x => x.LopHocId == LopHocId && x.IsDuocNghi == true && x.NgayDiemDanh.Month == month && x.NgayDiemDanh.Year == year)
+                                            .GroupBy(x => x.NgayDiemDanh)
+                                            .Select(m => new {
+                                                m.Key
+                                            })
+                                            .ToListAsync();
+            return ngayChoNghi.Count();
+        }
+
+        public async Task<TinhHocPhiViewModel> TinhHocPhiAsync(Guid LopHocId, int month, int year, int KhuyenMai, string GiaSachList)
+        {
+            int soNgayHoc = await TinhSoNgayHocAsync(LopHocId, month, year);
+            int soNgayDuocNghi = await TinhSoNgayDuocChoNghiAsync(LopHocId, month, year);
+
+            var item = await _context.LopHocs
+                                    .Include(x => x.HocPhi)
+                                    .Where(x => x.LopHocId == LopHocId)
+                                    .SingleOrDefaultAsync();
+
+            var hocPhi = item.HocPhi.Gia;
+
+            var hocPhiMoiNgay = hocPhi / soNgayHoc;
+
+            if (soNgayDuocNghi > 0)
+                hocPhi = hocPhi - (hocPhiMoiNgay * soNgayDuocNghi);
+
+            if (KhuyenMai > 0)
+            {
+                hocPhi = hocPhi - ((hocPhi * KhuyenMai) / 100);
+            }
+
+            if(!string.IsNullOrWhiteSpace(GiaSachList))
+            {
+                var giaSach = GiaSachList.Split(',');
+                foreach(var el in giaSach)
+                {
+                    hocPhi += int.Parse(el);
+                }
+            }
+
+            return new TinhHocPhiViewModel {
+                SoNgayDuocNghi = soNgayDuocNghi,
+                HocPhi = hocPhi,
+                SoNgayHoc = soNgayHoc
+            };
+        }
     }
 }

@@ -1,14 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Up.Data;
-using Up.Data.Entities;
-using Up.Models;
-
+﻿
 namespace Up.Services
 {
+    using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Up.Data;
+    using Up.Data.Entities;
+    using Up.Models;
+
     public class SachService : ISachService
     {
         private readonly ApplicationDbContext _context;
@@ -73,6 +74,18 @@ namespace Up.Services
                     Gia = x.Gia,
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<SachViewModel>> GetSachByLopHocIdAsync(Guid LopHocId)
+        {
+            return await _context.Sachs
+                .Where(x => x.IsDisabled == false && x.LopHoc_Sachs.Any(m => m.LopHocId == LopHocId))
+                .Select(x => new SachViewModel
+                {
+                    SachId = x.SachId,
+                    Name = x.Name
                 })
                 .ToListAsync();
         }

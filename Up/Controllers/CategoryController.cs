@@ -735,6 +735,13 @@
             return Json(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetSachByLopHocIdAsync(Guid LopHocId)
+        {
+            var model = await _sachService.GetSachByLopHocIdAsync(LopHocId);
+            return Json(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateSachAsync([FromBody]Models.SachViewModel model)
         {

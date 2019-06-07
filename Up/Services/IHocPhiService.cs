@@ -13,6 +13,8 @@ namespace Up.Services
         Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee);
         Task<bool> DeleteHocPhiAsync(Guid HocPhiId, string LoggedEmployee);
 
-        Task<int> TinhSoNgayHocAsync(Guid LopHocId, int month, int year );
+        Task<int> TinhSoNgayHocAsync(Guid LopHocId, int month, int year);
+        Task<int> TinhSoNgayDuocChoNghiAsync(Guid LopHocId, int month, int year);
+        Task<TinhHocPhiViewModel> TinhHocPhiAsync(Guid LopHocId, int month, int year, int KhuyenMai, string GiaSachList);
     }
 }

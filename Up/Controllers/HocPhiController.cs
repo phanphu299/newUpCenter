@@ -4,6 +4,7 @@ namespace Up.Controllers
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Up.Services;
@@ -27,9 +28,9 @@ namespace Up.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTongNgayHocAsync(Guid LopHocId, int Month, int Year)
+        public async Task<IActionResult> GetTinhHocPhiAsync(Guid LopHocId, int Month, int Year, int KhuyenMai, string GiaSachList)
         {
-            int model = await _hocPhiService.TinhSoNgayHocAsync(LopHocId, Month, Month);
+            var model = await _hocPhiService.TinhHocPhiAsync(LopHocId, Month, Year, KhuyenMai, GiaSachList);
             return Json(model);
         }
     }

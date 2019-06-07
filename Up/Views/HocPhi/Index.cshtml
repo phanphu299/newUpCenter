@@ -8,15 +8,14 @@
             <v-card>
                 <v-card-title>
                     <v-layout wrap>
-                        <v-flex xs12 sm3>
+                        <v-flex xs12 sm2>
                             <v-select v-model="selectedLopHoc"
                                       :items="itemLopHoc"
                                       item-text="name"
                                       item-value="lopHocId"
                                       attach
                                       chips
-                                      label="Chọn Lớp Học"
-                                      v-on:change="GetHocVienByLopHoc">
+                                      label="Chọn Lớp Học">
                                 <template v-slot:selection="data">
                                     <v-chip :selected="data.selected"
                                             color="green"
@@ -27,17 +26,55 @@
                             </v-select>
                         </v-flex>
 
-                        <v-flex xs12 sm3>
+                        <v-flex xs12 sm2>
                             <v-select :items="itemThang"
+                                      v-model="selectedThang"
                                       label="Chọn Tháng"></v-select>
                         </v-flex>
 
-                        <v-flex xs12 sm3>
+                        <v-flex xs12 sm2>
                             <v-select :items="itemNam"
+                                      v-model="selectedNam"
                                       label="Chọn Năm"></v-select>
                         </v-flex>
 
-            </v-card>
+                        <v-flex xs12 sm2>
+                            <v-select v-model="selectedSach"
+                                      :items="itemSach"
+                                      item-text="name"
+                                      item-value="gia"
+                                      attach
+                                      multiple
+                                      chips
+                                      label="Chọn Sách">
+                                <template v-slot:selection="data">
+                                    <v-chip :selected="data.selected"
+                                            color="green"
+                                            text-color="white">
+                                        <strong>{{ data.item.name }}</strong>&nbsp;
+                                        <span>({{ formatNumber(data.item.gia) }})</span>
+                                    </v-chip>
+                                </template>
+                            </v-select>
+                        </v-flex>
+
+                        <v-flex xs12 sm2>
+                            <v-text-field label="Khuyến Mãi (%)" v-model="khuyenMai"></v-text-field>
+                        </v-flex>
+
+                        <v-flex xs12 sm2>
+                            <v-btn color="success" v-on:click="onTinhTien">Tính Tiền</v-btn>
+                        </v-flex>
+                        tong ngay hoc :
+                        {{tongNgayHoc}}
+
+                        tong ngay nghi :
+                        {{tongNgayDuocNghi}}
+
+                        hoc  phi:
+                        {{formatNumber(tongHocPhi)}}
+
+</v-card>
         </div>
 
         <v-snackbar v-model="snackbar"
