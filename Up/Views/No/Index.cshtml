@@ -1,0 +1,100 @@
+﻿<div id="NoIndex">
+    <v-app>
+        <div class="container">
+            <div class="col s10 m6 l6">
+                <h5 class="breadcrumbs-title">{{ title }}</h5>
+            </div>
+
+            <v-card>
+                <v-card-title>
+                    <v-layout wrap>
+                        <v-flex xs12 sm3>
+                            <v-select v-model="selectedLopHoc"
+                                      :items="itemLopHoc"
+                                      item-text="name"
+                                      item-value="lopHocId"
+                                      attach
+                                      chips
+                                      label="Chọn Lớp Học"
+                                      v-on:change="GetHocVienNoByLopHoc">
+                                <template v-slot:selection="data">
+                                    <v-chip :selected="data.selected"
+                                            color="green"
+                                            text-color="white">
+                                        <span>{{ data.item.name }}</span>
+                                    </v-chip>
+                                </template>
+                            </v-select>
+                        </v-flex>
+
+                    </v-layout>
+                    <br />
+                    <v-spacer></v-spacer>
+                    <v-text-field v-model="search"
+                                  append-icon="search"
+                                  label="Tìm Kiếm"
+                                  single-line
+                                  v-if="hocVienList.length > 0"
+                                  hide-details></v-text-field>
+                </v-card-title>
+
+                <v-container fluid v-if="hocVienList.length > 0">
+                    <v-layout wrap>
+                        <v-flex>
+                            <v-data-table :headers="headers"
+                                          :items="hocVienList"
+                                          :search="search">
+                                <template slot="items" slot-scope="props">
+
+                                    <td>{{ props.item.hocVien }}</td>
+                                    <td>{{ props.item.lopHoc }}</td>
+                                    <td>{{ props.item.ngayNo }}</td>
+                                    <td>{{ formatNumber(props.item.tienNo) }}</td>
+                                    <td>{{ props.item.createdDate }}</td>
+                                    <td>{{ props.item.createdBy }}</td>
+
+                                </template>
+                                <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                                    Không tìm thấy "{{ search }}".
+                                </v-alert>
+                            </v-data-table>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+
+            </v-card>
+        </div>
+
+        <v-snackbar v-model="snackbar"
+                    :color="color"
+                    :timeout="timeout"
+                    top
+                    right>
+            {{ messageText }}
+            <v-btn dark
+                   flat
+                   v-on:click="snackbar = false">
+                Close
+            </v-btn>
+        </v-snackbar>
+    </v-app>
+</div>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="~/js/noindex.js" type="text/javascript"></script>
+
+<style>
+    .v-input__slot:before, .v-input__slot:after {
+        display: none
+    }
+
+    .v-small-dialog a {
+        text-decoration-style: dashed;
+        text-decoration-line: underline;
+        text-decoration-color: #0088cc;
+    }
+
+    td, th {
+        padding: unset;
+    }
+</style>

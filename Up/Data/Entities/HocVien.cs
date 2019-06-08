@@ -29,5 +29,6 @@ namespace Up.Data.Entities
         public ICollection<LopHoc_DiemDanh> LopHoc_DiemDanhs { get; set; }
         public ICollection<HocVien_LopHoc> HocVien_LopHocs { get; set; }
         public ICollection<HocVien_NgayHoc> HocVien_NgayHocs { get; set; }
+        public ICollection<HocVien_No> HocVien_Nos { get; set; }
     }
 }
