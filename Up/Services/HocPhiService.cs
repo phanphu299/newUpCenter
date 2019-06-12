@@ -34,7 +34,8 @@ namespace Up.Services
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
                 throw new Exception("Lỗi khi lưu Học Phí !!!");
-            return new HocPhiViewModel {
+            return new HocPhiViewModel
+            {
                 HocPhiId = hocPhi.HocPhiId,
                 Gia = hocPhi.Gia,
                 GhiChu = hocPhi.GhiChu,
@@ -75,7 +76,7 @@ namespace Up.Services
                     CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
                     HocPhiId = x.HocPhiId,
                     Gia = x.Gia,
-                    NgayApDung = x.NgayApDung == null ? "": ((DateTime)x.NgayApDung).ToString("dd/MM/yyyy"),
+                    NgayApDung = x.NgayApDung == null ? "" : ((DateTime)x.NgayApDung).ToString("dd/MM/yyyy"),
                     GhiChu = x.GhiChu,
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
@@ -93,7 +94,7 @@ namespace Up.Services
             var ngayHoc = item.NgayHoc.Name.Split('-');
             int tongNgayHoc = 0;
 
-            foreach(string el in ngayHoc)
+            foreach (string el in ngayHoc)
             {
                 switch (el.Trim())
                 {
@@ -164,7 +165,7 @@ namespace Up.Services
 
         public async Task<int> TinhSoNgayDuocChoNghiAsync(Guid LopHocId, int month, int year)
         {
-            if(month == 1)
+            if (month == 1)
             {
                 month = 12;
                 year--;
@@ -177,7 +178,8 @@ namespace Up.Services
             var ngayChoNghi = await _context.LopHoc_DiemDanhs
                                             .Where(x => x.LopHocId == LopHocId && x.IsDuocNghi == true && x.NgayDiemDanh.Month == month && x.NgayDiemDanh.Year == year)
                                             .GroupBy(x => x.NgayDiemDanh)
-                                            .Select(m => new {
+                                            .Select(m => new
+                                            {
                                                 m.Key
                                             })
                                             .ToListAsync();
@@ -206,20 +208,46 @@ namespace Up.Services
                 hocPhi = hocPhi - ((hocPhi * KhuyenMai) / 100);
             }
 
-            if(!string.IsNullOrWhiteSpace(GiaSachList))
+            if (!string.IsNullOrWhiteSpace(GiaSachList))
             {
                 var giaSach = GiaSachList.Split(',');
-                foreach(var el in giaSach)
+                foreach (var el in giaSach)
                 {
                     hocPhi += int.Parse(el);
                 }
             }
 
-            return new TinhHocPhiViewModel {
+            return new TinhHocPhiViewModel
+            {
                 SoNgayDuocNghi = soNgayDuocNghi,
                 HocPhi = hocPhi,
-                SoNgayHoc = soNgayHoc
+                SoNgayHoc = soNgayHoc,
+                HocVienList = await GetHocVien_No_NgayHocAsync(LopHocId, month, year, hocPhi)
             };
+        }
+
+        public async Task<List<HocVienViewModel>> GetHocVien_No_NgayHocAsync(Guid LopHocId, int month, int year, double HocPhi)
+        {
+            if (month == 1)
+            {
+                month = 12;
+                year--;
+            }
+            else
+            {
+                month--;
+            }
+            return await _context.HocVien_LopHocs
+                                    .Include(x => x.HocVien)
+                                    .Where(x => x.LopHocId == LopHocId)
+                                    .Select(x => new HocVienViewModel
+                                    {
+                                        FullName = x.HocVien.FullName,
+                                        HocVienId = x.HocVienId,
+                                        TienNo = x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year).SingleOrDefault() == null ? 0: x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year).SingleOrDefault().TienNo,
+                                        HocPhiMoi = x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year).SingleOrDefault() == null ? HocPhi : HocPhi + x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year).SingleOrDefault().TienNo
+                                    })
+                                    .ToListAsync();
         }
     }
 }

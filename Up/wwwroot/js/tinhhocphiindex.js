@@ -19,8 +19,20 @@
         tongNgayHoc: 0,
         tongNgayDuocNghi: 0,
         tongHocPhi: 0,
-        khuyenMai: 0
-        //isShowDatePicker: false,
+        khuyenMai: 0,
+        hocVienList: [],
+        headers: [
+            //{
+            //    text: 'Action',
+            //    align: 'left',
+            //    sortable: false,
+            //    value: ''
+            //},
+            { text: 'Tên Học Viên', value: 'fullName', align: 'left', sortable: true },
+            { text: 'Nợ Tháng Trước', value: 'tienNo', align: 'left', sortable: true },
+            { text: 'Học Phí Tháng Này', value: '', align: 'left', sortable: true },
+            { text: 'Action', value: '', align: 'left', sortable: false }
+        ]
 
     },
     async beforeCreate() {
@@ -53,6 +65,7 @@
                         that.tongNgayHoc = response.data.soNgayHoc;
                         that.tongNgayDuocNghi = response.data.soNgayDuocNghi;
                         that.tongHocPhi = response.data.hocPhi;
+                        that.hocVienList = response.data.hocVienList;
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -68,6 +81,38 @@
 
         formatNumber(val) {
             return val.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
-        }
+        },
+
+        async onLuu(item) {
+            let that = this;
+            await axios({
+                method: 'post',
+                url: '/HocPhi/LuuDoanhThu_HocPhiAsync',
+                data: {
+                    LopHocId: this.selectedLopHoc,
+                    HocVienId: item.hocVienId,
+                    HocPhi: item.hocPhiMoi
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Lưu Doanh Thu thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Lưu Doanh Thu lỗi: ' + error;
+                    that.color = 'error';
+                });
+        },
     }
 });

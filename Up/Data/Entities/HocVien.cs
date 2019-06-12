@@ -30,5 +30,6 @@ namespace Up.Data.Entities
         public ICollection<HocVien_LopHoc> HocVien_LopHocs { get; set; }
         public ICollection<HocVien_NgayHoc> HocVien_NgayHocs { get; set; }
         public ICollection<HocVien_No> HocVien_Nos { get; set; }
+        public ICollection<ThongKe_DoanhThuHocPhi> ThongKe_DoanhThuHocPhis { get; set; }
     }
 }

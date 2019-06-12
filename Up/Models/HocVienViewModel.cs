@@ -25,5 +25,9 @@
         public string UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate_Date { get; set; }
+
+        public double TienNo { get; set; }
+        public int SoNgayHoc { get; set; }
+        public double HocPhiMoi { get; set; }
     }
 }

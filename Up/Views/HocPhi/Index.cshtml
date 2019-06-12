@@ -74,6 +74,53 @@
                         hoc  phi:
                         {{formatNumber(tongHocPhi)}}
 
+                        <v-container fluid v-if="hocVienList.length > 0">
+                            <v-layout wrap>
+                                <v-flex>
+                                    <v-data-table :headers="headers"
+                                                  :items="hocVienList"
+                                                  :search="search">
+                                        <template slot="items" slot-scope="props">
+
+                                            <td>{{ props.item.fullName }}</td>
+                                            <td>{{ formatNumber(props.item.tienNo) }}</td>
+                                            <td><v-text-field label="Học Phí" v-model="props.item.hocPhiMoi" :value="props.item.hocPhiMoi"></v-text-field></td>
+                                            <td>
+                                                <v-tooltip top>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-btn flat icon
+                                                               color="success"
+                                                               v-on="on"
+                                                               v-on:click="onLuu(props.item)">
+                                                            <v-icon>check</v-icon>
+                                                        </v-btn>
+                                                    </template>
+                                                    <strong>Đóng tiền và Lưu</strong>
+                                                </v-tooltip>
+
+                                                <v-tooltip top>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-btn flat icon
+                                                               color="warning"
+                                                               v-on="on"
+                                                               v-on:click.stop="dialogNgayHoc = true"
+                                                               v-on:click="mappingNgayHocItem(props.item)">
+                                                            <v-icon>restore</v-icon>
+                                                        </v-btn>
+                                                    </template>
+                                                    <strong>Nợ và Lưu</strong>
+                                                </v-tooltip>
+                                            </td>
+
+                                        </template>
+                                        <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                                            Không tìm thấy "{{ search }}".
+                                        </v-alert>
+                                    </v-data-table>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+
 </v-card>
         </div>
 
