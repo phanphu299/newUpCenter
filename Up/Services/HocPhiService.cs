@@ -244,8 +244,8 @@ namespace Up.Services
                                     {
                                         FullName = x.HocVien.FullName,
                                         HocVienId = x.HocVienId,
-                                        TienNo = x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year).SingleOrDefault() == null ? 0: x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year).SingleOrDefault().TienNo,
-                                        HocPhiMoi = x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year).SingleOrDefault() == null ? HocPhi : HocPhi + x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year).SingleOrDefault().TienNo
+                                        TienNo = x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year && m.IsDisabled == false).SingleOrDefault() == null ? 0: x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year).SingleOrDefault().TienNo,
+                                        HocPhiMoi = x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year && m.IsDisabled == false).SingleOrDefault() == null ? HocPhi : HocPhi + x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year).SingleOrDefault().TienNo
                                     })
                                     .ToListAsync();
         }

@@ -4,8 +4,8 @@
 
     public class ThongKeGiaoVienViewModel
     {
-        public List<int> FullTime { get; set; }
-        public List<int> PartTime { get; set; }
-        public List<int> QuocTe { get; set; }
+        public List<double> FullTime { get; set; }
+        public List<double> PartTime { get; set; }
+        public List<double> QuocTe { get; set; }
     }
 }

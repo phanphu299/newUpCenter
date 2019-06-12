@@ -38,7 +38,7 @@
                                     Data = g.Count(),
                                 });
 
-            var listGiaoTiep = Enumerable.Repeat(0, 12).ToList();
+            var listGiaoTiep = Enumerable.Repeat(0.0, 12).ToList();
             foreach (var item in giaoTiep)
             {
                 listGiaoTiep[int.Parse(item.Label) - 1] = item.Data;
@@ -53,7 +53,7 @@
                                     Data = g.Count(),
                                 });
 
-            var listThieuNhi = Enumerable.Repeat(0, 12).ToList();
+            var listThieuNhi = Enumerable.Repeat(0.0, 12).ToList();
             foreach (var item in thieuNhi)
             {
                 listThieuNhi[int.Parse(item.Label) - 1] = item.Data;
@@ -67,7 +67,7 @@
                                     Label = g.Key.ToString(),
                                     Data = g.Count(),
                                 });
-            var listQuocTe = Enumerable.Repeat(0, 12).ToList();
+            var listQuocTe = Enumerable.Repeat(0.0, 12).ToList();
             foreach (var item in quocTe)
             {
                 listQuocTe[int.Parse(item.Label) - 1] = item.Data;
@@ -93,7 +93,7 @@
                                     Data = g.Count(),
                                 });
 
-            var listFullTime = Enumerable.Repeat(0, 12).ToList();
+            var listFullTime = Enumerable.Repeat(0.0, 12).ToList();
             foreach (var item in fullTime)
             {
                 listFullTime[int.Parse(item.Label) - 1] = item.Data;
@@ -108,7 +108,7 @@
                                     Data = g.Count(),
                                 });
 
-            var listPartTime = Enumerable.Repeat(0, 12).ToList();
+            var listPartTime = Enumerable.Repeat(0.0, 12).ToList();
             foreach (var item in partTime)
             {
                 listPartTime[int.Parse(item.Label) - 1] = item.Data;
@@ -122,7 +122,7 @@
                                     Label = g.Key.ToString(),
                                     Data = g.Count(),
                                 });
-            var listQuocTe = Enumerable.Repeat(0, 12).ToList();
+            var listQuocTe = Enumerable.Repeat(0.0, 12).ToList();
             foreach (var item in quocTe)
             {
                 listQuocTe[int.Parse(item.Label) - 1] = item.Data;
@@ -144,6 +144,27 @@
                 HocVien = await _thongKeService.GetTongHocVienAsync(),
                 GiaoVien = await _thongKeService.GetTongGiaoVienAsync()
             });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetThongKeDoanhThu_HocPhiAsync()
+        {
+            var doanhThu = _thongKeService.GetDoanhThuHocPhiAsync()
+                .Result
+                .GroupBy(p => p.CreatedDate_Date.Month)
+                                .Select(g => new ThongKeModel
+                                {
+                                    Label = g.Key.ToString(),
+                                    Data = g.Sum(x => x.HocPhi)
+                                });
+
+            var listDoanhThu = Enumerable.Repeat(0.0, 12).ToList();
+            foreach (var item in doanhThu)
+            {
+                listDoanhThu[int.Parse(item.Label) - 1] = item.Data;
+            }
+
+            return Json(listDoanhThu);
         }
     }
 }

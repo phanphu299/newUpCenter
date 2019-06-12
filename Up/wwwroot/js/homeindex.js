@@ -22,6 +22,7 @@ var vue = new Vue({
         tab: null,
         loadedHocVien: false,
         loadedGiaoVien: false,
+        loadedDoanhThuHocPhi: false,
         chartdataHocVien: {
             labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
             datasets: [
@@ -90,6 +91,21 @@ var vue = new Vue({
         thongKeTong: {
             hocVien: 0,
             giaoVien: 0
+        },
+
+        chartdataDoanhThuHocPhi: {
+            labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+            datasets: [
+                {
+                    label: 'Doanh Thu Học Phí',
+                    data: [],
+                    borderColor: '#4caf50',
+                    pointBackgroundColor: '#4caf50',
+                    borderWidth: 1,
+                    pointBorderColor: '#4caf50',
+                    backgroundColor: 'transparent'
+                }
+            ]
         }
 
     },
@@ -125,6 +141,15 @@ var vue = new Vue({
                 .then(function (response) {
                     that.thongKeTong.hocVien = response.data.hocVien;
                     that.thongKeTong.giaoVien = response.data.giaoVien;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+            await axios.get('/ThongKe/GetThongKeDoanhThu_HocPhiAsync')
+                .then(function (response) {
+                    that.chartdataDoanhThuHocPhi.datasets[0].data = response.data;
+                    that.loadedDoanhThuHocPhi = true;
                 })
                 .catch(function (error) {
                     console.log(error);

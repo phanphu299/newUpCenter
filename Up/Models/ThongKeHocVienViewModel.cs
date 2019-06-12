@@ -4,15 +4,15 @@
 
     public class ThongKeHocVienViewModel
     {
-        public List<int> GiaoTiep { get; set; }
-        public List<int> ThieuNhi { get; set; }
-        public List<int> QuocTe { get; set; }
+        public List<double> GiaoTiep { get; set; }
+        public List<double> ThieuNhi { get; set; }
+        public List<double> QuocTe { get; set; }
     }
 
     public class ThongKeModel
     {
         public string Label { get; set; }
-        public int Data { get; set; }
+        public double Data { get; set; }
 
     }
 }

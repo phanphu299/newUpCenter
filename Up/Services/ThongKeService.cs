@@ -185,5 +185,28 @@
                 throw new Exception(exception.Message);
             }
         }
+
+        public async Task<List<ThongKe_DoanhThuHocPhiViewModel>> GetDoanhThuHocPhiAsync()
+        {
+            try
+            {
+                var doanhThu = await _context.ThongKe_DoanhThuHocPhis
+                .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
+                .OrderBy(x => x.CreatedDate)
+
+                .Select(g => new ThongKe_DoanhThuHocPhiViewModel
+                {
+                    HocPhi = g.HocPhi,
+                    CreatedDate_Date = g.CreatedDate
+                })
+                .ToListAsync();
+
+                return doanhThu;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+        }
     }
 }

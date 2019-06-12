@@ -42,20 +42,39 @@ namespace Up.Services
             if (LopHocId == null || HocVienId == null || NgayNo == null)
                 throw new Exception("Tên Lớp Học, Học Viên, Ngày Nợ không được để trống !!!");
 
-            HocVien_No hocVien_No = new HocVien_No();
-            hocVien_No.HocVien_NoId = new Guid();
-            hocVien_No.TienNo = TienNo;
-            hocVien_No.NgayNo = NgayNo;
-            hocVien_No.HocVienId = HocVienId;
-            hocVien_No.LopHocId = LopHocId;
-            hocVien_No.CreatedBy = LoggedEmployee;
-            hocVien_No.CreatedDate = DateTime.Now;
+            var item = await _context.HocVien_Nos
+                .Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo.Month == DateTime.Now.Month && x.NgayNo.Year == DateTime.Now.Year)
+                .SingleOrDefaultAsync();
 
-            _context.HocVien_Nos.Add(hocVien_No);
-
-            await _context.SaveChangesAsync();
-
-            return true;
+            try
+            {
+                if (item == null)
+                {
+                    HocVien_No hocVien_No = new HocVien_No
+                    {
+                        HocVienId = HocVienId,
+                        HocVien_NoId = new Guid(),
+                        CreatedBy = LoggedEmployee,
+                        CreatedDate = DateTime.Now,
+                        TienNo = TienNo,
+                        LopHocId = LopHocId,
+                        NgayNo = NgayNo
+                    };
+                    _context.HocVien_Nos.Add(hocVien_No);
+                }
+                else
+                {
+                    item.TienNo = TienNo;
+                    item.UpdatedBy = LoggedEmployee;
+                    item.UpdatedDate = DateTime.Now;
+                }
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception exeption)
+            {
+                throw new Exception("Lỗi khi lưu nợ : " + exeption.Message);
+            }
         }
 
         public async Task<bool> XoaHocVien_NoAsync(Guid LopHocId, Guid HocVienId, DateTime NgayNo, string LoggedEmployee)

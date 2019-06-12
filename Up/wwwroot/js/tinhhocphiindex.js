@@ -114,5 +114,37 @@
                     that.color = 'error';
                 });
         },
+
+        async onNo(item) {
+            let that = this;
+            await axios({
+                method: 'post',
+                url: '/HocPhi/LuuNo_HocPhiAsync',
+                data: {
+                    LopHocId: this.selectedLopHoc,
+                    HocVienId: item.hocVienId,
+                    TienNo: item.hocPhiMoi
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Lưu Nợ thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Lưu Nợ lỗi: ' + error;
+                    that.color = 'error';
+                });
+        }
     }
 });
