@@ -27,7 +27,7 @@ namespace Up.Services
         public async Task<bool> ThemThongKe_DoanhThuHocPhiAsync(Guid LopHocId, Guid HocVienId, double HocPhi, DateTime NgayDong, string LoggedEmployee)
         {
             var item = await _context.ThongKe_DoanhThuHocPhis
-                .Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayDong.Month == DateTime.Now.Month && x.NgayDong.Year == DateTime.Now.Year)
+                .Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayDong.Month == NgayDong.Month && x.NgayDong.Year == NgayDong.Year)
                 .SingleOrDefaultAsync();
 
             try
@@ -45,13 +45,28 @@ namespace Up.Services
                         LopHocId = LopHocId
                     };
                     _context.ThongKe_DoanhThuHocPhis.Add(thongKe);
+
+                    var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo <= thongKe.NgayDong);
+                    foreach (var n in no)
+                    {
+                        n.IsDisabled = true;
+                    }
                 }
                 else
                 {
                     item.HocPhi = HocPhi;
                     item.UpdatedBy = LoggedEmployee;
                     item.UpdatedDate = DateTime.Now;
+
+                    var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo <= item.NgayDong);
+                    foreach (var n in no)
+                    {
+                        n.IsDisabled = true;
+                    }
                 }
+
+                
+
                 await _context.SaveChangesAsync();
                 return true;
             }
