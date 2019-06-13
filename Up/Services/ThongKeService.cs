@@ -191,17 +191,40 @@
             try
             {
                 var doanhThu = await _context.ThongKe_DoanhThuHocPhis
-                .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
-                .OrderBy(x => x.CreatedDate)
+                .Where(x => x.NgayDong.Year == DateTime.Now.Year)
+                .OrderBy(x => x.NgayDong)
 
                 .Select(g => new ThongKe_DoanhThuHocPhiViewModel
                 {
                     HocPhi = g.HocPhi,
-                    CreatedDate_Date = g.CreatedDate
+                    NgayDong = g.NgayDong
                 })
                 .ToListAsync();
 
                 return doanhThu;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+        }
+
+        public async Task<List<NoViewModel>> GetNoAsync()
+        {
+            try
+            {
+                var no = await _context.HocVien_Nos
+                .Where(x => x.NgayNo.Year == DateTime.Now.Year)
+                .OrderBy(x => x.NgayNo)
+
+                .Select(g => new NoViewModel
+                {
+                    TienNo = g.TienNo,
+                    NgayNo_Date = g.NgayNo
+                })
+                .ToListAsync();
+
+                return no;
             }
             catch (Exception exception)
             {

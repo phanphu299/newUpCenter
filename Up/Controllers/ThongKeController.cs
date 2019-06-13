@@ -2,7 +2,6 @@
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Up.Models;
@@ -151,7 +150,7 @@
         {
             var doanhThu = _thongKeService.GetDoanhThuHocPhiAsync()
                 .Result
-                .GroupBy(p => p.CreatedDate_Date.Month)
+                .GroupBy(p => p.NgayDong.Month)
                                 .Select(g => new ThongKeModel
                                 {
                                     Label = g.Key.ToString(),
@@ -165,6 +164,27 @@
             }
 
             return Json(listDoanhThu);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetNoAsync()
+        {
+            var no = _thongKeService.GetNoAsync()
+                .Result
+                .GroupBy(p => p.NgayNo_Date.Month)
+                                .Select(g => new ThongKeModel
+                                {
+                                    Label = g.Key.ToString(),
+                                    Data = g.Sum(x => x.TienNo)
+                                });
+
+            var listNo = Enumerable.Repeat(0.0, 12).ToList();
+            foreach (var item in no)
+            {
+                listNo[int.Parse(item.Label) - 1] = item.Data;
+            }
+
+            return Json(listNo);
         }
     }
 }

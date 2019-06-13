@@ -24,10 +24,10 @@ namespace Up.Services
             throw new NotImplementedException();
         }
 
-        public async Task<bool> ThemThongKe_DoanhThuHocPhiAsync(Guid LopHocId, Guid HocVienId, double HocPhi, string LoggedEmployee)
+        public async Task<bool> ThemThongKe_DoanhThuHocPhiAsync(Guid LopHocId, Guid HocVienId, double HocPhi, DateTime NgayDong, string LoggedEmployee)
         {
             var item = await _context.ThongKe_DoanhThuHocPhis
-                .Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Year == DateTime.Now.Year)
+                .Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayDong.Month == DateTime.Now.Month && x.NgayDong.Year == DateTime.Now.Year)
                 .SingleOrDefaultAsync();
 
             try
@@ -38,6 +38,7 @@ namespace Up.Services
                     {
                         HocVienId = HocVienId,
                         ThongKe_DoanhThuHocPhiId = new Guid(),
+                        NgayDong = NgayDong,
                         CreatedBy = LoggedEmployee,
                         CreatedDate = DateTime.Now,
                         HocPhi = HocPhi,

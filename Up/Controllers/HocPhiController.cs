@@ -54,8 +54,9 @@ namespace Up.Controllers
 
             try
             {
+                DateTime _ngayDong = new DateTime(model.year, model.month, 1);
                 var successful = await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(model.LopHocId, model.HocVienId,
-                    model.HocPhi, currentUser.Email);
+                    model.HocPhi, _ngayDong, currentUser.Email);
                 if (successful == false)
                 {
                     return Json(new Models.ResultModel
@@ -98,8 +99,9 @@ namespace Up.Controllers
 
             try
             {
+                DateTime _ngayNo = new DateTime(model.year, model.month, 1);
                 var successful = await _noService.ThemHocVien_NoAsync(model.LopHocId, model.HocVienId,
-                    model.TienNo, DateTime.Now, currentUser.Email);
+                    model.TienNo, _ngayNo, currentUser.Email);
                 if (successful == false)
                 {
                     return Json(new Models.ResultModel

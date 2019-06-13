@@ -10,6 +10,7 @@ namespace Up.Data.Entities
         public Guid HocVienId { get; set; }
         public Guid LopHocId { get; set; }
         public double HocPhi { get; set; }
+        public DateTime NgayDong { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }

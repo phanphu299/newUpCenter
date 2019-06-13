@@ -143,6 +143,12 @@
                                                 :chartdata="chartdataDoanhThuHocPhi" />
                                 </div>
 
+                                <div class="col s12 m6 l6">
+                                    <header style="color:#1976d2">Học Viên Nợ</header>
+                                    <line-chart v-if="loadedNo"
+                                                :chartdata="chartdataNo" />
+                                </div>
+
                             </div>
                         </div>
                     </div>

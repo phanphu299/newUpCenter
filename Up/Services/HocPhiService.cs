@@ -237,6 +237,7 @@ namespace Up.Services
             {
                 month--;
             }
+
             return await _context.HocVien_LopHocs
                                     .Include(x => x.HocVien)
                                     .Where(x => x.LopHocId == LopHocId)
@@ -244,8 +245,10 @@ namespace Up.Services
                                     {
                                         FullName = x.HocVien.FullName,
                                         HocVienId = x.HocVienId,
-                                        TienNo = x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year && m.IsDisabled == false).SingleOrDefault() == null ? 0: x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year).SingleOrDefault().TienNo,
-                                        HocPhiMoi = x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year && m.IsDisabled == false).SingleOrDefault() == null ? HocPhi : HocPhi + x.HocVien.HocVien_Nos.Where(m => m.NgayNo.Month == month && m.NgayNo.Year == year).SingleOrDefault().TienNo
+                                        TienNo = x.HocVien.HocVien_Nos
+                                                        .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Any() ? x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo) : 0,
+                                        HocPhiMoi = x.HocVien.HocVien_Nos
+                                                        .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Any() ? x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo) + HocPhi : HocPhi
                                     })
                                     .ToListAsync();
         }

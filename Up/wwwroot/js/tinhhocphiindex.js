@@ -91,7 +91,9 @@
                 data: {
                     LopHocId: this.selectedLopHoc,
                     HocVienId: item.hocVienId,
-                    HocPhi: item.hocPhiMoi
+                    HocPhi: item.hocPhiMoi,
+                    month: this.selectedThang,
+                    year: this.selectedNam
                 }
             })
                 .then(function (response) {
@@ -123,7 +125,9 @@
                 data: {
                     LopHocId: this.selectedLopHoc,
                     HocVienId: item.hocVienId,
-                    TienNo: item.hocPhiMoi
+                    TienNo: item.hocPhiMoi,
+                    month: this.selectedThang,
+                    year: this.selectedNam
                 }
             })
                 .then(function (response) {
