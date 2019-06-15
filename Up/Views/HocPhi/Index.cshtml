@@ -29,12 +29,14 @@
                         <v-flex xs12 sm2>
                             <v-select :items="itemThang"
                                       v-model="selectedThang"
+                                      chips
                                       label="Chọn Tháng"></v-select>
                         </v-flex>
 
                         <v-flex xs12 sm2>
                             <v-select :items="itemNam"
                                       v-model="selectedNam"
+                                      chips
                                       label="Chọn Năm"></v-select>
                         </v-flex>
 
@@ -65,7 +67,7 @@
                         <v-flex xs12 sm2>
                             <v-btn color="success" v-on:click="onTinhTien">Tính Tiền</v-btn>
                         </v-flex>
-                        tong ngay hoc :
+                        tong ngay hoc thang trc :
                         {{tongNgayHoc}}
 
                         tong ngay nghi :
@@ -73,6 +75,9 @@
 
                         hoc  phi:
                         {{formatNumber(tongHocPhi)}}
+
+                        hoc  phi moi ngay:
+                        {{formatNumber(hocPhiMoiNgay)}}
 
                         <v-container fluid v-if="hocVienList.length > 0">
                             <v-layout wrap>
@@ -83,6 +88,8 @@
                                         <template slot="items" slot-scope="props">
 
                                             <td>{{ props.item.fullName }}</td>
+                                            <td>{{ props.item.ngayBatDauHoc }}</td>
+                                            <td>{{ formatNumber(props.item.hocPhiBuHocVienVaoSau) }}</td>
                                             <td>{{ formatNumber(props.item.tienNo) }}</td>
                                             <td><v-text-field label="Học Phí" v-model="props.item.hocPhiMoi" :value="props.item.hocPhiMoi"></v-text-field></td>
                                             <td>

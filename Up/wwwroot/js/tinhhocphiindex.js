@@ -19,6 +19,7 @@
         tongNgayHoc: 0,
         tongNgayDuocNghi: 0,
         tongHocPhi: 0,
+        hocPhiMoiNgay: 0,
         khuyenMai: 0,
         hocVienList: [],
         headers: [
@@ -29,6 +30,8 @@
             //    value: ''
             //},
             { text: 'Tên Học Viên', value: 'fullName', align: 'left', sortable: true },
+            { text: 'Ngày Bắt Đầu Học', value: 'ngayBatDauHoc', align: 'left', sortable: true },
+            { text: 'Hoc Phi Vo Sau', value: 'hocPhiBuHocVienVaoSau', align: 'left', sortable: true },
             { text: 'Nợ Tháng Trước', value: 'tienNo', align: 'left', sortable: true },
             { text: 'Học Phí Tháng Này', value: '', align: 'left', sortable: true },
             { text: 'Action', value: '', align: 'left', sortable: false }
@@ -66,6 +69,7 @@
                         that.tongNgayDuocNghi = response.data.soNgayDuocNghi;
                         that.tongHocPhi = response.data.hocPhi;
                         that.hocVienList = response.data.hocVienList;
+                        that.hocPhiMoiNgay = response.data.hocPhiMoiNgay;
                     })
                     .catch(function (error) {
                         console.log(error);

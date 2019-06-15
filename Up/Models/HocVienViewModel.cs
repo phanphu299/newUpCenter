@@ -29,5 +29,7 @@
         public double TienNo { get; set; }
         public int SoNgayHoc { get; set; }
         public double HocPhiMoi { get; set; }
+        public string NgayBatDauHoc { get; set; }
+        public double HocPhiBuHocVienVaoSau { get; set; }
     }
 }

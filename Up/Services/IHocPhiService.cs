@@ -15,7 +15,7 @@ namespace Up.Services
 
         Task<int> TinhSoNgayHocAsync(Guid LopHocId, int month, int year);
         Task<int> TinhSoNgayDuocChoNghiAsync(Guid LopHocId, int month, int year);
-        Task<List<HocVienViewModel>> GetHocVien_No_NgayHocAsync(Guid LopHocId, int month, int year, double HocPhi);
+        Task<List<HocVienViewModel>> GetHocVien_No_NgayHocAsync(Guid LopHocId, int month, int year, double HocPhi, int SoNgayHoc, double HocPhiMoiNgay);
         Task<TinhHocPhiViewModel> TinhHocPhiAsync(Guid LopHocId, int month, int year, int KhuyenMai, string GiaSachList);
     }
 }

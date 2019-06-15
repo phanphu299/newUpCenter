@@ -134,6 +134,15 @@ namespace Up.Services
                 .Select(date => date.Day);
         }
 
+        private static IEnumerable<int> DaysInMonthWithStartDate(int year, int month, DayOfWeek dow, DateTime StartDate)
+        {
+            DateTime monthStart = new DateTime(year, month, 1);
+            return Enumerable.Range(0, DateTime.DaysInMonth(year, month))
+                .Select(day => monthStart.AddDays(day))
+                .Where(date => date.DayOfWeek == dow && date.Day >= StartDate.Day)
+                .Select(date => date.Day);
+        }
+
         public async Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee)
         {
             var item = await _context.HocPhis
@@ -186,9 +195,49 @@ namespace Up.Services
             return ngayChoNghi.Count();
         }
 
+        private async Task<int> TinhSoNgayHocVienVoSauAsync(int year, int month, DateTime NgayBatDau, Guid LopHocId)
+        {
+            var item = await _context.LopHocs
+                                    .Include(x => x.NgayHoc)
+                                    .Where(x => x.LopHocId == LopHocId)
+                                    .SingleOrDefaultAsync();
+
+            var ngayHoc = item.NgayHoc.Name.Split('-');
+            int tongNgayHoc = 0;
+
+            foreach (string el in ngayHoc)
+            {
+                switch (el.Trim())
+                {
+                    case "2":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Monday, NgayBatDau).Count();
+                        break;
+                    case "3":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Tuesday, NgayBatDau).Count();
+                        break;
+                    case "4":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Wednesday, NgayBatDau).Count();
+                        break;
+                    case "5":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Thursday, NgayBatDau).Count();
+                        break;
+                    case "6":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Friday, NgayBatDau).Count();
+                        break;
+                    case "7":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Saturday, NgayBatDau).Count();
+                        break;
+                    default:
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Sunday, NgayBatDau).Count();
+                        break;
+                }
+            }
+
+            return tongNgayHoc;
+        }
+
         public async Task<TinhHocPhiViewModel> TinhHocPhiAsync(Guid LopHocId, int month, int year, int KhuyenMai, string GiaSachList)
         {
-            int soNgayHoc = await TinhSoNgayHocAsync(LopHocId, month, year);
             int soNgayDuocNghi = await TinhSoNgayDuocChoNghiAsync(LopHocId, month, year);
 
             var item = await _context.LopHocs
@@ -197,6 +246,19 @@ namespace Up.Services
                                     .SingleOrDefaultAsync();
 
             var hocPhi = item.HocPhi.Gia;
+
+            int subMonth = month;
+            int subYear = year;
+            if (subMonth == 1)
+            {
+                subMonth = 12;
+                subYear--;
+            }
+            else
+            {
+                subMonth--;
+            }
+            int soNgayHoc = await TinhSoNgayHocAsync(LopHocId, subMonth, subYear);
 
             var hocPhiMoiNgay = hocPhi / soNgayHoc;
 
@@ -219,14 +281,15 @@ namespace Up.Services
 
             return new TinhHocPhiViewModel
             {
+                HocPhiMoiNgay = hocPhiMoiNgay,
                 SoNgayDuocNghi = soNgayDuocNghi,
                 HocPhi = hocPhi,
                 SoNgayHoc = soNgayHoc,
-                HocVienList = await GetHocVien_No_NgayHocAsync(LopHocId, month, year, hocPhi)
+                HocVienList = await GetHocVien_No_NgayHocAsync(LopHocId, month, year, hocPhi, soNgayHoc, hocPhiMoiNgay)
             };
         }
 
-        public async Task<List<HocVienViewModel>> GetHocVien_No_NgayHocAsync(Guid LopHocId, int month, int year, double HocPhi)
+        public async Task<List<HocVienViewModel>> GetHocVien_No_NgayHocAsync(Guid LopHocId, int month, int year, double HocPhi, int SoNgayHoc, double HocPhiMoiNgay)
         {
             if (month == 1)
             {
@@ -238,19 +301,52 @@ namespace Up.Services
                 month--;
             }
 
-            return await _context.HocVien_LopHocs
+            var ngayChoNghi = await _context.LopHoc_DiemDanhs
+                                            .Where(x => x.LopHocId == LopHocId && x.IsDuocNghi == true && x.NgayDiemDanh.Month == month && x.NgayDiemDanh.Year == year)
+                                            .GroupBy(x => x.NgayDiemDanh)
+                                            .Select(m => new
+                                            {
+                                                m.Key
+                                            })
+                                            .ToListAsync();
+
+            var model = await _context.HocVien_LopHocs
                                     .Include(x => x.HocVien)
                                     .Where(x => x.LopHocId == LopHocId)
                                     .Select(x => new HocVienViewModel
                                     {
                                         FullName = x.HocVien.FullName,
                                         HocVienId = x.HocVienId,
+                                        NgayBatDauHoc = x.HocVien.HocVien_NgayHocs.Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId).FirstOrDefault() == null ? "" : x.HocVien.HocVien_NgayHocs.Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId).FirstOrDefault().NgayBatDau.ToString("dd/MM/yyyy"),
                                         TienNo = x.HocVien.HocVien_Nos
                                                         .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Any() ? x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo) : 0,
                                         HocPhiMoi = x.HocVien.HocVien_Nos
                                                         .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Any() ? x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo) + HocPhi : HocPhi
                                     })
                                     .ToListAsync();
+
+            foreach (var item in model)
+            {
+                if (!string.IsNullOrWhiteSpace(item.NgayBatDauHoc))
+                {
+                    int ngayNghiTruocKhiVo = 0;
+                    DateTime _ngayBatDauHoc = new DateTime(int.Parse(item.NgayBatDauHoc.Substring(6)), int.Parse(item.NgayBatDauHoc.Substring(3, 2)), int.Parse(item.NgayBatDauHoc.Substring(0, 2)));
+                    foreach (var ngayNghi in ngayChoNghi)
+                    {
+                        if(ngayNghi.Key < _ngayBatDauHoc)
+                        {
+                            ngayNghiTruocKhiVo++;
+                        }
+                    }
+                    var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(year, month, _ngayBatDauHoc, LopHocId);
+                    if (soNgayHocVienVaoSau < SoNgayHoc)
+                    {
+                        item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau);
+                        item.HocPhiMoi = item.HocPhiMoi - item.HocPhiBuHocVienVaoSau + (HocPhiMoiNgay * ngayNghiTruocKhiVo);
+                    }
+                }
+            }
+            return model;
         }
     }
 }
