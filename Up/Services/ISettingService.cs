@@ -14,5 +14,6 @@ namespace Up.Services
         Task<bool> ActiveAsync(string UserId);
         Task<List<RoleViewModel>> GetAllRolesAsync();
         Task<AccountInfo> AddRolesToUserAsync(string UserId, List<string> RoleIds);
+        Task<bool> CreateNewUserAsync(string Email);
     }
 }

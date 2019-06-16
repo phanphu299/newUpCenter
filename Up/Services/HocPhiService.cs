@@ -312,7 +312,7 @@ namespace Up.Services
 
             var model = await _context.HocVien_LopHocs
                                     .Include(x => x.HocVien)
-                                    .Where(x => x.LopHocId == LopHocId)
+                                    .Where(x => x.LopHocId == LopHocId && (x.HocVien.HocVien_NgayHocs == null || x.HocVien.HocVien_NgayHocs.Any(m => m.NgayKetThuc != null)))
                                     .Select(x => new HocVienViewModel
                                     {
                                         FullName = x.HocVien.FullName,
@@ -342,7 +342,7 @@ namespace Up.Services
                     if (soNgayHocVienVaoSau < SoNgayHoc)
                     {
                         item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau);
-                        item.HocPhiMoi = item.HocPhiMoi - item.HocPhiBuHocVienVaoSau + (HocPhiMoiNgay * ngayNghiTruocKhiVo);
+                        item.HocPhiMoi = Math.Round(item.HocPhiMoi - item.HocPhiBuHocVienVaoSau + (HocPhiMoiNgay * ngayNghiTruocKhiVo),0);
                     }
                 }
             }

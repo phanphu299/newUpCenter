@@ -91,7 +91,8 @@ var vue = new Vue({
 
         thongKeTong: {
             hocVien: 0,
-            giaoVien: 0
+            giaoVien: 0,
+            doanhThu: 0
         },
 
         chartdataDoanhThuHocPhi: {
@@ -157,6 +158,7 @@ var vue = new Vue({
                 .then(function (response) {
                     that.thongKeTong.hocVien = response.data.hocVien;
                     that.thongKeTong.giaoVien = response.data.giaoVien;
+                    that.thongKeTong.doanhThu = response.data.doanhThu;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -185,6 +187,8 @@ var vue = new Vue({
     },
 
     methods: {
-        
+        formatNumber(val) {
+            return val.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
+        },
     }
 });

@@ -231,5 +231,17 @@
                 throw new Exception(exception.Message);
             }
         }
+
+        public async Task<double> GetTongDoanhThuAsync()
+        {
+            try
+            {
+                return Math.Round(await _context.ThongKe_DoanhThuHocPhis.Select(x => x.HocPhi).SumAsync(), 0);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+        }
     }
 }

@@ -84,6 +84,32 @@ namespace Up.Services
             return true;
         }
 
+        public async Task<bool> CreateNewUserAsync(string Email)
+        {
+            try
+            {
+                if (await _userManager.FindByEmailAsync(Email) == null)
+                {
+                    IdentityUser user = new IdentityUser
+                    {
+                        UserName = Email,
+                        Email = Email
+                    };
+
+                    IdentityResult result = _userManager.CreateAsync(user, "M@tkhau@123").Result;
+                    return result.Succeeded;
+                }
+                else
+                {
+                    throw new Exception("Tài khoản đã tồn tại !!!");
+                }
+            }
+            catch(Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+        }
+
         public async Task<bool> DisableAsync(string UserId)
         {
             var user = await _userManager.FindByIdAsync(UserId);

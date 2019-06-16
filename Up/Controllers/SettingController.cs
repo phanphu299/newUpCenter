@@ -212,5 +212,47 @@ namespace Up.Controllers
                 });
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateNewUserAsync(string Email)
+        {
+            if (string.IsNullOrWhiteSpace(Email))
+            {
+                return RedirectToAction("AccountIndexAsync");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("AccountIndexAsync");
+            }
+
+            try
+            {
+                var successful = await _settingService.CreateNewUserAsync(Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Tạo tài khoản lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Tạo tài khoản thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
     }
 }

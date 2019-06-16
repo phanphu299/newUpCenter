@@ -21,7 +21,13 @@
         dialogEditRole: false,
         itemToEditRole: {},
         editedIndex: -1,
-        itemRoles: []
+        itemRoles: [],
+        dialog: false,
+        alert: false,
+        newItem: "",
+        rules: [
+            v => /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || "Chỉ được nhập email"
+        ]
     },
     async beforeCreate() {
         let that = this;
@@ -45,6 +51,34 @@
         mappingEditRoleItem(item) {
             this.editedIndex = this.userItems.indexOf(item);
             this.itemToEditRole = Object.assign({}, item);
+        },
+
+        async onSave() {
+            if (this.newItem !== "") {
+                let that = this;
+                await axios.get('/Setting/CreateNewUserAsync?Email=' + this.newItem)
+                    .then(function (response) {
+                        if (response.data.status === "OK") {
+                            that.snackbar = true;
+                            that.messageText = 'Tạo tài khoản thành công !!!';
+                            that.color = 'success';
+                        }
+                        else {
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'error';
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        that.snackbar = true;
+                        that.messageText = 'Tạo tài khoản lỗi: ' + error;
+                        that.color = 'error';
+                    });
+            }
+            else {
+                this.alert = true;
+            }
         },
 
         async ResetMatKhau(id) {

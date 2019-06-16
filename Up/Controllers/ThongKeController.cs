@@ -141,7 +141,8 @@
             return Json(new ThongKeTongViewModel
             {
                 HocVien = await _thongKeService.GetTongHocVienAsync(),
-                GiaoVien = await _thongKeService.GetTongGiaoVienAsync()
+                GiaoVien = await _thongKeService.GetTongGiaoVienAsync(),
+                DoanhThu = await _thongKeService.GetTongDoanhThuAsync()
             });
         }
 

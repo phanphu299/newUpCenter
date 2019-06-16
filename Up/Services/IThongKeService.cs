@@ -16,6 +16,7 @@
 
         Task<int> GetTongGiaoVienAsync();
         Task<int> GetTongHocVienAsync();
+        Task<double> GetTongDoanhThuAsync();
 
         Task<List<ThongKe_DoanhThuHocPhiViewModel>> GetDoanhThuHocPhiAsync();
         Task<List<NoViewModel>> GetNoAsync();
