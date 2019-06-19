@@ -32,9 +32,9 @@ namespace Up.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTinhHocPhiAsync(Guid LopHocId, int Month, int Year, int KhuyenMai, string GiaSachList)
+        public async Task<IActionResult> GetTinhHocPhiAsync(Guid LopHocId, int Month, int Year)
         {
-            var model = await _hocPhiService.TinhHocPhiAsync(LopHocId, Month, Year, KhuyenMai, GiaSachList);
+            var model = await _hocPhiService.TinhHocPhiAsync(LopHocId, Month, Year);
             return Json(model);
         }
 

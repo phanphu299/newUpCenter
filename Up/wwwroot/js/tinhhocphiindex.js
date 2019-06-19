@@ -9,10 +9,10 @@
         deleteDialog: false,
         dialog: false,
         selectedLopHoc: '',
-        selectedSach: '',
         selectedThang: '',
         selectedNam: '',
         itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+        itemKhuyenMai: ['5', '10', '15', '20', '25', '30', '35', '40', '45', '50'],
         itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0],
         itemLopHoc: [],
         itemSach: [],
@@ -20,21 +20,14 @@
         tongNgayDuocNghi: 0,
         tongHocPhi: 0,
         hocPhiMoiNgay: 0,
-        khuyenMai: 0,
         hocVienList: [],
         headers: [
-            //{
-            //    text: 'Action',
-            //    align: 'left',
-            //    sortable: false,
-            //    value: ''
-            //},
-            { text: 'Tên Học Viên', value: 'fullName', align: 'left', sortable: true },
-            { text: 'Ngày Bắt Đầu Học', value: 'ngayBatDauHoc', align: 'left', sortable: true },
-            { text: 'Hoc Phi Vo Sau', value: 'hocPhiBuHocVienVaoSau', align: 'left', sortable: true },
-            { text: 'Nợ Tháng Trước', value: 'tienNo', align: 'left', sortable: true },
-            { text: 'Học Phí Tháng Này', value: '', align: 'left', sortable: true },
-            { text: 'Action', value: '', align: 'left', sortable: false }
+            { text: 'Tên Học Viên', align: 'left', sortable: true },
+            { text: 'Nợ', align: 'left', sortable: true },
+            { text: 'Sách', align: 'left', sortable: true },
+            { text: 'Khuyến Mãi', align: 'left', sortable: true },
+            { text: 'Học Phí Tháng Này', align: 'left', sortable: true },
+            { text: 'Action', align: 'left', sortable: false }
         ]
 
     },
@@ -57,13 +50,22 @@
             });
     },
     methods: {
+        async onchangeKhuyenMai(value, item) {
+            item.hocPhiMoi = item.hocPhiMoi - ((item.hocPhiMoi * value) / 100);
+        },
+
+        async onchangeSach(value, item) {
+            console.log(value);
+            console.log(item);
+        },
+
         async onTinhTien() {
             let that = this;
             if (this.selectedLopHoc !== '' && this.selectedNam !== '' && this.selectedThang !== '') {
                 if (this.khuyenMai === "") {
                     this.khuyenMai = 0;
                 }
-                await axios.get('/HocPhi/GetTinhHocPhiAsync?LopHocId=' + this.selectedLopHoc + '&Month=' + this.selectedThang + '&Year=' + this.selectedNam + '&KhuyenMai=' + this.khuyenMai + '&GiaSachList=' + this.selectedSach)
+                await axios.get('/HocPhi/GetTinhHocPhiAsync?LopHocId=' + this.selectedLopHoc + '&Month=' + this.selectedThang + '&Year=' + this.selectedNam)
                     .then(function (response) {
                         that.tongNgayHoc = response.data.soNgayHoc;
                         that.tongNgayDuocNghi = response.data.soNgayDuocNghi;

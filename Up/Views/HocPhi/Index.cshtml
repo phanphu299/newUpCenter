@@ -41,56 +41,74 @@
                         </v-flex>
 
                         <v-flex xs12 sm2>
-                            <v-select v-model="selectedSach"
-                                      :items="itemSach"
-                                      item-text="name"
-                                      item-value="gia"
-                                      attach
-                                      multiple
-                                      chips
-                                      label="Chọn Sách">
-                                <template v-slot:selection="data">
-                                    <v-chip :selected="data.selected"
-                                            color="green"
-                                            text-color="white">
-                                        <strong>{{ data.item.name }}</strong>&nbsp;
-                                        <span>({{ formatNumber(data.item.gia) }})</span>
-                                    </v-chip>
-                                </template>
-                            </v-select>
-                        </v-flex>
-
-                        <v-flex xs12 sm2>
-                            <v-text-field label="Khuyến Mãi (%)" v-model="khuyenMai"></v-text-field>
-                        </v-flex>
-
-                        <v-flex xs12 sm2>
                             <v-btn color="success" v-on:click="onTinhTien">Tính Tiền</v-btn>
                         </v-flex>
-                        tong ngay hoc thang trc :
-                        {{tongNgayHoc}}
+                        <div v-if="hocVienList.length > 0">
+                            Số ngày học tháng trước:
+                            <span style="color:red">{{tongNgayHoc}}</span>
 
-                        tong ngay nghi :
-                        {{tongNgayDuocNghi}}
+                            - Số ngày được nghỉ:
+                            <span style="color:red">
+                                {{tongNgayDuocNghi}}
+                            </span>
 
-                        hoc  phi:
-                        {{formatNumber(tongHocPhi)}}
+                            - Học phí:
+                            <span style="color:red">
+                                {{formatNumber(tongHocPhi)}}
+                            </span>
 
-                        hoc  phi moi ngay:
-                        {{formatNumber(hocPhiMoiNgay)}}
+                            - Học phí mỗi ngày:
+                            <span style="color:red">{{formatNumber(hocPhiMoiNgay)}}</span>
+                        </div>
+
 
                         <v-container fluid v-if="hocVienList.length > 0">
                             <v-layout wrap>
                                 <v-flex>
                                     <v-data-table :headers="headers"
-                                                  :items="hocVienList"
-                                                  :search="search">
+                                                  :items="hocVienList">
                                         <template slot="items" slot-scope="props">
 
-                                            <td>{{ props.item.fullName }}</td>
-                                            <td>{{ props.item.ngayBatDauHoc }}</td>
-                                            <td>{{ formatNumber(props.item.hocPhiBuHocVienVaoSau) }}</td>
+                                            <td>
+                                                {{ props.item.fullName }}
+                                                <v-tooltip top v-if="props.item.hocPhiBuHocVienVaoSau > 0">
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-icon color="grey lighten-1" dark v-on="on">info</v-icon>
+                                                    </template>
+                                                    Ngày vào học: <strong>{{ props.item.ngayBatDauHoc }}</strong><br />
+                                                    Trừ học phí: <strong>{{ formatNumber(props.item.hocPhiBuHocVienVaoSau) }}</strong>
+                                                </v-tooltip>
+                                            </td>
                                             <td>{{ formatNumber(props.item.tienNo) }}</td>
+                                            <td>
+                                                <v-select :items="itemSach"
+                                                          item-text="name"
+                                                          item-value="gia"
+                                                          attach
+                                                          multiple
+                                                          chips
+                                                          label="Chọn Sách"
+                                                          v-model="props.item.giaSach"
+                                                          v-on:change="onchangeSach(props.item.giaSach, props.item)">
+                                                    <template v-slot:selection="data">
+                                                        <v-chip :selected="data.selected"
+                                                                color="green"
+                                                                text-color="white">
+                                                            <strong>{{ data.item.name }}</strong>&nbsp;
+                                                            <span>({{ formatNumber(data.item.gia) }})</span>
+                                                        </v-chip>
+                                                    </template>
+                                                </v-select>
+                                            </td>
+                                            <td>
+                                                <v-select :items="itemKhuyenMai"
+                                                          v-model="props.item.khuyenMai"
+                                                          attach
+                                                          chips
+                                                          label="Khuyến Mãi (%)"
+                                                          v-on:change="onchangeKhuyenMai(props.item.khuyenMai, props.item)">
+                                                </v-select>
+                                            </td>
                                             <td><v-text-field label="Học Phí" v-model="props.item.hocPhiMoi" :value="formatNumber(props.item.hocPhiMoi)"></v-text-field></td>
                                             <td>
                                                 <v-tooltip top>
@@ -127,7 +145,7 @@
                             </v-layout>
                         </v-container>
 
-</v-card>
+            </v-card>
         </div>
 
         <v-snackbar v-model="snackbar"

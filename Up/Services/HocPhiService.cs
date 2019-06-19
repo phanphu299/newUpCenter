@@ -236,7 +236,7 @@ namespace Up.Services
             return tongNgayHoc;
         }
 
-        public async Task<TinhHocPhiViewModel> TinhHocPhiAsync(Guid LopHocId, int month, int year, int KhuyenMai, string GiaSachList)
+        public async Task<TinhHocPhiViewModel> TinhHocPhiAsync(Guid LopHocId, int month, int year)
         {
             int soNgayDuocNghi = await TinhSoNgayDuocChoNghiAsync(LopHocId, month, year);
 
@@ -264,20 +264,6 @@ namespace Up.Services
 
             if (soNgayDuocNghi > 0)
                 hocPhi = hocPhi - (hocPhiMoiNgay * soNgayDuocNghi);
-
-            if (KhuyenMai > 0)
-            {
-                hocPhi = hocPhi - ((hocPhi * KhuyenMai) / 100);
-            }
-
-            if (!string.IsNullOrWhiteSpace(GiaSachList))
-            {
-                var giaSach = GiaSachList.Split(',');
-                foreach (var el in giaSach)
-                {
-                    hocPhi += int.Parse(el);
-                }
-            }
 
             return new TinhHocPhiViewModel
             {
@@ -312,7 +298,7 @@ namespace Up.Services
 
             var model = await _context.HocVien_LopHocs
                                     .Include(x => x.HocVien)
-                                    .Where(x => x.LopHocId == LopHocId && (x.HocVien.HocVien_NgayHocs == null || x.HocVien.HocVien_NgayHocs.Any(m => m.NgayKetThuc != null)))
+                                    .Where(x => x.LopHocId == LopHocId)
                                     .Select(x => new HocVienViewModel
                                     {
                                         FullName = x.HocVien.FullName,
