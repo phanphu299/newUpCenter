@@ -331,6 +331,7 @@ namespace Up.Services
                         item.HocPhiMoi = Math.Round(item.HocPhiMoi - item.HocPhiBuHocVienVaoSau + (HocPhiMoiNgay * ngayNghiTruocKhiVo),0);
                     }
                 }
+                item.HocPhiFixed = item.HocPhiMoi;
             }
             return model;
         }

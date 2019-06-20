@@ -33,5 +33,7 @@
         public double HocPhiBuHocVienVaoSau { get; set; }
         public int KhuyenMai { get; set; } = 0;
         public string GiaSach { get; set; }
+        public double HocPhiFixed { get; set; }
+        public string LastGiaSach { get; set; }
     }
 }

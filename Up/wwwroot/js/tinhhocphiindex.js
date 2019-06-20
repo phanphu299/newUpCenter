@@ -51,12 +51,27 @@
     },
     methods: {
         async onchangeKhuyenMai(value, item) {
-            item.hocPhiMoi = item.hocPhiMoi - ((item.hocPhiMoi * value) / 100);
+            item.hocPhiMoi = item.hocPhiMoi - ((item.hocPhiFixed * value) / 100);
         },
 
         async onchangeSach(value, item) {
-            console.log(value);
-            console.log(item);
+            if (value.length > 0) {
+                if (item.lastGiaSach != null) {
+                    for (let i = 0; i < item.lastGiaSach.length; i++) {
+                        item.hocPhiMoi = item.hocPhiMoi - item.lastGiaSach[i];
+                    }
+                }
+                item.lastGiaSach = value;
+                for (let i = 0; i < value.length; i++) {
+                    item.hocPhiMoi = item.hocPhiMoi + value[i];
+                }
+            }
+            else {
+                for (let i = 0; i < item.lastGiaSach.length; i++) {
+                    item.hocPhiMoi = item.hocPhiMoi - item.lastGiaSach[i];
+                }
+                item.lastGiaSach = value;
+            }
         },
 
         async onTinhTien() {
