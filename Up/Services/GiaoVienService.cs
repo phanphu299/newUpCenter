@@ -118,7 +118,7 @@
                                         .SingleOrDefaultAsync();
 
                 if (item == null)
-                    throw new Exception("Không tìm thấy Học Viên!!!");
+                    throw new Exception("Không tìm thấy Giáo Viên!!!");
 
                 item.Name = Name;
                 item.Phone = Phone;
