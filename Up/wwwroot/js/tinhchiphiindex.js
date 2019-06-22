@@ -1,14 +1,13 @@
 ﻿var vue = new Vue({
-    el: '#HocPhiIndex',
+    el: '#ChiPhiIndex',
     data: {
-        title: 'Tính Học Phí',
+        title: 'Tính Chi Phí',
         messageText: '',
         color: '',
         timeout: 3000,
         snackbar: false,
         deleteDialog: false,
         dialog: false,
-        selectedLopHoc: '',
         selectedThang: '',
         selectedNam: '',
         itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
@@ -20,73 +19,40 @@
         tongNgayDuocNghi: 0,
         tongHocPhi: 0,
         hocPhiMoiNgay: 0,
-        hocVienList: [],
+        chiPhiList: [],
         headers: [
-            { text: 'Tên Học Viên', align: 'left', sortable: true },
-            { text: 'Nợ', align: 'left', sortable: true },
-            { text: 'Sách', align: 'left', sortable: true },
-            { text: 'Khuyến Mãi', align: 'left', sortable: true },
-            { text: 'Học Phí Tháng Này', align: 'left', sortable: true },
+            { text: 'Tên', align: 'left', sortable: true },
+            { text: 'Lương/Chi Phí', align: 'left', sortable: true },
+            { text: 'Lương Giảng Dạy', align: 'left', sortable: true },
+            { text: 'Lương Kèm', align: 'left', sortable: true },
+            { text: 'Số Giờ Dạy', align: 'left', sortable: true },
+            { text: 'Số Giờ Kèm', align: 'left', sortable: true },
+            { text: 'Bonus', align: 'left', sortable: true },
+            { text: 'Chi Phí', align: 'left', sortable: true },
             { text: 'Action', align: 'left', sortable: false }
         ]
 
     },
-    async beforeCreate() {
-        let that = this;
-        await axios.get('/LopHoc/GetAvailableLopHocAsync')
-            .then(function (response) {
-                that.itemLopHoc = response.data;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        await axios.get('/Category/GetSachAsync')
-            .then(function (response) {
-                that.itemSach = response.data;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    },
     methods: {
+        async onTinhChiPhi(item) {
+            if (!isNaN(item.soGioDay) && !isNaN(item.soGioKem) && !isNaN(item.bonus)) {
+                item.chiPhiMoi = item.salary_Expense + (item.soGioKem * item.tutoringRate) + (item.soGioDay * item.teachingRate) + (item.bonus * 1);
+            }
+        },
+
         async onchangeKhuyenMai(value, item) {
             item.hocPhiMoi = item.hocPhiMoi - ((item.hocPhiFixed * value) / 100);
         },
-
-        async onchangeSach(value, item) {
-            if (value.length > 0) {
-                if (item.lastGiaSach !== null) {
-                    for (let i = 0; i < item.lastGiaSach.length; i++) {
-                        item.hocPhiMoi = item.hocPhiMoi - item.lastGiaSach[i];
-                    }
-                }
-                item.lastGiaSach = value;
-                for (let i = 0; i < value.length; i++) {
-                    item.hocPhiMoi = item.hocPhiMoi + value[i];
-                }
-            }
-            else {
-                for (let i = 0; i < item.lastGiaSach.length; i++) {
-                    item.hocPhiMoi = item.hocPhiMoi - item.lastGiaSach[i];
-                }
-                item.lastGiaSach = value;
-            }
-        },
-
+        
         async onTinhTien() {
             let that = this;
-            if (this.selectedLopHoc !== '' && this.selectedNam !== '' && this.selectedThang !== '') {
+            if (this.selectedNam !== '' && this.selectedThang !== '') {
                 if (this.khuyenMai === "") {
                     this.khuyenMai = 0;
                 }
-                await axios.get('/HocPhi/GetTinhHocPhiAsync?LopHocId=' + this.selectedLopHoc + '&Month=' + this.selectedThang + '&Year=' + this.selectedNam)
+                await axios.get('/ChiPhi/GetChiPhiAsync')
                     .then(function (response) {
-                        that.tongNgayHoc = response.data.soNgayHoc;
-                        that.tongNgayDuocNghi = response.data.soNgayDuocNghi;
-                        that.tongHocPhi = response.data.hocPhi;
-                        that.hocVienList = response.data.hocVienList;
-                        that.hocPhiMoiNgay = response.data.hocPhiMoiNgay;
+                        that.chiPhiList = response.data.chiPhiList;
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -94,7 +60,7 @@
             }
             else {
                 that.snackbar = true;
-                that.messageText = "Phải chọn Lớp Học, Tháng và Năm trước khi tính tiền!!!";
+                that.messageText = "Phải chọn Tháng và Năm trước khi tính chi phí!!!";
                 that.color = 'error';
                 that.dialogEdit = false;
             }
