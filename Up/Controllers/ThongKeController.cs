@@ -142,7 +142,8 @@
             {
                 HocVien = await _thongKeService.GetTongHocVienAsync(),
                 GiaoVien = await _thongKeService.GetTongGiaoVienAsync(),
-                DoanhThu = await _thongKeService.GetTongDoanhThuAsync()
+                DoanhThu = await _thongKeService.GetTongDoanhThuAsync(),
+                ChiPhi = await _thongKeService.GetTongChiPhiAsync()
             });
         }
 
@@ -165,6 +166,27 @@
             }
 
             return Json(listDoanhThu);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetThongKeChiPhiAsync()
+        {
+            var chiPhi = _thongKeService.GetChiPhiAsync()
+                .Result
+                .GroupBy(p => p.NgayChiPhi.Month)
+                                .Select(g => new ThongKeModel
+                                {
+                                    Label = g.Key.ToString(),
+                                    Data = g.Sum(x => x.ChiPhi)
+                                });
+
+            var listChiPhi = Enumerable.Repeat(0.0, 12).ToList();
+            foreach (var item in chiPhi)
+            {
+                listChiPhi[int.Parse(item.Label) - 1] = item.Data;
+            }
+
+            return Json(listChiPhi);
         }
 
         [HttpGet]

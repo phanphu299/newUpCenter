@@ -243,5 +243,40 @@
                 throw new Exception(exception.Message);
             }
         }
+
+        public async Task<List<ThongKe_ChiPhiViewModel>> GetChiPhiAsync()
+        {
+            try
+            {
+                var chiPhi = await _context.ThongKe_ChiPhis
+                .Where(x => x.NgayChiPhi.Year == DateTime.Now.Year)
+                .OrderBy(x => x.NgayChiPhi)
+
+                .Select(g => new ThongKe_ChiPhiViewModel
+                {
+                    ChiPhi = g.ChiPhi,
+                    NgayChiPhi = g.NgayChiPhi
+                })
+                .ToListAsync();
+
+                return chiPhi;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+        }
+
+        public async Task<double> GetTongChiPhiAsync()
+        {
+            try
+            {
+                return Math.Round(await _context.ThongKe_ChiPhis.Select(x => x.ChiPhi).SumAsync(), 0);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+        }
     }
 }

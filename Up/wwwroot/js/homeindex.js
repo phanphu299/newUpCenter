@@ -24,6 +24,7 @@ var vue = new Vue({
         loadedGiaoVien: false,
         loadedDoanhThuHocPhi: false,
         loadedNo: false,
+        loadedChiPhi: false,
         chartdataHocVien: {
             labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
             datasets: [
@@ -92,7 +93,8 @@ var vue = new Vue({
         thongKeTong: {
             hocVien: 0,
             giaoVien: 0,
-            doanhThu: 0
+            doanhThu: 0,
+            chiPhi: 0
         },
 
         chartdataDoanhThuHocPhi: {
@@ -105,6 +107,21 @@ var vue = new Vue({
                     pointBackgroundColor: '#4caf50',
                     borderWidth: 1,
                     pointBorderColor: '#4caf50',
+                    backgroundColor: 'transparent'
+                }
+            ]
+        },
+
+        chartdataChiPhi: {
+            labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+            datasets: [
+                {
+                    label: 'Chi Phí',
+                    data: [],
+                    borderColor: '#1976d2',
+                    pointBackgroundColor: '#1976d2',
+                    borderWidth: 1,
+                    pointBorderColor: '#1976d2',
                     backgroundColor: 'transparent'
                 }
             ]
@@ -128,8 +145,6 @@ var vue = new Vue({
     },
 
     async mounted() {
-        this.loadedHocVien = false;
-        this.loadedGiaoVien = false;
         var that = this;
         try {
             await axios.get('/ThongKe/GetThongKeHocVienAsync')
@@ -159,6 +174,7 @@ var vue = new Vue({
                     that.thongKeTong.hocVien = response.data.hocVien;
                     that.thongKeTong.giaoVien = response.data.giaoVien;
                     that.thongKeTong.doanhThu = response.data.doanhThu;
+                    that.thongKeTong.chiPhi = response.data.chiPhi;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -168,6 +184,15 @@ var vue = new Vue({
                 .then(function (response) {
                     that.chartdataDoanhThuHocPhi.datasets[0].data = response.data;
                     that.loadedDoanhThuHocPhi = true;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+            await axios.get('/ThongKe/GetThongKeChiPhiAsync')
+                .then(function (response) {
+                    that.chartdataChiPhi.datasets[0].data = response.data;
+                    that.loadedChiPhi = true;
                 })
                 .catch(function (error) {
                     console.log(error);

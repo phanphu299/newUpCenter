@@ -26,24 +26,10 @@
                         <v-flex xs12 sm2>
                             <v-btn color="success" v-on:click="onTinhTien">Tính Chi Phí</v-btn>
                         </v-flex>
-                        @*<div v-if="hocVienList.length > 0">
-                                Số ngày học tháng trước:
-                                <span style="color:red">{{tongNgayHoc}}</span>
-
-                                - Số ngày được nghỉ:
-                                <span style="color:red">
-                                    {{tongNgayDuocNghi}}
-                                </span>
-
-                                - Học phí:
-                                <span style="color:red">
-                                    {{formatNumber(tongHocPhi)}}
-                                </span>
-
-                                - Học phí mỗi ngày:
-                                <span style="color:red">{{formatNumber(hocPhiMoiNgay)}}</span>
-                            </div>*@
-
+                        <v-spacer></v-spacer>
+                        <v-flex xs12 sm2>
+                            <v-btn color="primary" v-on:click="onLuuChiPhi" v-if="chiPhiList.length > 0">Lưu Chi Phí</v-btn>
+                        </v-flex>
 
                         <v-container fluid v-if="chiPhiList.length > 0">
                             <v-layout wrap>
@@ -70,31 +56,6 @@
                                             </td>
                                             <td><v-text-field label="Bonus" v-on:keyup="onTinhChiPhi(props.item)" v-model="props.item.bonus" :value="props.item.bonus"></v-text-field></td>
                                             <td><v-text-field label="Chi Phí" v-model="props.item.chiPhiMoi" :value="props.item.chiPhiMoi"></v-text-field></td>
-                                            <td>
-                                                <v-tooltip top>
-                                                    <template v-slot:activator="{ on }">
-                                                        <v-btn flat icon
-                                                               color="success"
-                                                               v-on="on"
-                                                               v-on:click="onLuu(props.item)">
-                                                            <v-icon>check</v-icon>
-                                                        </v-btn>
-                                                    </template>
-                                                    <strong>Đóng tiền và Lưu</strong>
-                                                </v-tooltip>
-
-                                                <v-tooltip top>
-                                                    <template v-slot:activator="{ on }">
-                                                        <v-btn flat icon
-                                                               color="warning"
-                                                               v-on="on"
-                                                               v-on:click="onNo(props.item)">
-                                                            <v-icon>restore</v-icon>
-                                                        </v-btn>
-                                                    </template>
-                                                    <strong>Nợ và Lưu</strong>
-                                                </v-tooltip>
-                                            </td>
 
                                         </template>
                                         <v-alert slot="no-results" :value="true" color="error" icon="warning">
@@ -105,7 +66,7 @@
                             </v-layout>
                         </v-container>
 
-            </v-card>
+</v-card>
         </div>
 
         <v-snackbar v-model="snackbar"

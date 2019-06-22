@@ -28,8 +28,7 @@
             { text: 'Số Giờ Dạy', align: 'left', sortable: true },
             { text: 'Số Giờ Kèm', align: 'left', sortable: true },
             { text: 'Bonus', align: 'left', sortable: true },
-            { text: 'Chi Phí', align: 'left', sortable: true },
-            { text: 'Action', align: 'left', sortable: false }
+            { text: 'Chi Phí', align: 'left', sortable: true }
         ]
 
     },
@@ -40,10 +39,6 @@
             }
         },
 
-        async onchangeKhuyenMai(value, item) {
-            item.hocPhiMoi = item.hocPhiMoi - ((item.hocPhiFixed * value) / 100);
-        },
-        
         async onTinhTien() {
             let that = this;
             if (this.selectedNam !== '' && this.selectedThang !== '') {
@@ -70,15 +65,18 @@
             return val.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
         },
 
-        async onLuu(item) {
+        async onLuuChiPhi() {
             let that = this;
+            let chiPhiMoi = 0;
+            for (let i = 0; i < this.chiPhiList.length; i++) {
+                chiPhiMoi = chiPhiMoi + this.chiPhiList[i].chiPhiMoi;
+            }
+            console.log(chiPhiMoi);
             await axios({
                 method: 'post',
-                url: '/HocPhi/LuuDoanhThu_HocPhiAsync',
+                url: '/ChiPhi/LuuChiPhiAsync',
                 data: {
-                    LopHocId: this.selectedLopHoc,
-                    HocVienId: item.hocVienId,
-                    HocPhi: item.hocPhiMoi,
+                    ChiPhi: chiPhiMoi,
                     month: this.selectedThang,
                     year: this.selectedNam
                 }
@@ -87,7 +85,7 @@
                     console.log(response);
                     if (response.data.status === "OK") {
                         that.snackbar = true;
-                        that.messageText = 'Lưu Doanh Thu thành công !!!';
+                        that.messageText = 'Lưu Chi Phí thành công !!!';
                         that.color = 'success';
                     }
                     else {
@@ -99,41 +97,7 @@
                 .catch(function (error) {
                     console.log(error);
                     that.snackbar = true;
-                    that.messageText = 'Lưu Doanh Thu lỗi: ' + error;
-                    that.color = 'error';
-                });
-        },
-
-        async onNo(item) {
-            let that = this;
-            await axios({
-                method: 'post',
-                url: '/HocPhi/LuuNo_HocPhiAsync',
-                data: {
-                    LopHocId: this.selectedLopHoc,
-                    HocVienId: item.hocVienId,
-                    TienNo: item.hocPhiMoi,
-                    month: this.selectedThang,
-                    year: this.selectedNam
-                }
-            })
-                .then(function (response) {
-                    console.log(response);
-                    if (response.data.status === "OK") {
-                        that.snackbar = true;
-                        that.messageText = 'Lưu Nợ thành công !!!';
-                        that.color = 'success';
-                    }
-                    else {
-                        that.snackbar = true;
-                        that.messageText = response.data.message;
-                        that.color = 'error';
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    that.snackbar = true;
-                    that.messageText = 'Lưu Nợ lỗi: ' + error;
+                    that.messageText = 'Lưu Chi Phí lỗi: ' + error;
                     that.color = 'error';
                 });
         }
