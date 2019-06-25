@@ -3,7 +3,9 @@ namespace Up.Controllers
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using OfficeOpenXml.Style;
     using System;
+    using System.Drawing;
     using System.Threading.Tasks;
     using Up.Services;
 
@@ -11,13 +13,15 @@ namespace Up.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IHocPhiService _hocPhiService;
+        private readonly ILopHocService _lopHocService;
         private readonly IThongKe_DoanhThuHocPhiService _thongKe_DoanhThuHocPhiService;
         private readonly INoService _noService;
 
-        public HocPhiController(UserManager<IdentityUser> userManager, IHocPhiService hocPhiService, IThongKe_DoanhThuHocPhiService thongKe_DoanhThuHocPhiService, INoService noService)
+        public HocPhiController(UserManager<IdentityUser> userManager, IHocPhiService hocPhiService, ILopHocService lopHocService, IThongKe_DoanhThuHocPhiService thongKe_DoanhThuHocPhiService, INoService noService)
         {
             _userManager = userManager;
             _hocPhiService = hocPhiService;
+            _lopHocService = lopHocService;
             _thongKe_DoanhThuHocPhiService = thongKe_DoanhThuHocPhiService;
             _noService = noService;
         }
@@ -124,6 +128,64 @@ namespace Up.Controllers
                     Message = exception.Message
                 });
             }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Export([FromBody]Models.TinhHocPhiViewModel model)
+        {
+            var stream = GenerateExcelFile(model);
+            string excelName = $"UserList-{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.xlsx";
+            //return File(stream, "application/octet-stream", excelName);  
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+        private System.IO.MemoryStream GenerateExcelFile(Models.TinhHocPhiViewModel model)
+        {
+            var stream = new System.IO.MemoryStream();
+            using (OfficeOpenXml.ExcelPackage package = new OfficeOpenXml.ExcelPackage(stream))
+            {
+                OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Customer");
+                int totalRows = model.HocVienList.Count;
+
+                worksheet.Cells["A1:I1"].Merge = true;
+                worksheet.Cells["A1:I1"].Value = "DANH SÁCH ĐÓNG HỌC PHÍ " + _lopHocService.GetLopHocByIdAsync(model.LopHocId).Result.Name;
+                worksheet.Cells["A1:I1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:I1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                worksheet.Cells["A2:I2"].Merge = true;
+                worksheet.Cells["A2:I2"].Value = "T" + model.month + "/" + model.year;
+                worksheet.Cells["A2:I2"].Style.Font.Bold = true;
+                worksheet.Cells["A2:I2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells["A2:I2"].Style.Font.Color.SetColor(Color.Red);
+
+                worksheet.Cells[3, 1].Value = "No";
+                worksheet.Cells[3, 2].Value = "Tên";
+                worksheet.Cells[3, 3].Value = "Khoảng trừ tháng trước";
+                worksheet.Cells[3, 4].Value = "Nợ tháng trước";
+                worksheet.Cells[3, 5].Value = "Học phí tháng này";
+                worksheet.Cells[3, 6].Value = "Mua sách";
+                worksheet.Cells[3, 7].Value = "Tổng";
+                worksheet.Cells[3, 8].Value = "Chữ ký";
+                worksheet.Cells[3, 9].Value = "Ghi Chú";
+
+                for (int i = 0; i < totalRows; i++)
+                {
+                    worksheet.Cells[i + 4, 1].Value = i + 1;
+                    worksheet.Cells[i + 4, 2].Value = model.HocVienList[i].FullName;
+                    worksheet.Cells[i + 4, 3].Value = model.HocVienList[i].HocPhiBuHocVienVaoSau;
+                    worksheet.Cells[i + 4, 4].Value = model.HocVienList[i].TienNo;
+                    worksheet.Cells[i + 4, 5].Value = model.HocVienList[i].HocPhiFixed;
+                    worksheet.Cells[i + 4, 6].Value = model.HocVienList[i].GiaSach;
+                    worksheet.Cells[i + 4, 7].Value = model.HocVienList[i].HocPhiMoi;
+                }
+
+                worksheet.Cells.AutoFitColumns();
+
+                package.Save();
+            }
+
+            stream.Position = 0;
+            return stream;
         }
     }
 }

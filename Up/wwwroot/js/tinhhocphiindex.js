@@ -100,6 +100,39 @@
             }
         },
 
+        forceFileDownload(response) {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'file.xlsx'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        },
+
+        async onExport() {
+            let that = this;
+            await axios
+                ({
+                    url: '/HocPhi/Export',
+                    method: 'put',
+                    responseType: 'blob', // important
+                    data: {
+                        HocVienList: that.hocVienList,
+                        LopHocId: that.selectedLopHoc,
+                        //HocPhi: that.tongHocPhi,
+                        month: that.selectedThang,
+                        year: that.selectedNam
+                    }
+                })
+                .then(function (response) {
+                    console.log(response);
+                    that.forceFileDownload(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
         formatNumber(val) {
             return val.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
         },

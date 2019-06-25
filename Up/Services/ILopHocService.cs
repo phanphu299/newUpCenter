@@ -8,6 +8,7 @@ namespace Up.Services
     public interface ILopHocService
     {
         Task<List<LopHocViewModel>> GetLopHocAsync();
+        Task<LopHocViewModel> GetLopHocByIdAsync(Guid LopHocId);
         Task<List<LopHocViewModel>> GetAvailableLopHocAsync();
         Task<List<LopHocViewModel>> GetGraduatedAndCanceledLopHocAsync();
         Task<List<LopHocViewModel>> GetLopHocByHocVienIdAsync(Guid HocVienId);
