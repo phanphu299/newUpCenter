@@ -119,13 +119,11 @@
                     data: {
                         HocVienList: that.hocVienList,
                         LopHocId: that.selectedLopHoc,
-                        //HocPhi: that.tongHocPhi,
                         month: that.selectedThang,
                         year: that.selectedNam
                     }
                 })
                 .then(function (response) {
-                    console.log(response);
                     that.forceFileDownload(response);
                 })
                 .catch(function (error) {

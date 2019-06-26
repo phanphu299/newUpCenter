@@ -130,7 +130,6 @@
 
     methods: {
         DisplayGioHoc: function (value) {
-            console.log(value);
             return value.from + " - " + value.to;
         },
 

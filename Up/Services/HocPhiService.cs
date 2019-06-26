@@ -327,8 +327,8 @@ namespace Up.Services
                     var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(year, month, _ngayBatDauHoc, LopHocId);
                     if (soNgayHocVienVaoSau < SoNgayHoc)
                     {
-                        item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau);
-                        item.HocPhiMoi = Math.Round(item.HocPhiMoi - item.HocPhiBuHocVienVaoSau + (HocPhiMoiNgay * ngayNghiTruocKhiVo),0);
+                        item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau)) - (HocPhiMoiNgay * ngayNghiTruocKhiVo);
+                        item.HocPhiMoi = Math.Round(item.HocPhiMoi - item.HocPhiBuHocVienVaoSau, 0);
                     }
                 }
                 item.HocPhiFixed = item.HocPhiMoi;

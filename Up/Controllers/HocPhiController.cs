@@ -131,7 +131,7 @@ namespace Up.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Export([FromBody]Models.TinhHocPhiViewModel model)
+        public IActionResult Export([FromBody]Models.TinhHocPhiViewModel model)
         {
             var stream = GenerateExcelFile(model);
             string excelName = $"UserList-{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.xlsx";
@@ -147,16 +147,16 @@ namespace Up.Controllers
                 OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Customer");
                 int totalRows = model.HocVienList.Count;
 
-                worksheet.Cells["A1:I1"].Merge = true;
-                worksheet.Cells["A1:I1"].Value = "DANH SÁCH ĐÓNG HỌC PHÍ " + _lopHocService.GetLopHocByIdAsync(model.LopHocId).Result.Name;
-                worksheet.Cells["A1:I1"].Style.Font.Bold = true;
-                worksheet.Cells["A1:I1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells["A1:J1"].Merge = true;
+                worksheet.Cells["A1:J1"].Value = "DANH SÁCH ĐÓNG HỌC PHÍ " + _lopHocService.GetLopHocByIdAsync(model.LopHocId).Result.Name;
+                worksheet.Cells["A1:J1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:J1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                worksheet.Cells["A2:I2"].Merge = true;
-                worksheet.Cells["A2:I2"].Value = "T" + model.month + "/" + model.year;
-                worksheet.Cells["A2:I2"].Style.Font.Bold = true;
-                worksheet.Cells["A2:I2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                worksheet.Cells["A2:I2"].Style.Font.Color.SetColor(Color.Red);
+                worksheet.Cells["A2:J2"].Merge = true;
+                worksheet.Cells["A2:J2"].Value = "T" + model.month + "/" + model.year;
+                worksheet.Cells["A2:J2"].Style.Font.Bold = true;
+                worksheet.Cells["A2:J2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells["A2:J2"].Style.Font.Color.SetColor(Color.Red);
 
                 worksheet.Cells[3, 1].Value = "No";
                 worksheet.Cells[3, 2].Value = "Tên";
@@ -164,9 +164,10 @@ namespace Up.Controllers
                 worksheet.Cells[3, 4].Value = "Nợ tháng trước";
                 worksheet.Cells[3, 5].Value = "Học phí tháng này";
                 worksheet.Cells[3, 6].Value = "Mua sách";
-                worksheet.Cells[3, 7].Value = "Tổng";
-                worksheet.Cells[3, 8].Value = "Chữ ký";
-                worksheet.Cells[3, 9].Value = "Ghi Chú";
+                worksheet.Cells[3, 7].Value = "Khuyến mãi";
+                worksheet.Cells[3, 8].Value = "Tổng";
+                worksheet.Cells[3, 9].Value = "Chữ ký";
+                worksheet.Cells[3, 10].Value = "Ghi Chú";
 
                 for (int i = 0; i < totalRows; i++)
                 {
@@ -175,8 +176,19 @@ namespace Up.Controllers
                     worksheet.Cells[i + 4, 3].Value = model.HocVienList[i].HocPhiBuHocVienVaoSau;
                     worksheet.Cells[i + 4, 4].Value = model.HocVienList[i].TienNo;
                     worksheet.Cells[i + 4, 5].Value = model.HocVienList[i].HocPhiFixed;
-                    worksheet.Cells[i + 4, 6].Value = model.HocVienList[i].GiaSach;
-                    worksheet.Cells[i + 4, 7].Value = model.HocVienList[i].HocPhiMoi;
+
+                    if(model.HocVienList[i].GiaSach != null && model.HocVienList[i].GiaSach.Length > 0)
+                    {
+                        double giaSach = 0;
+                        foreach(double item in model.HocVienList[i].GiaSach)
+                        {
+                            giaSach += item;
+                        }
+                        worksheet.Cells[i + 4, 6].Value = giaSach;
+                    }
+                    
+                    worksheet.Cells[i + 4, 7].Value = model.HocVienList[i].KhuyenMai + "%";
+                    worksheet.Cells[i + 4, 8].Value = model.HocVienList[i].HocPhiMoi;
                 }
 
                 worksheet.Cells.AutoFitColumns();
