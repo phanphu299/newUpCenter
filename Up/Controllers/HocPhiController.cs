@@ -144,11 +144,12 @@ namespace Up.Controllers
             var stream = new System.IO.MemoryStream();
             using (OfficeOpenXml.ExcelPackage package = new OfficeOpenXml.ExcelPackage(stream))
             {
-                OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Customer");
+                string lopHocName = _lopHocService.GetLopHocByIdAsync(model.LopHocId).Result.Name;
+                OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Phi " + lopHocName);
                 int totalRows = model.HocVienList.Count;
 
                 worksheet.Cells["A1:J1"].Merge = true;
-                worksheet.Cells["A1:J1"].Value = "DANH SÁCH ĐÓNG HỌC PHÍ " + _lopHocService.GetLopHocByIdAsync(model.LopHocId).Result.Name;
+                worksheet.Cells["A1:J1"].Value = "DANH SÁCH ĐÓNG HỌC PHÍ " + lopHocName;
                 worksheet.Cells["A1:J1"].Style.Font.Bold = true;
                 worksheet.Cells["A1:J1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
@@ -160,7 +161,8 @@ namespace Up.Controllers
 
                 worksheet.Cells[3, 1].Value = "No";
                 worksheet.Cells[3, 2].Value = "Tên";
-                worksheet.Cells[3, 3].Value = "Khoảng trừ tháng trước";
+                worksheet.Cells[3, 3].Value = "Khoảng trừ\r\ntháng trước";
+                worksheet.Cells[3, 3].Style.WrapText = true;
                 worksheet.Cells[3, 4].Value = "Nợ tháng trước";
                 worksheet.Cells[3, 5].Value = "Học phí tháng này";
                 worksheet.Cells[3, 6].Value = "Mua sách";
@@ -168,6 +170,21 @@ namespace Up.Controllers
                 worksheet.Cells[3, 8].Value = "Tổng";
                 worksheet.Cells[3, 9].Value = "Chữ ký";
                 worksheet.Cells[3, 10].Value = "Ghi Chú";
+                worksheet.Cells["A3:J3"].Style.Font.Bold = true;
+                worksheet.Cells["A3:J3"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A3:J3"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+
+                var modelCells = worksheet.Cells["A3"];
+                string modelRange = "A3:J" + (totalRows + 3);
+                var modelTable = worksheet.Cells[modelRange];
+
+                
+
+                // Assign borders
+                modelTable.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                modelTable.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                modelTable.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                modelTable.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
 
                 for (int i = 0; i < totalRows; i++)
                 {
@@ -192,6 +209,8 @@ namespace Up.Controllers
                 }
 
                 worksheet.Cells.AutoFitColumns();
+                worksheet.Column(9).Width = 40;
+                worksheet.Column(10).Width = 40;
 
                 package.Save();
             }

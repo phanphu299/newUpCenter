@@ -49,6 +49,7 @@
                 console.log(error);
             });
     },
+
     methods: {
         async onchangeKhuyenMai(value, item) {
             item.hocPhiMoi = item.hocPhiMoi - ((item.hocPhiFixed * value) / 100);
@@ -137,70 +138,84 @@
 
         async onLuu(item) {
             let that = this;
-            await axios({
-                method: 'post',
-                url: '/HocPhi/LuuDoanhThu_HocPhiAsync',
-                data: {
-                    LopHocId: this.selectedLopHoc,
-                    HocVienId: item.hocVienId,
-                    HocPhi: item.hocPhiMoi,
-                    month: this.selectedThang,
-                    year: this.selectedNam
-                }
-            })
-                .then(function (response) {
-                    console.log(response);
-                    if (response.data.status === "OK") {
-                        that.snackbar = true;
-                        that.messageText = 'Lưu Doanh Thu thành công !!!';
-                        that.color = 'success';
-                    }
-                    else {
-                        that.snackbar = true;
-                        that.messageText = response.data.message;
-                        that.color = 'error';
+            if (isNaN(item.hocPhiMoi)) {
+                this.messageText = "Học phí chỉ được nhập số";
+                this.snackbar = true;
+                this.color = 'error';
+            }
+            else {
+                await axios({
+                    method: 'post',
+                    url: '/HocPhi/LuuDoanhThu_HocPhiAsync',
+                    data: {
+                        LopHocId: this.selectedLopHoc,
+                        HocVienId: item.hocVienId,
+                        HocPhi: item.hocPhiMoi,
+                        month: this.selectedThang,
+                        year: this.selectedNam
                     }
                 })
-                .catch(function (error) {
-                    console.log(error);
-                    that.snackbar = true;
-                    that.messageText = 'Lưu Doanh Thu lỗi: ' + error;
-                    that.color = 'error';
-                });
+                    .then(function (response) {
+                        console.log(response);
+                        if (response.data.status === "OK") {
+                            that.snackbar = true;
+                            that.messageText = 'Lưu Doanh Thu thành công !!!';
+                            that.color = 'success';
+                        }
+                        else {
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'error';
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        that.snackbar = true;
+                        that.messageText = 'Lưu Doanh Thu lỗi: ' + error;
+                        that.color = 'error';
+                    });
+            }
         },
 
         async onNo(item) {
             let that = this;
-            await axios({
-                method: 'post',
-                url: '/HocPhi/LuuNo_HocPhiAsync',
-                data: {
-                    LopHocId: this.selectedLopHoc,
-                    HocVienId: item.hocVienId,
-                    TienNo: item.hocPhiMoi,
-                    month: this.selectedThang,
-                    year: this.selectedNam
-                }
-            })
-                .then(function (response) {
-                    console.log(response);
-                    if (response.data.status === "OK") {
-                        that.snackbar = true;
-                        that.messageText = 'Lưu Nợ thành công !!!';
-                        that.color = 'success';
-                    }
-                    else {
-                        that.snackbar = true;
-                        that.messageText = response.data.message;
-                        that.color = 'error';
+            if (isNaN(item.hocPhiMoi)) {
+                this.messageText = "Học phí chỉ được nhập số";
+                this.snackbar = true;
+                this.color = 'error';
+            }
+            else {
+                await axios({
+                    method: 'post',
+                    url: '/HocPhi/LuuNo_HocPhiAsync',
+                    data: {
+                        LopHocId: this.selectedLopHoc,
+                        HocVienId: item.hocVienId,
+                        TienNo: item.hocPhiMoi,
+                        month: this.selectedThang,
+                        year: this.selectedNam
                     }
                 })
-                .catch(function (error) {
-                    console.log(error);
-                    that.snackbar = true;
-                    that.messageText = 'Lưu Nợ lỗi: ' + error;
-                    that.color = 'error';
-                });
+                    .then(function (response) {
+                        console.log(response);
+                        if (response.data.status === "OK") {
+                            that.snackbar = true;
+                            that.messageText = 'Lưu Nợ thành công !!!';
+                            that.color = 'success';
+                        }
+                        else {
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'error';
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        that.snackbar = true;
+                        that.messageText = 'Lưu Nợ lỗi: ' + error;
+                        that.color = 'error';
+                    });
+            }
         }
     }
 });
