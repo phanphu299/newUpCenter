@@ -52,7 +52,14 @@
 
     methods: {
         async onchangeKhuyenMai(value, item) {
-            item.hocPhiMoi = item.hocPhiMoi - ((item.hocPhiFixed * value) / 100);
+            item.hocPhiMoi = item.hocPhiFixed - ((item.hocPhiFixed * value) / 100);
+            if (item.lastGiaSach !== null) {
+                for (let i = 0; i < item.lastGiaSach.length; i++) {
+                    item.hocPhiMoi = item.hocPhiMoi + item.lastGiaSach[i];
+                }
+            }
+
+            item.hocPhiMoi = (Math.ceil(item.hocPhiMoi / 10000) * 10000);
         },
 
         async onchangeSach(value, item) {

@@ -261,6 +261,7 @@ namespace Up.Services
             int soNgayHoc = await TinhSoNgayHocAsync(LopHocId, subMonth, subYear);
 
             var hocPhiMoiNgay = hocPhi / soNgayHoc;
+            //hocPhiMoiNgay = (Math.Ceiling(hocPhiMoiNgay / 10000) * 10000);
 
             if (soNgayDuocNghi > 0)
                 hocPhi = hocPhi - (hocPhiMoiNgay * soNgayDuocNghi);
@@ -307,7 +308,7 @@ namespace Up.Services
                                         TienNo = x.HocVien.HocVien_Nos
                                                         .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Any() ? x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo) : 0,
                                         HocPhiMoi = x.HocVien.HocVien_Nos
-                                                        .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Any() ? x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo) + HocPhi : HocPhi
+                                                        .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Any() ? (Math.Ceiling((HocPhi + x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo)) / 10000) * 10000) : (Math.Ceiling(HocPhi / 10000) * 10000)
                                     })
                                     .ToListAsync();
 
@@ -328,7 +329,7 @@ namespace Up.Services
                     if (soNgayHocVienVaoSau < SoNgayHoc)
                     {
                         item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau)) - (HocPhiMoiNgay * ngayNghiTruocKhiVo);
-                        item.HocPhiMoi = Math.Round(item.HocPhiMoi - item.HocPhiBuHocVienVaoSau, 0);
+                        item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                     }
                 }
                 item.HocPhiFixed = item.HocPhiMoi;
