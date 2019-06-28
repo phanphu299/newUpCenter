@@ -220,6 +220,15 @@
                 item.UpdatedBy = LoggedEmployee;
                 item.UpdatedDate = DateTime.Now;
 
+                var _hocVien_NgayHoc = await _context.HocVien_NgayHocs
+                                                .Where(x => x.LopHocId == item.LopHocId)
+                                                .ToListAsync();
+
+                foreach(var ngayHoc in _hocVien_NgayHoc)
+                {
+                    ngayHoc.NgayKetThuc = DateTime.Now;
+                }
+
                 await _context.SaveChangesAsync();
 
                 return true;
@@ -243,6 +252,15 @@
                 item.IsGraduated = !item.IsGraduated;
                 item.UpdatedBy = LoggedEmployee;
                 item.UpdatedDate = DateTime.Now;
+
+                var _hocVien_NgayHoc = await _context.HocVien_NgayHocs
+                                                .Where(x => x.LopHocId == item.LopHocId)
+                                                .ToListAsync();
+
+                foreach (var ngayHoc in _hocVien_NgayHoc)
+                {
+                    ngayHoc.NgayKetThuc = DateTime.Now;
+                }
 
                 await _context.SaveChangesAsync();
 

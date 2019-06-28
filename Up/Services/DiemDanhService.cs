@@ -140,7 +140,8 @@
                                     IsDuocNghi = x.IsDuocNghi,
                                     IsOff = x.IsOff,
                                     NgayDiemDanh = x.NgayDiemDanh.ToString("dd/MM/yyyy"),
-                                    HocVien = x.HocVien.FullName
+                                    HocVien = x.HocVien.FullName,
+                                    NgayDiemDanh_Date = x.NgayDiemDanh
                                 })
                                 .ToListAsync();
         }
