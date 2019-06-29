@@ -223,7 +223,11 @@
                 var groupedModel = model.GroupBy(x => x.HocVien).Select(x => new ThongKeModel
                 {
                     Label = x.Key,
-                    Dates = x.Select(m => m.NgayDiemDanh_Date).ToList()
+                    ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel {
+                        Dates = m.NgayDiemDanh_Date,
+                        DuocNghi = m.IsDuocNghi,
+                        IsOff = m.IsOff,
+                    }).ToList()
                 }).ToList();
                 int totalRows = groupedModel.Count;
 
@@ -269,7 +273,26 @@
                 {
                     worksheet.Cells[i + 4, 1].Value = i + 1;
                     worksheet.Cells[i + 4, 2].Value = groupedModel[i].Label;
-                    
+                    for (int j = 0; j < soNgayHoc.Count; j++)
+                    {
+                        for(int z = 0; z < groupedModel[i].ThongKeDiemDanh.Count; z++)
+                        {
+                            var ngay = groupedModel[i].ThongKeDiemDanh[z].Dates.Day;
+                            var off = groupedModel[i].ThongKeDiemDanh[z].IsOff;
+                            var duocNghi = groupedModel[i].ThongKeDiemDanh[z].DuocNghi;
+
+                            if (ngay == soNgayHoc[j] && off == false)
+                                worksheet.Cells[i + 4, j + 3].Value = "x";
+                            else if (ngay == soNgayHoc[j] && off == true && duocNghi == true)
+                            {
+                                worksheet.Cells[i + 4, j + 3].Value = "";
+                                worksheet.Cells[i + 4, j + 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                worksheet.Cells[i + 4, j + 3].Style.Fill.BackgroundColor.SetColor(Color.Gray);
+                            }
+                            else if (ngay == soNgayHoc[j] && off == true && duocNghi == null)
+                                worksheet.Cells[i + 4, j + 3].Value = "";
+                        }
+                    }
                 }
 
                 worksheet.Cells.AutoFitColumns();

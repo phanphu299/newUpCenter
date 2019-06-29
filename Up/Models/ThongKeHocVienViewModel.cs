@@ -14,6 +14,13 @@
     {
         public string Label { get; set; }
         public double Data { get; set; }
-        public List<DateTime> Dates { get; set; }
+        public List<ThongKeDiemDanhModel> ThongKeDiemDanh { get; set; }
+    }
+
+    public class ThongKeDiemDanhModel
+    {
+        public bool IsOff { get; set; }
+        public bool? DuocNghi { get; set; }
+        public DateTime Dates { get; set; }
     }
 }
