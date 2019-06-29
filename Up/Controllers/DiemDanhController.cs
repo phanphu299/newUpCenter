@@ -6,19 +6,34 @@
     using System.Threading.Tasks;
     using System;
     using System.Linq;
+    using System.Collections.Generic;
+    using OfficeOpenXml.Style;
+    using System.Drawing;
+    using Up.Models;
 
     public class DiemDanhController : Controller
     {
         private readonly IDiemDanhService _diemDanhService;
+        private readonly ILopHocService _lopHocService;
+        private readonly IHocPhiService _hocPhiService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public DiemDanhController(IDiemDanhService diemDanhService, UserManager<IdentityUser> userManager)
+        public DiemDanhController(IDiemDanhService diemDanhService, ILopHocService lopHocService, IHocPhiService hocPhiService, UserManager<IdentityUser> userManager)
         {
             _diemDanhService = diemDanhService;
+            _lopHocService = lopHocService;
+            _hocPhiService = hocPhiService;
             _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+            return View();
+        }
+
+        public async Task<IActionResult> ExportIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
@@ -181,6 +196,90 @@
                     Message = exception.Message
                 });
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportDiemDanh(Guid LopHocId, int month, int year)
+        {
+            var model = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId);
+            var stream = GenerateExcelFile(model.Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year).ToList(), month, year, LopHocId);
+            string excelName = $"UserList-{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.xlsx";
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+        private String Number2String(int number, bool isCaps)
+        {
+            Char c = (Char)((isCaps ? 65 : 97) + (number - 1));
+            return c.ToString();
+        }
+
+        private System.IO.MemoryStream GenerateExcelFile(List<Models.DiemDanhViewModel> model, int month, int year, Guid LopHocId)
+        {
+            var stream = new System.IO.MemoryStream();
+            using (OfficeOpenXml.ExcelPackage package = new OfficeOpenXml.ExcelPackage(stream))
+            {
+                string lopHocName = _lopHocService.GetLopHocByIdAsync(LopHocId).Result.Name;
+                OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Diem Danh " + lopHocName);
+                var groupedModel = model.GroupBy(x => x.HocVien).Select(x => new ThongKeModel
+                {
+                    Label = x.Key,
+                    Dates = x.Select(m => m.NgayDiemDanh_Date).ToList()
+                }).ToList();
+                int totalRows = groupedModel.Count;
+
+                var soNgayHoc = _hocPhiService.SoNgayHocAsync(LopHocId, month, year).Result;
+                string column = Number2String(soNgayHoc.Count + 3, true);
+
+                worksheet.Cells["A1:" + column + "1"].Merge = true;
+                worksheet.Cells["A1:" + column + "1"].Value = "DANH SÁCH ĐIỂM DANH " + lopHocName;
+                worksheet.Cells["A1:" + column + "1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:" + column + "1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                worksheet.Cells["A2:" + column + "2"].Merge = true;
+                worksheet.Cells["A2:" + column + "2"].Value = "T" + month + "/" + year;
+                worksheet.Cells["A2:" + column + "2"].Style.Font.Bold = true;
+                worksheet.Cells["A2:" + column + "2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells["A2:" + column + "2"].Style.Font.Color.SetColor(Color.Red);
+
+                worksheet.Cells[3, 1].Value = "No";
+                worksheet.Cells[3, 2].Value = "Tên";
+                for(int i = 0; i < soNgayHoc.Count; i++)
+                {
+                    worksheet.Cells[3, i + 3].Value = soNgayHoc[i];
+                }
+                worksheet.Cells[3, soNgayHoc.Count + 3].Value = "Ghi Chú";
+                
+                worksheet.Cells["A3:" + column + "3"].Style.Font.Bold = true;
+                worksheet.Cells["A3:" + column + "3"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A3:" + column + "3"].Style.Fill.BackgroundColor.SetColor(Color.Orange);
+
+                var modelCells = worksheet.Cells["A3"];
+                string modelRange = "A3:" + column + (totalRows + 3);
+                var modelTable = worksheet.Cells[modelRange];
+
+
+
+                // Assign borders
+                modelTable.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                modelTable.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                modelTable.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                modelTable.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+
+                for (int i = 0; i < totalRows; i++)
+                {
+                    worksheet.Cells[i + 4, 1].Value = i + 1;
+                    worksheet.Cells[i + 4, 2].Value = groupedModel[i].Label;
+                    
+                }
+
+                worksheet.Cells.AutoFitColumns();
+                worksheet.Column(soNgayHoc.Count + 3).Width = 40;
+
+                package.Save();
+            }
+
+            stream.Position = 0;
+            return stream;
         }
     }
 }

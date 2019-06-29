@@ -1,5 +1,6 @@
 ﻿namespace Up.Models
 {
+    using System;
     using System.Collections.Generic;
 
     public class ThongKeHocVienViewModel
@@ -13,6 +14,6 @@
     {
         public string Label { get; set; }
         public double Data { get; set; }
-
+        public List<DateTime> Dates { get; set; }
     }
 }

@@ -20,63 +20,77 @@
 
         public async Task<bool> DiemDanhTatCaAsync(Guid LopHocId, bool isOff, DateTime NgayDiemDanh, string LoggedEmployee)
         {
-            if (LopHocId == null || isOff == null || NgayDiemDanh == null)
-                throw new Exception("Lỗi khi Điểm Danh!!!");
-
-            var isExisting = _context.LopHoc_DiemDanhs
-                                    .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh)
-                                    .ToListAsync();
-            if(isExisting.Result.Any())
-                throw new Exception("Lớp học đã được điểm danh ngày " + NgayDiemDanh.ToShortDateString());
-
-            var hocViens = GetHocVienByLopHoc(LopHocId);
-
-            foreach(var item in hocViens.Result)
+            try
             {
-                LopHoc_DiemDanh lopHoc_DiemDanh = new LopHoc_DiemDanh();
-                lopHoc_DiemDanh.NgayDiemDanh = NgayDiemDanh;
-                lopHoc_DiemDanh.IsOff = isOff;
-                lopHoc_DiemDanh.LopHocId = LopHocId;
-                lopHoc_DiemDanh.HocVienId = item.HocVienId;
-                lopHoc_DiemDanh.CreatedBy = LoggedEmployee;
-                lopHoc_DiemDanh.CreatedDate = DateTime.Now;
-                _context.LopHoc_DiemDanhs.Add(lopHoc_DiemDanh);
-            }
+                if (LopHocId == null || isOff == null || NgayDiemDanh == null)
+                    throw new Exception("Lỗi khi Điểm Danh!!!");
 
-            var saveResult = await _context.SaveChangesAsync();
-            return true;
+                var isExisting = _context.LopHoc_DiemDanhs
+                                        .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh)
+                                        .ToListAsync();
+                if (isExisting.Result.Any())
+                    throw new Exception("Lớp học đã được điểm danh ngày " + NgayDiemDanh.ToShortDateString());
+
+                var hocViens = GetHocVienByLopHoc(LopHocId);
+
+                foreach (var item in hocViens.Result)
+                {
+                    LopHoc_DiemDanh lopHoc_DiemDanh = new LopHoc_DiemDanh();
+                    lopHoc_DiemDanh.NgayDiemDanh = NgayDiemDanh;
+                    lopHoc_DiemDanh.IsOff = isOff;
+                    lopHoc_DiemDanh.LopHocId = LopHocId;
+                    lopHoc_DiemDanh.HocVienId = item.HocVienId;
+                    lopHoc_DiemDanh.CreatedBy = LoggedEmployee;
+                    lopHoc_DiemDanh.CreatedDate = DateTime.Now;
+                    _context.LopHoc_DiemDanhs.Add(lopHoc_DiemDanh);
+                }
+
+                var saveResult = await _context.SaveChangesAsync();
+                return true;
+            }
+            catch(Exception exception)
+            {
+                throw exception;
+            }
         }
 
         public async Task<bool> DiemDanhTungHocVienAsync(Guid LopHocId, Guid HocVienId, bool isOff, DateTime NgayDiemDanh, string LoggedEmployee)
         {
-            if (LopHocId == null || HocVienId == null || isOff == null || NgayDiemDanh == null)
-                throw new Exception("Lỗi khi Điểm Danh!!!");
-
-            var diemDanh = await _context.LopHoc_DiemDanhs
-                                    .Where(x => x.LopHocId == LopHocId && x.HocVienId == HocVienId)
-                                    .SingleOrDefaultAsync();
-
-            if(diemDanh != null)
+            try
             {
-                diemDanh.IsOff = isOff;
-            }
-            else
-            {
-                LopHoc_DiemDanh lopHoc_DiemDanh = new LopHoc_DiemDanh();
-                lopHoc_DiemDanh.NgayDiemDanh = NgayDiemDanh;
-                lopHoc_DiemDanh.IsOff = isOff;
-                lopHoc_DiemDanh.LopHocId = LopHocId;
-                lopHoc_DiemDanh.HocVienId = HocVienId;
-                lopHoc_DiemDanh.CreatedBy = LoggedEmployee;
-                lopHoc_DiemDanh.CreatedDate = DateTime.Now;
+                if (LopHocId == null || HocVienId == null || isOff == null || NgayDiemDanh == null)
+                    throw new Exception("Lỗi khi Điểm Danh!!!");
 
-                _context.LopHoc_DiemDanhs.Add(lopHoc_DiemDanh);
+                var diemDanh = await _context.LopHoc_DiemDanhs
+                                        .Where(x => x.LopHocId == LopHocId && x.HocVienId == HocVienId && x.NgayDiemDanh == NgayDiemDanh)
+                                        .SingleOrDefaultAsync();
+
+                if (diemDanh != null)
+                {
+                    diemDanh.IsOff = isOff;
+                }
+                else
+                {
+                    LopHoc_DiemDanh lopHoc_DiemDanh = new LopHoc_DiemDanh();
+                    lopHoc_DiemDanh.NgayDiemDanh = NgayDiemDanh;
+                    lopHoc_DiemDanh.IsOff = isOff;
+                    lopHoc_DiemDanh.LopHocId = LopHocId;
+                    lopHoc_DiemDanh.HocVienId = HocVienId;
+                    lopHoc_DiemDanh.CreatedBy = LoggedEmployee;
+                    lopHoc_DiemDanh.CreatedDate = DateTime.Now;
+
+                    _context.LopHoc_DiemDanhs.Add(lopHoc_DiemDanh);
+                }
+
+                var saveResult = await _context.SaveChangesAsync();
+                if (saveResult != 1)
+                    throw new Exception("Lỗi khi Điểm Danh!!!");
+                return true;
             }
-            
-            var saveResult = await _context.SaveChangesAsync();
-            if (saveResult != 1)
-                throw new Exception("Lỗi khi Điểm Danh!!!");
-            return true;
+            catch(Exception exception)
+            {
+                throw exception;
+            }
         }
 
         public async Task<bool> DuocNghi(Guid LopHocId, DateTime NgayDiemDanh, string LoggedEmployee)
@@ -152,6 +166,7 @@
                 throw new Exception("Không tìm thấy Lớp Học!");
 
             return await _context.HocVien_LopHocs.Where(x => x.LopHocId == LopHocId)
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null))
                                 .Select(x => new HocVienViewModel
                                 {
                                     FullName = x.HocVien.FullName,

@@ -135,7 +135,6 @@ namespace Up.Controllers
         {
             var stream = GenerateExcelFile(model);
             string excelName = $"UserList-{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.xlsx";
-            //return File(stream, "application/octet-stream", excelName);  
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
 
