@@ -117,6 +117,13 @@
                         </v-card>
                     </v-dialog>
 
+                    <v-btn color="warning"
+                           class="white--text"
+                           v-on:click="onExport">
+                        Download
+                        <v-icon right dark>cloud_download</v-icon>
+                    </v-btn>
+
                     <v-spacer></v-spacer>
                     <v-text-field v-model="search"
                                   append-icon="search"

@@ -2,7 +2,10 @@
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using OfficeOpenXml.Style;
     using System;
+    using System.Drawing;
+    using System.Linq;
     using System.Threading.Tasks;
     using Up.Services;
 
@@ -291,6 +294,66 @@
                     Message = exception.Message
                 });
             }
+        }
+
+        [HttpGet]
+        public IActionResult Export()
+        {
+            var stream = GenerateExcelFile();
+            string excelName = $"UserList.xlsx";
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+        private System.IO.MemoryStream GenerateExcelFile()
+        {
+            var stream = new System.IO.MemoryStream();
+            using (OfficeOpenXml.ExcelPackage package = new OfficeOpenXml.ExcelPackage(stream))
+            {
+                var hocVien = _hocVienService.GetAllHocVienAsync().Result;
+                OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Vien");
+                int totalRows = hocVien.Count;
+
+                worksheet.Cells["A1:D1"].Merge = true;
+                worksheet.Cells["A1:D1"].Value = "DANH SÁCH HỌC VIÊN";
+                worksheet.Cells["A1:D1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:D1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                worksheet.Cells[2, 1].Value = "Firsname";
+                worksheet.Cells[2, 2].Value = "Mobile Phone";
+                worksheet.Cells[2, 3].Value = "Middle name";
+                worksheet.Cells[2, 4].Value = "Last name";
+                
+                worksheet.Cells["A2:D2"].Style.Font.Bold = true;
+                worksheet.Cells["A2:D2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A2:D2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+
+                var modelCells = worksheet.Cells["A2"];
+                string modelRange = "A2:D" + (totalRows + 2);
+                var modelTable = worksheet.Cells[modelRange];
+
+
+
+                // Assign borders
+                modelTable.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                modelTable.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                modelTable.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                modelTable.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+
+                for (int i = 0; i < totalRows; i++)
+                {
+                    worksheet.Cells[i + 3, 1].Value = hocVien[i].FullName;
+                    worksheet.Cells[i + 3, 2].Value = hocVien[i].Phone;
+                    worksheet.Cells[i + 3, 3].Value = "";
+                    worksheet.Cells[i + 3, 4].Value = hocVien[i].ParentFullName;
+                }
+
+                worksheet.Cells.AutoFitColumns();
+
+                package.Save();
+            }
+
+            stream.Position = 0;
+            return stream;
         }
     }
 }

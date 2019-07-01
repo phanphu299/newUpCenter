@@ -203,7 +203,7 @@
         {
             var model = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId);
             var stream = GenerateExcelFile(model.Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year).ToList(), month, year, LopHocId);
-            string excelName = $"UserList-{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.xlsx";
+            string excelName = $"UserList.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
 

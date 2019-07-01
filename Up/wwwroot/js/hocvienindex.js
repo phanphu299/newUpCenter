@@ -411,6 +411,31 @@
                 });
         },
 
+        forceFileDownload(response) {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'DanhSachHocVien.xlsx'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        },
+
+        async onExport() {
+            let that = this;
+            await axios
+                ({
+                    url: '/HocVien/Export',
+                    method: 'get',
+                    responseType: 'blob' // important
+                })
+                .then(function (response) {
+                    that.forceFileDownload(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
         async GetNgayHocByHocVien() {
             let that = this;
             await axios.get('/HocVien/GetHocVien_LopHocByHocVienAsync?HocVienId=' + that.itemToNgayHoc.hocVienId + '&LopHocId=' + that.selectedLopHoc)

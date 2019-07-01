@@ -134,7 +134,7 @@ namespace Up.Controllers
         public IActionResult Export([FromBody]Models.TinhHocPhiViewModel model)
         {
             var stream = GenerateExcelFile(model);
-            string excelName = $"UserList-{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.xlsx";
+            string excelName = $"UserList.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
 

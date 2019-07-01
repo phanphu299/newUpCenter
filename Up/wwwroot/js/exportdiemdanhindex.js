@@ -61,7 +61,6 @@
                 that.color = 'error';
                 that.dialogEdit = false;
             }
-        },
-
+        }
     }
 });

@@ -146,6 +146,40 @@ namespace Up.Services
             return saveResult == 1;
         }
 
+        public async Task<List<HocVienViewModel>> GetAllHocVienAsync()
+        {
+            return await _context.HocViens
+                .Select(x => new HocVienViewModel
+                {
+                    CreatedBy = x.CreatedBy,
+                    CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
+                    EnglishName = x.EnglishName,
+                    FacebookAccount = x.FacebookAccount,
+                    FullName = x.FullName,
+                    HocVienId = x.HocVienId,
+                    IsAppend = x.IsAppend,
+                    IsDisabled = x.IsDisabled,
+                    NgaySinh = x.NgaySinh.ToString("dd/MM/yyyy"),
+                    ParentFacebookAccount = x.ParentFacebookAccount,
+                    ParentFullName = x.ParentFullName,
+                    ParentPhone = x.ParentPhone,
+                    Phone = x.Phone,
+                    QuanHe = x.QuanHe.Name,
+                    QuanHeId = x.QuanHeId,
+                    UpdatedBy = x.UpdatedBy,
+                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
+                    LopHocIds = x.HocVien_LopHocs.Select(p => p.LopHocId).ToArray(),
+                    LopHocList = x.HocVien_LopHocs.Select(p => new LopHocViewModel
+                    {
+                        LopHocId = p.LopHocId,
+                        Name = p.LopHoc.Name,
+                        IsGraduated = p.LopHoc.IsGraduated,
+                        IsCanceled = p.LopHoc.IsCanceled
+                    }).ToList()
+                })
+                .ToListAsync();
+        }
+
         public async Task<List<HocVienViewModel>> GetHocVienAsync()
         {
             return await _context.HocViens
