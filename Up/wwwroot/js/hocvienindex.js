@@ -111,8 +111,8 @@
     methods: {
         async onUpdate(item) {
             let that = this;
-            if (this.newItem.fullName === '' || this.newItem.englishName === '' || this.newItem.phone === '' ||
-                this.newItem.facebookAccount === '' || this.newItem.ngaySinh === '') {
+            if (item.fullName === '' || item.englishName === '' || item.phone === '' ||
+                item.facebookAccount === '' || item.ngaySinh === '') {
                 this.alertEdit = true;
             }
             else {

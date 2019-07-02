@@ -342,9 +342,14 @@
                 for (int i = 0; i < totalRows; i++)
                 {
                     worksheet.Cells[i + 3, 1].Value = hocVien[i].FullName;
-                    worksheet.Cells[i + 3, 2].Value = hocVien[i].Phone;
-                    worksheet.Cells[i + 3, 3].Value = "";
-                    worksheet.Cells[i + 3, 4].Value = hocVien[i].ParentFullName;
+                    worksheet.Cells[i + 3, 2].Value = string.IsNullOrWhiteSpace(hocVien[i].ParentPhone) ? hocVien[i].Phone : hocVien[i].ParentPhone;
+                    string lopHoc = "";
+                    if (hocVien[i].IsDisabled || hocVien[i].LopHocList.Any(x => x.IsDisabled || x.IsGraduated || x.IsCanceled))
+                        lopHoc = "BL - " + String.Join(", ", hocVien[i].LopHocList.Select(x => x.Name).ToArray());
+                    else
+                        lopHoc = String.Join(", ", hocVien[i].LopHocList.Select(x => x.Name).ToArray());
+                    worksheet.Cells[i + 3, 3].Value = lopHoc;
+                    worksheet.Cells[i + 3, 4].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
                 }
 
                 worksheet.Cells.AutoFitColumns();
