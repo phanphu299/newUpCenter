@@ -7,11 +7,20 @@
 
             <v-card>
                 <v-card-title>
-                    <v-btn color="success"
-                           class="white--text">
-                        Thêm Từ Excel
-                        <v-icon right dark>attach_file</v-icon>
-                    </v-btn>
+                    
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on }">
+                            <v-btn color="success"
+                                   v-on="on"
+                                   v-on:click.stop="dialogImport = true"
+                                   class="white--text">
+                                Thêm Từ Excel
+                                <v-icon right dark>attach_file</v-icon>
+                            </v-btn>
+                        </template>
+                        <strong>Thêm Ngày Bắt Đầu Và Kết Thúc</strong>
+                    </v-tooltip>
+
                     <v-dialog v-model="dialog" persistent max-width="600px">
                         <v-btn color="primary"
                                slot="activator"
@@ -444,6 +453,55 @@
                     <v-spacer></v-spacer>
                     <v-btn color="secondary darken-1" flat v-on:click="dialogNgayHoc = false; selectedLopHoc = {}">Đóng</v-btn>
                     <v-btn color="blue darken-1 white--text" v-on:click="onThemNgayHoc(itemToNgayHoc)">Lưu</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        @*Import Dialog*@
+        <v-dialog v-model="dialogImport" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Thêm Học Viên Từ Excel</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container grid-list-md>
+                        <v-layout wrap>
+
+                            <v-flex xs12 sm4>
+                                <v-select v-model="selectedLopHoc"
+                                          :items="itemLopHoc"
+                                          item-text="name"
+                                          item-value="lopHocId"
+                                          attach
+                                          chips
+                                          label="Chọn Lớp Học">
+                                    <template v-slot:selection="data">
+                                        <v-chip :selected="data.selected"
+                                                color="green"
+                                                text-color="white">
+                                            <span>{{ data.item.name }}</span>
+                                        </v-chip>
+                                    </template>
+                                </v-select>
+                            </v-flex>
+
+                            <v-flex xs12 sm4 v-if="selectedLopHoc.length > 0">
+                                <v-btn color="primary"
+                                       class="white--text" v-on:click="onExportTemplate">
+                                    Download mẫu excel
+                                    <v-icon right dark>attach_file</v-icon>
+                                </v-btn>
+                            </v-flex>
+
+                            <input v-if="selectedLopHoc.length > 0" type="file" id="file" ref="myFiles" class="custom-file-input"/>
+
+                        </v-layout>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="secondary darken-1" flat v-on:click="dialogImport = false; selectedLopHoc = {}">Đóng</v-btn>
+                    <v-btn color="blue darken-1 white--text" v-on:click="onImport">Lưu</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>

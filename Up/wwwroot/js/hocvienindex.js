@@ -12,6 +12,7 @@
         dialogDiemDanh: false,
         dialogNgayHoc: false,
         dialogThemLop: false,
+        dialogImport: false,
         alert: false,
         alertEdit: false,
         alertNgayHoc: false,
@@ -411,11 +412,11 @@
                 });
         },
 
-        forceFileDownload(response) {
+        forceFileDownload(response, name) {
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'DanhSachHocVien.xlsx'); //or any other extension
+            link.setAttribute('download', name + '.xlsx'); //or any other extension
             document.body.appendChild(link);
             link.click();
         },
@@ -429,7 +430,46 @@
                     responseType: 'blob' // important
                 })
                 .then(function (response) {
-                    that.forceFileDownload(response);
+                    that.forceFileDownload(response, 'DanhSachHocVien');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
+        async onExportTemplate() {
+            let that = this;
+            await axios
+                ({
+                    url: '/HocVien/ExportTemplate?LopHocId=' + that.selectedLopHoc,
+                    method: 'get',
+                    responseType: 'blob' // important
+                })
+                .then(function (response) {
+                    that.forceFileDownload(response, 'MauImportHocVien');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
+        async onImport() {
+            let that = this;
+            console.log(this.$refs.myFiles.files[0]);
+            await axios
+                ({
+                    url: '/HocVien/Import',
+                    method: 'post',
+                    responseType: 'blob', // important
+                    data: {
+                        formFile: that.$refs.myFiles.files[0]
+                    },
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function (response) {
+                    console.log(response);
                 })
                 .catch(function (error) {
                     console.log(error);

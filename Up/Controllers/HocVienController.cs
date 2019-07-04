@@ -1,11 +1,16 @@
 ﻿namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using OfficeOpenXml;
     using OfficeOpenXml.Style;
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
+    using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Up.Services;
 
@@ -13,12 +18,14 @@
     {
         private readonly IHocVienService _hocVienService;
         private readonly INgayHocService _ngayHocService;
+        private readonly IQuanHeService _quanHeService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public HocVienController(IHocVienService hocVienService, INgayHocService ngayHocService, UserManager<IdentityUser> userManager)
+        public HocVienController(IHocVienService hocVienService, INgayHocService ngayHocService, IQuanHeService quanHeService, UserManager<IdentityUser> userManager)
         {
             _hocVienService = hocVienService;
             _ngayHocService = ngayHocService;
+            _quanHeService = quanHeService;
             _userManager = userManager;
         }
 
@@ -318,7 +325,7 @@
                 worksheet.Cells["A1:D1"].Style.Font.Bold = true;
                 worksheet.Cells["A1:D1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                worksheet.Cells[2, 1].Value = "Firsname";
+                worksheet.Cells[2, 1].Value = "Firstname";
                 worksheet.Cells[2, 2].Value = "Mobile Phone";
                 worksheet.Cells[2, 3].Value = "Middle name";
                 worksheet.Cells[2, 4].Value = "Last name";
@@ -359,6 +366,162 @@
 
             stream.Position = 0;
             return stream;
+        }
+
+        [HttpGet]
+        public IActionResult ExportTemplate(Guid LopHocId)
+        {
+            var stream = GenerateTemplateExcelFile(LopHocId);
+            string excelName = $"UserList.xlsx";
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+        private System.IO.MemoryStream GenerateTemplateExcelFile(Guid LopHocId)
+        {
+            var stream = new System.IO.MemoryStream();
+            using (OfficeOpenXml.ExcelPackage package = new OfficeOpenXml.ExcelPackage(stream))
+            {
+                OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("MauImportHocVien");
+
+                worksheet.Cells["A1:J1"].Merge = true;
+                worksheet.Cells["A1:J1"].Value = "MẪU IMPORT HỌC VIÊN";
+                worksheet.Cells["A1:J1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:J1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                worksheet.Cells[1, 12].Value = "Lớp Học";
+                worksheet.Cells[1, 12].Style.Font.Bold = true;
+                worksheet.Cells[1, 13].Value = LopHocId;
+                worksheet.Cells["L1:M1"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["L1:M1"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["L1:M1"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["L1:M1"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+
+                worksheet.Cells[5, 12].Value = "ID Quan Hệ";
+                worksheet.Cells[5, 12].Style.Font.Bold = true;
+                worksheet.Cells[5, 13].Value = "Quan Hệ";
+                worksheet.Cells[5, 13].Style.Font.Bold = true;
+
+                worksheet.Cells[2, 1].Value = "Họ và Tên";
+                worksheet.Cells[2, 2].Value = "English Name";
+                worksheet.Cells[2, 3].Value = "Số Điện Thoại";
+                worksheet.Cells[2, 4].Value = "Facebook";
+                worksheet.Cells[2, 5].Value = "Ngày Sinh";
+                worksheet.Cells[2, 6].Value = "Người Thân";
+                worksheet.Cells[2, 7].Value = "Quan Hệ Với Học Viên";
+                worksheet.Cells[2, 8].Value = "Facebook Người Thân";
+                worksheet.Cells[2, 9].Value = "Số Điện Thoại Người Thân";
+                worksheet.Cells[2, 10].Value = "Chèn";
+
+                worksheet.Cells["A2:J2"].Style.Font.Bold = true;
+                worksheet.Cells["A2:J2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A2:J2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+
+                var modelCells = worksheet.Cells["A2"];
+                string modelRange = "A2:J22";
+                var modelTable = worksheet.Cells[modelRange];
+
+
+
+                //// Assign borders
+                modelTable.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                modelTable.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                modelTable.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                modelTable.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+
+                var quanHe = _quanHeService.GetQuanHeAsync().Result;
+                int totalRowsQuanHe = quanHe.Count;
+
+                var modelCellsQuanHe = worksheet.Cells["L5"];
+                string modelRangeQuanHe = "L5:M" + (totalRowsQuanHe + 5);
+                var modelTableQuanHe = worksheet.Cells[modelRangeQuanHe];
+
+                // Assign borders
+                modelTableQuanHe.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                modelTableQuanHe.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                modelTableQuanHe.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                modelTableQuanHe.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+
+                for (int i = 0; i < totalRowsQuanHe; i++)
+                {
+                    worksheet.Cells[i + 6, 12].Value = quanHe[i].QuanHeId;
+                    worksheet.Cells[i + 6, 13].Value = quanHe[i].Name;
+                }
+
+                worksheet.Cells.AutoFitColumns();
+
+                package.Save();
+            }
+
+            stream.Position = 0;
+            return stream;
+        }
+
+        [HttpPost]
+        public async Task<DemoResponse<List<UserInfo>>> Import(IFormFile formFile, CancellationToken cancellationToken)
+        {
+            var files = Request.Form.Files;
+            if (formFile == null || formFile.Length <= 0)
+            {
+                return DemoResponse<List<UserInfo>>.GetResult(-1, "formfile is empty");
+            }
+
+            if (!Path.GetExtension(formFile.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+            {
+                return DemoResponse<List<UserInfo>>.GetResult(-1, "Not Support file extension");
+            }
+
+            var list = new List<UserInfo>();
+
+            using (var stream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(stream, cancellationToken);
+
+                using (var package = new ExcelPackage(stream))
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                    var rowCount = worksheet.Dimension.Rows;
+
+                    for (int row = 2; row <= rowCount; row++)
+                    {
+                        list.Add(new UserInfo
+                        {
+                            UserName = worksheet.Cells[row, 1].Value.ToString().Trim(),
+                            Age = int.Parse(worksheet.Cells[row, 2].Value.ToString().Trim()),
+                        });
+                    }
+                }
+            }
+
+            // add list to db ..  
+            // here just read and return  
+
+            return DemoResponse<List<UserInfo>>.GetResult(0, "OK", list);
+        }
+    }
+
+    public class UserInfo
+    {
+        public string UserName { get; set; }
+
+        public int Age { get; set; }
+    }
+
+    public class DemoResponse<T>
+    {
+        public int Code { get; set; }
+
+        public string Msg { get; set; }
+
+        public T Data { get; set; }
+
+        public static DemoResponse<T> GetResult(int code, string msg, T data = default(T))
+        {
+            return new DemoResponse<T>
+            {
+                Code = code,
+                Msg = msg,
+                Data = data
+            };
         }
     }
 }
