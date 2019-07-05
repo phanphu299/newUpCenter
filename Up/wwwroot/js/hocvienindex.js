@@ -226,9 +226,9 @@
         },
 
         mappingNgayHocItem(item) {
+            
             this.editedIndex = this.khoaHocItems.indexOf(item);
             this.itemToNgayHoc = Object.assign({}, item);
-            this.selectedLopHoc = null;
             this.ngayHocItem.ngayBatDau = "";
             this.ngayHocItem.ngayKetThuc = "";
 
@@ -256,7 +256,6 @@
                 .then(function (response) {
                     console.log(response);
                     if (response.data.status === "OK") {
-                        that.khoaHocItems.splice(0, 0, response.data.result);
                         that.snackbar = true;
                         that.messageText = 'Thêm mới thành công !!!';
                         that.color = 'success';
@@ -293,11 +292,10 @@
                     .then(function (response) {
                         console.log(response);
                         if (response.data.status === "OK") {
-                            that.khoaHocItems.splice(0, 0, response.data.result);
                             that.snackbar = true;
                             that.messageText = 'Thêm mới thành công !!!';
                             that.color = 'success';
-                            that.selectedArrayLopHoc = [];
+                            that.selectedLopHoc = "";
                         }
                         else {
                             that.snackbar = true;
