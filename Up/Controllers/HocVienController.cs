@@ -12,6 +12,7 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Up.Models;
     using Up.Services;
 
     public class HocVienController : Controller
@@ -103,7 +104,7 @@
             try
             {
                 DateTime _ngayBatDau = Convert.ToDateTime(model.NgayBatDau, System.Globalization.CultureInfo.InvariantCulture);
-                DateTime? _ngayKetThuc = null; 
+                DateTime? _ngayKetThuc = null;
                 if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
                     _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
 
@@ -273,7 +274,7 @@
             try
             {
                 DateTime _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
-                
+
                 var successful = await _hocVienService.UpdateHocVienAsync(model.HocVienId, model.FullName, model.Phone,
                    model.FacebookAccount, model.ParentFullName, model.ParentPhone, model.ParentFacebookAccount, model.QuanHeId,
                    model.EnglishName, _ngaySinh, model.LopHocIds, currentUser.Email);
@@ -329,7 +330,7 @@
                 worksheet.Cells[2, 2].Value = "Mobile Phone";
                 worksheet.Cells[2, 3].Value = "Middle name";
                 worksheet.Cells[2, 4].Value = "Last name";
-                
+
                 worksheet.Cells["A2:D2"].Style.Font.Bold = true;
                 worksheet.Cells["A2:D2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 worksheet.Cells["A2:D2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
@@ -405,12 +406,12 @@
                 worksheet.Cells[2, 2].Value = "English Name";
                 worksheet.Cells[2, 3].Value = "Số Điện Thoại";
                 worksheet.Cells[2, 4].Value = "Facebook";
-                worksheet.Cells[2, 5].Value = "Ngày Sinh";
+                worksheet.Cells[2, 5].Value = "Ngày Sinh (yyyy-mm-dd)";
                 worksheet.Cells[2, 6].Value = "Người Thân";
-                worksheet.Cells[2, 7].Value = "Quan Hệ Với Học Viên";
+                worksheet.Cells[2, 7].Value = "ID Quan Hệ";
                 worksheet.Cells[2, 8].Value = "Facebook Người Thân";
-                worksheet.Cells[2, 9].Value = "Số Điện Thoại Người Thân";
-                worksheet.Cells[2, 10].Value = "Chèn";
+                worksheet.Cells[2, 9].Value = "SĐT Người Thân";
+                worksheet.Cells[2, 10].Value = "Chèn (1 : true, 0 : false)";
 
                 worksheet.Cells["A2:J2"].Style.Font.Bold = true;
                 worksheet.Cells["A2:J2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -457,71 +458,79 @@
         }
 
         [HttpPost]
-        public async Task<DemoResponse<List<UserInfo>>> Import(IFormFile formFile, CancellationToken cancellationToken)
+        public async Task<IActionResult> Import([FromBody]FileUploadModel model)
         {
-            var files = Request.Form.Files;
-            if (formFile == null || formFile.Length <= 0)
+            try
             {
-                return DemoResponse<List<UserInfo>>.GetResult(-1, "formfile is empty");
-            }
-
-            if (!Path.GetExtension(formFile.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-            {
-                return DemoResponse<List<UserInfo>>.GetResult(-1, "Not Support file extension");
-            }
-
-            var list = new List<UserInfo>();
-
-            using (var stream = new MemoryStream())
-            {
-                await formFile.CopyToAsync(stream, cancellationToken);
-
-                using (var package = new ExcelPackage(stream))
+                var currentUser = await _userManager.GetUserAsync(User);
+                if (currentUser == null)
                 {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                    var rowCount = worksheet.Dimension.Rows;
+                    return RedirectToAction("Index");
+                }
 
-                    for (int row = 2; row <= rowCount; row++)
+                string extension = model.Name.Substring(model.Name.IndexOf('.'));
+                if (extension != ".xlsx")
+                    return Json(new Models.ResultModel
                     {
-                        list.Add(new UserInfo
+                        Status = "Failed",
+                        Message = "File import phải là excel .xlsx !!!"
+                    });
+
+                using (var stream = new MemoryStream(Convert.FromBase64String(model.File.Substring(model.File.IndexOf(',') + 1))))
+                {
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                        var rowCount = worksheet.Dimension.Rows;
+                        Guid lopHocId = new Guid(worksheet.Cells[1, 13].Value.ToString().Trim());
+                        List<HocVienViewModel> hocViens = new List<HocVienViewModel>();
+
+                        for (int row = 3; row <= rowCount; row++)
                         {
-                            UserName = worksheet.Cells[row, 1].Value.ToString().Trim(),
-                            Age = int.Parse(worksheet.Cells[row, 2].Value.ToString().Trim()),
+                            if(worksheet.Cells[row, 1].Value != null &&
+                                worksheet.Cells[row, 2].Value != null &&
+                                worksheet.Cells[row, 3].Value != null &&
+                                worksheet.Cells[row, 5].Value != null)
+                            {
+                                DateTime _ngaySinh = Convert.ToDateTime(worksheet.Cells[row, 5].Value.ToString().Trim() + " 00:00:00", System.Globalization.CultureInfo.InvariantCulture);
+                                Guid? quanHe = null;
+
+                                var successful = await _hocVienService.CreateHocVienAsync(
+                                    worksheet.Cells[row, 1].Value.ToString().Trim(),
+                                    worksheet.Cells[row, 3].Value.ToString().Trim(),
+                                    worksheet.Cells[row, 4].Value == null ? "" : worksheet.Cells[row, 4].Value.ToString().Trim(),
+                                    worksheet.Cells[row, 6].Value == null ? "" : worksheet.Cells[row, 6].Value.ToString().Trim(),
+                                    worksheet.Cells[row, 9].Value == null ? "" : worksheet.Cells[row, 9].Value.ToString().Trim(),
+                                    worksheet.Cells[row, 8].Value == null ? "" : worksheet.Cells[row, 8].Value.ToString().Trim(),
+                                    worksheet.Cells[row, 7].Value == null ? quanHe : new Guid(worksheet.Cells[row, 7].Value.ToString().Trim()),
+                                    worksheet.Cells[row, 2].Value.ToString().Trim(),
+                                    _ngaySinh,
+                                    worksheet.Cells[row, 9].Value == null ? false : worksheet.Cells[row, 9].ToString().Trim() == "1" ? true : false,
+                                    new Guid[0],
+                                    currentUser.Email
+                                    );
+
+                                if (successful != null)
+                                    hocViens.Add(successful);
+                            }
+                        }
+                        return Json(new Models.ResultModel
+                        {
+                            Status = "OK",
+                            Message = "Import thành công các học viên " + String.Join(", ", hocViens.Select(x => x.FullName).ToArray()),
+                            Result = hocViens
                         });
                     }
                 }
             }
-
-            // add list to db ..  
-            // here just read and return  
-
-            return DemoResponse<List<UserInfo>>.GetResult(0, "OK", list);
-        }
-    }
-
-    public class UserInfo
-    {
-        public string UserName { get; set; }
-
-        public int Age { get; set; }
-    }
-
-    public class DemoResponse<T>
-    {
-        public int Code { get; set; }
-
-        public string Msg { get; set; }
-
-        public T Data { get; set; }
-
-        public static DemoResponse<T> GetResult(int code, string msg, T data = default(T))
-        {
-            return new DemoResponse<T>
+            catch (Exception exception)
             {
-                Code = code,
-                Msg = msg,
-                Data = data
-            };
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
     }
 }

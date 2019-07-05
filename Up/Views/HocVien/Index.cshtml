@@ -411,7 +411,8 @@
                                         transition="scale-transition"
                                         offset-y
                                         full-width
-                                        min-width="290px">
+                                        min-width="290px"
+                                        v-if="selectedLopHoc.length > 0">
                                     <v-text-field slot="activator"
                                                   v-model="ngayHocItem.ngayBatDau"
                                                   label="Ngày Bắt Đầu *"
@@ -429,7 +430,8 @@
                                         transition="scale-transition"
                                         offset-y
                                         full-width
-                                        min-width="290px">
+                                        min-width="290px"
+                                        v-if="selectedLopHoc.length > 0">
                                     <v-text-field slot="activator"
                                                   v-model="ngayHocItem.ngayKetThuc"
                                                   label="Ngày Kết Thúc"

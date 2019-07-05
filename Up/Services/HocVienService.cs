@@ -307,7 +307,7 @@ namespace Up.Services
                     QuanHeId = item.QuanHeId,
                     UpdatedBy = item.UpdatedBy,
                     UpdatedDate = item.UpdatedDate?.ToString("dd/MM/yyyy"),
-                    QuanHe = _context.QuanHes.FindAsync(item.QuanHeId).Result.Name,
+                    QuanHe = _context.QuanHes.FindAsync(item.QuanHeId).Result != null ? _context.QuanHes.FindAsync(item.QuanHeId).Result.Name : "",
                     CreatedBy = item.CreatedBy,
                     CreatedDate = item.CreatedDate.ToString("dd/MM/yyyy"),
                     LopHocIds = LopHocIds,

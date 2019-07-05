@@ -453,25 +453,43 @@
 
         async onImport() {
             let that = this;
-            console.log(this.$refs.myFiles.files[0]);
-            await axios
-                ({
-                    url: '/HocVien/Import',
-                    method: 'post',
-                    responseType: 'blob', // important
-                    data: {
-                        formFile: that.$refs.myFiles.files[0]
-                    },
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then(function (response) {
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            if (!that.$refs.myFiles.files.length) {
+                that.snackbar = true;
+                that.messageText = 'Phải chọn file để import !!!';
+                that.color = 'error';
+                return;
+            }
+
+            const fr = new FileReader();
+            fr.readAsDataURL(that.$refs.myFiles.files[0]);
+            fr.addEventListener('load', () => {
+                axios
+                    ({
+                        url: '/HocVien/Import',
+                        method: 'post',
+                        data: {
+                            File: fr.result,
+                            Name: that.$refs.myFiles.files[0].name
+                        }
+                    })
+                    .then(function (response) {
+                        for (let i = 0; i < response.data.result.length; i++) {
+                            that.khoaHocItems.splice(0, 0, response.data.result[i]);
+                        }
+                        
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'success';
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        that.snackbar = true;
+                        that.messageText = 'Import lỗi: ' + error;
+                        that.color = 'error';
+                    });
+            });
+
+            
         },
 
         async GetNgayHocByHocVien() {
