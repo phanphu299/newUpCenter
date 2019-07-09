@@ -384,10 +384,10 @@
             {
                 OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("MauImportHocVien");
 
-                worksheet.Cells["A1:J1"].Merge = true;
-                worksheet.Cells["A1:J1"].Value = "MẪU IMPORT HỌC VIÊN";
-                worksheet.Cells["A1:J1"].Style.Font.Bold = true;
-                worksheet.Cells["A1:J1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells["A1:I1"].Merge = true;
+                worksheet.Cells["A1:I1"].Value = "MẪU IMPORT HỌC VIÊN";
+                worksheet.Cells["A1:I1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:I1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                 worksheet.Cells[1, 12].Value = "Lớp Học";
                 worksheet.Cells[1, 12].Style.Font.Bold = true;
@@ -411,14 +411,13 @@
                 worksheet.Cells[2, 7].Value = "ID Quan Hệ";
                 worksheet.Cells[2, 8].Value = "Facebook Người Thân";
                 worksheet.Cells[2, 9].Value = "SĐT Người Thân";
-                worksheet.Cells[2, 10].Value = "Chèn (1 : true, 0 : false)";
 
-                worksheet.Cells["A2:J2"].Style.Font.Bold = true;
-                worksheet.Cells["A2:J2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A2:J2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells["A2:I2"].Style.Font.Bold = true;
+                worksheet.Cells["A2:I2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A2:I2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 var modelCells = worksheet.Cells["A2"];
-                string modelRange = "A2:J22";
+                string modelRange = "A2:I22";
                 var modelTable = worksheet.Cells[modelRange];
 
 
@@ -483,12 +482,13 @@
                         ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
                         var rowCount = worksheet.Dimension.Rows;
                         Guid lopHocId = new Guid(worksheet.Cells[1, 13].Value.ToString().Trim());
+                        List<Guid> lopHocIds = new List<Guid>();
+                        lopHocIds.Add(lopHocId);
                         List<HocVienViewModel> hocViens = new List<HocVienViewModel>();
 
                         for (int row = 3; row <= rowCount; row++)
                         {
                             if(worksheet.Cells[row, 1].Value != null &&
-                                worksheet.Cells[row, 2].Value != null &&
                                 worksheet.Cells[row, 3].Value != null &&
                                 worksheet.Cells[row, 5].Value != null)
                             {
@@ -503,10 +503,10 @@
                                     worksheet.Cells[row, 9].Value == null ? "" : worksheet.Cells[row, 9].Value.ToString().Trim(),
                                     worksheet.Cells[row, 8].Value == null ? "" : worksheet.Cells[row, 8].Value.ToString().Trim(),
                                     worksheet.Cells[row, 7].Value == null ? quanHe : new Guid(worksheet.Cells[row, 7].Value.ToString().Trim()),
-                                    worksheet.Cells[row, 2].Value.ToString().Trim(),
+                                    worksheet.Cells[row, 2].Value == null ? "" : worksheet.Cells[row, 2].Value.ToString().Trim(),
                                     _ngaySinh,
-                                    worksheet.Cells[row, 9].Value == null ? false : worksheet.Cells[row, 9].ToString().Trim() == "1" ? true : false,
-                                    new Guid[0],
+                                    false,
+                                    lopHocIds.ToArray(),
                                     currentUser.Email
                                     );
 

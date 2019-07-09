@@ -71,6 +71,11 @@
                 console.log(error);
             });
     },
+    filters: {
+        truncate: function (text, length, suffix) {
+            return text.substring(0, length) + suffix;
+        },
+    },
     methods: {
         mappingEditItem(item) {
             this.editedIndex = this.khoaHocItems.indexOf(item);

@@ -57,7 +57,6 @@
             { text: 'SĐT Phụ Huynh', value: 'parentPhone', align: 'left', sortable: true },
             { text: 'Quan Hệ', value: 'quanHe', align: 'left', sortable: true },
             { text: 'Facebook Phụ Huynh', value: 'parentFacebookAccount', align: 'left', sortable: true },
-            { text: 'Chèn', value: 'isAppend', align: 'left', sortable: true },
             { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: true },
             { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: true },
             { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: true },
@@ -112,8 +111,7 @@
     methods: {
         async onUpdate(item) {
             let that = this;
-            if (item.fullName === '' || item.englishName === '' || item.phone === '' ||
-                item.facebookAccount === '' || item.ngaySinh === '') {
+            if (item.fullName === '' || item.phone === '' || item.ngaySinh === '') {
                 this.alertEdit = true;
             }
             else {
@@ -316,8 +314,7 @@
         },
 
         async onSave(item) {
-            if (this.newItem.fullName === '' || this.newItem.englishName === '' || this.newItem.phone === '' ||
-                this.newItem.facebookAccount === '' || this.newItem.ngaySinh === '') {
+            if (this.newItem.fullName === '' || this.newItem.phone === '' || this.newItem.ngaySinh === '') {
                 this.alert = true;
             }
             else {
@@ -473,13 +470,20 @@
                         }
                     })
                     .then(function (response) {
-                        for (let i = 0; i < response.data.result.length; i++) {
-                            that.khoaHocItems.splice(0, 0, response.data.result[i]);
+                        if (response.data.status === "OK") {
+                            for (let i = 0; i < response.data.result.length; i++) {
+                                that.khoaHocItems.splice(0, 0, response.data.result[i]);
+                            }
+
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'success';
                         }
-                        
-                        that.snackbar = true;
-                        that.messageText = response.data.message;
-                        that.color = 'success';
+                        else {
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'error';
+                        }
                     })
                     .catch(function (error) {
                         console.log(error);

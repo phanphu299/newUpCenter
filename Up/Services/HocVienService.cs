@@ -54,9 +54,8 @@ namespace Up.Services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(FullName) || string.IsNullOrWhiteSpace(Phone) ||
-                    string.IsNullOrWhiteSpace(EnglishName) || NgaySinh == null)
-                    throw new Exception("Tên Học Viên, Phone, Fb, Tên Tiếng Anh, Ngày Sinh " +
+                if (string.IsNullOrWhiteSpace(FullName) || string.IsNullOrWhiteSpace(Phone) || NgaySinh == null)
+                    throw new Exception("Tên Học Viên, Phone, Ngày Sinh " +
                         "không được để trống !!!");
 
                 HocVien hocVien = new HocVien();
@@ -245,10 +244,8 @@ namespace Up.Services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(FullName) || string.IsNullOrWhiteSpace(Phone)
-                    || string.IsNullOrWhiteSpace(FacebookAccount) 
-                    || string.IsNullOrWhiteSpace(EnglishName) || NgaySinh == null)
-                    throw new Exception("Tên Học Viên, SĐT, FB, Ngày Khai Giảng không được để trống !!!");
+                if (string.IsNullOrWhiteSpace(FullName) || string.IsNullOrWhiteSpace(Phone) || NgaySinh == null)
+                    throw new Exception("Tên Học Viên, SĐT, Ngày Khai Giảng không được để trống !!!");
 
                 var item = await _context.HocViens
                                         .Where(x => x.HocVienId == HocVienId)

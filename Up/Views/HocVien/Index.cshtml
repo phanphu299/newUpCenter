@@ -40,14 +40,14 @@
                                             <v-text-field label="Họ Và Tên *" required v-model="newItem.fullName"></v-text-field>
                                         </v-flex>
                                         <v-flex xs12 sm4>
-                                            <v-text-field label="English Name *" required v-model="newItem.englishName"></v-text-field>
+                                            <v-text-field label="English Name" required v-model="newItem.englishName"></v-text-field>
                                         </v-flex>
                                         <v-flex xs12 sm4>
                                             <v-text-field label="Số Điện Thoại *" required v-model="newItem.phone"></v-text-field>
                                         </v-flex>
 
                                         <v-flex xs12 sm4>
-                                            <v-text-field label="Facebook *" required v-model="newItem.facebookAccount"></v-text-field>
+                                            <v-text-field label="Facebook" required v-model="newItem.facebookAccount"></v-text-field>
                                         </v-flex>
                                         <v-flex xs12 sm4>
                                             <v-menu v-model="isShowDatePicker"
@@ -85,10 +85,7 @@
                                             <v-text-field label="SĐT Phụ Huynh" v-model="newItem.parentPhone"></v-text-field>
                                         </v-flex>
 
-                                        <v-flex xs12 sm4>
-                                            <v-switch v-model="newItem.isAppend" color="success" label="Chèn"></v-switch>
-                                        </v-flex>
-                                        <v-flex xs12 sm8>
+                                        <v-flex xs12 sm12>
                                             <v-select v-model="newItem.lopHoc"
                                                       :items="itemLopHoc"
                                                       item-text="name"
@@ -231,7 +228,6 @@
                         <td>{{ props.item.parentPhone }}</td>
                         <td>{{ props.item.quanHe }}</td>
                         <td>{{ props.item.parentFacebookAccount }}</td>
-                        <td><v-switch v-model="props.item.isAppend" color="success" hide-details v-on:change="onToggleAppend(props.item.hocVienId)"></v-switch></td>
                         <td>{{ props.item.createdDate }}</td>
                         <td>{{ props.item.createdBy }}</td>
                         <td>{{ props.item.updatedDate }}</td>
@@ -291,14 +287,14 @@
                                 <v-text-field label="Họ Và Tên *" required v-model="itemToEdit.fullName"></v-text-field>
                             </v-flex>
                             <v-flex xs12 sm4>
-                                <v-text-field label="English Name *" required v-model="itemToEdit.englishName"></v-text-field>
+                                <v-text-field label="English Name" required v-model="itemToEdit.englishName"></v-text-field>
                             </v-flex>
                             <v-flex xs12 sm4>
                                 <v-text-field label="Số Điện Thoại *" required v-model="itemToEdit.phone"></v-text-field>
                             </v-flex>
 
                             <v-flex xs12 sm4>
-                                <v-text-field label="Facebook *" required v-model="itemToEdit.facebookAccount"></v-text-field>
+                                <v-text-field label="Facebook" required v-model="itemToEdit.facebookAccount"></v-text-field>
                             </v-flex>
                             <v-flex xs12 sm4>
                                 <v-menu v-model="isShowDatePicker2"

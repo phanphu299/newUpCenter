@@ -125,7 +125,14 @@
                         <td>{{ props.item.tutoringRate }}</td>
                         <td>{{ props.item.basicSalary }}</td>
                         <td>{{ props.item.facebookAccount }}</td>
-                        <td>{{ props.item.diaChi }}</td>
+                        <td>
+                            <v-tooltip top>
+                                <template slot="activator" slot-scope="{ on }">
+                                    <span v-on="on" v-if="props.item.diaChi">{{ props.item.diaChi | truncate(10, '...')}}</span>
+                                </template>
+                                <span>{{ props.item.diaChi}}</span>
+                            </v-tooltip>
+                        </td>
                         <td>{{ props.item.initialName }}</td>
                         <td>{{ props.item.cmnd }}</td>
                         <td>{{ props.item.createdDate }}</td>
