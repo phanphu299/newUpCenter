@@ -15,7 +15,7 @@ namespace Up.Data.Entities
         public string ParentPhone { get; set; }
         public Guid? QuanHeId { get; set; }
         public string ParentFacebookAccount { get; set; }
-        public DateTime NgaySinh { get; set; }
+        public DateTime? NgaySinh { get; set; }
         public string EnglishName { get; set; }
         public bool IsAppend { get; set; }
         public bool IsDisabled { get; set; }

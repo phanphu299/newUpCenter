@@ -32,7 +32,7 @@
             parentFacebookAccount: "",
             lopHoc: [],
             isAppend: false,
-            ngaySinh: new Date().toISOString().substr(0, 10)
+            ngaySinh: ""
         },
         itemToDelete: {},
         itemToEdit: {},
@@ -111,7 +111,7 @@
     methods: {
         async onUpdate(item) {
             let that = this;
-            if (item.fullName === '' || item.phone === '' || item.ngaySinh === '') {
+            if (item.fullName === '' || item.phone === '' ) {
                 this.alertEdit = true;
             }
             else {
@@ -190,8 +190,10 @@
             this.editedIndex = this.khoaHocItems.indexOf(item);
             this.itemToEdit = Object.assign({}, item);
 
-            let [dayKG, monthKG, yearKG] = this.itemToEdit.ngaySinh.split('/');
-            this.itemToEdit.ngaySinh = yearKG + '-' + monthKG + '-' + dayKG;
+            if (itemToEdit.ngaySinh !== "") {
+                let [dayKG, monthKG, yearKG] = this.itemToEdit.ngaySinh.split('/');
+                this.itemToEdit.ngaySinh = yearKG + '-' + monthKG + '-' + dayKG;
+            }
 
         },
 
@@ -314,7 +316,7 @@
         },
 
         async onSave(item) {
-            if (this.newItem.fullName === '' || this.newItem.phone === '' || this.newItem.ngaySinh === '') {
+            if (this.newItem.fullName === '' || this.newItem.phone === '' ) {
                 this.alert = true;
             }
             else {

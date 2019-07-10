@@ -50,12 +50,12 @@ namespace Up.Services
 
         public async Task<HocVienViewModel> CreateHocVienAsync(string FullName, string Phone, string FacebookAccount, 
             string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid? QuanHeId, 
-            string EnglishName, DateTime NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee)
+            string EnglishName, DateTime? NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(FullName) || string.IsNullOrWhiteSpace(Phone) || NgaySinh == null)
-                    throw new Exception("Tên Học Viên, Phone, Ngày Sinh " +
+                if (string.IsNullOrWhiteSpace(FullName) || string.IsNullOrWhiteSpace(Phone))
+                    throw new Exception("Tên Học Viên, Phone " +
                         "không được để trống !!!");
 
                 HocVien hocVien = new HocVien();
@@ -95,7 +95,7 @@ namespace Up.Services
                 {
                     FullName = hocVien.FullName,
                     IsAppend = hocVien.IsAppend,
-                    NgaySinh = hocVien.NgaySinh.ToString("dd/MM/yyyy"),
+                    NgaySinh = hocVien.NgaySinh == null ? "" : hocVien.NgaySinh.Value.ToString("dd/MM/yyyy"),
                     EnglishName = hocVien.EnglishName,
                     QuanHeId = hocVien.QuanHeId,
                     ParentFacebookAccount = hocVien.ParentFacebookAccount,
@@ -158,7 +158,7 @@ namespace Up.Services
                     HocVienId = x.HocVienId,
                     IsAppend = x.IsAppend,
                     IsDisabled = x.IsDisabled,
-                    NgaySinh = x.NgaySinh.ToString("dd/MM/yyyy"),
+                    NgaySinh = x.NgaySinh == null ? "" : x.NgaySinh.Value.ToString("dd/MM/yyyy"),
                     ParentFacebookAccount = x.ParentFacebookAccount,
                     ParentFullName = x.ParentFullName,
                     ParentPhone = x.ParentPhone,
@@ -193,7 +193,7 @@ namespace Up.Services
                     HocVienId = x.HocVienId,
                     IsAppend = x.IsAppend,
                     IsDisabled = x.IsDisabled,
-                    NgaySinh = x.NgaySinh.ToString("dd/MM/yyyy"),
+                    NgaySinh = x.NgaySinh == null ? "" : x.NgaySinh.Value.ToString("dd/MM/yyyy"),
                     ParentFacebookAccount = x.ParentFacebookAccount,
                     ParentFullName = x.ParentFullName,
                     ParentPhone = x.ParentPhone,
@@ -240,12 +240,12 @@ namespace Up.Services
 
         public async Task<HocVienViewModel> UpdateHocVienAsync(Guid HocVienId, string FullName, string Phone, string FacebookAccount,
            string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid? QuanHeId, string EnglishName,
-           DateTime NgaySinh, Guid[] LopHocIds, string LoggedEmployee)
+           DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(FullName) || string.IsNullOrWhiteSpace(Phone) || NgaySinh == null)
-                    throw new Exception("Tên Học Viên, SĐT, Ngày Khai Giảng không được để trống !!!");
+                if (string.IsNullOrWhiteSpace(FullName) || string.IsNullOrWhiteSpace(Phone))
+                    throw new Exception("Tên Học Viên, SĐT không được để trống !!!");
 
                 var item = await _context.HocViens
                                         .Where(x => x.HocVienId == HocVienId)
@@ -292,7 +292,7 @@ namespace Up.Services
                 return new HocVienViewModel
                 {
                     FullName = item.FullName,
-                    NgaySinh = item.NgaySinh.ToString("dd/MM/yyyy"),
+                    NgaySinh = item.NgaySinh == null ? "" : item.NgaySinh.Value.ToString("dd/MM/yyyy"),
                     EnglishName = item.EnglishName,
                     ParentFacebookAccount = item.ParentFacebookAccount,
                     ParentPhone = item.ParentPhone,

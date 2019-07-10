@@ -62,7 +62,10 @@
 
             try
             {
-                DateTime _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
+                DateTime? _ngaySinh = null;
+
+                if(!string.IsNullOrWhiteSpace(model.NgaySinh) || model.NgaySinh != "")
+                    _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
 
                 var successful = await _hocVienService.CreateHocVienAsync(model.FullName, model.Phone, model.FacebookAccount, model.ParentFullName,
                     model.ParentPhone, model.ParentFacebookAccount, model.QuanHeId, model.EnglishName, _ngaySinh, model.IsAppend, model.LopHocIds, currentUser.Email);
@@ -273,7 +276,10 @@
 
             try
             {
-                DateTime _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
+                DateTime? _ngaySinh = null;
+
+                if (!string.IsNullOrWhiteSpace(model.NgaySinh) || model.NgaySinh != "")
+                    _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
 
                 var successful = await _hocVienService.UpdateHocVienAsync(model.HocVienId, model.FullName, model.Phone,
                    model.FacebookAccount, model.ParentFullName, model.ParentPhone, model.ParentFacebookAccount, model.QuanHeId,
