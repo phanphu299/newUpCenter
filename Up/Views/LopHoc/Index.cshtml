@@ -380,31 +380,54 @@
                 </v-card-title>
 
                 <v-card-text>
-                    <v-container>
                         
                         <v-layout wrap>
-                            <v-text-field v-model="searchDiemDanh"
-                                          append-icon="search"
-                                          label="Tìm Kiếm"
-                                          single-line
-                                          v-if="diemDanhItems.length > 0"
-                                          hide-details></v-text-field>
-                            <v-data-table :headers="headersDiemDanh"
-                                          :items="diemDanhItems"
-                                          v-if="diemDanhItems.length > 0"
-                                          :search="searchDiemDanh">
-                                <template slot="items" slot-scope="props">
-                                    <td>{{ props.item.hocVien}}</td>
-                                    <td>{{ props.item.ngayDiemDanh}}</td>
-                                    <td><v-switch v-model="props.item.isOff" color="error" hide-details readonly></v-switch></td>
-                                    <td><v-switch v-model="props.item.isDuocNghi" color="error" hide-details readonly></v-switch></td>
-                                </template>
-                                <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                                    Không tìm thấy "{{ search }}".
-                                </v-alert>
-                            </v-data-table>
+                            <v-flex xs12 sm4>
+                                <v-select :items="itemThang"
+                                          v-model="selectedThang"
+                                          chips
+                                          label="Chọn Tháng"></v-select>
+                            </v-flex>
+
+                            <v-flex xs12 sm4>
+                                <v-select :items="itemNam"
+                                          v-model="selectedNam"
+                                          chips
+                                          label="Chọn Năm"></v-select>
+                            </v-flex>
+
+                            <v-flex xs12 sm4>
+                                <v-btn color="primary" v-on:click="onTinhDiemDanh">Tìm</v-btn>
+                            </v-flex>
                         </v-layout>
-                    </v-container>
+
+                        <v-container fluid v-if="diemDanhItems.length > 0">
+                            <v-layout wrap>
+                                <v-flex>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Học Viên</th>
+                                                <th v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(item, index) in diemDanhItems" :key="index">
+                                                <td>{{ item.label }}</td>
+                                                <td v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
+                                                    <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
+                                                        <i v-if="content.day == column && content.isOff == false">x</i>
+                                                        <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == true">off</i>
+                                                        <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == null"></i>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>

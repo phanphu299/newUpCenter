@@ -22,5 +22,6 @@
         public bool IsOff { get; set; }
         public bool? DuocNghi { get; set; }
         public DateTime Dates { get; set; }
+        public int Day { get; set; }
     }
 }

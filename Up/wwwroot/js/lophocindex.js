@@ -27,6 +27,10 @@
             sach: [],
             ngayKhaiGiang: new Date().toISOString().substr(0, 10)
         },
+        selectedThang: '',
+        selectedNam: '',
+        itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+        itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0],
         itemToDelete: {},
         itemToDiemDanh: {},
         itemToEdit: {},
@@ -67,7 +71,8 @@
         itemHocPhi: [],
         itemSach: [],
         itemGiaoVien: [],
-        diemDanhItems: []
+        diemDanhItems: [],
+        soNgayHoc:[]
     },
     async beforeCreate() {
         let that = this;
@@ -261,11 +266,21 @@
         mappingDiemDanhItem(item) {
             this.editedIndex = this.khoaHocItems.indexOf(item);
             this.itemToDiemDanh = Object.assign({}, item);
+        },
 
+        async onTinhDiemDanh(item) {
             let that = this;
-            axios.get('/DiemDanh/GetDiemDanhByLopHocAsync?LopHocId=' + item.lopHocId)
+            axios.get('/DiemDanh/GetDiemDanhByLopHocAsync?LopHocId=' + that.itemToDiemDanh.lopHocId + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
                 .then(function (response) {
                     that.diemDanhItems = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+            axios.get('/DiemDanh/GetSoNgayHoc?LopHocId=' + that.itemToDiemDanh.lopHocId + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
+                .then(function (response) {
+                    that.soNgayHoc = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);

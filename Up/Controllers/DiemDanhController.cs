@@ -55,10 +55,23 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDiemDanhByLopHocAsync(Guid LopHocId)
+        public async Task<IActionResult> GetDiemDanhByLopHocAsync(Guid LopHocId, int month, int year)
         {
             var model = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId);
-            return Json(model);
+            return Json(model
+                        .Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year)
+                        .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
+                        {
+                            Label = x.Key,
+                            ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
+                            {
+                                Dates = m.NgayDiemDanh_Date,
+                                DuocNghi = m.IsDuocNghi,
+                                IsOff = m.IsOff,
+                                Day = m.NgayDiemDanh_Date.Day
+                            }).ToList()
+                        }).ToList()
+                );
         }
 
         [HttpPost]
@@ -207,6 +220,13 @@
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetSoNgayHoc(Guid LopHocId, int month, int year)
+        {
+            var model = await _hocPhiService.SoNgayHocAsync(LopHocId, month, year);
+            return Json(model);
+        }
+
         private String Number2String(int number, bool isCaps)
         {
             Char c = (Char)((isCaps ? 65 : 97) + (number - 1));
@@ -223,7 +243,8 @@
                 var groupedModel = model.GroupBy(x => x.HocVien).Select(x => new ThongKeModel
                 {
                     Label = x.Key,
-                    ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel {
+                    ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
+                    {
                         Dates = m.NgayDiemDanh_Date,
                         DuocNghi = m.IsDuocNghi,
                         IsOff = m.IsOff,
@@ -247,12 +268,12 @@
 
                 worksheet.Cells[3, 1].Value = "No";
                 worksheet.Cells[3, 2].Value = "Tên";
-                for(int i = 0; i < soNgayHoc.Count; i++)
+                for (int i = 0; i < soNgayHoc.Count; i++)
                 {
                     worksheet.Cells[3, i + 3].Value = soNgayHoc[i];
                 }
                 worksheet.Cells[3, soNgayHoc.Count + 3].Value = "Ghi Chú";
-                
+
                 worksheet.Cells["A3:" + column + "3"].Style.Font.Bold = true;
                 worksheet.Cells["A3:" + column + "3"].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 worksheet.Cells["A3:" + column + "3"].Style.Fill.BackgroundColor.SetColor(Color.Orange);
@@ -275,7 +296,7 @@
                     worksheet.Cells[i + 4, 2].Value = groupedModel[i].Label;
                     for (int j = 0; j < soNgayHoc.Count; j++)
                     {
-                        for(int z = 0; z < groupedModel[i].ThongKeDiemDanh.Count; z++)
+                        for (int z = 0; z < groupedModel[i].ThongKeDiemDanh.Count; z++)
                         {
                             var ngay = groupedModel[i].ThongKeDiemDanh[z].Dates.Day;
                             var off = groupedModel[i].ThongKeDiemDanh[z].IsOff;
