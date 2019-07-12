@@ -58,12 +58,6 @@
             { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: true },
             { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: true }
         ],
-        headersDiemDanh: [
-            { text: 'Học Viên', value: 'hocVien', align: 'left', sortable: false },
-            { text: 'Ngày Học', value: 'ngayDiemDanh', align: 'left', sortable: false },
-            { text: 'Vắng', value: '', align: 'left', sortable: false },
-            { text: 'Lớp Được Nghỉ', value: '', align: 'left', sortable: false }
-        ],
         khoaHocItems: [],
         itemKhoaHoc: [],
         itemGioHoc: [],
@@ -268,23 +262,32 @@
             this.itemToDiemDanh = Object.assign({}, item);
         },
 
-        async onTinhDiemDanh(item) {
-            let that = this;
-            axios.get('/DiemDanh/GetDiemDanhByLopHocAsync?LopHocId=' + that.itemToDiemDanh.lopHocId + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
-                .then(function (response) {
-                    that.diemDanhItems = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+        async onTinhDiemDanh() {
+            if (this.selectedNam !== '' && this.selectedThang !== '') {
+                let that = this;
+                axios.get('/DiemDanh/GetDiemDanhByLopHocAsync?LopHocId=' + that.itemToDiemDanh.lopHocId + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
+                    .then(function (response) {
+                        that.diemDanhItems = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
 
-            axios.get('/DiemDanh/GetSoNgayHoc?LopHocId=' + that.itemToDiemDanh.lopHocId + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
-                .then(function (response) {
-                    that.soNgayHoc = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                await axios.get('/DiemDanh/GetSoNgayHoc?LopHocId=' + that.itemToDiemDanh.lopHocId + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
+                    .then(function (response) {
+                        that.soNgayHoc = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+            else {
+                this.snackbar = true;
+                this.messageText = "Phải chọn Tháng và Năm trước khi tìm!!!";
+                this.color = 'error';
+                this.dialogEdit = false;
+            }
+            
         },
 
         async onSave(item) {

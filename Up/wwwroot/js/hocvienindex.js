@@ -34,6 +34,10 @@
             isAppend: false,
             ngaySinh: ""
         },
+        selectedThang: '',
+        selectedNam: '',
+        itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+        itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0],
         itemToDelete: {},
         itemToEdit: {},
         itemToDiemDanh: {},
@@ -62,11 +66,6 @@
             { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: true },
             { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: true }
         ],
-        headersDiemDanh: [
-            { text: 'Ngày Học', value: 'ngayDiemDanh', align: 'left', sortable: false },
-            { text: 'Vắng', value: '', align: 'left', sortable: false },
-            { text: 'Lớp Được Nghỉ', value: '', align: 'left', sortable: false }
-        ],
         khoaHocItems: [],
         diemDanhItems: [],
         ngayHocItem: {
@@ -79,7 +78,8 @@
         itemThemLop: [],
         itemNgayHoc: [],
         selectedLopHoc: {},
-        selectedArrayLopHoc: []
+        selectedArrayLopHoc: [],
+        soNgayHoc: []
     },
     async beforeCreate() {
         let that = this;
@@ -111,7 +111,7 @@
     methods: {
         async onUpdate(item) {
             let that = this;
-            if (item.fullName === '' || item.phone === '' ) {
+            if (item.fullName === '' || item.phone === '') {
                 this.alertEdit = true;
             }
             else {
@@ -157,7 +157,7 @@
             }
         },
 
-        async onToggleAppend (item) {
+        async onToggleAppend(item) {
             let that = this;
             await axios({
                 method: 'put',
@@ -166,24 +166,24 @@
                     HocVienId: item
                 }
             })
-            .then(function (response) {
-                if (response.data.status === "OK") {
+                .then(function (response) {
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Cập nhật thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
                     that.snackbar = true;
-                    that.messageText = 'Cập nhật thành công !!!';
-                    that.color = 'success';
-                }
-                else {
-                    that.snackbar = true;
-                    that.messageText = response.data.message;
+                    that.messageText = 'Cập nhật lỗi: ' + error;
                     that.color = 'error';
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-                that.snackbar = true;
-                that.messageText = 'Cập nhật lỗi: ' + error;
-                that.color = 'error';
-            });
+                });
         },
 
         mappingEditItem(item) {
@@ -199,7 +199,7 @@
 
         mappingDiemDanhItem(item) {
             this.editedIndex = this.khoaHocItems.indexOf(item);
-            this.itemToDiemDanh = Object.assign({}, item);   
+            this.itemToDiemDanh = Object.assign({}, item);
 
             let that = this;
             axios.get('/LopHoc/GetLopHocByHocVienIdAsync?HocVienId=' + item.hocVienId)
@@ -226,7 +226,7 @@
         },
 
         mappingNgayHocItem(item) {
-            
+
             this.editedIndex = this.khoaHocItems.indexOf(item);
             this.itemToNgayHoc = Object.assign({}, item);
             this.ngayHocItem.ngayBatDau = "";
@@ -316,7 +316,7 @@
         },
 
         async onSave(item) {
-            if (this.newItem.fullName === '' || this.newItem.phone === '' ) {
+            if (this.newItem.fullName === '' || this.newItem.phone === '') {
                 this.alert = true;
             }
             else {
@@ -400,13 +400,30 @@
 
         async GetDiemDanhByHocVien() {
             let that = this;
-            await axios.get('/DiemDanh/GetDiemDanhByHocVienAndLopHocAsync?HocVienId=' + that.itemToDiemDanh.hocVienId + '&LopHocId=' + that.selectedLopHoc)
-                .then(function (response) {
-                    that.diemDanhItems = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            if (this.selectedLopHoc !== '' && this.selectedNam !== '' && this.selectedThang !== '') {
+                await axios.get('/DiemDanh/GetDiemDanhByHocVienAndLopHocAsync?HocVienId=' + that.itemToDiemDanh.hocVienId + '&LopHocId=' + that.selectedLopHoc + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
+                    .then(function (response) {
+                        that.diemDanhItems = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                await axios.get('/DiemDanh/GetSoNgayHoc?LopHocId=' + that.selectedLopHoc + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
+                    .then(function (response) {
+                        that.soNgayHoc = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+            else {
+                that.snackbar = true;
+                that.messageText = "Phải chọn Lớp Học, Tháng và Năm trước khi tìm!!!";
+                that.color = 'error';
+                that.dialogEdit = false;
+            }
+            
         },
 
         forceFileDownload(response, name) {
@@ -495,7 +512,7 @@
                     });
             });
 
-            
+
         },
 
         async GetNgayHocByHocVien() {

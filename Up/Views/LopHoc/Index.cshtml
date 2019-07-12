@@ -404,17 +404,17 @@
                         <v-container fluid v-if="diemDanhItems.length > 0">
                             <v-layout wrap>
                                 <v-flex>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Học Viên</th>
-                                                <th v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
+                                    <table class="table" style="border: 1px solid black;">
+                                        <thead style="background-color: #dee2e6;">
+                                            <tr style="border: 1px solid black;">
+                                                <th style="border: 1px solid black;">Học Viên</th>
+                                                <th style="border: 1px solid black;" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(item, index) in diemDanhItems" :key="index">
-                                                <td>{{ item.label }}</td>
-                                                <td v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
+                                            <tr style="border: 1px solid black;" v-for="(item, index) in diemDanhItems" :key="index">
+                                                <td style="border: 1px solid black;">{{ item.label }}</td>
+                                                <td style="border: 1px solid black;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
                                                     <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
                                                         <i v-if="content.day == column && content.isOff == false">x</i>
                                                         <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == true">off</i>

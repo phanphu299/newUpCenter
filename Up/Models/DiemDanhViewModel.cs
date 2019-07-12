@@ -11,5 +11,6 @@ namespace Up.Models
         public string HocVien { get; set; }
 
         public DateTime NgayDiemDanh_Date { get; set; }
+        public int Day { get; set; }
     }
 }

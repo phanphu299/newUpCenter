@@ -514,15 +514,14 @@
                     <v-container grid-list-md>
                         <v-layout wrap>
 
-                            <v-flex xs12 sm4>
+                            <v-flex xs12 sm3>
                                 <v-select v-model="selectedLopHoc"
                                           :items="itemDiemDanh"
                                           item-text="name"
                                           item-value="lopHocId"
                                           attach
                                           chips
-                                          label="Chọn Lớp Học"
-                                          v-on:change="GetDiemDanhByHocVien">
+                                          label="Chọn Lớp Học">
                                     <template v-slot:selection="data">
                                         <v-chip :selected="data.selected"
                                                 color="green"
@@ -533,22 +532,48 @@
                                 </v-select>
                             </v-flex>
 
-                            <v-flex>
-                                <v-data-table :headers="headersDiemDanh"
-                                              :items="diemDanhItems"
-                                              v-if="diemDanhItems.length > 0"
-                                              :search="searchDiemDanh">
-                                    <template slot="items" slot-scope="props">
-                                        <td>{{ props.item.ngayDiemDanh}}</td>
-                                        <td><v-switch v-model="props.item.isOff" color="error" hide-details readonly></v-switch></td>
-                                        <td><v-switch v-model="props.item.isDuocNghi" color="error" hide-details readonly></v-switch></td>
-                                    </template>
-                                    <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                                        Không tìm thấy "{{ search }}".
-                                    </v-alert>
-                                </v-data-table>
+                            <v-flex xs12 sm3>
+                                <v-select :items="itemThang"
+                                          v-model="selectedThang"
+                                          chips
+                                          label="Chọn Tháng"></v-select>
                             </v-flex>
 
+                            <v-flex xs12 sm3>
+                                <v-select :items="itemNam"
+                                          v-model="selectedNam"
+                                          chips
+                                          label="Chọn Năm"></v-select>
+                            </v-flex>
+
+                            <v-flex xs12 sm3>
+                                <v-btn color="primary" v-on:click="GetDiemDanhByHocVien">Tìm</v-btn>
+                            </v-flex>
+
+                            <v-container fluid v-if="diemDanhItems.length > 0">
+                                <v-layout wrap>
+                                    <v-flex>
+                                        <table class="table" style="border: 1px solid black;">
+                                            <thead style="background-color: #dee2e6;">
+                                                <tr style="border: 1px solid black;">
+                                                    <th style="border: 1px solid black;" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr style="border: 1px solid black;">
+                                                    <td style="border: 1px solid black;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
+                                                        <span  v-for="(item, index) in diemDanhItems" :key="index">
+                                                            <i v-if="item.day == column && item.isOff == false">x</i>
+                                                            <i v-else-if="item.day == column && item.isOff == true && item.isDuocNghi == true">off</i>
+                                                            <i v-else-if="item.day == column && item.isOff == true && item.isDuocNghi == null"></i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </v-flex>
+                                </v-layout>
+                            </v-container>
 
                         </v-layout>
                     </v-container>

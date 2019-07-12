@@ -137,7 +137,9 @@
                                 {
                                     IsDuocNghi = x.IsDuocNghi,
                                     IsOff = x.IsOff,
-                                    NgayDiemDanh = x.NgayDiemDanh.ToString("dd/MM/yyyy")
+                                    NgayDiemDanh = x.NgayDiemDanh.ToString("dd/MM/yyyy"),
+                                    NgayDiemDanh_Date = x.NgayDiemDanh,
+                                    Day = x.NgayDiemDanh.Day
                                 })
                                 .ToListAsync();
         }
