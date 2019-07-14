@@ -9,7 +9,6 @@ namespace Up.Services
     public interface ISachService
     {
         Task<List<SachViewModel>> GetSachAsync();
-        Task<List<SachViewModel>> GetSachByLopHocIdAsync(Guid LopHocId);
         Task<SachViewModel> CreateSachAsync(string Name, double Gia, string LoggedEmployee);
         Task<bool> UpdateSachAsync(Guid SachId, string Name, double Gia, string LoggedEmployee);
         Task<bool> DeleteSachAsync(Guid SachId, string LoggedEmployee);

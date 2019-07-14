@@ -1,7 +1,7 @@
 ﻿<aside id="left-sidebar-nav" class="nav-expanded nav-lock nav-collapsible">
     <div class="brand-sidebar">
         <h1 class="logo-wrapper">
-            <a href="index.html" class="brand-logo darken-1">
+            <a asp-controller="Home" asp-action="Index" class="brand-logo darken-1">
                 <img src="~/layout_page/images/logo/new_logo.png" alt="materialize logo">
                 <span class="logo-text hide-on-med-and-down">UP Center</span>
             </a>
@@ -23,36 +23,38 @@
                     </a>
                     <div class="collapsible-body">
                         <ul>
-                            <li>
-                                <a asp-area="" asp-controller="Category" asp-action="KhoaHocIndex">
-                                    <i class="material-icons">keyboard_arrow_right</i>
-                                    <span> Khóa Học</span>
-                                </a>
-                            </li>
+
                             <li>
                                 <a asp-area="" asp-controller="LopHoc" asp-action="Index">
                                     <i class="material-icons">keyboard_arrow_right</i>
                                     <span> Lớp Học</span>
                                 </a>
                             </li>
+
                             <li>
-                                <a asp-area="" asp-controller="HocVien" asp-action="Index">
+                                <a asp-area="" asp-controller="Category" asp-action="SachIndex">
                                     <i class="material-icons">keyboard_arrow_right</i>
-                                    <span> Học Viên</span>
+                                    <span> Tài Liệu</span>
                                 </a>
                             </li>
+                            
+                        </ul>
+                    </div>
+                </li>
+                <li class="bold">
+                    <a class="collapsible-header waves-effect waves-cyan">
+                        <i class="material-icons">class</i>
+                        <span class="nav-text">Thông Tin Khóa Học</span>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
                             <li>
-                                <a asp-area="" asp-controller="Category" asp-action="LoaiGiaoVienIndex">
+                                <a asp-area="" asp-controller="Category" asp-action="KhoaHocIndex">
                                     <i class="material-icons">keyboard_arrow_right</i>
-                                    <span>Loại Giáo Viên</span>
+                                    <span> Khóa Học</span>
                                 </a>
                             </li>
-                            <li>
-                                <a asp-area="" asp-controller="GiaoVien" asp-action="Index">
-                                    <i class="material-icons">keyboard_arrow_right</i>
-                                    <span> Giáo Viên</span>
-                                </a>
-                            </li>
+
                             <li>
                                 <a asp-area="" asp-controller="Category" asp-action="NgayHocIndex">
                                     <i class="material-icons">keyboard_arrow_right</i>
@@ -71,16 +73,52 @@
                                     <span> Giờ Học</span>
                                 </a>
                             </li>
+
+                        </ul>
+                    </div>
+                </li>
+                <li class="bold">
+                    <a class="collapsible-header waves-effect waves-cyan">
+                        <i class="material-icons">school</i>
+                        <span class="nav-text">Quản Lý Học Viên</span>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a asp-area="" asp-controller="HocVien" asp-action="Index">
+                                    <i class="material-icons">keyboard_arrow_right</i>
+                                    <span> Học Viên</span>
+                                </a>
+                            </li>
+
                             <li>
                                 <a asp-area="" asp-controller="Category" asp-action="QuanHeIndex">
                                     <i class="material-icons">keyboard_arrow_right</i>
                                     <span> Quan Hệ</span>
                                 </a>
                             </li>
+
+                        </ul>
+                    </div>
+                </li>
+                <li class="bold">
+                    <a class="collapsible-header waves-effect waves-cyan">
+                        <i class="material-icons">people</i>
+                        <span class="nav-text">Quản Lý Nhân Viên</span>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+
                             <li>
-                                <a asp-area="" asp-controller="Category" asp-action="SachIndex">
+                                <a asp-area="" asp-controller="Category" asp-action="LoaiGiaoVienIndex">
                                     <i class="material-icons">keyboard_arrow_right</i>
-                                    <span> Sách</span>
+                                    <span>Loại Giáo Viên</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="GiaoVien" asp-action="Index">
+                                    <i class="material-icons">keyboard_arrow_right</i>
+                                    <span> Giáo Viên</span>
                                 </a>
                             </li>
                             <li>
@@ -89,6 +127,18 @@
                                     <span> Nhân Viên Khác</span>
                                 </a>
                             </li>
+
+                        </ul>
+                    </div>
+                </li>
+                <li class="bold">
+                    <a class="collapsible-header waves-effect waves-cyan">
+                        <i class="material-icons">attach_money</i>
+                        <span class="nav-text">Doanh Thu & Chi Phí</span>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+
                             <li>
                                 <a asp-area="" asp-controller="Category" asp-action="StaticExpenseIndex">
                                     <i class="material-icons">keyboard_arrow_right</i>
@@ -101,6 +151,20 @@
                                     <span> Học Viên Nợ</span>
                                 </a>
                             </li>
+
+                            <li>
+                                <a asp-area="" asp-controller="HocPhi" asp-action="Index">
+                                    <i class="material-icons">keyboard_arrow_right</i>
+                                    <span> Tính Học Phí</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="ChiPhi" asp-action="Index">
+                                    <i class="material-icons">keyboard_arrow_right</i>
+                                    <span> Tính Chi Phí</span>
+                                </a>
+                            </li>
+
                         </ul>
                     </div>
                 </li>
@@ -108,18 +172,6 @@
                     <a asp-area="" asp-controller="DiemDanh" asp-action="Index" class="waves-effect waves-cyan">
                         <i class="material-icons">list_alt</i>
                         <span class="nav-text">Điểm Danh</span>
-                    </a>
-                </li>
-                <li class="bold">
-                    <a asp-area="" asp-controller="HocPhi" asp-action="Index" class="waves-effect waves-cyan">
-                        <i class="material-icons">attach_money</i>
-                        <span class="nav-text">Tính Học Phí</span>
-                    </a>
-                </li>
-                <li class="bold">
-                    <a asp-area="" asp-controller="ChiPhi" asp-action="Index" class="waves-effect waves-cyan">
-                        <i class="material-icons">money_off</i>
-                        <span class="nav-text">Tính Chi Phí</span>
                     </a>
                 </li>
                 <li class="bold">

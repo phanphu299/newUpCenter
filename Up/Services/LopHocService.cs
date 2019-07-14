@@ -18,7 +18,7 @@
             _context = context;
         }
 
-        public async Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId, Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, Guid[] SachIds, Guid GiaoVienId, string LoggedEmployee)
+        public async Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId, Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, Guid GiaoVienId, string LoggedEmployee)
         {
             try
             {
@@ -37,21 +37,6 @@
                 lopHoc.CreatedDate = DateTime.Now;
 
                 _context.LopHocs.Add(lopHoc);
-
-                if (SachIds.Length > 0)
-                {
-                    foreach (Guid item in SachIds)
-                    {
-                        LopHoc_Sach lopHoc_Sach = new LopHoc_Sach();
-                        lopHoc_Sach.LopHoc_SachId = new Guid();
-                        lopHoc_Sach.LopHocId = lopHoc.LopHocId;
-                        lopHoc_Sach.SachId = item;
-                        lopHoc_Sach.CreatedBy = LoggedEmployee;
-                        lopHoc_Sach.CreatedDate = DateTime.Now;
-
-                        _context.LopHoc_Sachs.Add(lopHoc_Sach);
-                    }
-                }
                 await _context.SaveChangesAsync();
 
                 return new LopHocViewModel
@@ -74,14 +59,7 @@
                     HocPhiId = lopHoc.HocPhiId,
                     HocPhi = _context.HocPhis.FindAsync(lopHoc.HocPhiId).Result.Gia,
                     KhoaHoc = _context.KhoaHocs.FindAsync(lopHoc.KhoaHocId).Result.Name,
-                    NgayKetThuc = lopHoc.NgayKetThuc != null ? ((DateTime)lopHoc.NgayKetThuc).ToString("dd/MM/yyyy") : "",
-                    SachList = await _context.LopHoc_Sachs.Where(x => x.LopHocId == lopHoc.LopHocId).Select(x => new SachViewModel
-                    {
-                        SachId = x.SachId,
-                        Gia = x.Sach.Gia,
-                        Name = x.Sach.Name
-                    }).ToListAsync(),
-                    SachIds = SachIds
+                    NgayKetThuc = lopHoc.NgayKetThuc != null ? ((DateTime)lopHoc.NgayKetThuc).ToString("dd/MM/yyyy") : ""
                 };
             }
             catch (Exception exception)
@@ -101,12 +79,12 @@
                 if (item == null)
                     throw new Exception("Không tìm thấy Lớp Học !!!");
 
-                var _lopHoc_Sach = await _context.LopHoc_Sachs
+                var _lopHoc_HocVien = await _context.HocVien_LopHocs
                                                 .Where(x => x.LopHocId == item.LopHocId)
                                                 .ToListAsync();
 
-                if (_lopHoc_Sach.Any())
-                    _context.LopHoc_Sachs.RemoveRange(_lopHoc_Sach);
+                if (_lopHoc_HocVien.Any())
+                    throw new Exception("Vẫn còn học viên theo học Lớp Học này !!!");
 
                 item.IsDisabled = true;
                 item.UpdatedBy = LoggedEmployee;
@@ -171,14 +149,7 @@
                     NgayKhaiGiang = x.NgayKhaiGiang.ToString("dd/MM/yyyy"),
                     NgayKetThuc = x.NgayKetThuc != null ? ((DateTime)x.NgayKetThuc).ToString("dd/MM/yyyy") : "",
                     UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
-                    SachIds = x.LopHoc_Sachs.Select(p => p.SachId).ToArray(),
-                    SachList = x.LopHoc_Sachs.Select(p => new SachViewModel
-                    {
-                        SachId = p.SachId,
-                        Gia = p.Sach.Gia,
-                        Name = p.Sach.Name
-                    }).ToList()
+                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
                 })
                 .ToListAsync();
         }
@@ -273,7 +244,7 @@
         }
 
         public async Task<LopHocViewModel> UpdateLopHocAsync(Guid LopHocId, string Name, Guid KhoaHocId, Guid NgayHocId,
-            Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, DateTime? NgayKetThuc, Guid[] SachIds, Guid GiaoVienId, string LoggedEmployee)
+            Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, DateTime? NgayKetThuc, Guid GiaoVienId, string LoggedEmployee)
         {
             try
             {
@@ -300,28 +271,6 @@
                 if (NgayKetThuc != null)
                     item.NgayKetThuc = NgayKetThuc;
 
-                var _lopHoc_Sach = await _context.LopHoc_Sachs
-                                                    .Where(x => x.LopHocId == item.LopHocId)
-                                                    .ToListAsync();
-
-                if (_lopHoc_Sach.Any())
-                    _context.LopHoc_Sachs.RemoveRange(_lopHoc_Sach);
-
-                if (SachIds.Length > 0)
-                {
-                    foreach (Guid sach in SachIds)
-                    {
-                        LopHoc_Sach lopHoc_Sach = new LopHoc_Sach();
-                        lopHoc_Sach.LopHoc_SachId = new Guid();
-                        lopHoc_Sach.LopHocId = item.LopHocId;
-                        lopHoc_Sach.SachId = sach;
-                        lopHoc_Sach.CreatedBy = LoggedEmployee;
-                        lopHoc_Sach.CreatedDate = DateTime.Now;
-
-                        _context.LopHoc_Sachs.Add(lopHoc_Sach);
-                    }
-                }
-
                 await _context.SaveChangesAsync();
                 return new LopHocViewModel
                 {
@@ -343,16 +292,7 @@
                     IsCanceled = item.IsCanceled,
                     IsGraduated = item.IsGraduated,
                     KhoaHoc = _context.KhoaHocs.FindAsync(item.KhoaHocId).Result.Name,
-                    SachIds = SachIds,
-                    NgayKetThuc = item.NgayKetThuc != null ? ((DateTime)item.NgayKetThuc).ToString("dd/MM/yyyy") : "",
-                    SachList = await _context.LopHoc_Sachs
-                                        .Where(x => x.LopHocId == item.LopHocId)
-                                        .Select(x => new SachViewModel
-                                        {
-                                            Gia = x.Sach.Gia,
-                                            Name = x.Sach.Name,
-                                            SachId = x.SachId
-                                        }).ToListAsync()
+                    NgayKetThuc = item.NgayKetThuc != null ? ((DateTime)item.NgayKetThuc).ToString("dd/MM/yyyy") : ""
                 };
             }
             catch (Exception exception)

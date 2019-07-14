@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
-using Up.Services;
-
+﻿
 namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using System;
+    using System.Threading.Tasks;
+    using Up.Services;
+
     public class LopHocController : Controller
     {
         private readonly ILopHocService _lopHocService;
@@ -65,7 +66,7 @@ namespace Up.Controllers
             {
                 DateTime _ngayKhaiGiang = Convert.ToDateTime(model.NgayKhaiGiang, System.Globalization.CultureInfo.InvariantCulture);
 
-                var successful = await _lopHocService.CreateLopHocAsync(model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang, model.SachIds, model.GiaoVienId, currentUser.Email);
+                var successful = await _lopHocService.CreateLopHocAsync(model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang, model.GiaoVienId, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -157,7 +158,7 @@ namespace Up.Controllers
 
                 var successful = await _lopHocService.UpdateLopHocAsync(model.LopHocId, model.Name,
                     model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang,
-                    _ngayKetThuc, model.SachIds, model.GiaoVienId, currentUser.Email);
+                    _ngayKetThuc, model.GiaoVienId, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel

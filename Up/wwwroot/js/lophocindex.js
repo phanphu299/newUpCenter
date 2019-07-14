@@ -43,7 +43,6 @@
                 value: ''
             },
             { text: 'Tên Lớp Học', value: 'name', align: 'left', sortable: true },
-            { text: 'Sách', value: '', align: 'left', sortable: true },
             { text: 'Giáo Viên Chủ Nhiệm', value: 'giaoVien', align: 'left', sortable: true },
             { text: 'Khóa Học', value: 'khoaHoc', align: 'left', sortable: true },
             { text: 'Ngày Học', value: 'ngayHoc', align: 'left', sortable: true },

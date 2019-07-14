@@ -27,8 +27,8 @@
                 sortable: false,
                 value: ''
             },
-            { text: 'Tên Sách', value: 'name', align: 'left', sortable: false },
-            { text: 'Giá Sách', value: 'gia', align: 'left', sortable: false },
+            { text: 'Tên Tài Liệu', value: 'name', align: 'left', sortable: false },
+            { text: 'Giá', value: 'gia', align: 'left', sortable: false },
             { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: false },
             { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: false },
             { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: false },

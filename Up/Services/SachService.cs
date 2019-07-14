@@ -22,7 +22,7 @@ namespace Up.Services
         public async Task<SachViewModel> CreateSachAsync(string Name, double Gia, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                throw new Exception("Tên Sách không được để trống !!!");
+                throw new Exception("Tên Tài Liệu không được để trống !!!");
 
             Sach sach = new Sach();
             sach.SachId = new Guid();
@@ -35,7 +35,7 @@ namespace Up.Services
 
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
-                throw new Exception("Lỗi khi lưu Sách !!!");
+                throw new Exception("Lỗi khi lưu Tài Liệu !!!");
             return new SachViewModel { SachId = sach.SachId, Name = sach.Name, Gia = sach.Gia, CreatedBy = sach.CreatedBy, CreatedDate = sach.CreatedDate.ToString("dd/MM/yyyy") };
         }
 
@@ -47,11 +47,6 @@ namespace Up.Services
 
             if (item == null)
                 throw new Exception("Không tìm thấy Khóa Học !!!");
-
-            var _lopHoc_Sach = await _context.LopHoc_Sachs
-                                            .Where(x => x.SachId == item.SachId)
-                                            .ToListAsync();
-            _context.LopHoc_Sachs.RemoveRange(_lopHoc_Sach);
 
             item.IsDisabled = true;
             item.UpdatedBy = LoggedEmployee;
@@ -78,29 +73,17 @@ namespace Up.Services
                 .ToListAsync();
         }
 
-        public async Task<List<SachViewModel>> GetSachByLopHocIdAsync(Guid LopHocId)
-        {
-            return await _context.Sachs
-                .Where(x => x.IsDisabled == false && x.LopHoc_Sachs.Any(m => m.LopHocId == LopHocId))
-                .Select(x => new SachViewModel
-                {
-                    SachId = x.SachId,
-                    Name = x.Name
-                })
-                .ToListAsync();
-        }
-
         public async Task<bool> UpdateSachAsync(Guid SachId, string Name, double Gia, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                throw new Exception("Tên Sách không được để trống !!!");
+                throw new Exception("Tên Tài Liệu không được để trống !!!");
 
             var item = await _context.Sachs
                                     .Where(x => x.SachId == SachId)
                                     .SingleOrDefaultAsync();
 
             if (item == null)
-                throw new Exception("Không tìm thấy Sách !!!");
+                throw new Exception("Không tìm thấy Tài Liệu !!!");
 
             item.Name = Name;
             item.Gia = Gia;

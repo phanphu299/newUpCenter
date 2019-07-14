@@ -84,25 +84,6 @@
                                                       label="Chọn Giáo Viên Chăm Sóc *">
                                             </v-select>
                                         </v-flex>
-                                        <v-flex xs12 sm8>
-                                            <v-select v-model="newItem.sach"
-                                                      :items="itemSach"
-                                                      item-text="name"
-                                                      item-value="sachId"
-                                                      attach
-                                                      chips
-                                                      label="Chọn Sách"
-                                                      multiple>
-                                                <template v-slot:selection="data">
-                                                    <v-chip :selected="data.selected"
-                                                            color="green"
-                                                            text-color="white">
-                                                        <strong>{{ data.item.name }}</strong>&nbsp;
-                                                        <span>({{ formatNumber(data.item.gia) }})</span>
-                                                    </v-chip>
-                                                </template>
-                                            </v-select>
-                                        </v-flex>
                                     </v-layout>
                                 </v-container>
                                 <small>* bắt buộc</small>
@@ -176,16 +157,6 @@
 
                         </td>
                         <td>{{ props.item.name }}</td>
-                        <td>
-                            <v-tooltip top v-if="props.item.sachList.length > 0">
-                                <template v-slot:activator="{ on }">
-                                    <v-icon color="grey lighten-1" dark v-on="on">library_books</v-icon>
-                                </template>
-                                <div v-for="sach in props.item.sachList">
-                                    <strong>{{ sach.name }}</strong><span> - {{ formatNumber(sach.gia) }}</span>
-                                </div>
-                            </v-tooltip>
-                        </td>
                         <td>{{ props.item.giaoVien }}</td>
                         <td>{{ props.item.khoaHoc }}</td>
                         <td>{{ props.item.ngayHoc }}</td>
@@ -333,26 +304,6 @@
                                           label="Chọn Giáo Viên *">
                                 </v-select>
                             </v-flex>
-                            <v-flex xs12 sm12>
-                                <v-select v-model="itemToEdit.sachIds"
-                                          :items="itemSach"
-                                          item-text="name"
-                                          item-value="sachId"
-                                          attach
-                                          chips
-                                          label="Chọn Sách"
-                                          multiple>
-                                    <template v-slot:selection="data">
-                                        <v-chip :selected="data.selected"
-                                                color="green"
-                                                text-color="white">
-                                            <strong>{{ data.item.name }}</strong>&nbsp;
-                                            <span>({{ formatNumber(data.item.gia) }})</span>
-
-                                        </v-chip>
-                                    </template>
-                                </v-select>
-                            </v-flex>
                         </v-layout>
                     </v-container>
                     <small>* bắt buộc</small>
@@ -404,17 +355,17 @@
                         <v-container fluid v-if="diemDanhItems.length > 0">
                             <v-layout wrap>
                                 <v-flex>
-                                    <table class="table" style="border: 1px solid black;">
-                                        <thead style="background-color: #dee2e6;">
-                                            <tr style="border: 1px solid black;">
-                                                <th style="border: 1px solid black;">Học Viên</th>
-                                                <th style="border: 1px solid black;" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
+                                    <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
+                                        <thead style="background-color: orange;">
+                                            <tr style="border: 1px solid #ddd;">
+                                                <th style="border: 1px solid #ddd;">Học Viên</th>
+                                                <th style="border: 1px solid #ddd;" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr style="border: 1px solid black;" v-for="(item, index) in diemDanhItems" :key="index">
-                                                <td style="border: 1px solid black;">{{ item.label }}</td>
-                                                <td style="border: 1px solid black;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
+                                            <tr style="border: 1px solid #ddd;" v-for="(item, index) in diemDanhItems" :key="index">
+                                                <td style="border: 1px solid #ddd;">{{ item.label }}</td>
+                                                <td style="border: 1px solid #ddd;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
                                                     <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
                                                         <i v-if="content.day == column && content.isOff == false">x</i>
                                                         <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == true">off</i>
@@ -467,5 +418,52 @@
 
     td, th {
         padding: unset;
+    }
+
+    .table-bordered {
+        border: 1px solid #ddd;
+    }
+
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    table {
+        background-color: transparent;
+    }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
+        border-top: 0;
+    }
+
+    .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+        border-bottom-width: 2px;
+    }
+
+    .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+        border: 1px solid #ddd;
+    }
+
+    .table-condensed > tbody > tr > td, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > td, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > thead > tr > th {
+        padding: 5px;
+    }
+
+    .table > thead > tr > th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #ddd;
+    }
+
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 8px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
     }
 </style>

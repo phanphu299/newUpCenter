@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace Up.Data.Entities
 {
+    using System;
+
     public class Sach
     {
         public Guid SachId { get; set; }
@@ -13,7 +13,5 @@ namespace Up.Data.Entities
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
-
-        public ICollection<LopHoc_Sach> LopHoc_Sachs { get; set; }
     }
 }

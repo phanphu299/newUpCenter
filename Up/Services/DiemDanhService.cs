@@ -149,7 +149,7 @@
             if (LopHocId == null)
                 throw new Exception("Không tìm thấy Lớp Học!");
 
-            return await _context.LopHoc_DiemDanhs.Where(x => x.LopHocId == LopHocId)
+            return await _context.LopHoc_DiemDanhs.Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
                                 .OrderByDescending(x => x.NgayDiemDanh)
                                 .Select(x => new DiemDanhViewModel
                                 {

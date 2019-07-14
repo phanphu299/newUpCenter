@@ -164,7 +164,7 @@ namespace Up.Controllers
                 worksheet.Cells[3, 3].Style.WrapText = true;
                 worksheet.Cells[3, 4].Value = "Nợ tháng trước";
                 worksheet.Cells[3, 5].Value = "Học phí tháng này";
-                worksheet.Cells[3, 6].Value = "Mua sách";
+                worksheet.Cells[3, 6].Value = "Mua tài liệu";
                 worksheet.Cells[3, 7].Value = "Khuyến mãi";
                 worksheet.Cells[3, 8].Value = "Tổng";
                 worksheet.Cells[3, 9].Value = "Chữ ký";

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace Up.Models
 {
+    using System;
+
     public class LopHocViewModel
     {
-        public LopHocViewModel()
-        {
-            SachList = new List<SachViewModel>();
-        }
-
         public Guid LopHocId { get; set; }
         public string Name { get; set; }
         public bool IsDisabled { get; set; }
@@ -32,7 +27,5 @@ namespace Up.Models
         public string CreatedBy { get; set; }
         public string UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
-        public List<SachViewModel> SachList{ get; set; }
-        public Guid[] SachIds { get; set; }
     }
 }
