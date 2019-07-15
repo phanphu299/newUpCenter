@@ -423,7 +423,6 @@
                 that.color = 'error';
                 that.dialogEdit = false;
             }
-            
         },
 
         forceFileDownload(response, name) {

@@ -58,6 +58,28 @@
                             </v-btn>
                         </v-flex>
 
+
+                        <v-flex xs12 sm4>
+                            <v-select :items="itemThang"
+                                      v-model="selectedThang"
+                                      chips
+                                      label="Chọn Tháng"></v-select>
+                        </v-flex>
+
+                        <v-flex xs12 sm4>
+                            <v-select :items="itemNam"
+                                      v-model="selectedNam"
+                                      chips
+                                      label="Chọn Năm"></v-select>
+                        </v-flex>
+
+                        <v-flex xs12 sm4>
+                            <v-btn color="primary" v-on:click="onTinhDiemDanh">Tìm</v-btn>
+                        </v-flex>
+
+
+
+
                     </v-layout>
                     <br />
                     <v-spacer></v-spacer>
@@ -68,6 +90,37 @@
                                   v-if="hocVienList.length > 0"
                                   hide-details></v-text-field>
                 </v-card-title>
+
+                <v-container fluid v-if="diemDanhItems.length > 0">
+                    <v-layout wrap>
+                        <v-flex>
+                            <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
+                                <thead style="background-color: orange;">
+                                    <tr style="border: 1px solid #ddd;">
+                                        <th style="border: 1px solid #ddd;">Học Viên</th>
+                                        <th style="border: 1px solid #ddd;" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border: 1px solid #ddd;" v-for="(item, index) in diemDanhItems" :key="index">
+                                        <td style="border: 1px solid #ddd;">{{ item.label }}</td>
+                                        <td style="border: 1px solid #ddd;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
+                                            <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
+                                                <i v-if="content.day == column && content.isOff == false">
+                                                    <v-switch input-value="true" color="success" hide-details></v-switch>
+                                                </i>
+                                                <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == true">off</i>
+                                                <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == null">
+                                                    <v-switch input-value="false" color="success" hide-details></v-switch>
+                                                </i>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
 
                 <v-container fluid v-if="hocVienList.length > 0">
                     <v-layout wrap>
@@ -133,5 +186,52 @@
 
     td, th {
         padding: unset;
+    }
+
+    .table-bordered {
+        border: 1px solid #ddd;
+    }
+
+    .table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    table {
+        background-color: transparent;
+    }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
+        border-top: 0;
+    }
+
+    .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+        border-bottom-width: 2px;
+    }
+
+    .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+        border: 1px solid #ddd;
+    }
+
+    .table-condensed > tbody > tr > td, .table-condensed > tbody > tr > th, .table-condensed > tfoot > tr > td, .table-condensed > tfoot > tr > th, .table-condensed > thead > tr > td, .table-condensed > thead > tr > th {
+        padding: 5px;
+    }
+
+    .table > thead > tr > th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #ddd;
+    }
+
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 8px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
     }
 </style>

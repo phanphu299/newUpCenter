@@ -29,7 +29,13 @@
                 sortable: false,
                 value: ''
             }
-        ]
+        ],
+        diemDanhItems: [],
+        selectedThang: '',
+        selectedNam: '',
+        itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+        itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0],
+        soNgayHoc: []
     },
     async beforeCreate() {
         let that = this;
@@ -42,6 +48,33 @@
             });
     },
     methods: {
+        async onTinhDiemDanh() {
+            let that = this;
+            if (this.selectedLopHoc !== '' && this.selectedNam !== '' && this.selectedThang !== '') {
+                axios.get('/DiemDanh/GetDiemDanhByLopHocAsync?LopHocId=' + that.selectedLopHoc + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
+                    .then(function (response) {
+                        that.diemDanhItems = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+                await axios.get('/DiemDanh/GetSoNgayHoc?LopHocId=' + that.selectedLopHoc + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
+                    .then(function (response) {
+                        that.soNgayHoc = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+            else {
+                that.snackbar = true;
+                that.messageText = "Phải chọn Lớp Học, Tháng và Năm trước khi tìm!!!";
+                that.color = 'error';
+                that.dialogEdit = false;
+            }
+        },
+
         async GetHocVienByLopHoc() {
             let that = this;
             await axios.get('/DiemDanh/GetHocVienByLopHocAsync?LopHocId=' + this.selectedLopHoc)
