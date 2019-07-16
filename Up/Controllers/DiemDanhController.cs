@@ -57,53 +57,92 @@
         [HttpGet]
         public async Task<IActionResult> GetDiemDanhByLopHocAsync(Guid LopHocId, int month, int year)
         {
-            var model = _diemDanhService.GetDiemDanhByLopHoc(LopHocId).Result
-                                .Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year)
-                                .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
-                                {
-                                    Label = x.Key,
-                                    HocVienId = x.Select(m => m.HocVienId).First(),
-                                    ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
-                                    {
-                                        Dates = m.NgayDiemDanh_Date,
-                                        DuocNghi = m.IsDuocNghi,
-                                        IsOff = m.IsOff,
-                                        Day = m.NgayDiemDanh_Date.Day
-                                    }).ToList()
-                                }).ToList(); 
+            var list = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId);
+            List<ThongKeModel> model = new List<ThongKeModel>();
             var soNgayHoc = await _hocPhiService.SoNgayHocAsync(LopHocId, month, year);
-
-            foreach (var hocVien in model)
+            if (list.Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year).Any())
             {
-                List<ThongKeDiemDanhModel> diemDanhModel = new List<ThongKeDiemDanhModel>();
-                foreach (int ngayHoc in soNgayHoc)
-                {
-                    diemDanhModel.Add(new ThongKeDiemDanhModel
-                    {
-                        //phai~ dao~ isOff de ko sinh loi v-switch
-                        DuocNghi = false,
-                        IsOff = false,
-                        Day = ngayHoc,
-                        Dates = new DateTime(year, month, ngayHoc)
-                    });
-                }
+                model = list
+                        .Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year)
+                        .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
+                        {
+                            Label = x.Key,
+                            HocVienId = x.Select(m => m.HocVienId).First(),
+                            ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
+                            {
+                                Dates = m.NgayDiemDanh_Date,
+                                DuocNghi = m.IsDuocNghi,
+                                IsOff = m.IsOff,
+                                Day = m.NgayDiemDanh_Date.Day
+                            }).ToList()
+                        }).ToList();
 
-                foreach (var diemDanh in hocVien.ThongKeDiemDanh)
+                foreach (var hocVien in model)
                 {
-                    foreach (var item in diemDanhModel)
+                    List<ThongKeDiemDanhModel> diemDanhModel = new List<ThongKeDiemDanhModel>();
+                    foreach (int ngayHoc in soNgayHoc)
                     {
-                        if (diemDanh.Day == item.Day)
+                        diemDanhModel.Add(new ThongKeDiemDanhModel
                         {
                             //phai~ dao~ isOff de ko sinh loi v-switch
-                            item.Day = diemDanh.Day;
-                            item.Dates = diemDanh.Dates;
-                            item.IsOff = !diemDanh.IsOff;
-                            item.DuocNghi = diemDanh.DuocNghi;
+                            DuocNghi = false,
+                            IsOff = false,
+                            Day = ngayHoc,
+                            Dates = new DateTime(year, month, ngayHoc)
+                        });
+                    }
+
+                    foreach (var diemDanh in hocVien.ThongKeDiemDanh)
+                    {
+                        foreach (var item in diemDanhModel)
+                        {
+                            if (diemDanh.Day == item.Day)
+                            {
+                                //phai~ dao~ isOff de ko sinh loi v-switch
+                                item.Day = diemDanh.Day;
+                                item.Dates = diemDanh.Dates;
+                                item.IsOff = !diemDanh.IsOff;
+                                item.DuocNghi = diemDanh.DuocNghi;
+                            }
                         }
                     }
-                }
 
-                hocVien.ThongKeDiemDanh = diemDanhModel;
+                    hocVien.ThongKeDiemDanh = diemDanhModel;
+                }
+            }
+            else
+            {
+                model = list
+                        .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
+                        {
+                            Label = x.Key,
+                            HocVienId = x.Select(m => m.HocVienId).First(),
+                            ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
+                            {
+                                Dates = m.NgayDiemDanh_Date,
+                                DuocNghi = m.IsDuocNghi,
+                                IsOff = m.IsOff,
+                                Day = m.NgayDiemDanh_Date.Day
+                            }).ToList()
+                        }).ToList();
+
+                foreach (var hocVien in model)
+                {
+                    List<ThongKeDiemDanhModel> diemDanhModel = new List<ThongKeDiemDanhModel>();
+                    foreach (int ngayHoc in soNgayHoc)
+                    {
+                        diemDanhModel.Add(new ThongKeDiemDanhModel
+                        {
+                            //phai~ dao~ isOff de ko sinh loi v-switch
+                            DuocNghi = false,
+                            IsOff = false,
+                            Day = ngayHoc,
+                            Dates = new DateTime(year, month, ngayHoc)
+                        });
+                    }
+
+                    hocVien.ThongKeDiemDanh = diemDanhModel;
+                }
             }
                         
             return Json(

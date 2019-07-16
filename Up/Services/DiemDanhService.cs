@@ -149,18 +149,47 @@
             if (LopHocId == null)
                 throw new Exception("Không tìm thấy Lớp Học!");
 
-            return await _context.LopHoc_DiemDanhs.Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
-                                .OrderByDescending(x => x.NgayDiemDanh)
-                                .Select(x => new DiemDanhViewModel
+            return await _context.HocVien_LopHocs
+                                .Where(x => x.LopHocId == LopHocId)
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null) && x.HocVien.IsDisabled == false)
+                                .GroupJoin(_context.LopHoc_DiemDanhs,
+                                i => i.HocVienId,
+                                p => p.HocVienId,
+                                (i, g) =>
+                                new
                                 {
-                                    IsDuocNghi = x.IsDuocNghi,
-                                    IsOff = x.IsOff,
-                                    NgayDiemDanh = x.NgayDiemDanh.ToString("dd/MM/yyyy"),
-                                    HocVien = x.HocVien.FullName,
-                                    NgayDiemDanh_Date = x.NgayDiemDanh,
-                                    HocVienId = x.HocVienId
+                                    i = i,
+                                    g = g
                                 })
+                                .SelectMany (
+                                temp0 => temp0.g.DefaultIfEmpty (),
+                                (temp0, cat) =>
+                                    new DiemDanhViewModel
+                                    {
+                                        IsDuocNghi = (cat == null) ? false : cat.IsDuocNghi,
+                                        IsOff = (cat == null) ? true : cat.IsOff,
+                                        NgayDiemDanh = (cat == null) ? new DateTime().ToString("dd/MM/yyyy") : cat.NgayDiemDanh.ToString("dd/MM/yyyy"),
+                                        HocVien = temp0.i.HocVien.FullName,
+                                        NgayDiemDanh_Date = (cat == null) ? new DateTime() : cat.NgayDiemDanh,
+                                        HocVienId = temp0.i.HocVienId
+                                    }
+                                )
                                 .ToListAsync();
+
+            //return await (from c in _context.HocVien_LopHocs
+            //        join ct in _context.LopHoc_DiemDanhs
+            //        on c.HocVienId equals ct.HocVienId into g
+            //        from ct in g.DefaultIfEmpty()
+            //        where c.LopHocId == LopHocId && c.HocVien.IsDisabled == false
+            //        select new DiemDanhViewModel
+            //        {
+            //            IsDuocNghi = ct.IsDuocNghi,
+            //            IsOff = ct.IsOff,
+            //            NgayDiemDanh = ct.NgayDiemDanh.ToString("dd/MM/yyyy"),
+            //            HocVien = c.HocVien.FullName,
+            //            NgayDiemDanh_Date = ct.NgayDiemDanh,
+            //            HocVienId = c.HocVienId
+            //        }).ToListAsync();
         }
 
         public async Task<List<HocVienViewModel>> GetHocVienByLopHoc(Guid LopHocId)

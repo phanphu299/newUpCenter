@@ -75,8 +75,8 @@
             }
             else {
                 that.snackbar = true;
-                that.messageText = "Phải chọn Lớp Học, Tháng và Năm trước khi tìm!!!";
-                that.color = 'error';
+                that.messageText = "Phải chọn Lớp Học, Tháng và Năm trước khi điểm danh!!!";
+                that.color = 'info';
                 that.dialogEdit = false;
             }
         },

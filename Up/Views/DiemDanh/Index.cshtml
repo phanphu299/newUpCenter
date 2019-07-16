@@ -16,7 +16,7 @@
                                       attach
                                       chips
                                       label="Chọn Lớp Học"
-                                      v-on:change="GetHocVienByLopHoc">
+                                      v-on:change="onTinhDiemDanh">
                                 <template v-slot:selection="data">
                                     <v-chip :selected="data.selected"
                                             color="green"
@@ -26,6 +26,23 @@
                                 </template>
                             </v-select>
                         </v-flex>
+
+                        <v-flex xs12 sm2>
+                            <v-select :items="itemThang"
+                                      v-model="selectedThang"
+                                      chips
+                                      label="Chọn Tháng"
+                                      v-on:change="onTinhDiemDanh"></v-select>
+                        </v-flex>
+
+                        <v-flex xs12 sm2>
+                            <v-select :items="itemNam"
+                                      v-model="selectedNam"
+                                      chips
+                                      label="Chọn Năm"
+                                      v-on:change="onTinhDiemDanh"></v-select>
+                        </v-flex>
+
                         <v-flex xs12 sm2>
                             <v-menu v-model="isShowDatePicker"
                                     :close-on-content-click="false"
@@ -43,6 +60,7 @@
                                 <v-date-picker locale="vi-vn" v-model="ngayDiemDanh" v-on:input="isShowDatePicker = false"></v-date-picker>
                             </v-menu>
                         </v-flex>
+
                         <v-flex xs12 sm2 class="text-xs-center">
                             <v-btn v-if="selectedLopHoc!=''"
                                    color="info"
@@ -58,37 +76,11 @@
                             </v-btn>
                         </v-flex>
 
-
-                        <v-flex xs12 sm2>
-                            <v-select :items="itemThang"
-                                      v-model="selectedThang"
-                                      chips
-                                      label="Chọn Tháng"></v-select>
-                        </v-flex>
-
-                        <v-flex xs12 sm2>
-                            <v-select :items="itemNam"
-                                      v-model="selectedNam"
-                                      chips
-                                      label="Chọn Năm"></v-select>
-                        </v-flex>
-
                         <v-flex xs12 sm4>
                             <v-btn color="primary" v-on:click="onTinhDiemDanh">Tìm</v-btn>
                         </v-flex>
 
-
-
-
                     </v-layout>
-                    <br />
-                    <v-spacer></v-spacer>
-                    <v-text-field v-model="search"
-                                  append-icon="search"
-                                  label="Tìm Kiếm"
-                                  single-line
-                                  v-if="hocVienList.length > 0"
-                                  hide-details></v-text-field>
                 </v-card-title>
 
                 <v-container fluid v-if="diemDanhItems.length > 0">
