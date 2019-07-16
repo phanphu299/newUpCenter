@@ -168,7 +168,7 @@
                 throw new Exception("Không tìm thấy Lớp Học!");
 
             return await _context.HocVien_LopHocs.Where(x => x.LopHocId == LopHocId)
-                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null))
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null) && x.HocVien.IsDisabled == false)
                                 .Select(x => new HocVienViewModel
                                 {
                                     FullName = x.HocVien.FullName,

@@ -106,12 +106,15 @@
                                         <td style="border: 1px solid #ddd;">{{ item.label }}</td>
                                         <td style="border: 1px solid #ddd;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
                                             <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
-                                                <i v-if="content.day == column && content.isOff == false">
+                                                
+                                                <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
                                                     <v-switch input-value="true" color="success" hide-details></v-switch>
                                                 </i>
-                                                <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == true">off</i>
-                                                <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == null">
-                                                    <v-switch input-value="false" color="success" hide-details></v-switch>
+                                                <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == true">
+                                                    off
+                                                </i>
+                                                <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
+                                                    <v-switch color="success" hide-details></v-switch>
                                                 </i>
                                             </span>
                                         </td>
@@ -233,5 +236,9 @@
         line-height: 1.42857143;
         vertical-align: top;
         border-top: 1px solid #ddd;
+    }
+
+    .v-input--selection-controls {
+        margin-top: 0px; 
     }
 </style>

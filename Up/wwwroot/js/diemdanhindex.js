@@ -54,6 +54,13 @@
                 axios.get('/DiemDanh/GetDiemDanhByLopHocAsync?LopHocId=' + that.selectedLopHoc + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
                     .then(function (response) {
                         that.diemDanhItems = response.data;
+                        for (let i = 0; i < that.diemDanhItems.length; i++) {
+                            for (let j = 0; j < that.diemDanhItems[i].thongKeDiemDanh.length; j++) {
+                                if (that.diemDanhItems[i].thongKeDiemDanh[j].duocNghi !== true) {
+                                    that.diemDanhItems[i].thongKeDiemDanh[j].duocNghi = false;
+                                }
+                            }
+                        }
                     })
                     .catch(function (error) {
                         console.log(error);

@@ -57,20 +57,54 @@
         [HttpGet]
         public async Task<IActionResult> GetDiemDanhByLopHocAsync(Guid LopHocId, int month, int year)
         {
-            var model = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId);
-            return Json(model
-                        .Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year)
-                        .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
+            var model = _diemDanhService.GetDiemDanhByLopHoc(LopHocId).Result
+                                .Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year)
+                                .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
+                                {
+                                    Label = x.Key,
+                                    ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
+                                    {
+                                        Dates = m.NgayDiemDanh_Date,
+                                        DuocNghi = m.IsDuocNghi,
+                                        IsOff = m.IsOff,
+                                        Day = m.NgayDiemDanh_Date.Day
+                                    }).ToList()
+                                }).ToList(); 
+            var soNgayHoc = await _hocPhiService.SoNgayHocAsync(LopHocId, month, year);
+
+            foreach (var hocVien in model)
+            {
+                List<ThongKeDiemDanhModel> diemDanhModel = new List<ThongKeDiemDanhModel>();
+                foreach (int ngayHoc in soNgayHoc)
+                {
+                    diemDanhModel.Add(new ThongKeDiemDanhModel
+                    {
+                        DuocNghi = false,
+                        IsOff = true,
+                        Day = ngayHoc,
+                        Dates = new DateTime(year, month, ngayHoc)
+                    });
+                }
+
+                foreach (var diemDanh in hocVien.ThongKeDiemDanh)
+                {
+                    foreach (var item in diemDanhModel)
+                    {
+                        if (diemDanh.Day == item.Day)
                         {
-                            Label = x.Key,
-                            ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
-                            {
-                                Dates = m.NgayDiemDanh_Date,
-                                DuocNghi = m.IsDuocNghi,
-                                IsOff = m.IsOff,
-                                Day = m.NgayDiemDanh_Date.Day
-                            }).ToList()
-                        }).ToList()
+                            item.Day = diemDanh.Day;
+                            item.Dates = diemDanh.Dates;
+                            item.IsOff = diemDanh.IsOff;
+                            item.DuocNghi = diemDanh.DuocNghi;
+                        }
+                    }
+                }
+
+                hocVien.ThongKeDiemDanh = diemDanhModel;
+            }
+                        
+            return Json(
+                model
                 );
         }
 
