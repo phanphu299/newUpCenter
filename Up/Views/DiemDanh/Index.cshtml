@@ -105,16 +105,16 @@
                                     <tr style="border: 1px solid #ddd;" v-for="(item, index) in diemDanhItems" :key="index">
                                         <td style="border: 1px solid #ddd;">{{ item.label }}</td>
                                         <td style="border: 1px solid #ddd;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
+                                            @*phai~ dao~ isOff de ko sinh loi v-switch*@
                                             <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
-                                                
                                                 <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
-                                                    <v-switch input-value="true" color="success" hide-details></v-switch>
+                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                 </i>
-                                                <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == true">
+                                                <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
                                                     off
                                                 </i>
                                                 <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
-                                                    <v-switch color="success" hide-details></v-switch>
+                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                 </i>
                                             </span>
                                         </td>

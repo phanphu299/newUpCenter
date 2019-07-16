@@ -82,6 +82,30 @@
             }
         },
 
+        async onDiemDanhNew(hocVienId, column, isOff) {
+            let that = this;
+            await axios.get('/DiemDanh/DiemDanhTungHocVienNewAsync?HocVienId=' + hocVienId + '&LopHocId=' + this.selectedLopHoc + '&day=' + column + '&month=' + this.selectedThang + '&year=' + this.selectedNam + '&IsOff=' + isOff)
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Điểm danh thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Điểm danh lỗi: ' + error;
+                    that.color = 'error';
+                });
+        },
+
         async GetHocVienByLopHoc() {
             let that = this;
             await axios.get('/DiemDanh/GetHocVienByLopHocAsync?LopHocId=' + this.selectedLopHoc)

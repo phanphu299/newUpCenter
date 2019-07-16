@@ -13,6 +13,7 @@
     public class ThongKeModel
     {
         public string Label { get; set; }
+        public Guid HocVienId { get; set; }
         public double Data { get; set; }
         public List<ThongKeDiemDanhModel> ThongKeDiemDanh { get; set; }
     }

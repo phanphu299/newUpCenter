@@ -62,6 +62,7 @@
                                 .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
                                 {
                                     Label = x.Key,
+                                    HocVienId = x.Select(m => m.HocVienId).First(),
                                     ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
                                     {
                                         Dates = m.NgayDiemDanh_Date,
@@ -79,8 +80,9 @@
                 {
                     diemDanhModel.Add(new ThongKeDiemDanhModel
                     {
+                        //phai~ dao~ isOff de ko sinh loi v-switch
                         DuocNghi = false,
-                        IsOff = true,
+                        IsOff = false,
                         Day = ngayHoc,
                         Dates = new DateTime(year, month, ngayHoc)
                     });
@@ -92,9 +94,10 @@
                     {
                         if (diemDanh.Day == item.Day)
                         {
+                            //phai~ dao~ isOff de ko sinh loi v-switch
                             item.Day = diemDanh.Day;
                             item.Dates = diemDanh.Dates;
-                            item.IsOff = diemDanh.IsOff;
+                            item.IsOff = !diemDanh.IsOff;
                             item.DuocNghi = diemDanh.DuocNghi;
                         }
                     }
@@ -106,6 +109,52 @@
             return Json(
                 model
                 );
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DiemDanhTungHocVienNewAsync(Guid HocVienId, Guid LopHocId, int day, int month, int year, bool IsOff)
+        {
+            if (LopHocId == Guid.Empty || HocVienId == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                DateTime _ngayDiemDanh = new DateTime(year, month, day);
+
+                var successful = await _diemDanhService.DiemDanhTungHocVienAsync(LopHocId, HocVienId,
+                    !IsOff, _ngayDiemDanh, currentUser.Email);
+                if (successful == false)
+                {
+                    return Json(new ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Điểm Danh lỗi !!!"
+                    });
+                }
+
+                return Json(new ResultModel
+                {
+                    Status = "OK",
+                    Message = "Điểm Danh thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpPost]
@@ -130,14 +179,14 @@
                     model.IsOff, _ngayDiemDanh, currentUser.Email);
                 if (successful == false)
                 {
-                    return Json(new Models.ResultModel
+                    return Json(new ResultModel
                     {
                         Status = "Failed",
                         Message = "Điểm Danh lỗi !!!"
                     });
                 }
 
-                return Json(new Models.ResultModel
+                return Json(new ResultModel
                 {
                     Status = "OK",
                     Message = "Điểm Danh thành công !!!",
@@ -146,7 +195,7 @@
             }
             catch (Exception exception)
             {
-                return Json(new Models.ResultModel
+                return Json(new ResultModel
                 {
                     Status = "Failed",
                     Message = exception.Message

@@ -5,6 +5,7 @@ namespace Up.Models
 
     public class DiemDanhViewModel
     {
+        public Guid HocVienId { get; set; }
         public string NgayDiemDanh { get; set; }
         public bool IsOff { get; set; }
         public bool? IsDuocNghi { get; set; }
