@@ -12,7 +12,6 @@
         ngayDiemDanh: new Date().toISOString().substr(0, 10),
         itemLopHoc: [],
         isShowDatePicker: false,
-        hocVienList: [],
         search: '',
         headers: [
             { text: 'Học Viên', value: 'fullName', align: 'left', sortable: true },

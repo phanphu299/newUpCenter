@@ -8,7 +8,7 @@
             <v-card>
                 <v-card-title>
                     <v-layout wrap>
-                        <v-flex xs12 sm3>
+                        <v-flex xs12 sm2>
                             <v-select v-model="selectedLopHoc"
                                       :items="itemLopHoc"
                                       item-text="name"
@@ -26,7 +26,7 @@
                                 </template>
                             </v-select>
                         </v-flex>
-                        <v-flex xs12 sm3>
+                        <v-flex xs12 sm2>
                             <v-menu v-model="isShowDatePicker"
                                     :close-on-content-click="false"
                                     :nudge-right="40"
@@ -43,14 +43,14 @@
                                 <v-date-picker locale="vi-vn" v-model="ngayDiemDanh" v-on:input="isShowDatePicker = false"></v-date-picker>
                             </v-menu>
                         </v-flex>
-                        <v-flex xs12 sm3 class="text-xs-center">
+                        <v-flex xs12 sm2 class="text-xs-center">
                             <v-btn v-if="selectedLopHoc!=''"
                                    color="info"
                                    v-on:click="DiemDanhCaLop()">
                                 Có Mặt Cả Lớp
                             </v-btn>
                         </v-flex>
-                        <v-flex xs12 sm3 class="text-xs-center">
+                        <v-flex xs12 sm2 class="text-xs-center">
                             <v-btn v-if="selectedLopHoc!=''"
                                    color="error"
                                    v-on:click="LopNghi()">
@@ -59,14 +59,14 @@
                         </v-flex>
 
 
-                        <v-flex xs12 sm4>
+                        <v-flex xs12 sm2>
                             <v-select :items="itemThang"
                                       v-model="selectedThang"
                                       chips
                                       label="Chọn Tháng"></v-select>
                         </v-flex>
 
-                        <v-flex xs12 sm4>
+                        <v-flex xs12 sm2>
                             <v-select :items="itemNam"
                                       v-model="selectedNam"
                                       chips
@@ -121,36 +121,6 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </v-flex>
-                    </v-layout>
-                </v-container>
-
-                <v-container fluid v-if="hocVienList.length > 0">
-                    <v-layout wrap>
-                        <v-flex>
-                            <v-data-table :headers="headers"
-                                          :items="hocVienList"
-                                          :search="search">
-                                <template slot="items" slot-scope="props">
-
-                                    <td><b>{{ props.item.fullName }}</b></td>
-                                    <td><b>{{ props.item.englishName }}</b></td>
-                                    <td class="justify-center">
-                                        <v-btn outline fab dark color="primary" v-on:click="onCoMat(props.item)">
-                                            <v-icon dark>check</v-icon>
-                                        </v-btn>
-                                    </td>
-                                    <td class="justify-center">
-                                        <v-btn outline fab dark color="error" v-on:click="onVang(props.item)">
-                                            <v-icon dark>close</v-icon>
-                                        </v-btn>
-                                    </td>
-
-                                </template>
-                                <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                                    Không tìm thấy "{{ search }}".
-                                </v-alert>
-                            </v-data-table>
                         </v-flex>
                     </v-layout>
                 </v-container>
