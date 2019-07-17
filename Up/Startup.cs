@@ -56,6 +56,7 @@ namespace Up
             services.AddScoped<IGiaoVienService, GiaoVienService>();
             services.AddScoped<IDiemDanhService, DiemDanhService>();
             services.AddScoped<ILoaiGiaoVienService, LoaiGiaoVienService>();
+            services.AddScoped<ILoaiCheDoService, LoaiCheDoService>();
             services.AddScoped<IThongKeService, ThongKeService>();
             services.AddScoped<ISettingService, SettingService>();
             services.AddScoped<IChiPhiCoDinhService, ChiPhiCoDinhService>();

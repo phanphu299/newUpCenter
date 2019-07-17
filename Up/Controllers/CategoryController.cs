@@ -15,10 +15,11 @@
         private readonly IHocPhiService _hocPhiService;
         private readonly ISachService _sachService;
         private readonly ILoaiGiaoVienService _loaiGiaoVienService;
+        private readonly ILoaiCheDoService _loaiCheDoService;
         private readonly IChiPhiCoDinhService _chiPhiCoDinhService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public CategoryController(IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, IHocPhiService hocPhiService, ISachService sachService, ILoaiGiaoVienService loaiGiaoVienService, IChiPhiCoDinhService chiPhiCoDinhService, UserManager<IdentityUser> userManager)
+        public CategoryController(IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, IHocPhiService hocPhiService, ISachService sachService, ILoaiGiaoVienService loaiGiaoVienService, ILoaiCheDoService loaiCheDoService, IChiPhiCoDinhService chiPhiCoDinhService, UserManager<IdentityUser> userManager)
         {
             _khoaHocService = khoaHocService;
             _gioHocService = gioHocService;
@@ -27,6 +28,7 @@
             _hocPhiService = hocPhiService;
             _sachService = sachService;
             _loaiGiaoVienService = loaiGiaoVienService;
+            _loaiCheDoService = loaiCheDoService;
             _chiPhiCoDinhService = chiPhiCoDinhService;
             _userManager = userManager;
         }
@@ -995,6 +997,145 @@
                 });
             }
         }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        public async Task<IActionResult> LoaiCheDoIndex()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLoaiCheDoAsync()
+        {
+            var model = await _loaiCheDoService.GetLoaiCheDoAsync();
+            return Json(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateLoaiCheDoAsync([FromBody]Models.LoaiCheDoViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("LoaiCheDoIndex");
+            }
+
+            try
+            {
+                var successful = await _loaiCheDoService.CreateLoaiCheDoAsync(model.Name, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Thêm mới lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Thêm mới thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateLoaiCheDoAsync([FromBody]Models.LoaiCheDoViewModel model)
+        {
+            if (model.LoaiCheDoId == Guid.Empty)
+            {
+                return RedirectToAction("LoaiCheDoIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("LoaiCheDoIndex");
+            }
+
+            try
+            {
+                var successful = await _loaiCheDoService.UpdateLoaiCheDoAsync(model.LoaiCheDoId, model.Name, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteLoaiCheDoAsync([FromBody]Models.LoaiCheDoViewModel model)
+        {
+            if (model.LoaiCheDoId == Guid.Empty)
+            {
+                return RedirectToAction("LoaiCheDoIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("LoaiCheDoIndex");
+            }
+
+            try
+            {
+                var successful = await _loaiCheDoService.DeleteLoaiCheDoAsync(model.LoaiCheDoId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
         /// /////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<IActionResult> StaticExpenseIndex()
         {

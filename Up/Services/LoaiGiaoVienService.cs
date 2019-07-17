@@ -21,7 +21,7 @@
         public async Task<LoaiGiaoVienViewModel> CreateLoaiGiaoVienAsync(string Name, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                throw new Exception("Tên Loại GIáo Viên không được để trống !!!");
+                throw new Exception("Tên Loại Nhân Viên không được để trống !!!");
 
             LoaiGiaoVien loaiGiaoVien = new LoaiGiaoVien();
             loaiGiaoVien.LoaiGiaoVienId = new Guid();
@@ -33,7 +33,7 @@
 
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
-                throw new Exception("Lỗi khi lưu Loại Giáo Viên !!!");
+                throw new Exception("Lỗi khi lưu Loại Nhân Viên !!!");
             return new LoaiGiaoVienViewModel { LoaiGiaoVienId = loaiGiaoVien.LoaiGiaoVienId, Name = loaiGiaoVien.Name, CreatedBy = loaiGiaoVien.CreatedBy, CreatedDate = loaiGiaoVien.CreatedDate.ToString("dd/MM/yyyy") };
         }
 
@@ -41,14 +41,14 @@
         {
             var giaoVien = await _context.GiaoViens.Where(x => x.LoaiGiaoVienId == LoaiGiaoVienId).ToListAsync();
             if (giaoVien.Any())
-                throw new Exception("Hãy xóa những giáo viên thuộc loại này trước !!!");
+                throw new Exception("Hãy xóa những nhân viên thuộc loại này trước !!!");
 
             var item = await _context.LoaiGiaoViens
                                     .Where(x => x.LoaiGiaoVienId == LoaiGiaoVienId)
                                     .SingleOrDefaultAsync();
 
             if (item == null)
-                throw new Exception("Không tìm thấy Loại giáo viên !!!");
+                throw new Exception("Không tìm thấy Loại nhân viên !!!");
 
             item.IsDisabled = true;
             item.UpdatedBy = LoggedEmployee;
@@ -77,14 +77,14 @@
         public async Task<bool> UpdateLoaiGiaoVienAsync(Guid LoaiGiaoVienId, string Name, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
-                throw new Exception("Tên Loại Giáo Viên không được để trống !!!");
+                throw new Exception("Tên Loại Nhân Viên không được để trống !!!");
 
             var item = await _context.LoaiGiaoViens
                                     .Where(x => x.LoaiGiaoVienId == LoaiGiaoVienId)
                                     .SingleOrDefaultAsync();
 
             if (item == null)
-                throw new Exception("Không tìm thấy Loại Giáo Viên !!!");
+                throw new Exception("Không tìm thấy Loại Nhân Viên !!!");
 
             item.Name = Name;
             item.UpdatedBy = LoggedEmployee;

@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using Up.Data.Entities;
-
-namespace Up.Data
+﻿namespace Up.Data
 {
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
+    using Up.Data.Entities;
+
     public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -21,8 +21,11 @@ namespace Up.Data
         public DbSet<HocVien_LopHoc> HocVien_LopHocs { get; set; }
         public DbSet<LopHoc> LopHocs { get; set; }
         public DbSet<HocVien> HocViens { get; set; }
+        //GIAO VIEN LA NHAN VIEN
         public DbSet<GiaoVien> GiaoViens { get; set; }
+        //GIAO VIEN LA NHAN VIEN
         public DbSet<LoaiGiaoVien> LoaiGiaoViens { get; set; }
+        public DbSet<LoaiCheDo> LoaiCheDos { get; set; }
         public DbSet<LopHoc_DiemDanh> LopHoc_DiemDanhs { get; set; }
         public DbSet<HocVien_NgayHoc> HocVien_NgayHocs { get; set; }
         public DbSet<ChiPhiCoDinh> ChiPhiCoDinhs { get; set; }

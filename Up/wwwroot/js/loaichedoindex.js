@@ -1,7 +1,7 @@
 ﻿var vue = new Vue({
-    el: '#LoaiGiaoVienIndex',
+    el: '#LoaiCheDoIndex',
     data: {
-        title: 'Quản Lý Loại Nhân Viên',
+        title: 'Quản Lý Loại Chế Độ',
         messageText: '',
         color: '',
         timeout: 3000,
@@ -19,7 +19,7 @@
                 sortable: false,
                 value: ''
             },
-            { text: 'Tên Loại Nhân Viên', value: 'name', align: 'left', sortable: false },
+            { text: 'Tên Loại Chế Độ', value: 'name', align: 'left', sortable: false },
             { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: false },
             { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: false },
             { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: false },
@@ -29,7 +29,7 @@
     },
     async beforeCreate() {
         let that = this;
-        await axios.get('/category/GetLoaiGiaoVienAsync')
+        await axios.get('/category/GetLoaiCheDoAsync')
             .then(function (response) {
                 that.khoaHocItems = response.data;
             })
@@ -42,10 +42,10 @@
             let that = this;
             await axios({
                 method: 'put',
-                url: '/category/UpdateLoaiGiaoVienAsync',
+                url: '/category/UpdateLoaiCheDoAsync',
                 data: {
                     Name: item.name,
-                    LoaiGiaoVienId: item.loaiGiaoVienId
+                    LoaiCheDoId: item.loaiCheDoId
                 }
             })
                 .then(function (response) {
@@ -78,7 +78,7 @@
                 let that = this;
                 await axios({
                     method: 'post',
-                    url: '/category/CreateLoaiGiaoVienAsync',
+                    url: '/category/CreateLoaiCheDoAsync',
                     data: {
                         Name: that.newItem
                     }
@@ -111,9 +111,9 @@
             let that = this;
             await axios({
                 method: 'delete',
-                url: '/category/DeleteLoaiGiaoVienAsync',
+                url: '/category/DeleteLoaiCheDoAsync',
                 data: {
-                    LoaiGiaoVienId: item.loaiGiaoVienId
+                    LoaiCheDoId: item.loaiCheDoId
                 }
             })
                 .then(function (response) {
