@@ -16,13 +16,13 @@
                         </v-btn>
                         <v-card>
                             <v-card-title>
-                                <span class="headline">Thêm Giáo Viên Mới</span>
+                                <span class="headline">Thêm Nhân Viên Mới</span>
                             </v-card-title>
                             <v-card-text>
                                 <v-container grid-list-md>
                                     <v-layout wrap>
                                         <v-flex xs12 sm4>
-                                            <v-text-field label="Tên Giáo Viên *" required v-model="newItem.name" v-on:keyup.enter="onSave"></v-text-field>
+                                            <v-text-field label="Tên Nhân Viên *" required v-model="newItem.name" v-on:keyup.enter="onSave"></v-text-field>
                                         </v-flex>
                                         <v-flex xs12 sm4>
                                             <v-text-field label="Số Điện Thoại *" required v-model="newItem.phone" v-on:keyup.enter="onSave"></v-text-field>
@@ -51,12 +51,21 @@
                                             <v-text-field label="CMND *" required v-model="newItem.cmnd" v-on:keyup.enter="onSave"></v-text-field>
                                         </v-flex>
 
-                                        <v-flex xs12 sm4>
+                                        <v-flex xs12 sm6>
                                             <v-select :items="itemLoaiGiaoVien"
                                                       item-text="name"
                                                       item-value="loaiGiaoVienId"
                                                       v-model="newItem.loaiGiaoVien"
-                                                      label="Chọn Loại Giáo Viên *">
+                                                      label="Chọn Loại Nhân Viên *">
+                                            </v-select>
+                                        </v-flex>
+
+                                        <v-flex xs12 sm6>
+                                            <v-select :items="itemLoaiCheDo"
+                                                      item-text="name"
+                                                      item-value="loaiCheDoId"
+                                                      v-model="newItem.loaiCheDo"
+                                                      label="Chọn Loại Chế Độ *">
                                             </v-select>
                                         </v-flex>
                                     </v-layout>
@@ -120,6 +129,7 @@
                         </td>
                         <td>{{ props.item.name }}</td>
                         <td>{{ props.item.loaiGiaoVien }}</td>
+                        <td>{{ props.item.loaiCheDo }}</td>
                         <td>{{ props.item.phone }}</td>
                         <td>{{ props.item.teachingRate }}</td>
                         <td>{{ props.item.tutoringRate }}</td>
@@ -184,14 +194,14 @@
                   max-width="600px">
             <v-card>
                 <v-card-title>
-                    <span class="headline">Cập Nhật Giáo Viên '{{ itemToEdit.name }}'</span>
+                    <span class="headline">Cập Nhật Nhân Viên '{{ itemToEdit.name }}'</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container grid-list-md>
                         <v-layout wrap>
 
                             <v-flex xs12 sm4>
-                                <v-text-field label="Tên Giáo Viên *" required v-model="itemToEdit.name" v-on:keyup.enter="onSave"></v-text-field>
+                                <v-text-field label="Tên Nhân Viên *" required v-model="itemToEdit.name" v-on:keyup.enter="onSave"></v-text-field>
                             </v-flex>
                             <v-flex xs12 sm4>
                                 <v-text-field label="Số Điện Thoại *" required v-model="itemToEdit.phone" v-on:keyup.enter="onSave"></v-text-field>
@@ -220,12 +230,21 @@
                                 <v-text-field label="CMND *" required v-model="itemToEdit.cmnd" v-on:keyup.enter="onSave"></v-text-field>
                             </v-flex>
 
-                            <v-flex xs12 sm4>
+                            <v-flex xs12 sm6>
                                 <v-select :items="itemLoaiGiaoVien"
                                           item-text="name"
                                           item-value="loaiGiaoVienId"
                                           v-model="itemToEdit.loaiGiaoVienId"
-                                          label="Chọn Loại Giáo Viên *">
+                                          label="Chọn Loại Nhân Viên *">
+                                </v-select>
+                            </v-flex>
+
+                            <v-flex xs12 sm6>
+                                <v-select :items="itemLoaiCheDo"
+                                          item-text="name"
+                                          item-value="loaiCheDoId"
+                                          v-model="itemToEdit.loaiCheDoId"
+                                          label="Chọn Loại Chế Độ *">
                                 </v-select>
                             </v-flex>
                         </v-layout>

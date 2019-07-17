@@ -77,16 +77,17 @@ var vue = new Vue({
                     borderWidth: 1,
                     pointBorderColor: '#1976d2',
                     backgroundColor: 'transparent'
-                },
-                {
-                    label: 'Giáo Viên Nước Ngoài',
-                    data: [],
-                    borderColor: '#f44336',
-                    pointBackgroundColor: '#f44336',
-                    borderWidth: 1,
-                    pointBorderColor: '#f44336',
-                    backgroundColor: 'transparent'
                 }
+                //,
+                //{
+                //    label: 'Giáo Viên Nước Ngoài',
+                //    data: [],
+                //    borderColor: '#f44336',
+                //    pointBackgroundColor: '#f44336',
+                //    borderWidth: 1,
+                //    pointBorderColor: '#f44336',
+                //    backgroundColor: 'transparent'
+                //}
             ]
         },
 
@@ -162,7 +163,7 @@ var vue = new Vue({
                 .then(function (response) {
                     that.chartdataGiaoVien.datasets[0].data = response.data.fullTime;
                     that.chartdataGiaoVien.datasets[1].data = response.data.partTime;
-                    that.chartdataGiaoVien.datasets[2].data = response.data.quocTe;
+                    //that.chartdataGiaoVien.datasets[2].data = response.data.quocTe;
                     that.loadedGiaoVien = true;
                 })
                 .catch(function (error) {

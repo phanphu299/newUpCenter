@@ -113,24 +113,23 @@
                 listPartTime[int.Parse(item.Label) - 1] = item.Data;
             }
 
-            var quocTe = _thongKeService.GetGiaoVienNuocNgoaiAsync()
-                .Result
-                .GroupBy(p => p.CreatedDate_Date.Month)
-                                .Select(g => new ThongKeModel
-                                {
-                                    Label = g.Key.ToString(),
-                                    Data = g.Count(),
-                                });
-            var listQuocTe = Enumerable.Repeat(0.0, 12).ToList();
-            foreach (var item in quocTe)
-            {
-                listQuocTe[int.Parse(item.Label) - 1] = item.Data;
-            }
+            //var quocTe = _thongKeService.GetGiaoVienNuocNgoaiAsync()
+            //    .Result
+            //    .GroupBy(p => p.CreatedDate_Date.Month)
+            //                    .Select(g => new ThongKeModel
+            //                    {
+            //                        Label = g.Key.ToString(),
+            //                        Data = g.Count(),
+            //                    });
+            //var listQuocTe = Enumerable.Repeat(0.0, 12).ToList();
+            //foreach (var item in quocTe)
+            //{
+            //    listQuocTe[int.Parse(item.Label) - 1] = item.Data;
+            //}
 
             return Json(new ThongKeGiaoVienViewModel
             {
                 FullTime = listFullTime,
-                QuocTe = listQuocTe,
                 PartTime = listPartTime
             });
         }

@@ -7,6 +7,8 @@
         public string Name { get; set; }
         public Guid LoaiGiaoVienId { get; set; }
         public string LoaiGiaoVien { get; set; }
+        public Guid LoaiCheDoId { get; set; }
+        public string LoaiCheDo { get; set; }
         public string Phone { get; set; }
         public double TeachingRate { get; set; }
         public double TutoringRate { get; set; }

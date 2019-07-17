@@ -45,8 +45,8 @@ namespace Up.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ea19b33d-a2ef-4919-b91f-efda405ac726",
-                            ConcurrencyStamp = "662855fc-aeef-4bb7-bf86-fdbdb3c4ea58",
+                            Id = "fe37f8ed-9ce2-4297-8010-cf8c6dcca898",
+                            ConcurrencyStamp = "d02b6f31-ae96-4eb6-a245-5adb032af371",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -234,6 +234,8 @@ namespace Up.Data.Migrations
 
                     b.Property<bool>("IsDisabled");
 
+                    b.Property<Guid>("LoaiCheDoId");
+
                     b.Property<Guid>("LoaiGiaoVienId");
 
                     b.Property<string>("Name");
@@ -249,6 +251,8 @@ namespace Up.Data.Migrations
                     b.Property<DateTime?>("UpdatedDate");
 
                     b.HasKey("GiaoVienId");
+
+                    b.HasIndex("LoaiCheDoId");
 
                     b.HasIndex("LoaiGiaoVienId");
 
@@ -455,6 +459,28 @@ namespace Up.Data.Migrations
                     b.HasKey("KhoaHocId");
 
                     b.ToTable("KhoaHocs");
+                });
+
+            modelBuilder.Entity("Up.Data.Entities.LoaiCheDo", b =>
+                {
+                    b.Property<Guid>("LoaiCheDoId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<bool>("IsDisabled");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime?>("UpdatedDate");
+
+                    b.HasKey("LoaiCheDoId");
+
+                    b.ToTable("LoaiCheDos");
                 });
 
             modelBuilder.Entity("Up.Data.Entities.LoaiGiaoVien", b =>
@@ -762,6 +788,11 @@ namespace Up.Data.Migrations
 
             modelBuilder.Entity("Up.Data.Entities.GiaoVien", b =>
                 {
+                    b.HasOne("Up.Data.Entities.LoaiCheDo", "LoaiCheDo")
+                        .WithMany("GiaoViens")
+                        .HasForeignKey("LoaiCheDoId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Up.Data.Entities.LoaiGiaoVien", "LoaiGiaoVien")
                         .WithMany("GiaoViens")
                         .HasForeignKey("LoaiGiaoVienId")

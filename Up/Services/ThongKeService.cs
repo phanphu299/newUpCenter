@@ -95,7 +95,7 @@
             try
             {
                 var fullTime = await _context.GiaoViens
-                .Where(x => x.LoaiGiaoVienId == LoaiGiaoVienEnums.FullTime.ToId() && x.IsDisabled == false)
+                .Where(x => x.LoaiGiaoVienId == LoaiNhanVienEnums.GiaoVien.ToId() && x.LoaiCheDoId == LoaiCheDoEnums.FullTime.ToId() && x.IsDisabled == false)
                 .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
                 .OrderBy(x => x.CreatedDate)
 
@@ -119,7 +119,7 @@
             try
             {
                 var partTime = await _context.GiaoViens
-                .Where(x => x.LoaiGiaoVienId == LoaiGiaoVienEnums.PartTime.ToId() && x.IsDisabled == false)
+                .Where(x => x.LoaiGiaoVienId == LoaiNhanVienEnums.GiaoVien.ToId() && x.LoaiCheDoId == LoaiCheDoEnums.PartTime.ToId() && x.IsDisabled == false)
                 .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
                 .OrderBy(x => x.CreatedDate)
 
@@ -138,35 +138,35 @@
             }
         }
 
-        public async Task<List<GiaoVienViewModel>> GetGiaoVienNuocNgoaiAsync()
-        {
-            try
-            {
-                var nuocNgoai = await _context.GiaoViens
-                .Where(x => x.LoaiGiaoVienId == LoaiGiaoVienEnums.GVNN.ToId() && x.IsDisabled == false)
-                .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
-                .OrderBy(x => x.CreatedDate)
+        //public async Task<List<GiaoVienViewModel>> GetGiaoVienNuocNgoaiAsync()
+        //{
+        //    try
+        //    {
+        //        var nuocNgoai = await _context.GiaoViens
+        //        .Where(x => x.LoaiGiaoVienId == LoaiGiaoVienEnums.GVNN.ToId() && x.IsDisabled == false)
+        //        .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
+        //        .OrderBy(x => x.CreatedDate)
 
-                .Select(g => new GiaoVienViewModel
-                {
-                    GiaoVienId = g.GiaoVienId,
-                    CreatedDate_Date = g.CreatedDate
-                })
-                .ToListAsync();
+        //        .Select(g => new GiaoVienViewModel
+        //        {
+        //            GiaoVienId = g.GiaoVienId,
+        //            CreatedDate_Date = g.CreatedDate
+        //        })
+        //        .ToListAsync();
 
-                return nuocNgoai;
-            }
-            catch (Exception exception)
-            {
-                throw new Exception(exception.Message);
-            }
-        }
+        //        return nuocNgoai;
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        throw new Exception(exception.Message);
+        //    }
+        //}
 
         public async Task<int> GetTongGiaoVienAsync()
         {
             try
             {
-                return await _context.GiaoViens.Where(x => x.IsDisabled == false).CountAsync();
+                return await _context.GiaoViens.Where(x => x.LoaiGiaoVienId == LoaiNhanVienEnums.GiaoVien.ToId() && x.IsDisabled == false).CountAsync();
             }
             catch (Exception exception)
             {

@@ -1,7 +1,7 @@
 ﻿var vue = new Vue({
     el: '#GiaoVienIndex',
     data: {
-        title: 'Quản Lý Giáo Viên',
+        title: 'Quản Lý Nhân Viên',
         messageText: '',
         color: '',
         timeout: 3000,
@@ -22,7 +22,8 @@
             diaChi: '',
             initialName: '',
             cmnd: '',
-            loaiGiaoVien: ''
+            loaiGiaoVien: '',
+            loaiCheDo: ''
         },
         itemToDelete: {},
         itemToEdit: {},
@@ -35,8 +36,9 @@
                 sortable: false,
                 value: ''
             },
-            { text: 'Tên Giáo Viên', value: 'name', align: 'left', sortable: true },
-            { text: 'Loại Giáo Viên', value: 'loaiGiaoVien', align: 'left', sortable: true },
+            { text: 'Tên Nhân Viên', value: 'name', align: 'left', sortable: true },
+            { text: 'Loại Nhân Viên', value: 'loaiGiaoVien', align: 'left', sortable: true },
+            { text: 'Loại Chế Độ', value: 'loaiCheDo', align: 'left', sortable: true },
             { text: 'Số Điện Thoại', value: 'phone', align: 'left', sortable: true },
             { text: 'Teaching Rate', value: 'teachingRate', align: 'left', sortable: true },
             { text: 'Tutoring Rate', value: 'tutoringRate', align: 'left', sortable: true },
@@ -51,7 +53,8 @@
             { text: 'Người Sửa', value: 'updatedBy', align: 'left', sortable: true }
         ],
         khoaHocItems: [],
-        itemLoaiGiaoVien: []
+        itemLoaiGiaoVien: [],
+        itemLoaiCheDo: []
     },
     async beforeCreate() {
         let that = this;
@@ -66,6 +69,14 @@
         await axios.get('/Category/GetLoaiGiaoVienAsync')
             .then(function (response) {
                 that.itemLoaiGiaoVien = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        await axios.get('/Category/GetLoaiCheDoAsync')
+            .then(function (response) {
+                that.itemLoaiCheDo = response.data;
             })
             .catch(function (error) {
                 console.log(error);
@@ -107,7 +118,8 @@
                         DiaChi: item.diaChi,
                         InitialName: item.initialName,
                         CMND: item.cmnd,
-                        LoaiGiaoVienId: item.loaiGiaoVienId
+                        LoaiGiaoVienId: item.loaiGiaoVienId,
+                        LoaiCheDoId: item.loaiCheDoId
                     }
                 })
                 .then(function (response) {
@@ -161,7 +173,8 @@
                         DiaChi: that.newItem.diaChi,
                         InitialName: that.newItem.initialName,
                         CMND: that.newItem.cmnd,
-                        LoaiGiaoVienId: that.newItem.loaiGiaoVien
+                        LoaiGiaoVienId: that.newItem.loaiGiaoVien,
+                        LoaiCheDoId: that.newItem.loaiCheDo
                     }
                 })
                     .then(function (response) {

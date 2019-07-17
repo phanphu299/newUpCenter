@@ -18,10 +18,10 @@
             _context = context;
         }
 
-        public async Task<GiaoVienViewModel> CreateGiaoVienAsync(string Name, Guid LoaiGiaoVienId, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, string LoggedEmployee)
+        public async Task<GiaoVienViewModel> CreateGiaoVienAsync(string Name, Guid LoaiGiaoVienId, Guid LoaiCheDoId, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, string LoggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name) || LoaiGiaoVienId == null || string.IsNullOrWhiteSpace(Phone) || string.IsNullOrWhiteSpace(FacebookAccount) || string.IsNullOrWhiteSpace(DiaChi) || string.IsNullOrWhiteSpace(InitialName) || string.IsNullOrWhiteSpace(CMND))
-                throw new Exception("Tên Giáo Viên, Loại Giáo Viên, SĐT, FB, Địa Chỉ, Initial Name, CMND không được để trống !!!");
+            if (string.IsNullOrWhiteSpace(Name) || LoaiGiaoVienId == null || LoaiCheDoId == null || string.IsNullOrWhiteSpace(Phone) || string.IsNullOrWhiteSpace(FacebookAccount) || string.IsNullOrWhiteSpace(DiaChi) || string.IsNullOrWhiteSpace(InitialName) || string.IsNullOrWhiteSpace(CMND))
+                throw new Exception("Tên Nhân Viên, Loại Nhân Viên, Loại Chế Độ, SĐT, FB, Địa Chỉ, Initial Name, CMND không được để trống !!!");
 
             GiaoVien giaoVien = new GiaoVien();
             giaoVien.GiaoVienId = new Guid();
@@ -36,13 +36,14 @@
             giaoVien.TutoringRate = TutoringRate;
             giaoVien.BasicSalary = BasicSalary;
             giaoVien.CreatedBy = LoggedEmployee;
+            giaoVien.LoaiCheDoId = LoaiCheDoId;
             giaoVien.CreatedDate = DateTime.Now;
 
             _context.GiaoViens.Add(giaoVien);
 
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
-                throw new Exception("Lỗi khi lưu Giáo Viên !!!");
+                throw new Exception("Lỗi khi lưu Nhân Viên !!!");
             return new GiaoVienViewModel {
                 GiaoVienId = giaoVien.GiaoVienId,
                 Name = giaoVien.Name,
@@ -56,6 +57,8 @@
                 Phone = giaoVien.Phone,
                 LoaiGiaoVienId = giaoVien.LoaiGiaoVienId,
                 LoaiGiaoVien = _context.LoaiGiaoViens.FindAsync(giaoVien.LoaiGiaoVienId).Result.Name,
+                LoaiCheDoId = giaoVien.LoaiCheDoId,
+                LoaiCheDo = _context.LoaiCheDos.FindAsync(giaoVien.LoaiCheDoId).Result.Name,
                 CreatedBy = giaoVien.CreatedBy,
                 CreatedDate = giaoVien.CreatedDate.ToString("dd/MM/yyyy") };
         }
@@ -64,13 +67,13 @@
         {
             var lopHoc = await _context.LopHocs.Where(x => x.GiaoVienId == GiaoVienId).ToListAsync();
             if (lopHoc.Any())
-                throw new Exception("Hãy xóa những lớp học của giáo viên này trước !!!");
+                throw new Exception("Hãy xóa những lớp học của nhân viên này trước !!!");
 
             var item = await _context.GiaoViens
                                     .FindAsync(GiaoVienId);
 
             if (item == null)
-                throw new Exception("Không tìm thấy Giáo Viên !!!");
+                throw new Exception("Không tìm thấy Nhân Viên !!!");
 
             item.IsDisabled = true;
             item.UpdatedBy = LoggedEmployee;
@@ -99,6 +102,8 @@
                     InitialName = x.InitialName,
                     LoaiGiaoVienId = x.LoaiGiaoVienId,
                     LoaiGiaoVien = x.LoaiGiaoVien.Name,
+                    LoaiCheDoId = x.LoaiCheDoId,
+                    LoaiCheDo = x.LoaiCheDo.Name,
                     Name = x.Name,
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
@@ -106,19 +111,19 @@
                 .ToListAsync();
         }
 
-        public async Task<GiaoVienViewModel> UpdateGiaoVienAsync(Guid GiaoVienId, string Name, Guid LoaiGiaoVienId, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, string LoggedEmployee)
+        public async Task<GiaoVienViewModel> UpdateGiaoVienAsync(Guid GiaoVienId, string Name, Guid LoaiGiaoVienId, Guid LoaiCheDoId, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, string LoggedEmployee)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(Name) || LoaiGiaoVienId == null || string.IsNullOrWhiteSpace(Phone) || string.IsNullOrWhiteSpace(FacebookAccount) || string.IsNullOrWhiteSpace(DiaChi) || string.IsNullOrWhiteSpace(InitialName) || string.IsNullOrWhiteSpace(CMND))
-                    throw new Exception("Tên Giáo Viên, Loại Giáo Viên, SĐT, FB, Địa Chỉ, Initial Name, CMND không được để trống !!!");
+                if (string.IsNullOrWhiteSpace(Name) || LoaiGiaoVienId == null || LoaiCheDoId == null || string.IsNullOrWhiteSpace(Phone) || string.IsNullOrWhiteSpace(FacebookAccount) || string.IsNullOrWhiteSpace(DiaChi) || string.IsNullOrWhiteSpace(InitialName) || string.IsNullOrWhiteSpace(CMND))
+                    throw new Exception("Tên Giáo Viên, Loại Giáo Viên, Loại Chế Độ, SĐT, FB, Địa Chỉ, Initial Name, CMND không được để trống !!!");
 
                 var item = await _context.GiaoViens
                                         .Where(x => x.GiaoVienId == GiaoVienId)
                                         .SingleOrDefaultAsync();
 
                 if (item == null)
-                    throw new Exception("Không tìm thấy Giáo Viên!!!");
+                    throw new Exception("Không tìm thấy Nhân Viên!!!");
 
                 item.Name = Name;
                 item.Phone = Phone;
@@ -132,6 +137,7 @@
                 item.BasicSalary = BasicSalary;
                 item.UpdatedBy = LoggedEmployee;
                 item.LoaiGiaoVienId = LoaiGiaoVienId;
+                item.LoaiCheDoId = LoaiCheDoId;
                 item.UpdatedDate = DateTime.Now;
 
                 await _context.SaveChangesAsync();
@@ -148,6 +154,8 @@
                     FacebookAccount = item.FacebookAccount,
                     LoaiGiaoVienId = item.LoaiGiaoVienId,
                     LoaiGiaoVien = _context.LoaiGiaoViens.FindAsync(item.LoaiGiaoVienId).Result.Name,
+                    LoaiCheDoId = item.LoaiCheDoId,
+                    LoaiCheDo = _context.LoaiCheDos.FindAsync(item.LoaiCheDoId).Result.Name,
                     Phone = item.Phone,
                     UpdatedBy = item.UpdatedBy,
                     UpdatedDate = item.UpdatedDate?.ToString("dd/MM/yyyy"),

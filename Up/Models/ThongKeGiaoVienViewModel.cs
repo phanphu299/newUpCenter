@@ -6,6 +6,6 @@
     {
         public List<double> FullTime { get; set; }
         public List<double> PartTime { get; set; }
-        public List<double> QuocTe { get; set; }
+        //public List<double> QuocTe { get; set; }
     }
 }
