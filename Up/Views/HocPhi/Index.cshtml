@@ -8,14 +8,15 @@
             <v-card>
                 <v-card-title>
                     <v-layout wrap>
-                        <v-flex xs12 sm2>
+                        <v-flex xs12 sm4>
                             <v-select v-model="selectedLopHoc"
                                       :items="itemLopHoc"
                                       item-text="name"
                                       item-value="lopHocId"
                                       attach
                                       chips
-                                      label="Chọn Lớp Học">
+                                      label="Chọn Lớp Học"
+                                      v-on:change="onTinhTien">
                                 <template v-slot:selection="data">
                                     <v-chip :selected="data.selected"
                                             color="green"
@@ -26,22 +27,20 @@
                             </v-select>
                         </v-flex>
 
-                        <v-flex xs12 sm2>
+                        <v-flex xs12 sm4>
                             <v-select :items="itemThang"
                                       v-model="selectedThang"
                                       chips
-                                      label="Chọn Tháng"></v-select>
+                                      label="Chọn Tháng"
+                                      v-on:change="onTinhTien"></v-select>
                         </v-flex>
 
-                        <v-flex xs12 sm2>
+                        <v-flex xs12 sm4>
                             <v-select :items="itemNam"
                                       v-model="selectedNam"
                                       chips
-                                      label="Chọn Năm"></v-select>
-                        </v-flex>
-
-                        <v-flex xs12 sm2>
-                            <v-btn color="primary" v-on:click="onTinhTien">Tính Tiền</v-btn>
+                                      label="Chọn Năm"
+                                      v-on:change="onTinhTien"></v-select>
                         </v-flex>
                         <v-spacer></v-spacer>
                         <v-flex xs12 sm2 v-if="hocVienList.length > 0">

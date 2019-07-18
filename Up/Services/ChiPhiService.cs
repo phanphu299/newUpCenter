@@ -6,6 +6,7 @@ namespace Up.Services
     using System.Linq;
     using System.Threading.Tasks;
     using Up.Data;
+    using Up.Enums;
     using Up.Models;
 
     public class ChiPhiService : IChiPhiService
@@ -28,19 +29,8 @@ namespace Up.Services
                     TeachingRate = x.TeachingRate,
                     TutoringRate = x.TutoringRate,
                     Bonus = 0,
-                    LoaiChiPhi = 1,
-                    ChiPhiMoi = x.BasicSalary
-                })
-                .ToListAsync();
-
-            var nhanVien = await _context.NhanVienKhacs
-                .Where(x => x.IsDisabled == false)
-                .Select(x => new ChiPhiModel
-                {
-                    Salary_Expense = x.BasicSalary,
-                    Name = x.Name,
-                    LoaiChiPhi = 2,
-                    Bonus = 0,
+                    Minus = 0,
+                    LoaiChiPhi = x.LoaiGiaoVienId == LoaiNhanVienEnums.GiaoVien.ToId() ? 1 : 2,
                     ChiPhiMoi = x.BasicSalary
                 })
                 .ToListAsync();
@@ -52,6 +42,7 @@ namespace Up.Services
                     Name = x.Name,
                     Salary_Expense = x.Gia,
                     Bonus = 0,
+                    Minus = 0,
                     LoaiChiPhi = 3,
                     ChiPhiMoi = x.Gia
                 })
@@ -59,7 +50,6 @@ namespace Up.Services
 
             List<ChiPhiModel> model = new List<ChiPhiModel>();
             model.AddRange(giaoVien);
-            model.AddRange(nhanVien);
             model.AddRange(chiPhi);
 
             return new TinhChiPhiViewModel

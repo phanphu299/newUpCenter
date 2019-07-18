@@ -28,14 +28,15 @@
             { text: 'Số Giờ Dạy', align: 'left', sortable: true },
             { text: 'Số Giờ Kèm', align: 'left', sortable: true },
             { text: 'Bonus', align: 'left', sortable: true },
+            { text: 'Khoảng Trừ Khác', align: 'left', sortable: true },
             { text: 'Chi Phí', align: 'left', sortable: true }
         ]
 
     },
     methods: {
         async onTinhChiPhi(item) {
-            if (!isNaN(item.soGioDay) && !isNaN(item.soGioKem) && !isNaN(item.bonus)) {
-                item.chiPhiMoi = item.salary_Expense + (item.soGioKem * item.tutoringRate) + (item.soGioDay * item.teachingRate) + (item.bonus * 1);
+            if (!isNaN(item.soGioDay) && !isNaN(item.soGioKem) && !isNaN(item.bonus) && !isNaN(item.minus)) {
+                item.chiPhiMoi = item.salary_Expense + (item.soGioKem * item.tutoringRate) + (item.soGioDay * item.teachingRate) + (item.bonus * 1) - (item.minus * 1);
             }
         },
 
@@ -52,12 +53,6 @@
                     .catch(function (error) {
                         console.log(error);
                     });
-            }
-            else {
-                that.snackbar = true;
-                that.messageText = "Phải chọn Tháng và Năm trước khi tính chi phí!!!";
-                that.color = 'error';
-                that.dialogEdit = false;
             }
         },
 

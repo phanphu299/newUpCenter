@@ -100,12 +100,6 @@
                         console.log(error);
                     });
             }
-            else {
-                that.snackbar = true;
-                that.messageText = "Phải chọn Lớp Học, Tháng và Năm trước khi tính tiền!!!";
-                that.color = 'error';
-                that.dialogEdit = false;
-            }
         },
 
         forceFileDownload(response) {

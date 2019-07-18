@@ -31,6 +31,13 @@
             return Json(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetGiaoVienOnlyAsync()
+        {
+            var model = await _giaoVienService.GetGiaoVienOnlyAsync();
+            return Json(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateGiaoVienAsync([FromBody]Models.GiaoVienViewModel model)
         {

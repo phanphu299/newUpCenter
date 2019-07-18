@@ -117,7 +117,7 @@
                 console.log(error);
             });
 
-        await axios.get('/GiaoVien/GetGiaoVienAsync')
+        await axios.get('/GiaoVien/GetGiaoVienOnlyAsync')
             .then(function (response) {
                 that.itemGiaoVien = response.data;
             })

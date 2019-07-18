@@ -190,7 +190,7 @@
             this.editedIndex = this.khoaHocItems.indexOf(item);
             this.itemToEdit = Object.assign({}, item);
 
-            if (itemToEdit.ngaySinh !== "") {
+            if (this.itemToEdit.ngaySinh !== "") {
                 let [dayKG, monthKG, yearKG] = this.itemToEdit.ngaySinh.split('/');
                 this.itemToEdit.ngaySinh = yearKG + '-' + monthKG + '-' + dayKG;
             }

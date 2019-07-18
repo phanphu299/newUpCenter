@@ -9,6 +9,7 @@ namespace Up.Services
     public interface IGiaoVienService
     {
         Task<List<GiaoVienViewModel>> GetGiaoVienAsync();
+        Task<List<GiaoVienViewModel>> GetGiaoVienOnlyAsync();
         Task<GiaoVienViewModel> CreateGiaoVienAsync(string Name, Guid LoaiGiaoVienId, Guid LoaiCheDoId, string Phone, double TeachingRate, double TutoringRate,
             double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, string LoggedEmployee);
         Task<GiaoVienViewModel> UpdateGiaoVienAsync(Guid GiaoVienId, string Name, Guid LoaiGiaoVienId, Guid LoaiCheDoId, string Phone, double TeachingRate, double TutoringRate,

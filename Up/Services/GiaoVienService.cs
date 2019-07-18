@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using Up.Data;
     using Up.Data.Entities;
+    using Up.Enums;
     using Up.Models;
 
     public class GiaoVienService : IGiaoVienService
@@ -87,6 +88,34 @@
         {
             return await _context.GiaoViens
                 .Where(x => x.IsDisabled == false)
+                .Select(x => new GiaoVienViewModel
+                {
+                    CreatedBy = x.CreatedBy,
+                    CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
+                    GiaoVienId = x.GiaoVienId,
+                    Phone = x.Phone,
+                    FacebookAccount = x.FacebookAccount,
+                    DiaChi = x.DiaChi,
+                    CMND = x.CMND,
+                    TeachingRate = x.TeachingRate,
+                    TutoringRate = x.TutoringRate,
+                    BasicSalary = x.BasicSalary,
+                    InitialName = x.InitialName,
+                    LoaiGiaoVienId = x.LoaiGiaoVienId,
+                    LoaiGiaoVien = x.LoaiGiaoVien.Name,
+                    LoaiCheDoId = x.LoaiCheDoId,
+                    LoaiCheDo = x.LoaiCheDo.Name,
+                    Name = x.Name,
+                    UpdatedBy = x.UpdatedBy,
+                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<GiaoVienViewModel>> GetGiaoVienOnlyAsync()
+        {
+            return await _context.GiaoViens
+                .Where(x => x.IsDisabled == false && x.LoaiGiaoVienId == LoaiNhanVienEnums.GiaoVien.ToId())
                 .Select(x => new GiaoVienViewModel
                 {
                     CreatedBy = x.CreatedBy,
