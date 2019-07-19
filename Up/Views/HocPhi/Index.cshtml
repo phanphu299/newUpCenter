@@ -87,7 +87,6 @@
                                                 <v-select :items="itemSach"
                                                           item-text="name"
                                                           item-value="gia"
-                                                          attach
                                                           multiple
                                                           chips
                                                           label="Chọn Tài Liệu"
@@ -106,7 +105,6 @@
                                             <td>
                                                 <v-select :items="itemKhuyenMai"
                                                           v-model="props.item.khuyenMai"
-                                                          attach
                                                           chips
                                                           label="Khuyến Mãi (%)"
                                                           v-on:change="onchangeKhuyenMai(props.item.khuyenMai, props.item)">
