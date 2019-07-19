@@ -278,6 +278,8 @@ namespace Up.Services
 
         public async Task<List<HocVienViewModel>> GetHocVien_No_NgayHocAsync(Guid LopHocId, int month, int year, double HocPhi, int SoNgayHoc, double HocPhiMoiNgay)
         {
+            int currentMonth = month;
+            int currentYear = year;
             if (month == 1)
             {
                 month = 12;
@@ -309,7 +311,8 @@ namespace Up.Services
                                         TienNo = x.HocVien.HocVien_Nos
                                                         .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Any() ? x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo) : 0,
                                         HocPhiMoi = x.HocVien.HocVien_Nos
-                                                        .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Any() ? (Math.Ceiling((HocPhi + x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo)) / 10000) * 10000) : (Math.Ceiling(HocPhi / 10000) * 10000)
+                                                        .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Any() ? (Math.Ceiling((HocPhi + x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo)) / 10000) * 10000) : (Math.Ceiling(HocPhi / 10000) * 10000),
+                                        DaDongHocPhi = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear)
                                     })
                                     .ToListAsync();
 

@@ -22,6 +22,7 @@
         hocPhiMoiNgay: 0,
         hocVienList: [],
         headers: [
+            { text: 'Đã Đóng?', align: 'left', sortable: true },
             { text: 'Tên Học Viên', align: 'left', sortable: true },
             { text: 'Nợ', align: 'left', sortable: true },
             { text: 'Tài Liệu', align: 'left', sortable: true },

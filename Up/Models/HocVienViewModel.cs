@@ -35,5 +35,6 @@
         public double[] GiaSach { get; set; }
         public double HocPhiFixed { get; set; }
         public double[] LastGiaSach { get; set; }
+        public bool DaDongHocPhi { get; set; } = false;
     }
 }

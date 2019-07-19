@@ -205,6 +205,11 @@ namespace Up.Controllers
                     
                     worksheet.Cells[i + 4, 7].Value = model.HocVienList[i].KhuyenMai + "%";
                     worksheet.Cells[i + 4, 8].Value = model.HocVienList[i].HocPhiMoi;
+                    
+                    if(model.HocVienList[i].DaDongHocPhi)
+                    {
+                        worksheet.Cells[i + 4, 10].Value = "ĐÃ ĐÓNG HP";
+                    }
                 }
 
                 worksheet.Cells.AutoFitColumns();
