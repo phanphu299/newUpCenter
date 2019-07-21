@@ -280,13 +280,6 @@
                         console.log(error);
                     });
             }
-            else {
-                this.snackbar = true;
-                this.messageText = "Phải chọn Tháng và Năm trước khi tìm!!!";
-                this.color = 'error';
-                this.dialogEdit = false;
-            }
-            
         },
 
         async onSave(item) {

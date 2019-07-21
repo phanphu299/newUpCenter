@@ -333,22 +333,20 @@
                 <v-card-text>
                         
                         <v-layout wrap>
-                            <v-flex xs12 sm4>
+                            <v-flex xs12 sm6>
                                 <v-select :items="itemThang"
                                           v-model="selectedThang"
                                           chips
-                                          label="Chọn Tháng"></v-select>
+                                          label="Chọn Tháng"
+                                          v-on:change="onTinhDiemDanh"></v-select>
                             </v-flex>
 
-                            <v-flex xs12 sm4>
+                            <v-flex xs12 sm6>
                                 <v-select :items="itemNam"
                                           v-model="selectedNam"
                                           chips
-                                          label="Chọn Năm"></v-select>
-                            </v-flex>
-
-                            <v-flex xs12 sm4>
-                                <v-btn color="primary" v-on:click="onTinhDiemDanh">Tìm</v-btn>
+                                          label="Chọn Năm"
+                                          v-on:change="onTinhDiemDanh"></v-select>
                             </v-flex>
                         </v-layout>
 
@@ -367,9 +365,9 @@
                                                 <td style="border: 1px solid #ddd;">{{ item.label }}</td>
                                                 <td style="border: 1px solid #ddd;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
                                                     <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
-                                                        <i v-if="content.day == column && content.isOff == false">x</i>
-                                                        <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == true">off</i>
-                                                        <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == null"></i>
+                                                        <i v-if="content.day == column && content.isOff != false">x</i>
+                                                        <i v-else-if="content.day == column && content.isOff != true && content.duocNghi == true">off</i>
+                                                        <i v-else-if="content.day == column && content.isOff != true && content.duocNghi == null"></i>
                                                     </span>
                                                 </td>
                                             </tr>

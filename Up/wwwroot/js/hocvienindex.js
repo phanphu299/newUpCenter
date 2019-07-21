@@ -417,12 +417,6 @@
                         console.log(error);
                     });
             }
-            else {
-                that.snackbar = true;
-                that.messageText = "Phải chọn Lớp Học, Tháng và Năm trước khi tìm!!!";
-                that.color = 'error';
-                that.dialogEdit = false;
-            }
         },
 
         forceFileDownload(response, name) {
