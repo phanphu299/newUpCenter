@@ -495,10 +495,11 @@
                         for (int row = 3; row <= rowCount; row++)
                         {
                             if(worksheet.Cells[row, 1].Value != null &&
-                                worksheet.Cells[row, 3].Value != null &&
-                                worksheet.Cells[row, 5].Value != null)
+                                worksheet.Cells[row, 3].Value != null)
                             {
-                                DateTime _ngaySinh = Convert.ToDateTime(worksheet.Cells[row, 5].Value.ToString().Trim() + " 00:00:00", System.Globalization.CultureInfo.InvariantCulture);
+                                DateTime? _ngaySinh = null;
+                                if(worksheet.Cells[row, 5].Value != null)
+                                    _ngaySinh = Convert.ToDateTime(worksheet.Cells[row, 5].Value.ToString().Trim() + " 00:00:00", System.Globalization.CultureInfo.InvariantCulture);
                                 Guid? quanHe = null;
 
                                 var successful = await _hocVienService.CreateHocVienAsync(
