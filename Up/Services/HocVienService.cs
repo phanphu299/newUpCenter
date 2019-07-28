@@ -49,8 +49,8 @@ namespace Up.Services
         }
 
         public async Task<HocVienViewModel> CreateHocVienAsync(string FullName, string Phone, string FacebookAccount, 
-            string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid? QuanHeId, 
-            string EnglishName, DateTime? NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee)
+            string ParentFullName, Guid? QuanHeId, 
+            string EnglishName, DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee)
         {
             try
             {
@@ -63,12 +63,9 @@ namespace Up.Services
                 hocVien.Phone = Phone;
                 hocVien.FacebookAccount = FacebookAccount;
                 hocVien.ParentFullName = ParentFullName;
-                hocVien.ParentPhone = ParentPhone;
-                hocVien.ParentFacebookAccount = ParentFacebookAccount;
                 hocVien.QuanHeId = QuanHeId;
                 hocVien.EnglishName = EnglishName;
                 hocVien.NgaySinh = NgaySinh;
-                hocVien.IsAppend = IsAppend;
                 hocVien.CreatedBy = LoggedEmployee;
                 hocVien.CreatedDate = DateTime.Now;
 
@@ -94,17 +91,14 @@ namespace Up.Services
                 return new HocVienViewModel
                 {
                     FullName = hocVien.FullName,
-                    IsAppend = hocVien.IsAppend,
                     NgaySinh = hocVien.NgaySinh == null ? "" : hocVien.NgaySinh.Value.ToString("dd/MM/yyyy"),
                     EnglishName = hocVien.EnglishName,
                     QuanHeId = hocVien.QuanHeId,
-                    ParentFacebookAccount = hocVien.ParentFacebookAccount,
                     CreatedBy = hocVien.CreatedBy,
                     CreatedDate = hocVien.CreatedDate.ToString("dd/MM/yyyy"),
                     FacebookAccount = hocVien.FacebookAccount,
                     IsDisabled = hocVien.IsDisabled,
                     ParentFullName = hocVien.ParentFullName,
-                    ParentPhone = hocVien.ParentPhone,
                     Phone = hocVien.Phone,
                     HocVienId = hocVien.HocVienId,
                     QuanHe = _context.QuanHes.FindAsync(hocVien.QuanHeId).Result == null ? "" : _context.QuanHes.FindAsync(hocVien.QuanHeId).Result.Name,
@@ -156,12 +150,9 @@ namespace Up.Services
                     FacebookAccount = x.FacebookAccount,
                     FullName = x.FullName,
                     HocVienId = x.HocVienId,
-                    IsAppend = x.IsAppend,
                     IsDisabled = x.IsDisabled,
                     NgaySinh = x.NgaySinh == null ? "" : x.NgaySinh.Value.ToString("dd/MM/yyyy"),
-                    ParentFacebookAccount = x.ParentFacebookAccount,
                     ParentFullName = x.ParentFullName,
-                    ParentPhone = x.ParentPhone,
                     Phone = x.Phone,
                     QuanHe = x.QuanHe.Name,
                     QuanHeId = x.QuanHeId,
@@ -191,12 +182,9 @@ namespace Up.Services
                     FacebookAccount = x.FacebookAccount,
                     FullName = x.FullName,
                     HocVienId = x.HocVienId,
-                    IsAppend = x.IsAppend,
                     IsDisabled = x.IsDisabled,
                     NgaySinh = x.NgaySinh == null ? "" : x.NgaySinh.Value.ToString("dd/MM/yyyy"),
-                    ParentFacebookAccount = x.ParentFacebookAccount,
                     ParentFullName = x.ParentFullName,
-                    ParentPhone = x.ParentPhone,
                     Phone = x.Phone,
                     QuanHe = x.QuanHe.Name,
                     QuanHeId = x.QuanHeId,
@@ -225,7 +213,6 @@ namespace Up.Services
                 if (item == null)
                     throw new Exception("Không tìm thấy Học Viên!!!");
                 
-                item.IsAppend = !item.IsAppend;
                 item.UpdatedBy = LoggedEmployee;
                 item.UpdatedDate = DateTime.Now;
                 await _context.SaveChangesAsync();
@@ -239,7 +226,7 @@ namespace Up.Services
         }
 
         public async Task<HocVienViewModel> UpdateHocVienAsync(Guid HocVienId, string FullName, string Phone, string FacebookAccount,
-           string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid? QuanHeId, string EnglishName,
+           string ParentFullName, Guid? QuanHeId, string EnglishName,
            DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee)
         {
             try
@@ -259,8 +246,6 @@ namespace Up.Services
                 item.Phone = Phone;
                 item.FacebookAccount = FacebookAccount;
                 item.ParentFullName = ParentFullName;
-                item.ParentPhone = ParentPhone;
-                item.ParentFacebookAccount = ParentFacebookAccount;
                 item.EnglishName = EnglishName;
                 item.NgaySinh = NgaySinh;
                 item.UpdatedBy = LoggedEmployee;
@@ -294,9 +279,6 @@ namespace Up.Services
                     FullName = item.FullName,
                     NgaySinh = item.NgaySinh == null ? "" : item.NgaySinh.Value.ToString("dd/MM/yyyy"),
                     EnglishName = item.EnglishName,
-                    ParentFacebookAccount = item.ParentFacebookAccount,
-                    ParentPhone = item.ParentPhone,
-                    IsAppend = item.IsAppend,
                     HocVienId = item.HocVienId,
                     ParentFullName = item.ParentFullName,
                     FacebookAccount = item.FacebookAccount,

@@ -45,8 +45,8 @@ namespace Up.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f6ebbdd5-fd88-4bbe-9d7d-8f6093b94b3d",
-                            ConcurrencyStamp = "edfaac11-bd45-4919-9b01-22f81f4d5e5d",
+                            Id = "9b18394c-0888-475a-ae42-6c471d5ed60f",
+                            ConcurrencyStamp = "331ca43d-47fc-4ca5-abe8-a4a7a19046df",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -324,17 +324,11 @@ namespace Up.Data.Migrations
 
                     b.Property<string>("FullName");
 
-                    b.Property<bool>("IsAppend");
-
                     b.Property<bool>("IsDisabled");
 
                     b.Property<DateTime?>("NgaySinh");
 
-                    b.Property<string>("ParentFacebookAccount");
-
                     b.Property<string>("ParentFullName");
-
-                    b.Property<string>("ParentPhone");
 
                     b.Property<string>("Phone");
 

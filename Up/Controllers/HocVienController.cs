@@ -68,7 +68,7 @@
                     _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
 
                 var successful = await _hocVienService.CreateHocVienAsync(model.FullName, model.Phone, model.FacebookAccount, model.ParentFullName,
-                    model.ParentPhone, model.ParentFacebookAccount, model.QuanHeId, model.EnglishName, _ngaySinh, model.IsAppend, model.LopHocIds, currentUser.Email);
+                    model.QuanHeId, model.EnglishName, _ngaySinh, model.LopHocIds, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -282,7 +282,7 @@
                     _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
 
                 var successful = await _hocVienService.UpdateHocVienAsync(model.HocVienId, model.FullName, model.Phone,
-                   model.FacebookAccount, model.ParentFullName, model.ParentPhone, model.ParentFacebookAccount, model.QuanHeId,
+                   model.FacebookAccount, model.ParentFullName, model.QuanHeId,
                    model.EnglishName, _ngaySinh, model.LopHocIds, currentUser.Email);
                 if (successful == null)
                 {
@@ -356,7 +356,7 @@
                 for (int i = 0; i < totalRows; i++)
                 {
                     worksheet.Cells[i + 3, 1].Value = hocVien[i].FullName;
-                    worksheet.Cells[i + 3, 2].Value = string.IsNullOrWhiteSpace(hocVien[i].ParentPhone) ? hocVien[i].Phone : hocVien[i].ParentPhone;
+                    worksheet.Cells[i + 3, 2].Value = hocVien[i].Phone;
                     string lopHoc = "";
                     if (hocVien[i].IsDisabled || hocVien[i].LopHocList.Any(x => x.IsDisabled || x.IsGraduated || x.IsCanceled))
                         lopHoc = "BL - " + String.Join(", ", hocVien[i].LopHocList.Select(x => x.Name).ToArray());
@@ -415,15 +415,14 @@
                 worksheet.Cells[2, 5].Value = "Ngày Sinh (yyyy-mm-dd)";
                 worksheet.Cells[2, 6].Value = "Người Thân";
                 worksheet.Cells[2, 7].Value = "ID Quan Hệ";
-                worksheet.Cells[2, 8].Value = "Facebook Người Thân";
-                worksheet.Cells[2, 9].Value = "SĐT Người Thân";
+                worksheet.Cells[2, 8].Value = "Ngày Bắt Đầu (yyyy-mm-dd)";
 
-                worksheet.Cells["A2:I2"].Style.Font.Bold = true;
-                worksheet.Cells["A2:I2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A2:I2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells["A2:H2"].Style.Font.Bold = true;
+                worksheet.Cells["A2:H2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A2:H2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 var modelCells = worksheet.Cells["A2"];
-                string modelRange = "A2:I22";
+                string modelRange = "A2:H22";
                 var modelTable = worksheet.Cells[modelRange];
 
 
@@ -507,12 +506,9 @@
                                     worksheet.Cells[row, 3].Value.ToString().Trim(),
                                     worksheet.Cells[row, 4].Value == null ? "" : worksheet.Cells[row, 4].Value.ToString().Trim(),
                                     worksheet.Cells[row, 6].Value == null ? "" : worksheet.Cells[row, 6].Value.ToString().Trim(),
-                                    worksheet.Cells[row, 9].Value == null ? "" : worksheet.Cells[row, 9].Value.ToString().Trim(),
-                                    worksheet.Cells[row, 8].Value == null ? "" : worksheet.Cells[row, 8].Value.ToString().Trim(),
                                     worksheet.Cells[row, 7].Value == null ? quanHe : new Guid(worksheet.Cells[row, 7].Value.ToString().Trim()),
                                     worksheet.Cells[row, 2].Value == null ? "" : worksheet.Cells[row, 2].Value.ToString().Trim(),
                                     _ngaySinh,
-                                    false,
                                     lopHocIds.ToArray(),
                                     currentUser.Email
                                     );

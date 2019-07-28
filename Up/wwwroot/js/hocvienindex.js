@@ -27,9 +27,7 @@
             phone: "",
             facebookAccount: "",
             parentFullName: "",
-            parentPhone: "",
             quanHe: "",
-            parentFacebookAccount: "",
             lopHoc: [],
             isAppend: false,
             ngaySinh: ""
@@ -58,9 +56,7 @@
             { text: 'SĐT', value: 'phone', align: 'left', sortable: true },
             { text: 'Facebook', value: 'facebookAccount', align: 'left', sortable: true },
             { text: 'Họ Tên Phụ Huynh', value: 'parentFullName', align: 'left', sortable: true },
-            { text: 'SĐT Phụ Huynh', value: 'parentPhone', align: 'left', sortable: true },
             { text: 'Quan Hệ', value: 'quanHe', align: 'left', sortable: true },
-            { text: 'Facebook Phụ Huynh', value: 'parentFacebookAccount', align: 'left', sortable: true },
             { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: true },
             { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: true },
             { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: true },
@@ -127,8 +123,6 @@
                         ParentFullName: item.parentFullName,
                         QuanHeId: item.quanHeId,
                         NgaySinh: item.ngaySinh,
-                        ParentPhone: item.parentPhone,
-                        ParentFacebookAccount: item.parentFacebookAccount,
                         LopHocIds: item.lopHocIds
                     }
                 })
@@ -330,12 +324,9 @@
                         EnglishName: that.newItem.englishName,
                         Phone: that.newItem.phone,
                         FacebookAccount: that.newItem.facebookAccount,
-                        ParentPhone: that.newItem.parentPhone,
                         NgaySinh: that.newItem.ngaySinh,
                         ParentFullName: that.newItem.parentFullName,
-                        ParentFacebookAccount: that.newItem.parentFacebookAccount,
                         QuanHeId: that.newItem.quanHe,
-                        IsAppend: that.newItem.isAppend,
                         LopHocIds: that.newItem.lopHoc
                     }
                 })
@@ -346,11 +337,15 @@
                             that.snackbar = true;
                             that.messageText = 'Thêm mới thành công !!!';
                             that.color = 'success';
-                            that.newItem.name = '';
-                            that.newItem.khoaHoc = '';
-                            that.newItem.gioHoc = '';
-                            that.newItem.ngayHoc = '';
-                            that.newItem.ngayKhaiGiang = new Date().toISOString().substr(0, 10);
+                            that.newItem.fullName = '';
+                            that.newItem.englishName = '';
+                            that.newItem.phone = '';
+                            that.newItem.facebookAccount = '';
+                            that.newItem.ngaySinh = '';
+
+                            that.newItem.parentFullName = '';
+                            that.newItem.quanHe = '';
+                            that.newItem.lopHoc = [];
                         }
                         else {
                             that.snackbar = true;

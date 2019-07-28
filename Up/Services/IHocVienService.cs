@@ -10,11 +10,11 @@
         Task<List<HocVienViewModel>> GetHocVienAsync();
         Task<List<HocVienViewModel>> GetAllHocVienAsync();
         Task<HocVienViewModel> CreateHocVienAsync(string FullName, string Phone, string FacebookAccount,
-           string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid? QuanHeId, string EnglishName,
-           DateTime? NgaySinh, bool IsAppend, Guid[] LopHocIds, string LoggedEmployee);
+           string ParentFullName, Guid? QuanHeId, string EnglishName,
+           DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee);
 
         Task<HocVienViewModel> UpdateHocVienAsync(Guid HocVienId, string FullName, string Phone, string FacebookAccount,
-           string ParentFullName, string ParentPhone, string ParentFacebookAccount, Guid? QuanHeId, string EnglishName,
+           string ParentFullName, Guid? QuanHeId, string EnglishName,
            DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee);
 
         Task<bool> DeleteHocVienAsync(Guid HocVienId, string LoggedEmployee);

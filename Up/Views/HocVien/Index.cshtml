@@ -78,14 +78,8 @@
                                                       label="Chọn Quan Hệ">
                                             </v-select>
                                         </v-flex>
-                                        <v-flex xs12 sm4>
-                                            <v-text-field label="Facebook Phụ Huynh" v-model="newItem.parentFacebookAccount"></v-text-field>
-                                        </v-flex>
-                                        <v-flex xs12 sm4>
-                                            <v-text-field label="SĐT Phụ Huynh" v-model="newItem.parentPhone"></v-text-field>
-                                        </v-flex>
 
-                                        <v-flex xs12 sm12>
+                                        <v-flex xs12 sm8>
                                             <v-select v-model="newItem.lopHoc"
                                                       :items="itemLopHoc"
                                                       item-text="name"
@@ -138,7 +132,8 @@
                 </v-card-title>
                 <v-data-table :headers="headers"
                               :items="khoaHocItems"
-                              :search="search">
+                              :search="search"
+                              class="elevation-1">
                     <template slot="items" slot-scope="props">
                         <td class="justify-center layout px-0">
 
@@ -208,7 +203,7 @@
                             </v-tooltip>
 
                         </td>
-                        <td>{{ props.item.fullName }}</td>
+                        <td class="px-0">{{ props.item.fullName }}</td>
                         <td>
                             <v-tooltip top v-if="props.item.lopHocList.length > 0">
                                 <template v-slot:activator="{ on }">
@@ -224,9 +219,7 @@
                         <td>{{ props.item.phone }}</td>
                         <td>{{ props.item.facebookAccount }}</td>
                         <td>{{ props.item.parentFullName }}</td>
-                        <td>{{ props.item.parentPhone }}</td>
                         <td>{{ props.item.quanHe }}</td>
-                        <td>{{ props.item.parentFacebookAccount }}</td>
                         <td>{{ props.item.createdDate }}</td>
                         <td>{{ props.item.createdBy }}</td>
                         <td>{{ props.item.updatedDate }}</td>
@@ -324,14 +317,8 @@
                                           label="Chọn Quan Hệ">
                                 </v-select>
                             </v-flex>
-                            <v-flex xs12 sm4>
-                                <v-text-field label="Facebook Phụ Huynh" v-model="itemToEdit.parentFacebookAccount"></v-text-field>
-                            </v-flex>
-                            <v-flex xs12 sm4>
-                                <v-text-field label="SĐT Phụ Huynh" v-model="itemToEdit.parentPhone"></v-text-field>
-                            </v-flex>
 
-                            <v-flex xs12 sm12>
+                            <v-flex xs12 sm8>
                                 <v-select v-model="itemToEdit.lopHocIds"
                                           :items="itemLopHoc"
                                           item-text="name"
@@ -634,7 +621,7 @@
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/hocvienindex.min.js" type="text/javascript"></script>
+<script src="~/js/hocvienindex.js" type="text/javascript"></script>
 
 <style>
     .v-input__slot:before, .v-input__slot:after {
