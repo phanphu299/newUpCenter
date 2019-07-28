@@ -10,6 +10,7 @@
     using OfficeOpenXml.Style;
     using System.Drawing;
     using Up.Models;
+    using OfficeOpenXml;
 
     public class DiemDanhController : Controller
     {
@@ -390,10 +391,8 @@
 
                 worksheet.Cells[3, 1].Value = "No";
                 worksheet.Cells[3, 2].Value = "Tên";
-                for (int i = 0; i < soNgayHoc.Count; i++)
-                {
-                    worksheet.Cells[3, i + 3].Value = soNgayHoc[i];
-                }
+                
+
                 worksheet.Cells[3, soNgayHoc.Count + 3].Value = "Ghi Chú";
 
                 worksheet.Cells["A3:" + column + "3"].Style.Font.Bold = true;
@@ -434,11 +433,21 @@
                             }
                             else if (ngay == soNgayHoc[j] && off == true && duocNghi == null)
                                 worksheet.Cells[i + 4, j + 3].Value = "";
+
+                            worksheet.Cells[i + 4, j + 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                         }
                     }
                 }
-
+                worksheet.PrinterSettings.Orientation = eOrientation.Landscape;
                 worksheet.Cells.AutoFitColumns();
+
+                worksheet.Column(1).Width = 3;
+                for (int i = 0; i < soNgayHoc.Count; i++)
+                {
+                    worksheet.Cells[3, i + 3].Value = soNgayHoc[i];
+                    worksheet.Cells[3, i + 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Column(i + 3).Width = 3;
+                }
                 worksheet.Column(soNgayHoc.Count + 3).Width = 40;
 
                 package.Save();
