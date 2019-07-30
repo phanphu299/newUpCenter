@@ -423,22 +423,6 @@
             link.click();
         },
 
-        async onExport() {
-            let that = this;
-            await axios
-                ({
-                    url: '/HocVien/Export',
-                    method: 'get',
-                    responseType: 'blob' // important
-                })
-                .then(function (response) {
-                    that.forceFileDownload(response, 'DanhSachHocVien');
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        },
-
         async onExportTemplate() {
             let that = this;
             await axios

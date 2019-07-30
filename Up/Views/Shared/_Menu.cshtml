@@ -37,7 +37,7 @@
                                     <span> Tài Liệu</span>
                                 </a>
                             </li>
-                            
+
                         </ul>
                     </div>
                 </li>
@@ -128,11 +128,11 @@
                                 </a>
                             </li>
                             @*<li>
-                                <a asp-area="" asp-controller="NhanVienKhac" asp-action="Index">
-                                    <i class="material-icons">keyboard_arrow_right</i>
-                                    <span> Nhân Viên Khác</span>
-                                </a>
-                            </li>*@
+                        <a asp-area="" asp-controller="NhanVienKhac" asp-action="Index">
+                            <i class="material-icons">keyboard_arrow_right</i>
+                            <span> Nhân Viên Khác</span>
+                        </a>
+                    </li>*@
 
                         </ul>
                     </div>
@@ -186,6 +186,14 @@
                             check_circle_outline
                         </i>
                         <span class="nav-text">Export Điểm Danh</span>
+                    </a>
+                </li>
+                <li class="bold">
+                    <a asp-area="" asp-controller="HocVien" asp-action="ExportIndex" class="waves-effect waves-cyan">
+                        <i class="material-icons">
+                            perm_contact_calendar
+                        </i>
+                        <span class="nav-text">Export Học Viên</span>
                     </a>
                 </li>
             </ul>

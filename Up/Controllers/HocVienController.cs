@@ -35,6 +35,13 @@
             return View();
         }
 
+        public async Task<IActionResult> ExportIndex()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+            return View();
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetHocVienAsync()
         {
@@ -324,23 +331,18 @@
                 var hocVien = _hocVienService.GetAllHocVienAsync().Result;
                 OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Vien");
                 int totalRows = hocVien.Count;
+                
+                worksheet.Cells[1, 1].Value = "Firstname";
+                worksheet.Cells[1, 2].Value = "Mobile Phone";
+                worksheet.Cells[1, 3].Value = "Middle name";
+                worksheet.Cells[1, 4].Value = "Last name";
 
-                worksheet.Cells["A1:D1"].Merge = true;
-                worksheet.Cells["A1:D1"].Value = "DANH SÁCH HỌC VIÊN";
-                worksheet.Cells["A1:D1"].Style.Font.Bold = true;
-                worksheet.Cells["A1:D1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells["A1:D2"].Style.Font.Bold = true;
+                worksheet.Cells["A1:D2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A1:D2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
-                worksheet.Cells[2, 1].Value = "Firstname";
-                worksheet.Cells[2, 2].Value = "Mobile Phone";
-                worksheet.Cells[2, 3].Value = "Middle name";
-                worksheet.Cells[2, 4].Value = "Last name";
-
-                worksheet.Cells["A2:D2"].Style.Font.Bold = true;
-                worksheet.Cells["A2:D2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A2:D2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
-
-                var modelCells = worksheet.Cells["A2"];
-                string modelRange = "A2:D" + (totalRows + 2);
+                var modelCells = worksheet.Cells["A1"];
+                string modelRange = "A1:D" + (totalRows + 2);
                 var modelTable = worksheet.Cells[modelRange];
 
 
@@ -357,7 +359,7 @@
                     worksheet.Cells[i + 3, 2].Value = hocVien[i].Phone;
                     string lopHoc = "";
                     if (hocVien[i].IsDisabled || hocVien[i].LopHocList.Any(x => x.IsDisabled || x.IsGraduated || x.IsCanceled))
-                        lopHoc = "BL - " + String.Join(", ", hocVien[i].LopHocList.Select(x => x.Name).ToArray());
+                        lopHoc = "BL-" + String.Join(", ", hocVien[i].LopHocList.Select(x => x.Name.Substring(2) + "-" + x.Name.Substring(0,2)).ToArray());
                     else
                         lopHoc = String.Join(", ", hocVien[i].LopHocList.Select(x => x.Name).ToArray());
                     worksheet.Cells[i + 3, 3].Value = lopHoc;
