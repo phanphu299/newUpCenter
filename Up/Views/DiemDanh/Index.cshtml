@@ -81,33 +81,35 @@
                 <v-container fluid v-if="diemDanhItems.length > 0">
                     <v-layout wrap>
                         <v-flex>
-                            <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
-                                <thead style="background-color: orange;">
-                                    <tr style="border: 1px solid #ddd;">
-                                        <th style="border: 1px solid #ddd;">Học Viên</th>
-                                        <th style="border: 1px solid #ddd;" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr style="border: 1px solid #ddd;" v-for="(item, index) in diemDanhItems" :key="index">
-                                        <td style="border: 1px solid #ddd;">{{ item.label }}</td>
-                                        <td style="border: 1px solid #ddd;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
-                                            @*phai~ dao~ isOff de ko sinh loi v-switch*@
-                                            <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
-                                                <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
-                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
-                                                </i>
-                                                <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
-                                                    off
-                                                </i>
-                                                <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
-                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
-                                                </i>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div style="overflow-x:auto;">
+                                <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
+                                    <thead style="background-color: orange;">
+                                        <tr style="border: 1px solid #ddd;">
+                                            <th style="border: 1px solid #ddd;">Học Viên</th>
+                                            <th style="border: 1px solid #ddd;" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr style="border: 1px solid #ddd;" v-for="(item, index) in diemDanhItems" :key="index">
+                                            <td style="border: 1px solid #ddd;">{{ item.label }}</td>
+                                            <td style="border: 1px solid #ddd;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
+                                                @*phai~ dao~ isOff de ko sinh loi v-switch*@
+                                                <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
+                                                    <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
+                                                        <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                    </i>
+                                                    <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
+                                                        off
+                                                    </i>
+                                                    <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
+                                                        <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                    </i>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </v-flex>
                     </v-layout>
                 </v-container>

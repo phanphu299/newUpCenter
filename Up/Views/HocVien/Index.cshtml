@@ -529,24 +529,26 @@
                             <v-container fluid v-if="diemDanhItems.length > 0">
                                 <v-layout wrap>
                                     <v-flex>
-                                        <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
-                                            <thead style="background-color: orange;">
-                                                <tr style="border: 1px solid #ddd;">
-                                                    <th style="border: 1px solid #ddd;" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr style="border: 1px solid #ddd;">
-                                                    <td style="border: 1px solid #ddd;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
-                                                        <span v-for="(item, index) in diemDanhItems" :key="index">
-                                                            <i v-if="item.day == column && item.isOff == false">x</i>
-                                                            <i v-else-if="item.day == column && item.isOff == true && item.isDuocNghi == true">off</i>
-                                                            <i v-else-if="item.day == column && item.isOff == true && item.isDuocNghi == null"></i>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        <div style="overflow-x:auto;">
+                                            <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
+                                                <thead style="background-color: orange;">
+                                                    <tr style="border: 1px solid #ddd;">
+                                                        <th style="border: 1px solid #ddd;" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr style="border: 1px solid #ddd;">
+                                                        <td style="border: 1px solid #ddd;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
+                                                            <span v-for="(item, index) in diemDanhItems" :key="index">
+                                                                <i v-if="item.day == column && item.isOff == false">x</i>
+                                                                <i v-else-if="item.day == column && item.isOff == true && item.isDuocNghi == true">off</i>
+                                                                <i v-else-if="item.day == column && item.isOff == true && item.isDuocNghi == null"></i>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </v-flex>
                                 </v-layout>
                             </v-container>
