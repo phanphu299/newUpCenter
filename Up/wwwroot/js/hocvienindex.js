@@ -485,6 +485,8 @@
                             that.snackbar = true;
                             that.messageText = response.data.message;
                             that.color = 'success';
+
+                            that.dialogImport = false;
                         }
                         else {
                             that.snackbar = true;
