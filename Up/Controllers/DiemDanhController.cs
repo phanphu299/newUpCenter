@@ -58,13 +58,12 @@
         [HttpGet]
         public async Task<IActionResult> GetDiemDanhByLopHocAsync(Guid LopHocId, int month, int year)
         {
-            var list = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId);
+            var list = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId, month, year);
             List<ThongKeModel> model = new List<ThongKeModel>();
             var soNgayHoc = await _hocPhiService.SoNgayHocAsync(LopHocId, month, year);
             if (list.Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year).Any())
             {
                 model = list
-                        .Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year)
                         .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
                         {
                             Label = x.Key,
@@ -111,7 +110,7 @@
                     hocVien.ThongKeDiemDanh = diemDanhModel;
                 }
             }
-            else
+            else if (list.Where(x => (x.NgayDiemDanh_Date.Month < month && x.NgayDiemDanh_Date.Year == year) || x.NgayDiemDanh_Date.Year < year).Any())
             {
                 model = list
                         .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
@@ -337,8 +336,8 @@
         [HttpGet]
         public async Task<IActionResult> ExportDiemDanh(Guid LopHocId, int month, int year)
         {
-            var model = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId);
-            var stream = GenerateExcelFile(model.Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year).ToList(), month, year, LopHocId);
+            var model = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId, month, year);
+            var stream = GenerateExcelFile(model.ToList(), month, year, LopHocId);
             string excelName = $"UserList.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
@@ -366,7 +365,7 @@
                 var groupedModel = model.GroupBy(x => x.HocVien).Select(x => new ThongKeModel
                 {
                     Label = x.Key,
-                    ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
+                    ThongKeDiemDanh = x.Where(n => n.NgayDiemDanh_Date.Month == month && n.NgayDiemDanh_Date.Year == year).Select(m => new ThongKeDiemDanhModel
                     {
                         Dates = m.NgayDiemDanh_Date,
                         DuocNghi = m.IsDuocNghi,

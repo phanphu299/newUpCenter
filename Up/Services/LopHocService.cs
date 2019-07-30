@@ -195,9 +195,19 @@
                                                 .Where(x => x.LopHocId == item.LopHocId)
                                                 .ToListAsync();
 
-                foreach(var ngayHoc in _hocVien_NgayHoc)
+                if (item.IsCanceled == true)
                 {
-                    ngayHoc.NgayKetThuc = DateTime.Now;
+                    foreach (var ngayHoc in _hocVien_NgayHoc)
+                    {
+                        ngayHoc.NgayKetThuc = DateTime.Now;
+                    }
+                }
+                else
+                {
+                    foreach (var ngayHoc in _hocVien_NgayHoc)
+                    {
+                        ngayHoc.NgayKetThuc = null;
+                    }
                 }
 
                 await _context.SaveChangesAsync();
@@ -228,9 +238,19 @@
                                                 .Where(x => x.LopHocId == item.LopHocId)
                                                 .ToListAsync();
 
-                foreach (var ngayHoc in _hocVien_NgayHoc)
+                if(item.IsGraduated == true)
                 {
-                    ngayHoc.NgayKetThuc = DateTime.Now;
+                    foreach (var ngayHoc in _hocVien_NgayHoc)
+                    {
+                        ngayHoc.NgayKetThuc = DateTime.Now;
+                    }
+                }
+                else
+                {
+                    foreach (var ngayHoc in _hocVien_NgayHoc)
+                    {
+                        ngayHoc.NgayKetThuc = null;
+                    }
                 }
 
                 await _context.SaveChangesAsync();

@@ -144,14 +144,14 @@
                                 .ToListAsync();
         }
 
-        public async Task<List<DiemDanhViewModel>> GetDiemDanhByLopHoc(Guid LopHocId)
+        public async Task<List<DiemDanhViewModel>> GetDiemDanhByLopHoc(Guid LopHocId, int month, int year)
         {
             if (LopHocId == null)
                 throw new Exception("Không tìm thấy Lớp Học!");
 
             return await _context.HocVien_LopHocs
                                 .Where(x => x.LopHocId == LopHocId)
-                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null) && x.HocVien.IsDisabled == false)
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null) && x.HocVien.IsDisabled == false && x.HocVien.HocVien_NgayHocs.Any(m => m.NgayBatDau.Month <= month && m.NgayBatDau.Year <= year))
                                 .GroupJoin(_context.LopHoc_DiemDanhs,
                                 i => i.HocVienId,
                                 p => p.HocVienId,
@@ -175,21 +175,6 @@
                                     }
                                 )
                                 .ToListAsync();
-
-            //return await (from c in _context.HocVien_LopHocs
-            //        join ct in _context.LopHoc_DiemDanhs
-            //        on c.HocVienId equals ct.HocVienId into g
-            //        from ct in g.DefaultIfEmpty()
-            //        where c.LopHocId == LopHocId && c.HocVien.IsDisabled == false
-            //        select new DiemDanhViewModel
-            //        {
-            //            IsDuocNghi = ct.IsDuocNghi,
-            //            IsOff = ct.IsOff,
-            //            NgayDiemDanh = ct.NgayDiemDanh.ToString("dd/MM/yyyy"),
-            //            HocVien = c.HocVien.FullName,
-            //            NgayDiemDanh_Date = ct.NgayDiemDanh,
-            //            HocVienId = c.HocVienId
-            //        }).ToListAsync();
         }
 
         public async Task<List<HocVienViewModel>> GetHocVienByLopHoc(Guid LopHocId)
