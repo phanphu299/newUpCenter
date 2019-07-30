@@ -1,6 +1,5 @@
 ﻿namespace Up.Controllers
 {
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using OfficeOpenXml;
@@ -10,7 +9,6 @@
     using System.Drawing;
     using System.IO;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
     using Up.Models;
     using Up.Services;
@@ -366,6 +364,7 @@
                     worksheet.Cells[i + 3, 4].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
                 }
 
+                worksheet.PrinterSettings.Orientation = eOrientation.Landscape;
                 worksheet.Cells.AutoFitColumns();
 
                 package.Save();
@@ -383,12 +382,12 @@
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
 
-        private System.IO.MemoryStream GenerateTemplateExcelFile(Guid LopHocId)
+        private MemoryStream GenerateTemplateExcelFile(Guid LopHocId)
         {
-            var stream = new System.IO.MemoryStream();
-            using (OfficeOpenXml.ExcelPackage package = new OfficeOpenXml.ExcelPackage(stream))
+            var stream = new MemoryStream();
+            using (ExcelPackage package = new ExcelPackage(stream))
             {
-                OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("MauImportHocVien");
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("MauImportHocVien");
 
                 worksheet.Cells["A1:I1"].Merge = true;
                 worksheet.Cells["A1:I1"].Value = "MẪU IMPORT HỌC VIÊN";
@@ -474,7 +473,7 @@
 
                 string extension = model.Name.Substring(model.Name.IndexOf('.'));
                 if (extension != ".xlsx")
-                    return Json(new Models.ResultModel
+                    return Json(new ResultModel
                     {
                         Status = "Failed",
                         Message = "File import phải là excel .xlsx !!!"
@@ -534,7 +533,7 @@
             }
             catch (Exception exception)
             {
-                return Json(new Models.ResultModel
+                return Json(new ResultModel
                 {
                     Status = "Failed",
                     Message = exception.Message

@@ -3,6 +3,7 @@ namespace Up.Controllers
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using OfficeOpenXml;
     using OfficeOpenXml.Style;
     using System;
     using System.Drawing;
@@ -141,10 +142,10 @@ namespace Up.Controllers
         private System.IO.MemoryStream GenerateExcelFile(Models.TinhHocPhiViewModel model)
         {
             var stream = new System.IO.MemoryStream();
-            using (OfficeOpenXml.ExcelPackage package = new OfficeOpenXml.ExcelPackage(stream))
+            using (ExcelPackage package = new ExcelPackage(stream))
             {
                 string lopHocName = _lopHocService.GetLopHocByIdAsync(model.LopHocId).Result.Name;
-                OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Phi " + lopHocName);
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Phi " + lopHocName);
                 int totalRows = model.HocVienList.Count;
 
                 worksheet.Cells["A1:J1"].Merge = true;
@@ -212,6 +213,7 @@ namespace Up.Controllers
                     }
                 }
 
+                worksheet.PrinterSettings.Orientation = eOrientation.Landscape;
                 worksheet.Cells.AutoFitColumns();
                 worksheet.Column(9).Width = 40;
                 worksheet.Column(10).Width = 40;
