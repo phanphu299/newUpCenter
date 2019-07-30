@@ -499,6 +499,11 @@
                                 DateTime? _ngaySinh = null;
                                 if(worksheet.Cells[row, 5].Value != null)
                                     _ngaySinh = Convert.ToDateTime(worksheet.Cells[row, 5].Value.ToString().Trim() + " 00:00:00", System.Globalization.CultureInfo.InvariantCulture);
+
+                                DateTime? _ngayBatDau = null;
+                                if (worksheet.Cells[row, 8].Value != null)
+                                    _ngayBatDau = Convert.ToDateTime(worksheet.Cells[row, 8].Value.ToString().Trim() + " 00:00:00", System.Globalization.CultureInfo.InvariantCulture);
+
                                 Guid? quanHe = null;
 
                                 var successful = await _hocVienService.CreateHocVienAsync(
@@ -510,14 +515,15 @@
                                     worksheet.Cells[row, 2].Value == null ? "" : worksheet.Cells[row, 2].Value.ToString().Trim(),
                                     _ngaySinh,
                                     lopHocIds.ToArray(),
-                                    currentUser.Email
+                                    currentUser.Email,
+                                    _ngayBatDau
                                     );
 
                                 if (successful != null)
                                     hocViens.Add(successful);
                             }
                         }
-                        return Json(new Models.ResultModel
+                        return Json(new ResultModel
                         {
                             Status = "OK",
                             Message = "Import thành công các học viên " + String.Join(", ", hocViens.Select(x => x.FullName).ToArray()),

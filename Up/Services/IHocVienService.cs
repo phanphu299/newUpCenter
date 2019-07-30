@@ -11,7 +11,7 @@
         Task<List<HocVienViewModel>> GetAllHocVienAsync();
         Task<HocVienViewModel> CreateHocVienAsync(string FullName, string Phone, string FacebookAccount,
            string ParentFullName, Guid? QuanHeId, string EnglishName,
-           DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee);
+           DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee, DateTime? NgayBatDau = null);
 
         Task<HocVienViewModel> UpdateHocVienAsync(Guid HocVienId, string FullName, string Phone, string FacebookAccount,
            string ParentFullName, Guid? QuanHeId, string EnglishName,

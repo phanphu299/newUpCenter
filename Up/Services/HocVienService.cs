@@ -50,7 +50,7 @@ namespace Up.Services
 
         public async Task<HocVienViewModel> CreateHocVienAsync(string FullName, string Phone, string FacebookAccount, 
             string ParentFullName, Guid? QuanHeId, 
-            string EnglishName, DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee)
+            string EnglishName, DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee, DateTime? NgayBatDau = null)
         {
             try
             {
@@ -83,6 +83,20 @@ namespace Up.Services
                         hocVien_LopHoc.CreatedDate = DateTime.Now;
 
                         _context.HocVien_LopHocs.Add(hocVien_LopHoc);
+
+                        if (NgayBatDau != null)
+                        {
+                            HocVien_NgayHoc HV_NgayHoc = new HocVien_NgayHoc();
+                            HV_NgayHoc.HocVien_NgayHocId = new Guid();
+                            HV_NgayHoc.HocVienId = hocVien.HocVienId;
+                            HV_NgayHoc.LopHocId = item;
+                            HV_NgayHoc.NgayBatDau = NgayBatDau.Value;
+                            HV_NgayHoc.NgayKetThuc = null;
+                            HV_NgayHoc.CreatedBy = LoggedEmployee;
+                            HV_NgayHoc.CreatedDate = DateTime.Now;
+
+                            _context.HocVien_NgayHocs.Add(HV_NgayHoc);
+                        }
                     }
                 }
 
