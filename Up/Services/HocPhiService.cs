@@ -261,10 +261,6 @@ namespace Up.Services
             int soNgayHoc = await TinhSoNgayHocAsync(LopHocId, month, month);
 
             var hocPhiMoiNgay = hocPhi / soNgayHoc;
-            //hocPhiMoiNgay = (Math.Ceiling(hocPhiMoiNgay / 10000) * 10000);
-
-            //if (soNgayDuocNghi > 0)
-            //    hocPhi = hocPhi - (hocPhiMoiNgay * soNgayDuocNghi);
 
             return new TinhHocPhiViewModel
             {
@@ -301,7 +297,7 @@ namespace Up.Services
 
             var model = await _context.HocVien_LopHocs
                                     .Include(x => x.HocVien)
-                                    .Where(x => x.LopHocId == LopHocId)
+                                    .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
                                     .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.NgayBatDau.Month <= currentMonth && m.NgayKetThuc == null))
                                     .Select(x => new HocVienViewModel
                                     {
