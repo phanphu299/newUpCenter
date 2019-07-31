@@ -134,23 +134,30 @@ namespace Up.Services
 
         public async Task<bool> DeleteHocVienAsync(Guid HocVienId, string LoggedEmployee)
         {
-            //var hocVien = await _context.HocViens.Where(x => x.HocVienId == HocVienId).ToListAsync();
-            //if (lopHoc.Any())
-            //    throw new Exception("Hãy xóa những lớp học có học phí này trước !!!");
-
-            var item = await _context.HocViens
+            try
+            {
+                var item = await _context.HocViens
                                     .Where(x => x.HocVienId == HocVienId)
                                     .SingleOrDefaultAsync();
 
-            if (item == null)
-                throw new Exception("Không tìm thấy Học Viên !!!");
+                if (item == null)
+                    throw new Exception("Không tìm thấy Học Viên !!!");
 
-            item.IsDisabled = true;
-            item.UpdatedBy = LoggedEmployee;
-            item.UpdatedDate = DateTime.Now;
+                item.IsDisabled = true;
+                item.UpdatedBy = LoggedEmployee;
+                item.UpdatedDate = DateTime.Now;
 
-            var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+                var hocVien_LopHoc = await _context.HocVien_LopHocs.Where(x => x.HocVienId == HocVienId).ToListAsync();
+                if (hocVien_LopHoc.Any())
+                    _context.HocVien_LopHocs.RemoveRange(hocVien_LopHoc);
+
+                var saveResult = await _context.SaveChangesAsync();
+                return true;
+            }
+            catch(Exception exception)
+            {
+                throw new Exception("Xóa lỗi: " + exception.Message);
+            }
         }
 
         public async Task<List<HocVienViewModel>> GetAllHocVienAsync()
