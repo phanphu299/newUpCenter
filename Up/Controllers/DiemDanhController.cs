@@ -68,6 +68,9 @@
                         {
                             Label = x.Key,
                             HocVienId = x.Select(m => m.HocVienId).First(),
+                            NgayBatDau_Day = x.Select(m => m.NgayBatDau).First().Day,
+                            NgayBatDau_Month = x.Select(m => m.NgayBatDau).First().Month,
+                            NgayBatDau_Year = x.Select(m => m.NgayBatDau).First().Year,
                             ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
                             {
                                 Dates = m.NgayDiemDanh_Date,
@@ -117,6 +120,9 @@
                         {
                             Label = x.Key,
                             HocVienId = x.Select(m => m.HocVienId).First(),
+                            NgayBatDau_Day = x.Select(m => m.NgayBatDau).First().Day,
+                            NgayBatDau_Month = x.Select(m => m.NgayBatDau).First().Month,
+                            NgayBatDau_Year = x.Select(m => m.NgayBatDau).First().Year,
                             ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
                             {
                                 Dates = m.NgayDiemDanh_Date,

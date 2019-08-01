@@ -171,7 +171,8 @@
                                         NgayDiemDanh = (cat == null) ? new DateTime().ToString("dd/MM/yyyy") : cat.NgayDiemDanh.ToString("dd/MM/yyyy"),
                                         HocVien = temp0.i.HocVien.FullName,
                                         NgayDiemDanh_Date = (cat == null) ? new DateTime() : cat.NgayDiemDanh,
-                                        HocVienId = temp0.i.HocVienId
+                                        HocVienId = temp0.i.HocVienId,
+                                        NgayBatDau = temp0.i.HocVien.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayBatDau
                                     }
                                 )
                                 .ToListAsync();

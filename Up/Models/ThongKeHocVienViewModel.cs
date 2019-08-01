@@ -16,6 +16,10 @@
         public Guid HocVienId { get; set; }
         public double Data { get; set; }
         public List<ThongKeDiemDanhModel> ThongKeDiemDanh { get; set; }
+
+        public int NgayBatDau_Day { get; set; }
+        public int NgayBatDau_Month { get; set; }
+        public int NgayBatDau_Year { get; set; }
     }
 
     public class ThongKeDiemDanhModel

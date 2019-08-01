@@ -13,5 +13,7 @@ namespace Up.Models
 
         public DateTime NgayDiemDanh_Date { get; set; }
         public int Day { get; set; }
+
+        public DateTime NgayBatDau { get; set; }
     }
 }

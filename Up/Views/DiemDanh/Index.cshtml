@@ -95,15 +95,59 @@
                                             <td style="border: 1px solid #ddd;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
                                                 @*phai~ dao~ isOff de ko sinh loi v-switch*@
                                                 <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
-                                                    <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
-                                                        <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
-                                                    </i>
-                                                    <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
-                                                        off
-                                                    </i>
-                                                    <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
-                                                        <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
-                                                    </i>
+                                                    <span v-if="item.ngayBatDau_Year < selectedNam">
+                                                        <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
+                                                            <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                        </i>
+                                                        <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
+                                                            off
+                                                        </i>
+                                                        <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
+                                                            <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                        </i>
+                                                    </span>
+                                                    <span v-else-if="item.ngayBatDau_Year == selectedNam">
+                                                        <span v-if="item.ngayBatDau_Month < selectedThang">
+                                                            <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
+                                                                <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                            </i>
+                                                            <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
+                                                                off
+                                                            </i>
+                                                            <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
+                                                                <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                            </i>
+                                                        </span>
+                                                        <span v-else-if="item.ngayBatDau_Month == selectedThang">
+                                                            <span v-if="item.ngayBatDau_Day < column">
+                                                                <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
+                                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                </i>
+                                                                <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
+                                                                    off
+                                                                </i>
+                                                                <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
+                                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                </i>
+                                                            </span>
+                                                            <span v-else-if="item.ngayBatDau_Day == column">
+                                                                <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
+                                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                </i>
+                                                                <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
+                                                                    off
+                                                                </i>
+                                                                <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
+                                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                </i>
+                                                            </span>
+                                                            <span v-else>
+                                                            </span>
+                                                        </span>
+                                                        <span v-else>
+                                                        </span>
+                                                    </span>
+                                                    <span v-else></span>
                                                 </span>
                                             </td>
                                         </tr>
@@ -198,6 +242,6 @@
     }
 
     .v-input--selection-controls {
-        margin-top: 0px; 
+        margin-top: 0px;
     }
 </style>
