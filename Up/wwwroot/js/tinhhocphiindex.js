@@ -12,7 +12,7 @@
         selectedThang: '',
         selectedNam: '',
         itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-        itemKhuyenMai: ['5', '10', '15', '20', '25', '30', '35', '40', '45', '50'],
+        itemKhuyenMai: ['5', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55', '60', '65', '70', '75', '80', '85', '90', '95', '100'],
         itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0],
         itemLopHoc: [],
         itemSach: [],
@@ -163,6 +163,7 @@
                             that.snackbar = true;
                             that.messageText = 'Lưu Doanh Thu thành công !!!';
                             that.color = 'success';
+                            item.daDongHocPhi = true;
                         }
                         else {
                             that.snackbar = true;
@@ -204,6 +205,7 @@
                             that.snackbar = true;
                             that.messageText = 'Lưu Nợ thành công !!!';
                             that.color = 'success';
+                            item.daDongHocPhi = false;
                         }
                         else {
                             that.snackbar = true;
