@@ -107,6 +107,7 @@
                                                 <v-select :items="itemKhuyenMai"
                                                           v-model="props.item.khuyenMai"
                                                           chips
+                                                          clearable
                                                           label="Khuyến Mãi (%)"
                                                           v-on:change="onchangeKhuyenMai(props.item.khuyenMai, props.item)">
                                                 </v-select>

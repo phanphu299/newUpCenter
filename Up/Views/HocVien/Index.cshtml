@@ -410,6 +410,7 @@
                                     <v-text-field slot="activator"
                                                   v-model="ngayHocItem.ngayKetThuc"
                                                   label="Ngày Kết Thúc"
+                                                  clearable 
                                                   prepend-icon="event"
                                                   readonly></v-text-field>
                                     <v-date-picker locale="vi-vn" v-model="ngayHocItem.ngayKetThuc" v-on:input="isShowDatePickerKetThuc = false"></v-date-picker>
