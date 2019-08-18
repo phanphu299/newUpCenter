@@ -148,16 +148,16 @@ namespace Up.Controllers
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Phi " + lopHocName);
                 int totalRows = model.HocVienList.Count;
 
-                worksheet.Cells["A1:J1"].Merge = true;
-                worksheet.Cells["A1:J1"].Value = "DANH SÁCH ĐÓNG HỌC PHÍ " + lopHocName;
-                worksheet.Cells["A1:J1"].Style.Font.Bold = true;
-                worksheet.Cells["A1:J1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells["A1:L1"].Merge = true;
+                worksheet.Cells["A1:L1"].Value = "DANH SÁCH ĐÓNG HỌC PHÍ " + lopHocName;
+                worksheet.Cells["A1:L1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:L1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                worksheet.Cells["A2:J2"].Merge = true;
-                worksheet.Cells["A2:J2"].Value = "T" + model.month + "/" + model.year;
-                worksheet.Cells["A2:J2"].Style.Font.Bold = true;
-                worksheet.Cells["A2:J2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                worksheet.Cells["A2:J2"].Style.Font.Color.SetColor(Color.Red);
+                worksheet.Cells["A2:L2"].Merge = true;
+                worksheet.Cells["A2:L2"].Value = "T" + model.month + "/" + model.year;
+                worksheet.Cells["A2:L2"].Style.Font.Bold = true;
+                worksheet.Cells["A2:L2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells["A2:L2"].Style.Font.Color.SetColor(Color.Red);
 
                 worksheet.Cells[3, 1].Value = "No";
                 worksheet.Cells[3, 2].Value = "Tên";
@@ -167,15 +167,17 @@ namespace Up.Controllers
                 worksheet.Cells[3, 5].Value = "Học phí tháng này";
                 worksheet.Cells[3, 6].Value = "Mua tài liệu";
                 worksheet.Cells[3, 7].Value = "Khuyến mãi";
-                worksheet.Cells[3, 8].Value = "Tổng";
-                worksheet.Cells[3, 9].Value = "Chữ ký";
-                worksheet.Cells[3, 10].Value = "Ghi Chú";
-                worksheet.Cells["A3:J3"].Style.Font.Bold = true;
-                worksheet.Cells["A3:J3"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A3:J3"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells[3, 8].Value = "Bonus";
+                worksheet.Cells[3, 9].Value = "Khoảng trừ khác";
+                worksheet.Cells[3, 10].Value = "Tổng";
+                worksheet.Cells[3, 11].Value = "Chữ ký";
+                worksheet.Cells[3, 12].Value = "Ghi Chú";
+                worksheet.Cells["A3:L3"].Style.Font.Bold = true;
+                worksheet.Cells["A3:L3"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A3:L3"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 var modelCells = worksheet.Cells["A3"];
-                string modelRange = "A3:J" + (totalRows + 3);
+                string modelRange = "A3:L" + (totalRows + 3);
                 var modelTable = worksheet.Cells[modelRange];
 
                 
@@ -205,18 +207,24 @@ namespace Up.Controllers
                     }
                     
                     worksheet.Cells[i + 4, 7].Value = model.HocVienList[i].KhuyenMai + "%";
-                    worksheet.Cells[i + 4, 8].Value = model.HocVienList[i].HocPhiMoi;
+                    worksheet.Cells[i + 4, 8].Value = model.HocVienList[i].Bonus;
+                    worksheet.Cells[i + 4, 9].Value = model.HocVienList[i].Minus;
+                    worksheet.Cells[i + 4, 10].Value = model.HocVienList[i].HocPhiMoi;
                     
                     if(model.HocVienList[i].DaDongHocPhi)
                     {
-                        worksheet.Cells[i + 4, 10].Value = "ĐÃ ĐÓNG HP";
+                        worksheet.Cells[i + 4, 12].Value = model.HocVienList[i].GhiChu + "ĐÃ ĐÓNG HP";
+                    }
+                    else
+                    {
+                        worksheet.Cells[i + 4, 12].Value = model.HocVienList[i].GhiChu;
                     }
                 }
 
                 worksheet.PrinterSettings.Orientation = eOrientation.Landscape;
                 worksheet.Cells.AutoFitColumns();
-                worksheet.Column(9).Width = 40;
-                worksheet.Column(10).Width = 40;
+                worksheet.Column(11).Width = 40;
+                worksheet.Column(12).Width = 40;
 
                 package.Save();
             }

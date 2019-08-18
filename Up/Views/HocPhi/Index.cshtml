@@ -78,7 +78,7 @@
                                                 {{ props.item.fullName }}
                                                 <v-tooltip top v-if="props.item.hocPhiBuHocVienVaoSau > 0">
                                                     <template v-slot:activator="{ on }">
-                                                        <v-icon color="grey lighten-1" dark v-on="on">info</v-icon>
+                                                        <v-icon color="error lighten-1" dark v-on="on">info</v-icon>
                                                     </template>
                                                     Ngày vào học: <strong>{{ props.item.ngayBatDauHoc }}</strong><br />
                                                     Trừ học phí: <strong>{{ formatNumber(props.item.hocPhiBuHocVienVaoSau) }}</strong>
@@ -114,6 +114,9 @@
                                                           v-on:change="onchangeKhuyenMai(props.item.khuyenMai, props.item)">
                                                 </v-select>
                                             </td>
+                                            <td><v-text-field v-model="props.item.bonus" v-on:keyup="onBonusHocPhi(props.item.bonus, props.item)"></v-text-field></td>
+                                            <td><v-text-field v-model="props.item.minus" v-on:keyup="onMinusHocPhi(props.item.minus, props.item)"></v-text-field></td>
+                                            <td><v-text-field v-model="props.item.ghiChu"></v-text-field></td>
                                             <td>
                                                 <v-tooltip top>
                                                     <template v-slot:activator="{ on }">
@@ -142,7 +145,7 @@
 
                                         </template>
                                     </v-data-table>
-                                    <v-span><b>Tổng Học Phí: {{ formatNumber(total) }}</b></v-span>
+                                    <span><b>Tổng Học Phí: {{ formatNumber(total) }}</b></span>
                                 </v-flex>
                             </v-layout>
                         </v-container>

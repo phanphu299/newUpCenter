@@ -33,5 +33,10 @@
         public double HocPhiFixed { get; set; }
         public double[] LastGiaSach { get; set; }
         public bool DaDongHocPhi { get; set; } = false;
+        public double Bonus { get; set; } = 0;
+        public double Minus { get; set; } = 0;
+        public string GhiChu { get; set; }
+        public double LastBonus { get; set; } = 0;
+        public double LastMinus { get; set; } = 0;
     }
 }

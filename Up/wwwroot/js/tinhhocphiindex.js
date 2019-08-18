@@ -28,6 +28,9 @@
             { text: 'Nợ', align: 'left', sortable: true },
             { text: 'Tài Liệu', align: 'left', sortable: true },
             { text: 'Khuyến Mãi', align: 'left', sortable: true },
+            { text: 'Bonus', align: 'left', sortable: true },
+            { text: 'Khoảng Trừ Khác', align: 'left', sortable: true },
+            { text: 'Ghi Chú', align: 'left', sortable: true },
             { text: 'Action', align: 'left', sortable: false }
         ],
     },
@@ -72,6 +75,20 @@
                     item.hocPhiMoi = item.hocPhiMoi + item.lastGiaSach[i];
                 }
             }
+        },
+
+        async onBonusHocPhi(value, item) {
+            if (item.lastBonus > 0)
+                item.hocPhiMoi = item.hocPhiMoi - (item.lastBonus * 1);
+            item.hocPhiMoi = item.hocPhiMoi + (value * 1);
+            item.lastBonus = value;
+        },
+
+        async onMinusHocPhi(value, item) {
+            if (item.lastMinus > 0)
+                item.hocPhiMoi = item.hocPhiMoi + (item.lastMinus * 1);
+            item.hocPhiMoi = item.hocPhiMoi - (value * 1);
+            item.lastMinus = value;
         },
 
         async onchangeSach(value, item) {

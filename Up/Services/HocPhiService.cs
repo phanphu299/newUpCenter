@@ -350,14 +350,6 @@ namespace Up.Services
                     }
                     else
                     {
-                        //var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(year, month, _ngayBatDauHoc, LopHocId);
-                        //if (soNgayHocVienVaoSau < SoNgayHoc)
-                        //{
-                        //    item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau)) -
-                        //        (HocPhiMoiNgay * ngayNghiTruocKhiVo);
-
-                        //    item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                        //}
                         item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * ngayDuocNghi;
 
                         item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);

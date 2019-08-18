@@ -17,8 +17,8 @@
         public string Name { get; set; }
         public int LoaiChiPhi { get; set; }
         public double Salary_Expense { get; set; }
-        public double Bonus { get; set; }
-        public double Minus { get; set; }
+        public double Bonus { get; set; } = 0;
+        public double Minus { get; set; } = 0;
         public double TeachingRate { get; set; }
         public double TutoringRate { get; set; }
         public double SoGioDay { get; set; }
