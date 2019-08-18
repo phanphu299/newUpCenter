@@ -22,6 +22,7 @@
         chiPhiList: [],
         headers: [
             { text: 'Tên', align: 'left', sortable: true },
+            { text: 'Chi Phí', align: 'left', sortable: true, class: "red-header"},
             { text: 'Lương/Chi Phí', align: 'left', sortable: true },
             { text: 'Lương Giảng Dạy', align: 'left', sortable: true },
             { text: 'Lương Kèm', align: 'left', sortable: true },
@@ -29,10 +30,21 @@
             { text: 'Số Giờ Kèm', align: 'left', sortable: true },
             { text: 'Bonus', align: 'left', sortable: true },
             { text: 'Khoảng Trừ Khác', align: 'left', sortable: true },
-            { text: 'Chi Phí', align: 'left', sortable: true }
+            
         ]
 
     },
+
+    computed: {
+        total() {
+            let sum = 0;
+            for (let x of this.chiPhiList) {
+                sum += (x.chiPhiMoi * 1.0);
+            }
+            return sum;
+        }
+    },
+
     methods: {
         async onTinhChiPhi(item) {
             if (!isNaN(item.soGioDay) && !isNaN(item.soGioKem) && !isNaN(item.bonus) && !isNaN(item.minus)) {

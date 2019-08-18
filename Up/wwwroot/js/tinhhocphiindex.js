@@ -29,8 +29,7 @@
             { text: 'Tài Liệu', align: 'left', sortable: true },
             { text: 'Khuyến Mãi', align: 'left', sortable: true },
             { text: 'Action', align: 'left', sortable: false }
-        ]
-
+        ],
     },
     async beforeCreate() {
         let that = this;
@@ -51,16 +50,28 @@
             });
     },
 
+    computed: {
+        total() {
+            let sum = 0;
+            for (let x of this.hocVienList) {
+                sum += (x.hocPhiMoi * 1.0);
+            }
+            return sum;
+        }
+    },
+
     methods: {
         async onchangeKhuyenMai(value, item) {
+            if (value === undefined) {
+                value = 0;
+            }
             item.hocPhiMoi = item.hocPhiFixed - ((item.hocPhiFixed * value) / 100);
+            item.hocPhiMoi = (Math.ceil(item.hocPhiMoi / 10000) * 10000);
             if (item.lastGiaSach !== null) {
                 for (let i = 0; i < item.lastGiaSach.length; i++) {
                     item.hocPhiMoi = item.hocPhiMoi + item.lastGiaSach[i];
                 }
             }
-
-            item.hocPhiMoi = (Math.ceil(item.hocPhiMoi / 10000) * 10000);
         },
 
         async onchangeSach(value, item) {
