@@ -84,6 +84,7 @@
                                                     Trừ học phí: <strong>{{ formatNumber(props.item.hocPhiBuHocVienVaoSau) }}</strong>
                                                 </v-tooltip>
                                             </td>
+                                            <td><v-text-field v-model="props.item.hocPhiMoi"></v-text-field></td>
                                             <td>{{ formatNumber(props.item.tienNo) }}</td>
                                             <td>
                                                 <v-select :items="itemSach"
@@ -113,7 +114,6 @@
                                                           v-on:change="onchangeKhuyenMai(props.item.khuyenMai, props.item)">
                                                 </v-select>
                                             </td>
-                                            <td><v-text-field label="Học Phí" v-model="props.item.hocPhiMoi"></v-text-field></td>
                                             <td>
                                                 <v-tooltip top>
                                                     <template v-slot:activator="{ on }">
@@ -180,5 +180,9 @@
 
     td, th {
         padding: unset;
+    }
+
+    .red-header{
+        color: red !important
     }
 </style>

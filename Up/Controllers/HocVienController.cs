@@ -332,17 +332,17 @@
                 OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Vien");
                 int totalRows = hocVien.Count;
                 
-                worksheet.Cells[1, 1].Value = "Firstname";
+                worksheet.Cells[1, 1].Value = "First name";
                 worksheet.Cells[1, 2].Value = "Mobile Phone";
                 worksheet.Cells[1, 3].Value = "Middle name";
                 worksheet.Cells[1, 4].Value = "Last name";
 
-                worksheet.Cells["A1:D2"].Style.Font.Bold = true;
-                worksheet.Cells["A1:D2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A1:D2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells["A1:D1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:D1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A1:D1"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 var modelCells = worksheet.Cells["A1"];
-                string modelRange = "A1:D" + (totalRows + 2);
+                string modelRange = "A1:D" + (totalRows + 1);
                 var modelTable = worksheet.Cells[modelRange];
 
 
@@ -355,15 +355,15 @@
 
                 for (int i = 0; i < totalRows; i++)
                 {
-                    worksheet.Cells[i + 3, 1].Value = hocVien[i].FullName;
-                    worksheet.Cells[i + 3, 2].Value = hocVien[i].Phone;
+                    worksheet.Cells[i + 2, 1].Value = hocVien[i].FullName;
+                    worksheet.Cells[i + 2, 2].Value = hocVien[i].Phone;
                     string lopHoc = "";
                     if (hocVien[i].IsDisabled || hocVien[i].LopHocList.Any(x => x.IsDisabled || x.IsGraduated || x.IsCanceled))
                         lopHoc = "BL-" + String.Join(", ", hocVien[i].LopHocList.Select(x => x.Name.Substring(2) + "-" + x.Name.Substring(0,2)).ToArray());
                     else
                         lopHoc = String.Join(", ", hocVien[i].LopHocList.Select(x => x.Name).ToArray());
-                    worksheet.Cells[i + 3, 3].Value = lopHoc;
-                    worksheet.Cells[i + 3, 4].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
+                    worksheet.Cells[i + 2, 3].Value = lopHoc;
+                    worksheet.Cells[i + 2, 4].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
                 }
 
                 worksheet.PrinterSettings.Orientation = eOrientation.Landscape;
