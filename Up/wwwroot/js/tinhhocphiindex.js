@@ -89,7 +89,7 @@
                 if (this.khuyenMai === "") {
                     this.khuyenMai = 0;
                 }
-                await axios.get('/HocPhi/GetTinhHocPhiAsync?LopHocId=' + this.selectedLopHoc + '&Month=' + this.selectedThang + '&Year=' + this.selectedNam)
+                await axios.get('/HocPhi/GetTinhHocPhiAsync?LopHocId=' + this.selectedLopHoc.lopHocId + '&Month=' + this.selectedThang + '&Year=' + this.selectedNam)
                     .then(function (response) {
                         that.tongNgayHoc = response.data.soNgayHoc;
                         that.tongNgayDuocNghi = response.data.soNgayDuocNghi;
@@ -107,7 +107,7 @@
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'hocphi_T' + this.selectedThang + '-' + this.selectedNam + '.xlsx'); //or any other extension
+            link.setAttribute('download', 'hocphi_' + this.selectedLopHoc.name + '_T' + this.selectedThang + '-' + this.selectedNam + '.xlsx'); //or any other extension
             document.body.appendChild(link);
             link.click();
         },
@@ -121,7 +121,7 @@
                     responseType: 'blob', // important
                     data: {
                         HocVienList: that.hocVienList,
-                        LopHocId: that.selectedLopHoc,
+                        LopHocId: that.selectedLopHoc.lopHocId,
                         month: that.selectedThang,
                         year: that.selectedNam
                     }
@@ -150,7 +150,7 @@
                     method: 'post',
                     url: '/HocPhi/LuuDoanhThu_HocPhiAsync',
                     data: {
-                        LopHocId: this.selectedLopHoc,
+                        LopHocId: this.selectedLopHoc.lopHocId,
                         HocVienId: item.hocVienId,
                         HocPhi: item.hocPhiMoi,
                         month: this.selectedThang,
@@ -192,7 +192,7 @@
                     method: 'post',
                     url: '/HocPhi/LuuNo_HocPhiAsync',
                     data: {
-                        LopHocId: this.selectedLopHoc,
+                        LopHocId: this.selectedLopHoc.lopHocId,
                         HocVienId: item.hocVienId,
                         TienNo: item.hocPhiMoi,
                         month: this.selectedThang,
