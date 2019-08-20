@@ -92,6 +92,7 @@
                                                           item-value="gia"
                                                           multiple
                                                           chips
+                                                          return-object
                                                           label="Chọn Tài Liệu"
                                                           v-model="props.item.giaSach"
                                                           v-on:change="onchangeSach(props.item.giaSach, props.item)">
@@ -121,6 +122,7 @@
                                                 <v-tooltip top>
                                                     <template v-slot:activator="{ on }">
                                                         <v-btn flat icon
+                                                               small
                                                                color="success"
                                                                v-on="on"
                                                                v-on:click="onLuu(props.item)">
@@ -133,6 +135,7 @@
                                                 <v-tooltip top>
                                                     <template v-slot:activator="{ on }">
                                                         <v-btn flat icon
+                                                               small
                                                                color="warning"
                                                                v-on="on"
                                                                v-on:click="onNo(props.item)">

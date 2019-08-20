@@ -29,9 +29,9 @@
         public string NgayBatDauHoc { get; set; }
         public double HocPhiBuHocVienVaoSau { get; set; }
         public int KhuyenMai { get; set; } = 0;
-        public double[] GiaSach { get; set; }
+        public SachViewModel[] GiaSach { get; set; }
         public double HocPhiFixed { get; set; }
-        public double[] LastGiaSach { get; set; }
+        public SachViewModel[] LastGiaSach { get; set; }
         public bool DaDongHocPhi { get; set; } = false;
         public double Bonus { get; set; } = 0;
         public double Minus { get; set; } = 0;

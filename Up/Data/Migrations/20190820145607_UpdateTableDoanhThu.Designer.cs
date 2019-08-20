@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Up.Data;
 
 namespace Up.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190820145607_UpdateTableDoanhThu")]
+    partial class UpdateTableDoanhThu
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +47,8 @@ namespace Up.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2aac3505-2556-4263-9c07-0f540307d122",
-                            ConcurrencyStamp = "0d9bba62-e9d0-41cc-9545-a52a49d9a3fd",
+                            Id = "6eb504c9-49a7-408c-9c6d-e8dc972210a7",
+                            ConcurrencyStamp = "22af6bc7-3119-4f6a-bd30-70cda769bf8d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -711,28 +713,6 @@ namespace Up.Data.Migrations
                     b.ToTable("ThongKe_DoanhThuHocPhis");
                 });
 
-            modelBuilder.Entity("Up.Data.Entities.ThongKe_DoanhThuHocPhi_TaiLieu", b =>
-                {
-                    b.Property<Guid>("ThongKe_DoanhThuHocPhi_TaiLieuId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<Guid>("SachId");
-
-                    b.Property<Guid>("ThongKe_DoanhThuHocPhiId");
-
-                    b.HasKey("ThongKe_DoanhThuHocPhi_TaiLieuId");
-
-                    b.HasIndex("SachId");
-
-                    b.HasIndex("ThongKe_DoanhThuHocPhiId");
-
-                    b.ToTable("ThongKe_DoanhThuHocPhi_TaiLieus");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -888,19 +868,6 @@ namespace Up.Data.Migrations
                     b.HasOne("Up.Data.Entities.LopHoc", "LopHoc")
                         .WithMany("ThongKe_DoanhThuHocPhis")
                         .HasForeignKey("LopHocId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Up.Data.Entities.ThongKe_DoanhThuHocPhi_TaiLieu", b =>
-                {
-                    b.HasOne("Up.Data.Entities.Sach", "Sach")
-                        .WithMany("ThongKe_DoanhThuHocPhi_TaiLieus")
-                        .HasForeignKey("SachId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Up.Data.Entities.ThongKe_DoanhThuHocPhi", "ThongKe_DoanhThuHocPhi")
-                        .WithMany("ThongKe_DoanhThuHocPhi_TaiLieus")
-                        .HasForeignKey("ThongKe_DoanhThuHocPhiId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

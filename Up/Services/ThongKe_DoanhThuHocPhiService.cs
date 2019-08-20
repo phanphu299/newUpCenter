@@ -24,7 +24,7 @@ namespace Up.Services
             throw new NotImplementedException();
         }
 
-        public async Task<bool> ThemThongKe_DoanhThuHocPhiAsync(Guid LopHocId, Guid HocVienId, double HocPhi, DateTime NgayDong, string LoggedEmployee)
+        public async Task<bool> ThemThongKe_DoanhThuHocPhiAsync(Guid LopHocId, Guid HocVienId, double HocPhi, DateTime NgayDong, double Bonus, double Minus, int KhuyenMai, string GhiChu, Guid[] SachIds, string LoggedEmployee)
         {
             var item = await _context.ThongKe_DoanhThuHocPhis
                 .Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayDong.Month == NgayDong.Month && x.NgayDong.Year == NgayDong.Year)
@@ -42,30 +42,52 @@ namespace Up.Services
                         CreatedBy = LoggedEmployee,
                         CreatedDate = DateTime.Now,
                         HocPhi = HocPhi,
-                        LopHocId = LopHocId
+                        LopHocId = LopHocId,
+                        Bonus = Bonus,
+                        KhuyenMai = KhuyenMai,
+                        Minus = Minus,
+                        GhiChu = GhiChu
                     };
-                    _context.ThongKe_DoanhThuHocPhis.Add(thongKe);
+                    await _context.ThongKe_DoanhThuHocPhis.AddAsync(thongKe);
 
                     var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo <= thongKe.NgayDong);
                     foreach (var n in no)
                     {
                         n.IsDisabled = true;
                     }
+
+                    foreach(Guid sachId in SachIds)
+                    {
+                        ThongKe_DoanhThuHocPhi_TaiLieu thongKe_TaiLieu = new ThongKe_DoanhThuHocPhi_TaiLieu
+                        {
+                            ThongKe_DoanhThuHocPhi_TaiLieuId = new Guid(),
+                            ThongKe_DoanhThuHocPhiId = thongKe.ThongKe_DoanhThuHocPhiId,
+                            CreatedBy = LoggedEmployee,
+                            CreatedDate = DateTime.Now,
+                            SachId = sachId
+                        };
+                        await _context.ThongKe_DoanhThuHocPhi_TaiLieus.AddAsync(thongKe_TaiLieu);
+                    }
                 }
                 else
                 {
+                    item.GhiChu = GhiChu;
+                    item.Bonus = Bonus;
+                    item.KhuyenMai = KhuyenMai;
+                    item.Minus = Minus;
                     item.HocPhi = HocPhi;
                     item.UpdatedBy = LoggedEmployee;
                     item.UpdatedDate = DateTime.Now;
 
-                    var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo <= item.NgayDong);
+                    var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo <= item.NgayDong).ToList();
                     foreach (var n in no)
                     {
                         n.IsDisabled = true;
                     }
-                }
 
-                
+                    var sach = _context.ThongKe_DoanhThuHocPhi_TaiLieus.Where(x => x.ThongKe_DoanhThuHocPhiId == item.ThongKe_DoanhThuHocPhiId);
+                    _context.ThongKe_DoanhThuHocPhi_TaiLieus.RemoveRange(sach);
+                }
 
                 await _context.SaveChangesAsync();
                 return true;

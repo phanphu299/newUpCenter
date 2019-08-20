@@ -72,7 +72,7 @@
             item.hocPhiMoi = (Math.ceil(item.hocPhiMoi / 10000) * 10000);
             if (item.lastGiaSach !== null) {
                 for (let i = 0; i < item.lastGiaSach.length; i++) {
-                    item.hocPhiMoi = item.hocPhiMoi + item.lastGiaSach[i];
+                    item.hocPhiMoi = item.hocPhiMoi + (item.lastGiaSach[i].gia * 1.0);
                 }
             }
         },
@@ -95,17 +95,17 @@
             if (value.length > 0) {
                 if (item.lastGiaSach !== null) {
                     for (let i = 0; i < item.lastGiaSach.length; i++) {
-                        item.hocPhiMoi = item.hocPhiMoi - item.lastGiaSach[i];
+                        item.hocPhiMoi = item.hocPhiMoi - (item.lastGiaSach[i].gia * 1.0);
                     }
                 }
                 item.lastGiaSach = value;
                 for (let i = 0; i < value.length; i++) {
-                    item.hocPhiMoi = item.hocPhiMoi + value[i];
+                    item.hocPhiMoi = item.hocPhiMoi + (value[i].gia * 1.0);
                 }
             }
             else {
                 for (let i = 0; i < item.lastGiaSach.length; i++) {
-                    item.hocPhiMoi = item.hocPhiMoi - item.lastGiaSach[i];
+                    item.hocPhiMoi = item.hocPhiMoi - (item.lastGiaSach[i].gia * 1.0);
                 }
                 item.lastGiaSach = value;
             }
@@ -174,6 +174,7 @@
                 this.color = 'error';
             }
             else {
+                let Sachs = item.giaSach.map(m => m.sachId);
                 await axios({
                     method: 'post',
                     url: '/HocPhi/LuuDoanhThu_HocPhiAsync',
@@ -182,7 +183,12 @@
                         HocVienId: item.hocVienId,
                         HocPhi: item.hocPhiMoi,
                         month: this.selectedThang,
-                        year: this.selectedNam
+                        year: this.selectedNam,
+                        Bonus: item.bonus,
+                        Minus: item.minus,
+                        KhuyenMai: item.khuyenMai,
+                        GhiChu: item.ghiChu,
+                        SachIds: Sachs
                     }
                 })
                     .then(function (response) {

@@ -60,7 +60,7 @@ namespace Up.Services
                         LopHocId = LopHocId,
                         NgayNo = NgayNo
                     };
-                    _context.HocVien_Nos.Add(hocVien_No);
+                    await _context.HocVien_Nos.AddAsync(hocVien_No);
                 }
                 else
                 {
@@ -68,6 +68,10 @@ namespace Up.Services
                     item.UpdatedBy = LoggedEmployee;
                     item.UpdatedDate = DateTime.Now;
                 }
+
+                var doanhThu = _context.ThongKe_DoanhThuHocPhis.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayDong.Month == NgayNo.Month && x.NgayDong.Year == NgayNo.Year);
+                _context.ThongKe_DoanhThuHocPhis.RemoveRange(doanhThu);
+
                 await _context.SaveChangesAsync();
                 return true;
             }

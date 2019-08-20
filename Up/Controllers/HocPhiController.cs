@@ -59,7 +59,7 @@ namespace Up.Controllers
             {
                 DateTime _ngayDong = new DateTime(model.year, model.month, 1);
                 var successful = await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(model.LopHocId, model.HocVienId,
-                    model.HocPhi, _ngayDong, currentUser.Email);
+                    model.HocPhi, _ngayDong, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, currentUser.Email);
                 if (successful == false)
                 {
                     return Json(new Models.ResultModel
@@ -199,9 +199,9 @@ namespace Up.Controllers
                     if(model.HocVienList[i].GiaSach != null && model.HocVienList[i].GiaSach.Length > 0)
                     {
                         double giaSach = 0;
-                        foreach(double item in model.HocVienList[i].GiaSach)
+                        foreach(var item in model.HocVienList[i].GiaSach)
                         {
-                            giaSach += item;
+                            giaSach += item.Gia;
                         }
                         worksheet.Cells[i + 4, 6].Value = giaSach;
                     }

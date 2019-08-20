@@ -32,6 +32,7 @@
         public DbSet<HocVien_No> HocVien_Nos { get; set; }
         public DbSet<ThongKe_DoanhThuHocPhi> ThongKe_DoanhThuHocPhis { get; set; }
         public DbSet<ThongKe_ChiPhi> ThongKe_ChiPhis { get; set; }
+        public DbSet<ThongKe_DoanhThuHocPhi_TaiLieu> ThongKe_DoanhThuHocPhi_TaiLieus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

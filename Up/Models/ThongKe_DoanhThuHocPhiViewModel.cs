@@ -17,6 +17,12 @@ namespace Up.Models
         public string UpdatedBy { get; set; }
         public DateTime NgayDong { get; set; }
 
+        public double Bonus { get; set; }
+        public double Minus { get; set; }
+        public int KhuyenMai { get; set; }
+        public string GhiChu { get; set; }
+        public Guid[] SachIds { get; set; }
+
         public int month { get; set; }
         public int year { get; set; }
     }

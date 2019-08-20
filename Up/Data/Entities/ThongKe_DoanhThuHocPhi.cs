@@ -2,6 +2,7 @@
 namespace Up.Data.Entities
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
 
     public class ThongKe_DoanhThuHocPhi
@@ -16,9 +17,15 @@ namespace Up.Data.Entities
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
 
+        public double Bonus { get; set; }
+        public double Minus { get; set; }
+        public int KhuyenMai { get; set; }
+        public string GhiChu { get; set; }
+
         [ForeignKey("LopHocId")]
         public LopHoc LopHoc { get; set; }
         [ForeignKey("HocVienId")]
         public HocVien HocVien { get; set; }
+        public ICollection<ThongKe_DoanhThuHocPhi_TaiLieu> ThongKe_DoanhThuHocPhi_TaiLieus { get; set; }
     }
 }
