@@ -274,109 +274,126 @@ namespace Up.Services
 
         public async Task<List<HocVienViewModel>> GetHocVien_No_NgayHocAsync(Guid LopHocId, int month, int year, double HocPhi, int SoNgayHoc, double HocPhiMoiNgay)
         {
-            int currentMonth = month;
-            int currentYear = year;
-            if (month == 1)
+            try
             {
-                month = 12;
-                year--;
-            }
-            else
-            {
-                month--;
-            }
-
-            var ngayChoNghi = await _context.LopHoc_DiemDanhs
-                                            .Where(x => x.LopHocId == LopHocId && x.IsDuocNghi == true && x.NgayDiemDanh.Month == month && x.NgayDiemDanh.Year == year)
-                                            .GroupBy(x => x.NgayDiemDanh)
-                                            .Select(m => new
-                                            {
-                                                m.Key
-                                            })
-                                            .ToListAsync();
-
-            var model = await _context.HocVien_LopHocs
-                                    .Include(x => x.HocVien)
-                                    .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
-                                    .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.NgayBatDau.Month <= currentMonth && m.NgayBatDau.Year <= currentYear && m.NgayKetThuc == null))
-                                    .Select(x => new HocVienViewModel
-                                    {
-                                        FullName = x.HocVien.FullName,
-                                        HocVienId = x.HocVienId,
-                                        NgayBatDauHoc = x.HocVien.HocVien_NgayHocs
-                                                        .Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId)
-                                                        .FirstOrDefault() == null ? 
-                                                        "" : 
-                                                        x.HocVien.HocVien_NgayHocs
-                                                        .Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId)
-                                                        .FirstOrDefault().NgayBatDau.ToString("dd/MM/yyyy"),
-                                        TienNo = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
-                                                        x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).No
-                                                        :
-                                                        x.HocVien.HocVien_Nos
-                                                        .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year)
-                                                        .Any() ? 
-                                                        x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo) : 
-                                                        0,
-                                        HocPhiMoi = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
-                                                        x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).HocPhi 
-                                                        :
-                                                        (Math.Ceiling(HocPhi / 10000) * 10000),
-                                        DaDongHocPhi = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear && m.LopHocId == LopHocId),
-                                        Bonus = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
-                                                        x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).Bonus
-                                                        : 0,
-                                        Minus = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
-                                                        x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).Minus
-                                                        : 0,
-                                        KhuyenMai = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
-                                                        x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).KhuyenMai
-                                                        : 0,
-                                        GhiChu = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
-                                                        x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).GhiChu
-                                                        : "",
-                                        HocPhiFixed = (Math.Ceiling(HocPhi / 10000) * 10000),
-                                    })
-                                    .ToListAsync();
-
-            foreach (var item in model)
-            {
-                if (!string.IsNullOrWhiteSpace(item.NgayBatDauHoc))
+                int currentMonth = month;
+                int currentYear = year;
+                if (month == 1)
                 {
-                    int ngayDuocNghi = 0;
-                    DateTime _ngayBatDauHoc = new DateTime(int.Parse(item.NgayBatDauHoc.Substring(6)), int.Parse(item.NgayBatDauHoc.Substring(3, 2)), int.Parse(item.NgayBatDauHoc.Substring(0, 2)));
-                    foreach (var ngayNghi in ngayChoNghi)
-                    {
-                        if(ngayNghi.Key >= _ngayBatDauHoc)
-                        {
-                            ngayDuocNghi++;
-                        }
-                    }
-                    
-                    if(_ngayBatDauHoc.Month == currentMonth && _ngayBatDauHoc.Year == currentYear)
-                    {
-                        var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayBatDauHoc, LopHocId);
-                        if (soNgayHocVienVaoSau < SoNgayHoc)
-                        {
-                            item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau);
+                    month = 12;
+                    year--;
+                }
+                else
+                {
+                    month--;
+                }
 
-                            item.HocPhiMoi = item.DaDongHocPhi? item.HocPhiMoi : (Math.Ceiling((item.HocPhiMoi + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                var ngayChoNghi = await _context.LopHoc_DiemDanhs
+                                                .Where(x => x.LopHocId == LopHocId && x.IsDuocNghi == true && x.NgayDiemDanh.Month == month && x.NgayDiemDanh.Year == year)
+                                                .GroupBy(x => x.NgayDiemDanh)
+                                                .Select(m => new
+                                                {
+                                                    m.Key
+                                                })
+                                                .ToListAsync();
+
+                var model = await _context.HocVien_LopHocs
+                                        .Include(x => x.HocVien)
+                                        .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
+                                        .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.NgayBatDau.Month <= currentMonth && m.NgayBatDau.Year <= currentYear && m.NgayKetThuc == null))
+                                        .Select(x => new HocVienViewModel
+                                        {
+                                            FullName = x.HocVien.FullName,
+                                            HocVienId = x.HocVienId,
+                                            NgayBatDauHoc = x.HocVien.HocVien_NgayHocs
+                                                            .Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId)
+                                                            .FirstOrDefault() == null ?
+                                                            "" :
+                                                            x.HocVien.HocVien_NgayHocs
+                                                            .Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId)
+                                                            .FirstOrDefault().NgayBatDau.ToString("dd/MM/yyyy"),
+                                            TienNo = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
+                                                            x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).No
+                                                            :
+                                                            x.HocVien.HocVien_Nos
+                                                            .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year)
+                                                            .Any() ?
+                                                            x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo) :
+                                                            0,
+                                            HocPhiMoi = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
+                                                            x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).HocPhi
+                                                            :
+                                                            (Math.Ceiling(HocPhi / 10000) * 10000),
+                                            DaDongHocPhi = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear && m.LopHocId == LopHocId),
+                                            Bonus = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
+                                                            x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).Bonus
+                                                            : 0,
+                                            Minus = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
+                                                            x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).Minus
+                                                            : 0,
+                                            KhuyenMai = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
+                                                            x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).KhuyenMai
+                                                            : 0,
+                                            GhiChu = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
+                                                            x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).GhiChu
+                                                            : "",
+                                            HocPhiFixed = (Math.Ceiling(HocPhi / 10000) * 10000),
+
+                                            GiaSach = x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) == null ?
+                                                        null :
+                                                        x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).ThongKe_DoanhThuHocPhi_TaiLieus.Any() ?
+                                                        x.HocVien.ThongKe_DoanhThuHocPhis
+                                                        .Where(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear)
+                                                        .SelectMany(m => m.ThongKe_DoanhThuHocPhi_TaiLieus)
+                                                        .Select(t => new SachViewModel { Gia = t.Sach.Gia, SachId = t.SachId, Name = t.Sach.Name }).ToArray()
+                                                        : null
+                                        })
+                                        .ToListAsync();
+
+                foreach (var item in model)
+                {
+                    if (!string.IsNullOrWhiteSpace(item.NgayBatDauHoc))
+                    {
+                        int ngayDuocNghi = 0;
+                        DateTime _ngayBatDauHoc = new DateTime(int.Parse(item.NgayBatDauHoc.Substring(6)), int.Parse(item.NgayBatDauHoc.Substring(3, 2)), int.Parse(item.NgayBatDauHoc.Substring(0, 2)));
+                        foreach (var ngayNghi in ngayChoNghi)
+                        {
+                            if (ngayNghi.Key >= _ngayBatDauHoc)
+                            {
+                                ngayDuocNghi++;
+                            }
+                        }
+
+                        if (_ngayBatDauHoc.Month == currentMonth && _ngayBatDauHoc.Year == currentYear)
+                        {
+                            var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayBatDauHoc, LopHocId);
+                            if (soNgayHocVienVaoSau < SoNgayHoc)
+                            {
+                                item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau);
+
+                                item.HocPhiMoi = item.DaDongHocPhi ? item.HocPhiMoi : (Math.Ceiling((item.HocPhiMoi + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                                item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                            }
+                        }
+                        else
+                        {
+                            item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * ngayDuocNghi;
+
+                            item.HocPhiMoi = item.DaDongHocPhi ? item.HocPhiMoi : (Math.Ceiling((item.HocPhiMoi + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                             item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                         }
                     }
-                    else
-                    {
-                        item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * ngayDuocNghi;
-
-                        item.HocPhiMoi = item.DaDongHocPhi ? item.HocPhiMoi : (Math.Ceiling((item.HocPhiMoi + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                        item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                    }
+                    //item.HocPhiFixed = item.HocPhiMoi;
+                    item.LastBonus = item.Bonus;
+                    item.LastMinus = item.Minus;
+                    item.LastGiaSach = item.GiaSach;
                 }
-                //item.HocPhiFixed = item.HocPhiMoi;
-                item.LastBonus = item.Bonus;
-                item.LastMinus = item.Minus;
+                return model;
             }
-            return model;
+            catch(Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
         }
 
         public async Task<List<int>> SoNgayHocAsync(Guid LopHocId, int month, int year)

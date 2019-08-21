@@ -90,6 +90,19 @@ namespace Up.Services
 
                     var sach = _context.ThongKe_DoanhThuHocPhi_TaiLieus.Where(x => x.ThongKe_DoanhThuHocPhiId == item.ThongKe_DoanhThuHocPhiId);
                     _context.ThongKe_DoanhThuHocPhi_TaiLieus.RemoveRange(sach);
+
+                    foreach (Guid sachId in SachIds)
+                    {
+                        ThongKe_DoanhThuHocPhi_TaiLieu thongKe_TaiLieu = new ThongKe_DoanhThuHocPhi_TaiLieu
+                        {
+                            ThongKe_DoanhThuHocPhi_TaiLieuId = new Guid(),
+                            ThongKe_DoanhThuHocPhiId = item.ThongKe_DoanhThuHocPhiId,
+                            CreatedBy = LoggedEmployee,
+                            CreatedDate = DateTime.Now,
+                            SachId = sachId
+                        };
+                        await _context.ThongKe_DoanhThuHocPhi_TaiLieus.AddAsync(thongKe_TaiLieu);
+                    }
                 }
 
                 await _context.SaveChangesAsync();
