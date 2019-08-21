@@ -196,7 +196,8 @@
                         Minus: item.minus,
                         KhuyenMai: item.khuyenMai,
                         GhiChu: item.ghiChu,
-                        SachIds: Sachs
+                        SachIds: Sachs,
+                        No: item.tienNo
                     }
                 })
                     .then(function (response) {

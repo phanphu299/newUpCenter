@@ -23,6 +23,8 @@ namespace Up.Models
         public string GhiChu { get; set; }
         public Guid[] SachIds { get; set; }
 
+        public double No { get; set; }
+
         public int month { get; set; }
         public int year { get; set; }
     }

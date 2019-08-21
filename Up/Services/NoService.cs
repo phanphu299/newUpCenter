@@ -43,7 +43,7 @@ namespace Up.Services
                 throw new Exception("Tên Lớp Học, Học Viên, Ngày Nợ không được để trống !!!");
 
             var item = await _context.HocVien_Nos
-                .Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo.Month == DateTime.Now.Month && x.NgayNo.Year == DateTime.Now.Year)
+                .Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo.Month == NgayNo.Month && x.NgayNo.Year == NgayNo.Year)
                 .SingleOrDefaultAsync();
 
             try
@@ -64,7 +64,9 @@ namespace Up.Services
                 }
                 else
                 {
+                    item.NgayNo = NgayNo;
                     item.TienNo = TienNo;
+                    item.IsDisabled = false;
                     item.UpdatedBy = LoggedEmployee;
                     item.UpdatedDate = DateTime.Now;
                 }

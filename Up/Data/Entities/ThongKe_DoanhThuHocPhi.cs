@@ -21,6 +21,7 @@ namespace Up.Data.Entities
         public double Minus { get; set; }
         public int KhuyenMai { get; set; }
         public string GhiChu { get; set; }
+        public double No { get; set; }
 
         [ForeignKey("LopHocId")]
         public LopHoc LopHoc { get; set; }

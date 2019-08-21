@@ -310,7 +310,10 @@ namespace Up.Services
                                                         x.HocVien.HocVien_NgayHocs
                                                         .Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId)
                                                         .FirstOrDefault().NgayBatDau.ToString("dd/MM/yyyy"),
-                                        TienNo = x.HocVien.HocVien_Nos
+                                        TienNo = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
+                                                        x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).No
+                                                        :
+                                                        x.HocVien.HocVien_Nos
                                                         .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year)
                                                         .Any() ? 
                                                         x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo) : 
@@ -318,10 +321,6 @@ namespace Up.Services
                                         HocPhiMoi = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
                                                         x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).HocPhi 
                                                         :
-                                                        x.HocVien.HocVien_Nos
-                                                        .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year)
-                                                        .Any() ? 
-                                                        (Math.Ceiling((HocPhi + x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo)) / 10000) * 10000) :
                                                         (Math.Ceiling(HocPhi / 10000) * 10000),
                                         DaDongHocPhi = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear && m.LopHocId == LopHocId),
                                         Bonus = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
@@ -336,11 +335,7 @@ namespace Up.Services
                                         GhiChu = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
                                                         x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).GhiChu
                                                         : "",
-                                        HocPhiFixed = x.HocVien.HocVien_Nos
-                                                        .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year)
-                                                        .Any() ?
-                                                        (Math.Ceiling((HocPhi + x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo)) / 10000) * 10000) :
-                                                        (Math.Ceiling(HocPhi / 10000) * 10000),
+                                        HocPhiFixed = (Math.Ceiling(HocPhi / 10000) * 10000),
                                     })
                                     .ToListAsync();
 
@@ -365,16 +360,16 @@ namespace Up.Services
                         {
                             item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau);
 
-                            item.HocPhiMoi = item.DaDongHocPhi? item.HocPhiMoi : (Math.Ceiling((item.HocPhiMoi - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                            item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                            item.HocPhiMoi = item.DaDongHocPhi? item.HocPhiMoi : (Math.Ceiling((item.HocPhiMoi + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                            item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                         }
                     }
                     else
                     {
                         item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * ngayDuocNghi;
 
-                        item.HocPhiMoi = item.DaDongHocPhi ? item.HocPhiMoi : (Math.Ceiling((item.HocPhiMoi - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                        item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                        item.HocPhiMoi = item.DaDongHocPhi ? item.HocPhiMoi : (Math.Ceiling((item.HocPhiMoi + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                        item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                     }
                 }
                 //item.HocPhiFixed = item.HocPhiMoi;
