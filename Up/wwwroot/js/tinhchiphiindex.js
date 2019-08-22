@@ -85,9 +85,6 @@
                 method: 'post',
                 url: '/ChiPhi/LuuChiPhiAsync',
                 data: {
-                    //ChiPhi: chiPhiMoi,
-                    //month: this.selectedThang,
-                    //year: this.selectedNam
                     models: that.chiPhiList
                 }
             })
