@@ -1,0 +1,24 @@
+Link: https://win01.hostvn.net:8443
+User: upengli1
+Pass: Ro#zLD[ta2204C
+
+
+<modules>
+		<remove name="WebDAVModule" />
+	  </modules>
+      <handlers>
+	    <remove name="WebDAV" />
+        <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModule" resourceType="Unspecified" />
+      </handlers>
+
+
+>
+		  <environmentVariables>
+			<environmentVariable name="ASPNETCORE_ENVIRONMENT" value="Development" />
+		  </environmentVariables>
+		</aspNetCore>
+
+
+
+
+"DefaultConnection": "Server=localhost;Database=upengli1_UpCenter;user id=upengli1_UpCenter;password=P@ssword@123"
