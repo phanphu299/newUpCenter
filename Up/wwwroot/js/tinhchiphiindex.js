@@ -58,7 +58,7 @@
                 if (this.khuyenMai === "") {
                     this.khuyenMai = 0;
                 }
-                await axios.get('/ChiPhi/GetChiPhiAsync')
+                await axios.get('/ChiPhi/GetChiPhiAsync?month=' + this.selectedThang + '&year=' + this.selectedNam)
                     .then(function (response) {
                         that.chiPhiList = response.data.chiPhiList;
                     })
@@ -77,15 +77,18 @@
             let chiPhiMoi = 0;
             for (let i = 0; i < this.chiPhiList.length; i++) {
                 chiPhiMoi = chiPhiMoi + this.chiPhiList[i].chiPhiMoi;
+                this.chiPhiList[i].year = this.selectedNam;
+                this.chiPhiList[i].month = this.selectedThang;
             }
-            console.log(chiPhiMoi);
+
             await axios({
                 method: 'post',
                 url: '/ChiPhi/LuuChiPhiAsync',
                 data: {
-                    ChiPhi: chiPhiMoi,
-                    month: this.selectedThang,
-                    year: this.selectedNam
+                    //ChiPhi: chiPhiMoi,
+                    //month: this.selectedThang,
+                    //year: this.selectedNam
+                    models: that.chiPhiList
                 }
             })
                 .then(function (response) {

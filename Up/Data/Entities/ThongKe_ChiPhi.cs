@@ -2,6 +2,7 @@
 namespace Up.Data.Entities
 {
     using System;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public class ThongKe_ChiPhi
     {
@@ -13,5 +14,18 @@ namespace Up.Data.Entities
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
+
+        public double Bonus { get; set; }
+        public double Minus { get; set; }
+        public double SoGioDay { get; set; }
+        public double SoGioKem { get; set; }
+
+        public Guid? ChiPhiCoDinhId { get; set; }
+        public Guid? NhanVienId { get; set; }
+
+        [ForeignKey("ChiPhiCoDinhId")]
+        public ChiPhiCoDinh ChiPhiCoDinh { get; set; }
+        [ForeignKey("NhanVienId")]
+        public GiaoVien NhanVien { get; set; }
     }
 }

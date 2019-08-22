@@ -18,9 +18,37 @@ namespace Up.Services
             _context = context;
         }
 
-        public async Task<TinhChiPhiViewModel> TinhChiPhiAsync()
+        public async Task<TinhChiPhiViewModel> TinhChiPhiAsync(int month, int year)
         {
-            var giaoVien = await _context
+            var items = _context.ThongKe_ChiPhis.Where(x => x.NgayChiPhi.Month == month && x.NgayChiPhi.Year == year);
+            
+            if(items.Any())
+            {
+                return new TinhChiPhiViewModel
+                {
+                    ChiPhiList = await _context.ThongKe_ChiPhis
+                                        .Where(x => x.NgayChiPhi.Month == month && x.NgayChiPhi.Year == year)
+                                        .Select(x => new ChiPhiModel
+                                        {
+                                            Bonus = x.Bonus,
+                                            Minus = x.Minus,
+                                            ChiPhiMoi = x.ChiPhi,
+                                            NhanVienId = x.NhanVienId,
+                                            ChiPhiCoDinhId = x.ChiPhiCoDinhId,
+                                            SoGioKem = x.SoGioKem,
+                                            SoGioDay = x.SoGioDay,
+                                            Name = x.NhanVienId != null ? x.NhanVien.Name : x.ChiPhiCoDinh.Name,
+                                            Salary_Expense = x.NhanVienId != null ? x.NhanVien.BasicSalary : x.ChiPhiCoDinh.Gia,
+                                            TeachingRate = x.NhanVienId != null ? x.NhanVien.TeachingRate : 0,
+                                            TutoringRate = x.NhanVienId != null ? x.NhanVien.TutoringRate : 0,
+                                            LoaiChiPhi = x.NhanVienId == null ? 3 : x.NhanVien.LoaiGiaoVienId == LoaiNhanVienEnums.GiaoVien.ToId() ? 1 : 2
+                                        })
+                                        .ToListAsync()
+                };
+            }
+            else
+            {
+                var giaoVien = await _context
                 .GiaoViens.Where(x => x.IsDisabled == false)
                 .Select(x => new ChiPhiModel
                 {
@@ -31,31 +59,34 @@ namespace Up.Services
                     Bonus = 0,
                     Minus = 0,
                     LoaiChiPhi = x.LoaiGiaoVienId == LoaiNhanVienEnums.GiaoVien.ToId() ? 1 : 2,
-                    ChiPhiMoi = x.BasicSalary
+                    ChiPhiMoi = x.BasicSalary,
+                    NhanVienId = x.GiaoVienId
                 })
                 .ToListAsync();
 
-            var chiPhi = await _context.ChiPhiCoDinhs
-                .Where(x => x.IsDisabled == false)
-                .Select(x => new ChiPhiModel
+                var chiPhi = await _context.ChiPhiCoDinhs
+                    .Where(x => x.IsDisabled == false)
+                    .Select(x => new ChiPhiModel
+                    {
+                        Name = x.Name,
+                        Salary_Expense = x.Gia,
+                        Bonus = 0,
+                        Minus = 0,
+                        LoaiChiPhi = 3,
+                        ChiPhiMoi = x.Gia,
+                        ChiPhiCoDinhId = x.ChiPhiCoDinhId
+                    })
+                    .ToListAsync();
+
+                List<ChiPhiModel> model = new List<ChiPhiModel>();
+                model.AddRange(giaoVien);
+                model.AddRange(chiPhi);
+
+                return new TinhChiPhiViewModel
                 {
-                    Name = x.Name,
-                    Salary_Expense = x.Gia,
-                    Bonus = 0,
-                    Minus = 0,
-                    LoaiChiPhi = 3,
-                    ChiPhiMoi = x.Gia
-                })
-                .ToListAsync();
-
-            List<ChiPhiModel> model = new List<ChiPhiModel>();
-            model.AddRange(giaoVien);
-            model.AddRange(chiPhi);
-
-            return new TinhChiPhiViewModel
-            {
-                ChiPhiList = model
-            };
+                    ChiPhiList = model
+                };
+            }
         }
     }
 }

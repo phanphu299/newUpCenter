@@ -2,6 +2,7 @@
 namespace Up.Data.Entities
 {
     using System;
+    using System.Collections.Generic;
 
     public class ChiPhiCoDinh
     {
@@ -13,5 +14,7 @@ namespace Up.Data.Entities
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
+
+        public ICollection<ThongKe_ChiPhi> ThongKe_ChiPhis { get; set; }
     }
 }

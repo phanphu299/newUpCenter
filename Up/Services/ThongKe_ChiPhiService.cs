@@ -8,6 +8,7 @@ namespace Up.Services
     using System.Threading.Tasks;
     using Up.Data;
     using Up.Data.Entities;
+    using Up.Models;
 
     public class ThongKe_ChiPhiService : IThongKe_ChiPhiService
     {
@@ -18,15 +19,16 @@ namespace Up.Services
             _context = context;
         }
 
-        public async Task<bool> ThemThongKe_ChiPhiAsync(double ChiPhi, DateTime NgayChiPhi, string LoggedEmployee)
+        public async Task<bool> ThemThongKe_ChiPhiAsync(ThongKe_ChiPhiViewModel[] Model, DateTime NgayChiPhi, string LoggedEmployee)
         {
-            var item = await _context.ThongKe_ChiPhis
-                .Where(x => x.NgayChiPhi.Month == NgayChiPhi.Month && x.NgayChiPhi.Year == NgayChiPhi.Year)
-                .SingleOrDefaultAsync();
+            var items = _context.ThongKe_ChiPhis
+                .Where(x => x.NgayChiPhi.Month == NgayChiPhi.Month && x.NgayChiPhi.Year == NgayChiPhi.Year);
 
             try
             {
-                if (item == null)
+                _context.RemoveRange(items);
+
+                foreach (var item in Model)
                 {
                     ThongKe_ChiPhi thongKe = new ThongKe_ChiPhi
                     {
@@ -34,15 +36,15 @@ namespace Up.Services
                         NgayChiPhi = NgayChiPhi,
                         CreatedBy = LoggedEmployee,
                         CreatedDate = DateTime.Now,
-                        ChiPhi = ChiPhi
+                        ChiPhi = item.ChiPhiMoi,
+                        Bonus = item.Bonus,
+                        Minus = item.Minus,
+                        SoGioDay = item.SoGioDay,
+                        SoGioKem = item.SoGioKem,
+                        ChiPhiCoDinhId = item.ChiPhiCoDinhId,
+                        NhanVienId = item.NhanVienId
                     };
-                    _context.ThongKe_ChiPhis.Add(thongKe);
-                }
-                else
-                {
-                    item.ChiPhi = ChiPhi;
-                    item.UpdatedBy = LoggedEmployee;
-                    item.UpdatedDate = DateTime.Now;
+                    await _context.ThongKe_ChiPhis.AddAsync(thongKe);
                 }
 
                 await _context.SaveChangesAsync();
@@ -50,7 +52,7 @@ namespace Up.Services
             }
             catch (Exception exeption)
             {
-                throw new Exception("Lỗi khi lưu doanh thu : " + exeption.Message);
+                throw new Exception("Lỗi khi lưu chi phí : " + exeption.Message);
             }
         }
     }

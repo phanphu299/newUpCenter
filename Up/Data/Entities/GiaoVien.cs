@@ -30,6 +30,6 @@
         public LoaiCheDo LoaiCheDo { get; set; }
 
         public ICollection<LopHoc> LopHocs { get; set; }
-
+        public ICollection<ThongKe_ChiPhi> ThongKe_ChiPhis { get; set; }
     }
 }

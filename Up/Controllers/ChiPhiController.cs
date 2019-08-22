@@ -4,6 +4,7 @@ namespace Up.Controllers
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Up.Services;
 
@@ -28,14 +29,14 @@ namespace Up.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetChiPhiAsync()
+        public async Task<IActionResult> GetChiPhiAsync(int month, int year)
         {
-            var model = await _chiPhiService.TinhChiPhiAsync();
+            var model = await _chiPhiService.TinhChiPhiAsync(month, year);
             return Json(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> LuuChiPhiAsync([FromBody]Models.ThongKe_ChiPhiViewModel model)
+        public async Task<IActionResult> LuuChiPhiAsync([FromBody]Models.Add_ThongKe_ChiPhiViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -45,8 +46,8 @@ namespace Up.Controllers
 
             try
             {
-                DateTime _ngayChiPhi = new DateTime(model.year, model.month, 1);
-                var successful = await _thongKe_ChiPhiService.ThemThongKe_ChiPhiAsync(model.ChiPhi, _ngayChiPhi, currentUser.Email);
+                DateTime _ngayChiPhi = new DateTime(model.models[0].year, model.models[0].month, 1);
+                var successful = await _thongKe_ChiPhiService.ThemThongKe_ChiPhiAsync(model.models, _ngayChiPhi, currentUser.Email);
                 if (successful == false)
                 {
                     return Json(new Models.ResultModel
@@ -60,7 +61,7 @@ namespace Up.Controllers
                 {
                     Status = "OK",
                     Message = "Lưu Chi Phí thành công !!!",
-                    Result = successful
+                    //Result = successful
                 });
             }
             catch (Exception exception)

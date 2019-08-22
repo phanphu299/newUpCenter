@@ -6,6 +6,6 @@ namespace Up.Services
 
     public interface IChiPhiService
     {
-        Task<TinhChiPhiViewModel> TinhChiPhiAsync();
+        Task<TinhChiPhiViewModel> TinhChiPhiAsync(int month, int year);
     }
 }

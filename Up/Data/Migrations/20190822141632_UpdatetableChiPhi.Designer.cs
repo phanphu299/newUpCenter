@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Up.Data;
 
 namespace Up.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190822141632_UpdatetableChiPhi")]
+    partial class UpdatetableChiPhi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +47,8 @@ namespace Up.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f8f694b2-ca97-4ab1-bcf7-aab069cf609c",
-                            ConcurrencyStamp = "1df24833-00e9-4d71-89a3-c29255fd515a",
+                            Id = "c018d74b-3a47-4869-a845-0f4d8d4508be",
+                            ConcurrencyStamp = "4b2c8971-9728-4d69-b269-39eff996ac27",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -672,9 +674,9 @@ namespace Up.Data.Migrations
 
                     b.Property<Guid?>("NhanVienId");
 
-                    b.Property<double>("SoGioDay");
+                    b.Property<double?>("TeachingRate");
 
-                    b.Property<double>("SoGioKem");
+                    b.Property<double?>("TutoringRate");
 
                     b.Property<string>("UpdatedBy");
 

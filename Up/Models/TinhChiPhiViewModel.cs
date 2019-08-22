@@ -1,5 +1,6 @@
 ﻿namespace Up.Models
 {
+    using System;
     using System.Collections.Generic;
 
     public class TinhChiPhiViewModel
@@ -24,5 +25,7 @@
         public double SoGioDay { get; set; }
         public double SoGioKem { get; set; }
         public double ChiPhiMoi { get; set; }
+        public Guid? ChiPhiCoDinhId { get; set; }
+        public Guid? NhanVienId { get; set; }
     }
 }
