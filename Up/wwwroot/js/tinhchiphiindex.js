@@ -107,6 +107,43 @@
                     that.messageText = 'Lưu Chi Phí lỗi: ' + error;
                     that.color = 'error';
                 });
+        },
+
+        async onLuuNhapChiPhi() {
+            let that = this;
+            let chiPhiMoi = 0;
+            for (let i = 0; i < this.chiPhiList.length; i++) {
+                chiPhiMoi = chiPhiMoi + this.chiPhiList[i].chiPhiMoi;
+                this.chiPhiList[i].year = this.selectedNam;
+                this.chiPhiList[i].month = this.selectedThang;
+            }
+
+            await axios({
+                method: 'post',
+                url: '/ChiPhi/LuuNhapChiPhiAsync',
+                data: {
+                    models: that.chiPhiList
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Lưu Nháp thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Lưu Nháp lỗi: ' + error;
+                    that.color = 'error';
+                });
         }
     }
 });

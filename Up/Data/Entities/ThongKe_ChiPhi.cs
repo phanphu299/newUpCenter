@@ -22,6 +22,7 @@ namespace Up.Data.Entities
 
         public Guid? ChiPhiCoDinhId { get; set; }
         public Guid? NhanVienId { get; set; }
+        public bool DaLuu { get; set; }
 
         [ForeignKey("ChiPhiCoDinhId")]
         public ChiPhiCoDinh ChiPhiCoDinh { get; set; }

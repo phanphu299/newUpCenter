@@ -37,6 +37,7 @@ namespace Up.Services
                                             ChiPhiCoDinhId = x.ChiPhiCoDinhId,
                                             SoGioKem = x.SoGioKem,
                                             SoGioDay = x.SoGioDay,
+                                            DaLuu = x.DaLuu,
                                             Name = x.NhanVienId != null ? x.NhanVien.Name : x.ChiPhiCoDinh.Name,
                                             Salary_Expense = x.NhanVienId != null ? x.NhanVien.BasicSalary : x.ChiPhiCoDinh.Gia,
                                             TeachingRate = x.NhanVienId != null ? x.NhanVien.TeachingRate : 0,

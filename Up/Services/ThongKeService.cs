@@ -249,7 +249,7 @@
             try
             {
                 var chiPhi = await _context.ThongKe_ChiPhis
-                .Where(x => x.NgayChiPhi.Year == DateTime.Now.Year)
+                .Where(x => x.NgayChiPhi.Year == DateTime.Now.Year  && x.DaLuu == true)
                 .OrderBy(x => x.NgayChiPhi)
 
                 .Select(g => new ThongKe_ChiPhiViewModel
@@ -271,7 +271,7 @@
         {
             try
             {
-                return Math.Round(await _context.ThongKe_ChiPhis.Select(x => x.ChiPhi).SumAsync(), 0);
+                return Math.Round(await _context.ThongKe_ChiPhis.Where(x => x.DaLuu == true).Select(x => x.ChiPhi).SumAsync(), 0);
             }
             catch (Exception exception)
             {

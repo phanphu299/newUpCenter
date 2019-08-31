@@ -27,5 +27,6 @@
         public double ChiPhiMoi { get; set; }
         public Guid? ChiPhiCoDinhId { get; set; }
         public Guid? NhanVienId { get; set; }
+        public bool DaLuu { get; set; }
     }
 }

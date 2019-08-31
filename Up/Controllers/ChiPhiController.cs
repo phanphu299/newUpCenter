@@ -47,6 +47,53 @@ namespace Up.Controllers
             try
             {
                 DateTime _ngayChiPhi = new DateTime(model.models[0].year, model.models[0].month, 1);
+                foreach(var item in model.models)
+                {
+                    item.DaLuu = true;
+                }
+                var successful = await _thongKe_ChiPhiService.ThemThongKe_ChiPhiAsync(model.models, _ngayChiPhi, currentUser.Email);
+                if (successful == false)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Lưu Chi Phí lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Lưu Chi Phí thành công !!!",
+                    //Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LuuNhapChiPhiAsync([FromBody]Models.Add_ThongKe_ChiPhiViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                DateTime _ngayChiPhi = new DateTime(model.models[0].year, model.models[0].month, 1);
+                foreach (var item in model.models)
+                {
+                    item.DaLuu = false;
+                }
                 var successful = await _thongKe_ChiPhiService.ThemThongKe_ChiPhiAsync(model.models, _ngayChiPhi, currentUser.Email);
                 if (successful == false)
                 {

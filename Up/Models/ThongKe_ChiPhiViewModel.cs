@@ -25,6 +25,8 @@ namespace Up.Models
         public Guid? ChiPhiCoDinhId { get; set; }
         public Guid? NhanVienId { get; set; }
         public double ChiPhiMoi { get; set; }
+
+        public bool DaLuu { get; set; }
     }
 
     public class Add_ThongKe_ChiPhiViewModel

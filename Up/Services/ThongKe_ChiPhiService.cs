@@ -42,7 +42,8 @@ namespace Up.Services
                         SoGioDay = item.SoGioDay,
                         SoGioKem = item.SoGioKem,
                         ChiPhiCoDinhId = item.ChiPhiCoDinhId,
-                        NhanVienId = item.NhanVienId
+                        NhanVienId = item.NhanVienId,
+                        DaLuu = item.DaLuu
                     };
                     await _context.ThongKe_ChiPhis.AddAsync(thongKe);
                 }
