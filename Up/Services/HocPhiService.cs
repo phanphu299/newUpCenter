@@ -324,7 +324,7 @@ namespace Up.Services
                                                             x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).HocPhi
                                                             :
                                                             (Math.Ceiling(HocPhi / 10000) * 10000),
-                                            DaDongHocPhi = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear && m.LopHocId == LopHocId),
+                                            DaSaveNhap = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear && m.LopHocId == LopHocId),
                                             Bonus = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
                                                             x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).Bonus
                                                             : 0,
@@ -346,7 +346,8 @@ namespace Up.Services
                                                         .Where(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear)
                                                         .SelectMany(m => m.ThongKe_DoanhThuHocPhi_TaiLieus)
                                                         .Select(t => new SachViewModel { Gia = t.Sach.Gia, SachId = t.SachId, Name = t.Sach.Name }).ToArray()
-                                                        : null
+                                                        : null,
+                                            DaDongHocPhi = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear && m.LopHocId == LopHocId && m.DaDong == true)
                                         })
                                         .ToListAsync();
 
@@ -371,7 +372,7 @@ namespace Up.Services
                             {
                                 item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau);
 
-                                item.HocPhiMoi = item.DaDongHocPhi ? item.HocPhiMoi : (Math.Ceiling((item.HocPhiMoi + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                                item.HocPhiMoi = item.DaSaveNhap ? item.HocPhiMoi : (Math.Ceiling((item.HocPhiMoi + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                                 item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                             }
                         }
@@ -379,7 +380,7 @@ namespace Up.Services
                         {
                             item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * ngayDuocNghi;
 
-                            item.HocPhiMoi = item.DaDongHocPhi ? item.HocPhiMoi : (Math.Ceiling((item.HocPhiMoi + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                            item.HocPhiMoi = item.DaSaveNhap ? item.HocPhiMoi : (Math.Ceiling((item.HocPhiMoi + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                             item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                         }
                     }

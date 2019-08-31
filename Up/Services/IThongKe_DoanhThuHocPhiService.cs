@@ -10,6 +10,6 @@ namespace Up.Services
     {
         Task<List<ThongKe_DoanhThuHocPhiViewModel>> GetThongKe_DoanhThuHocPhiByLopHoc(Guid LopHocId);
         Task<bool> ThemThongKe_DoanhThuHocPhiAsync(Guid LopHocId, Guid HocVienId, double HocPhi, DateTime NgayDong,
-            double Bonus, double Minus, int KhuyenMai, string GhiChu, Guid[] SachIds, double No, string LoggedEmployee);
+            double Bonus, double Minus, int KhuyenMai, string GhiChu, Guid[] SachIds, double No, bool DaDong, string LoggedEmployee);
     }
 }

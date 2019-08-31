@@ -23,6 +23,8 @@ namespace Up.Data.Entities
         public string GhiChu { get; set; }
         public double No { get; set; }
 
+        public bool DaDong { get; set; }
+
         [ForeignKey("LopHocId")]
         public LopHoc LopHoc { get; set; }
         [ForeignKey("HocVienId")]

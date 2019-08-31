@@ -32,11 +32,12 @@
         public SachViewModel[] GiaSach { get; set; }
         public double HocPhiFixed { get; set; }
         public SachViewModel[] LastGiaSach { get; set; }
-        public bool DaDongHocPhi { get; set; } = false;
+        public bool DaDongHocPhi { get; set; } 
         public double Bonus { get; set; } = 0;
         public double Minus { get; set; } = 0;
         public string GhiChu { get; set; }
         public double LastBonus { get; set; } = 0;
         public double LastMinus { get; set; } = 0;
+        public bool DaSaveNhap { get; set; } = false;
     }
 }

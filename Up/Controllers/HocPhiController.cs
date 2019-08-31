@@ -6,7 +6,9 @@ namespace Up.Controllers
     using OfficeOpenXml;
     using OfficeOpenXml.Style;
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
     using System.Threading.Tasks;
     using Up.Services;
 
@@ -42,6 +44,42 @@ namespace Up.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> LuuNhap_HocPhiAsync([FromBody]Models.LuuNhap_ThongKe_HocPhiViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                DateTime _ngayDong = new DateTime(model.models[0].year, model.models[0].month, 1);
+                foreach(var item in model.models)
+                {
+                    var sachIds = item.GiaSach.Select(x => x.SachId).ToArray();
+                    await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(item.LopHocId, item.HocVienId,
+                    item.HocPhiMoi, _ngayDong, item.Bonus, item.Minus, item.KhuyenMai, item.GhiChu, sachIds, item.No, false, currentUser.Email);
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Lưu Nháp Doanh Thu thành công !!!",
+                    Result = true
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpPost]
         public async Task<IActionResult> LuuDoanhThu_HocPhiAsync([FromBody]Models.ThongKe_DoanhThuHocPhiViewModel model)
         {
             if (model.LopHocId == Guid.Empty || model.HocVienId == Guid.Empty)
@@ -59,7 +97,7 @@ namespace Up.Controllers
             {
                 DateTime _ngayDong = new DateTime(model.year, model.month, 1);
                 var successful = await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(model.LopHocId, model.HocVienId,
-                    model.HocPhi, _ngayDong, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, model.No, currentUser.Email);
+                    model.HocPhi, _ngayDong, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, model.No, true, currentUser.Email);
                 if (successful == false)
                 {
                     return Json(new Models.ResultModel

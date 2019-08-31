@@ -25,7 +25,7 @@ namespace Up.Services
         }
 
         public async Task<bool> ThemThongKe_DoanhThuHocPhiAsync(Guid LopHocId, Guid HocVienId, double HocPhi, DateTime NgayDong,
-            double Bonus, double Minus, int KhuyenMai, string GhiChu, Guid[] SachIds, double No, string LoggedEmployee)
+            double Bonus, double Minus, int KhuyenMai, string GhiChu, Guid[] SachIds, double No, bool DaDong, string LoggedEmployee)
         {
             var item = await _context.ThongKe_DoanhThuHocPhis
                 .Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayDong.Month == NgayDong.Month && x.NgayDong.Year == NgayDong.Year)
@@ -48,7 +48,8 @@ namespace Up.Services
                         KhuyenMai = KhuyenMai,
                         Minus = Minus,
                         GhiChu = GhiChu,
-                        No = No
+                        No = No,
+                        DaDong = DaDong
                     };
                     await _context.ThongKe_DoanhThuHocPhis.AddAsync(thongKe);
 
@@ -81,6 +82,7 @@ namespace Up.Services
                     item.HocPhi = HocPhi;
                     item.UpdatedBy = LoggedEmployee;
                     item.UpdatedDate = DateTime.Now;
+                    item.DaDong = DaDong;
 
                     var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo <= item.NgayDong).ToList();
                     foreach (var n in no)

@@ -22,10 +22,17 @@ namespace Up.Models
         public int KhuyenMai { get; set; }
         public string GhiChu { get; set; }
         public Guid[] SachIds { get; set; }
-
+        public bool DaDong { get; set; }
         public double No { get; set; }
+
+        public double HocPhiMoi { get; set; }
+        public SachViewModel[] GiaSach { get; set; }
 
         public int month { get; set; }
         public int year { get; set; }
+    }
+    public class LuuNhap_ThongKe_HocPhiViewModel
+    {
+        public ThongKe_DoanhThuHocPhiViewModel[] models { get; set; }
     }
 }

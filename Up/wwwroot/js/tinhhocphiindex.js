@@ -132,6 +132,12 @@
                         that.tongHocPhi = response.data.hocPhi;
                         that.hocVienList = response.data.hocVienList;
                         that.hocPhiMoiNgay = response.data.hocPhiMoiNgay;
+
+                        for (let i = 0; i < that.hocVienList.length; i++) {
+                            that.hocVienList[i].year = that.selectedNam;
+                            that.hocVienList[i].month = that.selectedThang;
+                            that.hocVienList[i].lopHocId = that.selectedLopHoc.lopHocId;
+                        }
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -182,7 +188,7 @@
                 this.color = 'error';
             }
             else {
-                let Sachs = item.giaSach.map(m => m.sachId);
+                let Sachs = item.giaSach != null ? item.giaSach.map(m => m.sachId) : [];
                 await axios({
                     method: 'post',
                     url: '/HocPhi/LuuDoanhThu_HocPhiAsync',
@@ -263,6 +269,36 @@
                         that.color = 'error';
                     });
             }
+        },
+
+        async onLuuNhap() {
+            let that = this;
+            await axios({
+                method: 'post',
+                url: '/HocPhi/LuuNhap_HocPhiAsync',
+                data: {
+                    models: that.hocVienList
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Lưu Nháp thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Lưu Nháp lỗi: ' + error;
+                    that.color = 'error';
+                });
         }
     }
 });
