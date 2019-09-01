@@ -94,7 +94,7 @@
         },
 
         async onUpdate(item) {
-            if (item.name === '' || item.phone === '' || item.facebookAccount === '' || item.diaChi === '' || item.initialName === '' || item.cmnd === '') {
+            if (item.name === '' || item.phone === '' || item.diaChi === '' || item.initialName === '' || item.cmnd === '') {
                 this.alertMessage = "Không được bỏ trống";
                 this.alertEdit = true;
             }
@@ -149,7 +149,7 @@
         },
 
         async onSave(item) {
-            if (this.newItem.name === '' || this.newItem.phone === '' || this.newItem.facebookAccount === '' || this.newItem.diaChi === '' || this.newItem.initialName === '' || this.newItem.cmnd === '') {
+            if (this.newItem.name === '' || this.newItem.phone === '' || this.newItem.diaChi === '' || this.newItem.initialName === '' || this.newItem.cmnd === '') {
                 this.alertMessage = "Không được bỏ trống";
                 this.alert = true;
             }

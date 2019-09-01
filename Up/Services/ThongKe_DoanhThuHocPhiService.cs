@@ -53,13 +53,16 @@ namespace Up.Services
                     };
                     await _context.ThongKe_DoanhThuHocPhis.AddAsync(thongKe);
 
-                    var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo <= thongKe.NgayDong);
-                    foreach (var n in no)
+                    if(DaDong == true)
                     {
-                        n.IsDisabled = true;
+                        var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo <= thongKe.NgayDong);
+                        foreach (var n in no)
+                        {
+                            n.IsDisabled = true;
+                        }
                     }
 
-                    foreach(Guid sachId in SachIds)
+                    foreach (Guid sachId in SachIds)
                     {
                         ThongKe_DoanhThuHocPhi_TaiLieu thongKe_TaiLieu = new ThongKe_DoanhThuHocPhi_TaiLieu
                         {
@@ -84,10 +87,13 @@ namespace Up.Services
                     item.UpdatedDate = DateTime.Now;
                     item.DaDong = DaDong;
 
-                    var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo <= item.NgayDong).ToList();
-                    foreach (var n in no)
+                    if(DaDong == true)
                     {
-                        n.IsDisabled = true;
+                        var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo <= item.NgayDong).ToList();
+                        foreach (var n in no)
+                        {
+                            n.IsDisabled = true;
+                        }
                     }
 
                     var sach = _context.ThongKe_DoanhThuHocPhi_TaiLieus.Where(x => x.ThongKe_DoanhThuHocPhiId == item.ThongKe_DoanhThuHocPhiId);
@@ -110,9 +116,34 @@ namespace Up.Services
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch(Exception exeption)
+            catch (Exception exeption)
             {
                 throw new Exception("Lỗi khi lưu doanh thu : " + exeption.Message);
+            }
+        }
+
+        public async Task<bool> Undo_DoanhThuAsync(Guid LopHocId, Guid HocVienId, int Month, int Year, string LoggedEmployee)
+        {
+            try
+            {
+                var item = await _context.ThongKe_DoanhThuHocPhis
+                .Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayDong.Month == Month && x.NgayDong.Year == Year)
+                .SingleOrDefaultAsync();
+
+                if (item != null)
+                {
+                    item.DaDong = false;
+                    item.UpdatedDate = DateTime.Now;
+                    item.UpdatedBy = LoggedEmployee;
+
+                    await _context.SaveChangesAsync();
+                }
+
+                return true;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Lỗi khi undo Học Phí : " + exception.Message);
             }
         }
     }

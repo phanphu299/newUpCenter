@@ -57,7 +57,7 @@ namespace Up.Controllers
                 DateTime _ngayDong = new DateTime(model.models[0].year, model.models[0].month, 1);
                 foreach(var item in model.models)
                 {
-                    var sachIds = item.GiaSach.Select(x => x.SachId).ToArray();
+                    var sachIds = item.GiaSach != null ? item.GiaSach.Select(x => x.SachId).ToArray() : new Guid[0];
                     await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(item.LopHocId, item.HocVienId,
                     item.HocPhiMoi, _ngayDong, item.Bonus, item.Minus, item.KhuyenMai, item.GhiChu, sachIds, item.No, false, currentUser.Email);
                 }
@@ -269,6 +269,42 @@ namespace Up.Controllers
 
             stream.Position = 0;
             return stream;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UndoAsync(Guid LopHocId, Guid HocVienId, int Month, int Year)
+        {
+            if (LopHocId == Guid.Empty || HocVienId == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                await _thongKe_DoanhThuHocPhiService.Undo_DoanhThuAsync(LopHocId, HocVienId, Month, Year, currentUser.Email);
+                await _noService.Undo_NoAsync(LopHocId, HocVienId, Month, Year, currentUser.Email);
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Undo thành công !!!",
+                    Result = true
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
     }
 }

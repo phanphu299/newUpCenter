@@ -24,10 +24,7 @@
                                       label="Chọn Năm"
                                       v-on:change="onTinhTien"></v-select>
                         </v-flex>
-                        <v-spacer></v-spacer>
-                        <v-flex xs12 sm2>
-                            <v-btn color="primary" v-on:click="onLuuNhapChiPhi" v-if="chiPhiList.length > 0">Lưu Nháp</v-btn>
-                        </v-flex>
+
                         <v-flex xs12 sm2>
                             <v-btn color="success" v-on:click="onLuuChiPhi" v-if="chiPhiList.length > 0">Lưu Chi Phí</v-btn>
                         </v-flex>
@@ -70,8 +67,13 @@
                                 </v-flex>
                             </v-layout>
                         </v-container>
-
-</v-card>
+                        <v-layout>
+                            <v-spacer></v-spacer>
+                            <v-flex xs12 sm2>
+                                <v-btn color="primary" v-on:click="onLuuNhapChiPhi" v-if="chiPhiList.length > 0">Lưu Bảng Tính</v-btn>
+                            </v-flex>
+                        </v-layout>
+            </v-card>
         </div>
 
         <v-snackbar v-model="snackbar"
@@ -106,7 +108,7 @@
     td, th {
         padding: unset;
     }
-    
+
     .red-header {
         color: red !important
     }

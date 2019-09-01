@@ -71,8 +71,8 @@ namespace Up.Services
                     item.UpdatedDate = DateTime.Now;
                 }
 
-                var doanhThu = _context.ThongKe_DoanhThuHocPhis.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayDong.Month == NgayNo.Month && x.NgayDong.Year == NgayNo.Year);
-                _context.ThongKe_DoanhThuHocPhis.RemoveRange(doanhThu);
+                //var doanhThu = _context.ThongKe_DoanhThuHocPhis.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayDong.Month == NgayNo.Month && x.NgayDong.Year == NgayNo.Year);
+                //_context.ThongKe_DoanhThuHocPhis.RemoveRange(doanhThu);
 
                 await _context.SaveChangesAsync();
                 return true;
@@ -80,6 +80,33 @@ namespace Up.Services
             catch (Exception exeption)
             {
                 throw new Exception("Lỗi khi lưu nợ : " + exeption.Message);
+            }
+        }
+
+        public async Task<bool> Undo_NoAsync(Guid LopHocId, Guid HocVienId, int Month, int Year, string LoggedEmployee)
+        {
+            try
+            {
+                
+                var item = await _context.HocVien_Nos
+                                    .Where(x => x.LopHocId == LopHocId && x.HocVienId == HocVienId)
+                                    .Where(x => x.NgayNo.Month == Month && x.NgayNo.Year == Year)
+                                    .SingleOrDefaultAsync();
+
+                if (item != null)
+                {
+                    item.IsDisabled = true;
+                    item.UpdatedBy = LoggedEmployee;
+                    item.UpdatedDate = DateTime.Now;
+
+                    await _context.SaveChangesAsync();
+                }
+                
+                return true;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Lỗi khi undo Nợ : " + exception.Message);
             }
         }
 

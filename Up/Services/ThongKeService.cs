@@ -191,7 +191,7 @@
             try
             {
                 var doanhThu = await _context.ThongKe_DoanhThuHocPhis
-                .Where(x => x.NgayDong.Year == DateTime.Now.Year)
+                .Where(x => x.NgayDong.Year == DateTime.Now.Year && x.DaDong == true)
                 .OrderBy(x => x.NgayDong)
 
                 .Select(g => new ThongKe_DoanhThuHocPhiViewModel
@@ -236,7 +236,7 @@
         {
             try
             {
-                return Math.Round(await _context.ThongKe_DoanhThuHocPhis.Select(x => x.HocPhi).SumAsync(), 0);
+                return Math.Round(await _context.ThongKe_DoanhThuHocPhis.Where(x => x.DaDong == true).Select(x => x.HocPhi).SumAsync(), 0);
             }
             catch (Exception exception)
             {

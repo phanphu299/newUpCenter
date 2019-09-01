@@ -43,10 +43,7 @@
                                       label="Chọn Năm"
                                       v-on:change="onTinhTien"></v-select>
                         </v-flex>
-                        <v-spacer></v-spacer>
-                        <v-flex xs12 sm2 v-if="hocVienList.length > 0">
-                            <v-btn color="primary" v-on:click="onLuuNhap">Lưu Nháp</v-btn>
-                        </v-flex>
+                        
                         <v-flex xs12 sm2 v-if="hocVienList.length > 0">
                             <v-btn color="success" v-on:click="onExport">Xuất Excel</v-btn>
                         </v-flex>
@@ -76,7 +73,6 @@
                                                   :items="hocVienList">
                                         <template slot="items" slot-scope="props">
 
-                                            <td><v-icon v-if="props.item.daDongHocPhi">check_circle_outline</v-icon></td>
                                             <td>
                                                 {{ props.item.fullName }}
                                                 <v-tooltip top v-if="props.item.hocPhiBuHocVienVaoSau > 0">
@@ -85,6 +81,13 @@
                                                     </template>
                                                     Ngày vào học: <strong>{{ props.item.ngayBatDauHoc }}</strong><br />
                                                     Trừ học phí: <strong>{{ formatNumber(props.item.hocPhiBuHocVienVaoSau) }}</strong>
+                                                </v-tooltip>
+                                                <v-icon v-if="props.item.daDongHocPhi" color="success">check_circle_outline</v-icon>
+                                                <v-tooltip top v-if="props.item.daNo">
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-icon color="warning lighten-1" dark v-on="on">move_to_inbox</v-icon>
+                                                    </template>
+                                                    Dời qua tháng sau
                                                 </v-tooltip>
                                             </td>
                                             <td><v-text-field v-model="props.item.hocPhiMoi"></v-text-field></td>
@@ -141,16 +144,35 @@
                                                                color="warning"
                                                                v-on="on"
                                                                v-on:click="onNo(props.item)">
-                                                            <v-icon>restore</v-icon>
+                                                            <v-icon>move_to_inbox</v-icon>
                                                         </v-btn>
                                                     </template>
                                                     <strong>Nợ và Lưu</strong>
+                                                </v-tooltip>
+
+                                                <v-tooltip top>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-btn flat icon
+                                                               small
+                                                               color="error"
+                                                               v-on="on"
+                                                               v-on:click="onUndo(props.item)">
+                                                            <v-icon>restore</v-icon>
+                                                        </v-btn>
+                                                    </template>
+                                                    <strong>Undo</strong>
                                                 </v-tooltip>
                                             </td>
 
                                         </template>
                                     </v-data-table>
                                     <span><b>Tổng Học Phí: {{ formatNumber(total) }}</b></span>
+                                    <v-layout>
+                                        <v-spacer></v-spacer>
+                                        <v-flex xs12 sm2 v-if="hocVienList.length > 0">
+                                            <v-btn color="primary" v-on:click="onLuuNhap">Lưu Bảng Tính</v-btn>
+                                        </v-flex>
+                                    </v-layout>
                                 </v-flex>
                             </v-layout>
                         </v-container>

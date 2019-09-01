@@ -22,9 +22,8 @@
         hocPhiMoiNgay: 0,
         hocVienList: [],
         headers: [
-            { text: 'Đã Đóng?', align: 'left', sortable: true },
-            { text: 'Tên Học Viên', align: 'left', sortable: true },
-            { text: 'Học Phí Tháng Này', align: 'left', sortable: true, class: "red-header"},
+            { text: 'Tên HV', align: 'left', sortable: true },
+            { text: 'Học Phí Tháng', align: 'left', sortable: true, class: "red-header" },
             { text: 'Nợ', align: 'left', sortable: true },
             { text: 'Tài Liệu', align: 'left', sortable: true },
             { text: 'Khuyến Mãi', align: 'left', sortable: true },
@@ -32,7 +31,7 @@
             { text: 'Khoảng Trừ Khác', align: 'left', sortable: true },
             { text: 'Ghi Chú', align: 'left', sortable: true },
             { text: 'Action', align: 'left', sortable: false }
-        ],
+        ]
     },
     async beforeCreate() {
         let that = this;
@@ -255,6 +254,7 @@
                             that.messageText = 'Lưu Nợ thành công !!!';
                             that.color = 'success';
                             item.daDongHocPhi = false;
+                            item.daNo = true;
                         }
                         else {
                             that.snackbar = true;
@@ -297,6 +297,31 @@
                     console.log(error);
                     that.snackbar = true;
                     that.messageText = 'Lưu Nháp lỗi: ' + error;
+                    that.color = 'error';
+                });
+        },
+
+        async onUndo(item) {
+            let that = this;
+            await axios.get('/HocPhi/UndoAsync?LopHocId=' + this.selectedLopHoc.lopHocId + '&HocVienId=' + item.hocVienId + '&Month=' + this.selectedThang + '&Year=' + this.selectedNam)
+                .then(function (response) {
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Undo thành công !!!';
+                        that.color = 'success';
+                        item.daDongHocPhi = false;
+                        item.daNo = false;
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Undo lỗi: ' + error;
                     that.color = 'error';
                 });
         }

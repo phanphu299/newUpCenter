@@ -21,8 +21,8 @@
 
         public async Task<GiaoVienViewModel> CreateGiaoVienAsync(string Name, Guid LoaiGiaoVienId, Guid LoaiCheDoId, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, string LoggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name) || LoaiGiaoVienId == null || LoaiCheDoId == null || string.IsNullOrWhiteSpace(Phone) || string.IsNullOrWhiteSpace(FacebookAccount) || string.IsNullOrWhiteSpace(DiaChi) || string.IsNullOrWhiteSpace(InitialName) || string.IsNullOrWhiteSpace(CMND))
-                throw new Exception("Tên Nhân Viên, Loại Nhân Viên, Loại Chế Độ, SĐT, FB, Địa Chỉ, Initial Name, CMND không được để trống !!!");
+            if (string.IsNullOrWhiteSpace(Name) || LoaiGiaoVienId == null || LoaiCheDoId == null || string.IsNullOrWhiteSpace(Phone) || string.IsNullOrWhiteSpace(DiaChi) || string.IsNullOrWhiteSpace(InitialName) || string.IsNullOrWhiteSpace(CMND))
+                throw new Exception("Tên Nhân Viên, Loại Nhân Viên, Loại Chế Độ, SĐT, Địa Chỉ, Initial Name, CMND không được để trống !!!");
 
             GiaoVien giaoVien = new GiaoVien();
             giaoVien.GiaoVienId = new Guid();
@@ -144,8 +144,8 @@
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(Name) || LoaiGiaoVienId == null || LoaiCheDoId == null || string.IsNullOrWhiteSpace(Phone) || string.IsNullOrWhiteSpace(FacebookAccount) || string.IsNullOrWhiteSpace(DiaChi) || string.IsNullOrWhiteSpace(InitialName) || string.IsNullOrWhiteSpace(CMND))
-                    throw new Exception("Tên Giáo Viên, Loại Giáo Viên, Loại Chế Độ, SĐT, FB, Địa Chỉ, Initial Name, CMND không được để trống !!!");
+                if (string.IsNullOrWhiteSpace(Name) || LoaiGiaoVienId == null || LoaiCheDoId == null || string.IsNullOrWhiteSpace(Phone) || string.IsNullOrWhiteSpace(DiaChi) || string.IsNullOrWhiteSpace(InitialName) || string.IsNullOrWhiteSpace(CMND))
+                    throw new Exception("Tên Giáo Viên, Loại Giáo Viên, Loại Chế Độ, SĐT, Địa Chỉ, Initial Name, CMND không được để trống !!!");
 
                 var item = await _context.GiaoViens
                                         .Where(x => x.GiaoVienId == GiaoVienId)

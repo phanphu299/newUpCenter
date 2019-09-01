@@ -39,5 +39,6 @@
         public double LastBonus { get; set; } = 0;
         public double LastMinus { get; set; } = 0;
         public bool DaSaveNhap { get; set; } = false;
+        public bool DaNo { get; set; } = false;
     }
 }

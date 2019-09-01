@@ -23,7 +23,7 @@
         headers: [
             { text: 'Tên', align: 'left', sortable: true },
             { text: 'Chi Phí', align: 'left', sortable: true, class: "red-header"},
-            { text: 'Lương/Chi Phí', align: 'left', sortable: true },
+            { text: 'Lương Căn Bản/Chi Phí', align: 'left', sortable: true },
             { text: 'Lương Giảng Dạy', align: 'left', sortable: true },
             { text: 'Lương Kèm', align: 'left', sortable: true },
             { text: 'Số Giờ Dạy', align: 'left', sortable: true },
