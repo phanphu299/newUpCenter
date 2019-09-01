@@ -22,3 +22,7 @@ Pass: Ro#zLD[ta2204C
 
 
 "DefaultConnection": "Server=localhost;Database=upengli1_UpCenter;user id=upengli1_UpCenter;password=P@ssword@123"
+
+a.ns.hostvn.net
+
+b.ns.hostvn.net
