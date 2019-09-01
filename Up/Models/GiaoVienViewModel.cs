@@ -1,14 +1,12 @@
 ﻿namespace Up.Models
 {
     using System;
+    using System.Collections.Generic;
+
     public class GiaoVienViewModel
     {
         public Guid GiaoVienId { get; set; }
         public string Name { get; set; }
-        public Guid LoaiGiaoVienId { get; set; }
-        public string LoaiGiaoVien { get; set; }
-        public Guid LoaiCheDoId { get; set; }
-        public string LoaiCheDo { get; set; }
         public string Phone { get; set; }
         public double TeachingRate { get; set; }
         public double TutoringRate { get; set; }
@@ -22,5 +20,11 @@
         public string UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate_Date { get; set; }
+        public List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo { get; set; }
+    }
+    public class LoaiNhanVien_CheDoViewModel
+    {
+        public LoaiGiaoVienViewModel LoaiGiaoVien { get; set; }
+        public LoaiCheDoViewModel LoaiCheDo { get; set; }
     }
 }

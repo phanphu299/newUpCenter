@@ -37,8 +37,7 @@
                 value: ''
             },
             { text: 'Tên Nhân Viên', value: 'name', align: 'left', sortable: true },
-            { text: 'Loại Nhân Viên', value: 'loaiGiaoVien', align: 'left', sortable: true },
-            { text: 'Loại Chế Độ', value: 'loaiCheDo', align: 'left', sortable: true },
+            { text: 'Vị Trí/Chế Độ', value: 'loaiGiaoVien', align: 'left', sortable: true },
             { text: 'Số Điện Thoại', value: 'phone', align: 'left', sortable: true },
             { text: 'Teaching Rate', value: 'teachingRate', align: 'left', sortable: true },
             { text: 'Tutoring Rate', value: 'tutoringRate', align: 'left', sortable: true },
@@ -54,7 +53,8 @@
         ],
         khoaHocItems: [],
         itemLoaiGiaoVien: [],
-        itemLoaiCheDo: []
+        itemLoaiCheDo: [],
+        arrayLoaiNVandCD: []
     },
     async beforeCreate() {
         let that = this;
@@ -85,9 +85,65 @@
     filters: {
         truncate: function (text, length, suffix) {
             return text.substring(0, length) + suffix;
-        },
+        }
     },
     methods: {
+        async onAddLoaiNVCD() {
+            if (this.newItem.loaiGiaoVien !== '' && this.newItem.loaiCheDo !== '') {
+                let isExisting = false;
+                this.arrayLoaiNVandCD.map(item => {
+                    if (item.loaiGiaoVien.loaiGiaoVienId === this.newItem.loaiGiaoVien.loaiGiaoVienId) {
+                        isExisting = true;
+                    }
+                });
+
+                if (isExisting === false) {
+                    this.arrayLoaiNVandCD.push({
+                        loaiGiaoVien: this.newItem.loaiGiaoVien,
+                        loaiCheDo: this.newItem.loaiCheDo
+                    });
+                }
+            }
+            else {
+                this.snackbar = true;
+                this.messageText = 'Phải chọn cả loại nhân viên và chế độ trước khi thêm !!!';
+                this.color = 'error';
+            }
+        },
+
+        async onXoaLoaiNVCD(item) {
+            this.arrayLoaiNVandCD = this.arrayLoaiNVandCD
+                .filter(x => x.loaiGiaoVien.loaiGiaoVienId !== item.loaiGiaoVien.loaiGiaoVienId);
+        },
+
+        async onAddLoaiNVCDForEdit(item) {
+            if (this.itemToEdit.loaiGiaoVienId !== undefined && this.itemToEdit.loaiCheDoId !== undefined) {
+                let isExisting = false;
+                item.loaiNhanVien_CheDo.map(i => {
+                    if (i.loaiGiaoVien.loaiGiaoVienId === this.itemToEdit.loaiGiaoVienId.loaiGiaoVienId) {
+                        isExisting = true;
+                    }
+                });
+
+                if (isExisting === false) {
+                    item.loaiNhanVien_CheDo.push({
+                        loaiGiaoVien: this.itemToEdit.loaiGiaoVienId,
+                        loaiCheDo: this.itemToEdit.loaiCheDoId
+                    });
+                }
+            }
+            else {
+                this.snackbar = true;
+                this.messageText = 'Phải chọn cả loại nhân viên và chế độ trước khi thêm !!!';
+                this.color = 'error';
+            }
+        },
+
+        async onXoaLoaiNVCDForEdit(item) {
+            this.itemToEdit.loaiNhanVien_CheDo = this.itemToEdit.loaiNhanVien_CheDo
+                .filter(x => x.loaiGiaoVien.loaiGiaoVienId !== item.loaiGiaoVien.loaiGiaoVienId);
+        },
+
         mappingEditItem(item) {
             this.editedIndex = this.khoaHocItems.indexOf(item);
             this.itemToEdit = Object.assign({}, item);
@@ -101,6 +157,11 @@
             else if (isNaN(item.teachingRate) || isNaN(item.tutoringRate) || isNaN(item.basicSalary)) {
                 this.alertMessage = "Teaching Rate, Tutoring Rate, Basic Salary chỉ được nhập số";
                 this.alertEdit = true;
+            }
+            else if (item.loaiNhanVien_CheDo.length === 0) {
+                this.snackbar = true;
+                this.messageText = 'Phải chọn loại nhân viên và chế độ !!!';
+                this.color = 'error';
             }
             else {
                 let that = this;
@@ -118,8 +179,7 @@
                         DiaChi: item.diaChi,
                         InitialName: item.initialName,
                         CMND: item.cmnd,
-                        LoaiGiaoVienId: item.loaiGiaoVienId,
-                        LoaiCheDoId: item.loaiCheDoId
+                        LoaiNhanVien_CheDo: item.loaiNhanVien_CheDo
                     }
                 })
                 .then(function (response) {
@@ -157,6 +217,11 @@
                 this.alertMessage = "Teaching Rate, Tutoring Rate, Basic Salary chỉ được nhập số";
                 this.alert = true;
             }
+            else if (this.arrayLoaiNVandCD.length === 0) {
+                this.snackbar = true;
+                this.messageText = 'Phải chọn loại nhân viên và chế độ !!!';
+                this.color = 'error';
+            }
             else {
                 this.dialog = false;
                 let that = this;
@@ -173,8 +238,7 @@
                         DiaChi: that.newItem.diaChi,
                         InitialName: that.newItem.initialName,
                         CMND: that.newItem.cmnd,
-                        LoaiGiaoVienId: that.newItem.loaiGiaoVien,
-                        LoaiCheDoId: that.newItem.loaiCheDo
+                        LoaiNhanVien_CheDo: that.arrayLoaiNVandCD
                     }
                 })
                     .then(function (response) {
@@ -193,6 +257,7 @@
                             that.newItem.diaChi = '';
                             that.newItem.initialName = '';
                             that.newItem.cmnd = '';
+                            that.arrayLoaiNVandCD = [];
                         }
                         else {
                             that.snackbar = true;

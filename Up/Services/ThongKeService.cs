@@ -95,7 +95,7 @@
             try
             {
                 var fullTime = await _context.GiaoViens
-                .Where(x => x.LoaiGiaoVienId == LoaiNhanVienEnums.GiaoVien.ToId() && x.LoaiCheDoId == LoaiCheDoEnums.FullTime.ToId() && x.IsDisabled == false)
+                .Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiCheDoEnums.FullTime.ToId()) && x.IsDisabled == false)
                 .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
                 .OrderBy(x => x.CreatedDate)
 
@@ -119,7 +119,7 @@
             try
             {
                 var partTime = await _context.GiaoViens
-                .Where(x => x.LoaiGiaoVienId == LoaiNhanVienEnums.GiaoVien.ToId() && x.LoaiCheDoId == LoaiCheDoEnums.PartTime.ToId() && x.IsDisabled == false)
+                .Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiCheDoEnums.PartTime.ToId()) && x.IsDisabled == false)
                 .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
                 .OrderBy(x => x.CreatedDate)
 
@@ -166,7 +166,7 @@
         {
             try
             {
-                return await _context.GiaoViens.Where(x => x.LoaiGiaoVienId == LoaiNhanVienEnums.GiaoVien.ToId() && x.IsDisabled == false).CountAsync();
+                return await _context.GiaoViens.Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.IsDisabled == false).CountAsync();
             }
             catch (Exception exception)
             {

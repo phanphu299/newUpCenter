@@ -51,23 +51,59 @@
                                             <v-text-field label="CMND *" required v-model="newItem.cmnd" v-on:keyup.enter="onSave"></v-text-field>
                                         </v-flex>
 
-                                        <v-flex xs12 sm6>
+                                        <v-flex xs12 sm5>
                                             <v-select :items="itemLoaiGiaoVien"
                                                       item-text="name"
-                                                      item-value="loaiGiaoVienId"
+                                                      return-object
                                                       v-model="newItem.loaiGiaoVien"
                                                       label="Chọn Loại Nhân Viên *">
                                             </v-select>
                                         </v-flex>
 
-                                        <v-flex xs12 sm6>
+                                        <v-flex xs12 sm5>
                                             <v-select :items="itemLoaiCheDo"
                                                       item-text="name"
-                                                      item-value="loaiCheDoId"
+                                                      return-object
                                                       v-model="newItem.loaiCheDo"
                                                       label="Chọn Loại Chế Độ *">
                                             </v-select>
                                         </v-flex>
+
+                                        <v-flex xs12 sm2>
+                                            <v-tooltip top>
+                                                <template v-slot:activator="{ on }">
+                                                    <v-btn slot="activator" v-on="on" color="primary darken-1" fab small flat v-on:click="onAddLoaiNVCD"><v-icon>add</v-icon></v-btn>
+                                                </template>
+                                                <strong>Thêm Chức Danh và Chế Độ</strong>
+                                            </v-tooltip>
+                                        </v-flex>
+                                        
+                                        <v-flex xs12 sm12>
+                                            <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;" v-if="arrayLoaiNVandCD.length > 0">
+                                                <thead style="background-color: orange;">
+                                                    <tr style="border: 1px solid #ddd;">
+                                                        <th style="border: 1px solid #ddd;"> Vị Trí</th>
+                                                        <th style="border: 1px solid #ddd;"> Chế Độ</th>
+                                                        <th style="border: 1px solid #ddd;"> Xóa</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr style="border: 1px solid #ddd;" v-for="(item,i) in arrayLoaiNVandCD" :key="i">
+                                                        <td style="border: 1px solid #ddd; padding-right:5px; padding-top: 0px; padding-bottom: 0px">{{ item.loaiGiaoVien.name }}</td>
+                                                        <td style="border: 1px solid #ddd; padding-right:5px; padding-top: 0px; padding-bottom: 0px">{{ item.loaiCheDo.name }}</td>
+                                                        <td style="border: 1px solid #ddd; padding-right:5px; padding-top: 0px; padding-bottom: 0px">
+                                                            <v-tooltip top>
+                                                                <template v-slot:activator="{ on }">
+                                                                    <v-btn slot="activator" v-on="on" color="error darken-1" fab small flat v-on:click="onXoaLoaiNVCD(item)"><v-icon>delete</v-icon></v-btn>
+                                                                </template>
+                                                                <strong>Xóa Chức Danh và Chế Độ</strong>
+                                                            </v-tooltip>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </v-flex>
+
                                     </v-layout>
                                 </v-container>
                                 <small>* bắt buộc</small>
@@ -128,8 +164,16 @@
 
                         </td>
                         <td>{{ props.item.name }}</td>
-                        <td>{{ props.item.loaiGiaoVien }}</td>
-                        <td>{{ props.item.loaiCheDo }}</td>
+                        <td>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on }">
+                                    <v-icon color="grey lighten-1" dark v-on="on">info</v-icon>
+                                </template>
+                                <div v-for="loaiItem in props.item.loaiNhanVien_CheDo">
+                                    <strong>{{ loaiItem.loaiGiaoVien.name }}/{{ loaiItem.loaiCheDo.name }}</strong><br />
+                                </div>
+                            </v-tooltip>
+                        </td>
                         <td>{{ props.item.phone }}</td>
                         <td>{{ props.item.teachingRate }}</td>
                         <td>{{ props.item.tutoringRate }}</td>
@@ -230,23 +274,59 @@
                                 <v-text-field label="CMND *" required v-model="itemToEdit.cmnd" v-on:keyup.enter="onSave"></v-text-field>
                             </v-flex>
 
-                            <v-flex xs12 sm6>
+                            <v-flex xs12 sm5>
                                 <v-select :items="itemLoaiGiaoVien"
                                           item-text="name"
-                                          item-value="loaiGiaoVienId"
+                                          return-object
                                           v-model="itemToEdit.loaiGiaoVienId"
                                           label="Chọn Loại Nhân Viên *">
                                 </v-select>
                             </v-flex>
 
-                            <v-flex xs12 sm6>
+                            <v-flex xs12 sm5>
                                 <v-select :items="itemLoaiCheDo"
                                           item-text="name"
-                                          item-value="loaiCheDoId"
+                                          return-object
                                           v-model="itemToEdit.loaiCheDoId"
                                           label="Chọn Loại Chế Độ *">
                                 </v-select>
                             </v-flex>
+
+                            <v-flex xs12 sm2>
+                                <v-tooltip top>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn slot="activator" v-on="on" color="primary darken-1" fab small flat v-on:click="onAddLoaiNVCDForEdit(itemToEdit)"><v-icon>add</v-icon></v-btn>
+                                    </template>
+                                    <strong>Thêm Chức Danh và Chế Độ</strong>
+                                </v-tooltip>
+                            </v-flex>
+
+                            <v-flex xs12 sm12>
+                                <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
+                                    <thead style="background-color: orange;">
+                                        <tr style="border: 1px solid #ddd;">
+                                            <th style="border: 1px solid #ddd;"> Vị Trí</th>
+                                            <th style="border: 1px solid #ddd;"> Chế Độ</th>
+                                            <th style="border: 1px solid #ddd;"> Xóa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr style="border: 1px solid #ddd;" v-for="(item,i) in itemToEdit.loaiNhanVien_CheDo" :key="i">
+                                            <td style="border: 1px solid #ddd; padding-right:5px; padding-top: 0px; padding-bottom: 0px">{{ item.loaiGiaoVien.name }}</td>
+                                            <td style="border: 1px solid #ddd; padding-right:5px; padding-top: 0px; padding-bottom: 0px">{{ item.loaiCheDo.name }}</td>
+                                            <td style="border: 1px solid #ddd; padding-right:5px; padding-top: 0px; padding-bottom: 0px">
+                                                <v-tooltip top>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-btn slot="activator" v-on="on" color="error darken-1" fab small flat v-on:click="onXoaLoaiNVCDForEdit(item)"><v-icon>delete</v-icon></v-btn>
+                                                    </template>
+                                                    <strong>Xóa Chức Danh và Chế Độ</strong>
+                                                </v-tooltip>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </v-flex>
+
                         </v-layout>
                     </v-container>
                     <small>* bắt buộc</small>
@@ -282,7 +362,7 @@
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/giaovienindex.min.js" type="text/javascript"></script>
+<script src="~/js/giaovienindex.js" type="text/javascript"></script>
 
 <style>
     .v-input__slot:before, .v-input__slot:after {

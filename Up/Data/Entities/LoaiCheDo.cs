@@ -14,6 +14,6 @@ namespace Up.Data.Entities
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
         //GIAO VIEN LA NHAN VIEN
-        public ICollection<GiaoVien> GiaoViens { get; set; }
+        public ICollection<NhanVien_ViTri> NhanVien_ViTris { get; set; }
     }
 }

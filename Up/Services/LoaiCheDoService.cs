@@ -40,7 +40,7 @@ namespace Up.Services
 
         public async Task<bool> DeleteLoaiCheDoAsync(Guid LoaiCheDoId, string LoggedEmployee)
         {
-            var giaoVien = await _context.GiaoViens.Where(x => x.LoaiCheDoId == LoaiCheDoId).ToListAsync();
+            var giaoVien = await _context.GiaoViens.Where(x => x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiCheDoId)).ToListAsync();
             if (giaoVien.Any())
                 throw new Exception("Hãy xóa những nhân viên thuộc loại này trước !!!");
 

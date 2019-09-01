@@ -21,15 +21,10 @@
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
-        public Guid LoaiGiaoVienId { get; set; }
-        public Guid LoaiCheDoId { get; set; }
         //GIAO VIEN LA NHAN VIEN
-        [ForeignKey("LoaiGiaoVienId")]
-        public LoaiGiaoVien LoaiGiaoVien { get; set; }
-        [ForeignKey("LoaiCheDoId")]
-        public LoaiCheDo LoaiCheDo { get; set; }
 
         public ICollection<LopHoc> LopHocs { get; set; }
         public ICollection<ThongKe_ChiPhi> ThongKe_ChiPhis { get; set; }
+        public ICollection<NhanVien_ViTri> NhanVien_ViTris { get; set; }
     }
 }

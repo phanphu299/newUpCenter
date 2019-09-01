@@ -1,7 +1,7 @@
 ﻿var vue = new Vue({
     el: '#ChiPhiIndex',
     data: {
-        title: 'Tính Chi Phí',
+        title: 'Tính Lương/Chi Phí',
         messageText: '',
         color: '',
         timeout: 3000,

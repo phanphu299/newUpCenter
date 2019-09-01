@@ -13,6 +13,6 @@
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
 
-        public ICollection<GiaoVien> GiaoViens { get; set; }
+        public ICollection<NhanVien_ViTri> NhanVien_ViTris { get; set; }
     }
 }

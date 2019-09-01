@@ -39,7 +39,7 @@
 
         public async Task<bool> DeleteLoaiGiaoVienAsync(Guid LoaiGiaoVienId, string LoggedEmployee)
         {
-            var giaoVien = await _context.GiaoViens.Where(x => x.LoaiGiaoVienId == LoaiGiaoVienId).ToListAsync();
+            var giaoVien = await _context.GiaoViens.Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiGiaoVienId)).ToListAsync();
             if (giaoVien.Any())
                 throw new Exception("Hãy xóa những nhân viên thuộc loại này trước !!!");
 
