@@ -21,6 +21,7 @@
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
+        public double MucHoaHong { get; set; }
         //GIAO VIEN LA NHAN VIEN
 
         public ICollection<LopHoc> LopHocs { get; set; }

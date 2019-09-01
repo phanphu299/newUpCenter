@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Up.Data;
 
 namespace Up.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190901100028_AddcolumnHoaHong")]
+    partial class AddcolumnHoaHong
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +47,8 @@ namespace Up.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e9f35e79-c66c-435e-8a25-f5949efa4cd1",
-                            ConcurrencyStamp = "34ba7677-9ccc-477d-bfe4-f97404b71046",
+                            Id = "a5929137-90d8-41af-98a8-01f93182df04",
+                            ConcurrencyStamp = "e348775f-feb1-4d1f-8b1d-c23e08c34825",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -697,8 +699,6 @@ namespace Up.Data.Migrations
                     b.Property<double>("SoGioDay");
 
                     b.Property<double>("SoGioKem");
-
-                    b.Property<double>("SoHocVien");
 
                     b.Property<string>("UpdatedBy");
 

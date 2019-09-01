@@ -28,17 +28,20 @@
                                             <v-text-field label="Số Điện Thoại *" required v-model="newItem.phone" v-on:keyup.enter="onSave"></v-text-field>
                                         </v-flex>
                                         <v-flex xs12 sm4>
-                                            <v-text-field label="Teaching Rate *" required v-model="newItem.teachingRate" v-on:keyup.enter="onSave"></v-text-field>
+                                            <v-text-field label="Facebook" v-model="newItem.facebookAccount" v-on:keyup.enter="onSave"></v-text-field>
                                         </v-flex>
 
-                                        <v-flex xs12 sm4>
-                                            <v-text-field label="Tutoring Rate *" required v-model="newItem.tutoringRate" v-on:keyup.enter="onSave"></v-text-field>
+                                        <v-flex xs12 sm3>
+                                            <v-text-field label="Teaching Rate" v-model="newItem.teachingRate" v-on:keyup.enter="onSave"></v-text-field>
                                         </v-flex>
-                                        <v-flex xs12 sm4>
+                                        <v-flex xs12 sm3>
+                                            <v-text-field label="Tutoring Rate" v-model="newItem.tutoringRate" v-on:keyup.enter="onSave"></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 sm3>
                                             <v-text-field label="Lương Cơ Bản *" required v-model="newItem.basicSalary" v-on:keyup.enter="onSave"></v-text-field>
                                         </v-flex>
-                                        <v-flex xs12 sm4>
-                                            <v-text-field label="Facebook" v-model="newItem.facebookAccount" v-on:keyup.enter="onSave"></v-text-field>
+                                        <v-flex xs12 sm3>
+                                            <v-text-field label="Mức Hoa Hồng" v-model="newItem.mucHoaHong" v-on:keyup.enter="onSave"></v-text-field>
                                         </v-flex>
 
                                         <v-flex xs12 sm4>
@@ -77,7 +80,7 @@
                                                 <strong>Thêm Chức Danh và Chế Độ</strong>
                                             </v-tooltip>
                                         </v-flex>
-                                        
+
                                         <v-flex xs12 sm12>
                                             <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;" v-if="arrayLoaiNVandCD.length > 0">
                                                 <thead style="background-color: orange;">
@@ -178,6 +181,7 @@
                         <td>{{ props.item.teachingRate }}</td>
                         <td>{{ props.item.tutoringRate }}</td>
                         <td>{{ props.item.basicSalary }}</td>
+                        <td>{{ props.item.mucHoaHong }}</td>
                         <td>{{ props.item.facebookAccount }}</td>
                         <td>
                             <v-tooltip top>
@@ -251,17 +255,20 @@
                                 <v-text-field label="Số Điện Thoại *" required v-model="itemToEdit.phone" v-on:keyup.enter="onSave"></v-text-field>
                             </v-flex>
                             <v-flex xs12 sm4>
-                                <v-text-field label="Teaching Rate *" required v-model="itemToEdit.teachingRate" v-on:keyup.enter="onSave"></v-text-field>
+                                <v-text-field label="Facebook" v-model="itemToEdit.facebookAccount" v-on:keyup.enter="onSave"></v-text-field>
                             </v-flex>
 
-                            <v-flex xs12 sm4>
-                                <v-text-field label="Tutoring Rate *" required v-model="itemToEdit.tutoringRate" v-on:keyup.enter="onSave"></v-text-field>
+                            <v-flex xs12 sm3>
+                                <v-text-field label="Teaching Rate" v-model="itemToEdit.teachingRate" v-on:keyup.enter="onSave"></v-text-field>
                             </v-flex>
-                            <v-flex xs12 sm4>
+                            <v-flex xs12 sm3>
+                                <v-text-field label="Tutoring Rate" v-model="itemToEdit.tutoringRate" v-on:keyup.enter="onSave"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm3>
                                 <v-text-field label="Lương Cơ Bản *" required v-model="itemToEdit.basicSalary" v-on:keyup.enter="onSave"></v-text-field>
                             </v-flex>
-                            <v-flex xs12 sm4>
-                                <v-text-field label="Facebook" v-model="itemToEdit.facebookAccount" v-on:keyup.enter="onSave"></v-text-field>
+                            <v-flex xs12 sm3>
+                                <v-text-field label="Mức Hoa Hồng" v-model="itemToEdit.mucHoaHong" v-on:keyup.enter="onSave"></v-text-field>
                             </v-flex>
 
                             <v-flex xs12 sm4>
@@ -362,7 +369,7 @@
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/giaovienindex.js" type="text/javascript"></script>
+<script src="~/js/giaovienindex.min.js" type="text/javascript"></script>
 
 <style>
     .v-input__slot:before, .v-input__slot:after {

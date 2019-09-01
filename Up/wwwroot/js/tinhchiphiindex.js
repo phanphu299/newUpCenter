@@ -13,12 +13,6 @@
         itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
         itemKhuyenMai: ['5', '10', '15', '20', '25', '30', '35', '40', '45', '50'],
         itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0],
-        itemLopHoc: [],
-        itemSach: [],
-        tongNgayHoc: 0,
-        tongNgayDuocNghi: 0,
-        tongHocPhi: 0,
-        hocPhiMoiNgay: 0,
         chiPhiList: [],
         headers: [
             { text: 'Tên', align: 'left', sortable: true },
@@ -28,9 +22,10 @@
             { text: 'Lương Kèm', align: 'left', sortable: true },
             { text: 'Số Giờ Dạy', align: 'left', sortable: true },
             { text: 'Số Giờ Kèm', align: 'left', sortable: true },
+            { text: 'Hoa Hồng', align: 'left', sortable: true },
+            { text: 'Số HV', align: 'left', sortable: true },
             { text: 'Bonus', align: 'left', sortable: true },
-            { text: 'Khoảng Trừ Khác', align: 'left', sortable: true },
-            
+            { text: 'Khoảng Trừ Khác', align: 'left', sortable: true }
         ]
 
     },
@@ -47,8 +42,8 @@
 
     methods: {
         async onTinhChiPhi(item) {
-            if (!isNaN(item.soGioDay) && !isNaN(item.soGioKem) && !isNaN(item.bonus) && !isNaN(item.minus)) {
-                item.chiPhiMoi = item.salary_Expense + (item.soGioKem * item.tutoringRate) + (item.soGioDay * item.teachingRate) + (item.bonus * 1) - (item.minus * 1);
+            if (!isNaN(item.soHocVien) && !isNaN(item.soGioDay) && !isNaN(item.soGioKem) && !isNaN(item.bonus) && !isNaN(item.minus)) {
+                item.chiPhiMoi = item.salary_Expense + (item.mucHoaHong * item.soHocVien) + (item.soGioKem * item.tutoringRate) + (item.soGioDay * item.teachingRate) + (item.bonus * 1) - (item.minus * 1);
             }
         },
 
@@ -129,7 +124,7 @@
                     console.log(response);
                     if (response.data.status === "OK") {
                         that.snackbar = true;
-                        that.messageText = 'Lưu Nháp thành công !!!';
+                        that.messageText = 'Lưu Bảng Tính thành công !!!';
                         that.color = 'success';
                     }
                     else {
@@ -141,7 +136,7 @@
                 .catch(function (error) {
                     console.log(error);
                     that.snackbar = true;
-                    that.messageText = 'Lưu Nháp lỗi: ' + error;
+                    that.messageText = 'Lưu Bảng Tính lỗi: ' + error;
                     that.color = 'error';
                 });
         }

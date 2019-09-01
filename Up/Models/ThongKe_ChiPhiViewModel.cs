@@ -21,6 +21,7 @@ namespace Up.Models
         public double Minus { get; set; }
         public double SoGioDay { get; set; }
         public double SoGioKem { get; set; }
+        public double SoHocVien { get; set; }
 
         public Guid? ChiPhiCoDinhId { get; set; }
         public Guid? NhanVienId { get; set; }

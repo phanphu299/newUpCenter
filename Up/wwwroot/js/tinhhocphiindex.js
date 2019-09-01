@@ -284,7 +284,7 @@
                     console.log(response);
                     if (response.data.status === "OK") {
                         that.snackbar = true;
-                        that.messageText = 'Lưu Nháp thành công !!!';
+                        that.messageText = 'Lưu Bảng Tính thành công !!!';
                         that.color = 'success';
                     }
                     else {
@@ -296,7 +296,7 @@
                 .catch(function (error) {
                     console.log(error);
                     that.snackbar = true;
-                    that.messageText = 'Lưu Nháp lỗi: ' + error;
+                    that.messageText = 'Lưu Bảng Tính lỗi: ' + error;
                     that.color = 'error';
                 });
         },

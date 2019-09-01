@@ -19,7 +19,7 @@
             _context = context;
         }
 
-        public async Task<GiaoVienViewModel> CreateGiaoVienAsync(List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo, string Name, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, string LoggedEmployee)
+        public async Task<GiaoVienViewModel> CreateGiaoVienAsync(List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo, string Name, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, double HoaHong, string LoggedEmployee)
         {
             try
             {
@@ -39,6 +39,7 @@
                 giaoVien.BasicSalary = BasicSalary;
                 giaoVien.CreatedBy = LoggedEmployee;
                 giaoVien.CreatedDate = DateTime.Now;
+                giaoVien.MucHoaHong = HoaHong;
 
                 _context.GiaoViens.Add(giaoVien);
 
@@ -72,6 +73,7 @@
                     Phone = giaoVien.Phone,
                     CreatedBy = giaoVien.CreatedBy,
                     CreatedDate = giaoVien.CreatedDate.ToString("dd/MM/yyyy"),
+                    MucHoaHong = giaoVien.MucHoaHong,
                     LoaiNhanVien_CheDo = await _context.NhanVien_ViTris
                                         .Where(x => x.NhanVienId == giaoVien.GiaoVienId)
                                         .Select(x => new LoaiNhanVien_CheDoViewModel
@@ -134,6 +136,7 @@
                     BasicSalary = x.BasicSalary,
                     InitialName = x.InitialName,
                     Name = x.Name,
+                    MucHoaHong = x.MucHoaHong,
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
                     LoaiNhanVien_CheDo = _context.NhanVien_ViTris
@@ -177,6 +180,7 @@
                     //LoaiGiaoVien = x.LoaiGiaoVien.Name,
                     //LoaiCheDoId = x.LoaiCheDoId,
                     //LoaiCheDo = x.LoaiCheDo.Name,
+                    MucHoaHong = x.MucHoaHong,
                     Name = x.Name,
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
@@ -184,7 +188,7 @@
                 .ToListAsync();
         }
 
-        public async Task<GiaoVienViewModel> UpdateGiaoVienAsync(List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo, Guid GiaoVienId, string Name, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, string LoggedEmployee)
+        public async Task<GiaoVienViewModel> UpdateGiaoVienAsync(List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo, Guid GiaoVienId, string Name, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, double HoaHong, string LoggedEmployee)
         {
             try
             {
@@ -210,6 +214,7 @@
                 item.BasicSalary = BasicSalary;
                 item.UpdatedBy = LoggedEmployee;
                 item.UpdatedDate = DateTime.Now;
+                item.MucHoaHong = HoaHong;
 
                 var viTris = _context.NhanVien_ViTris.Where(x => x.NhanVienId == item.GiaoVienId);
                 _context.NhanVien_ViTris.RemoveRange(viTris);
@@ -245,6 +250,7 @@
                     UpdatedDate = item.UpdatedDate?.ToString("dd/MM/yyyy"),
                     CreatedBy = item.CreatedBy,
                     CreatedDate = item.CreatedDate.ToString("dd/MM/yyyy"),
+                    MucHoaHong = item.MucHoaHong,
                     LoaiNhanVien_CheDo = _context.NhanVien_ViTris
                                         .Where(m => m.NhanVienId == item.GiaoVienId)
                                         .Select(m => new LoaiNhanVien_CheDoViewModel

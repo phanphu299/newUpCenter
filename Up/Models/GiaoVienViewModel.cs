@@ -21,6 +21,7 @@
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate_Date { get; set; }
         public List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo { get; set; }
+        public double MucHoaHong { get; set; }
     }
     public class LoaiNhanVien_CheDoViewModel
     {

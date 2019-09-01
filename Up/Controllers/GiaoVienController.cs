@@ -50,7 +50,7 @@
             try
             {
                 var successful = await _giaoVienService.CreateGiaoVienAsync(model.LoaiNhanVien_CheDo, model.Name, model.Phone, model.TeachingRate, model.TutoringRate,
-                    model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName, model.CMND, currentUser.Email);
+                    model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName, model.CMND, model.MucHoaHong, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -136,7 +136,7 @@
             try
             {
                 var successful = await _giaoVienService.UpdateGiaoVienAsync(model.LoaiNhanVien_CheDo, model.GiaoVienId, model.Name, model.Phone, model.TeachingRate, model.TutoringRate,
-                    model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName, model.CMND, currentUser.Email);
+                    model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName, model.CMND, model.MucHoaHong, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel

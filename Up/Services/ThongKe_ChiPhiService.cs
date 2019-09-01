@@ -1,9 +1,7 @@
 ﻿
 namespace Up.Services
 {
-    using Microsoft.EntityFrameworkCore;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Up.Data;
@@ -43,7 +41,8 @@ namespace Up.Services
                         SoGioKem = item.SoGioKem,
                         ChiPhiCoDinhId = item.ChiPhiCoDinhId,
                         NhanVienId = item.NhanVienId,
-                        DaLuu = item.DaLuu
+                        DaLuu = item.DaLuu,
+                        SoHocVien = item.SoHocVien
                     };
                     await _context.ThongKe_ChiPhis.AddAsync(thongKe);
                 }

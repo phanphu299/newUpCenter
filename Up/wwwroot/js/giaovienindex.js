@@ -23,7 +23,8 @@
             initialName: '',
             cmnd: '',
             loaiGiaoVien: '',
-            loaiCheDo: ''
+            loaiCheDo: '',
+            mucHoaHong: 0
         },
         itemToDelete: {},
         itemToEdit: {},
@@ -42,6 +43,7 @@
             { text: 'Teaching Rate', value: 'teachingRate', align: 'left', sortable: true },
             { text: 'Tutoring Rate', value: 'tutoringRate', align: 'left', sortable: true },
             { text: 'Lương Cơ Bản', value: 'basicSalary', align: 'left', sortable: true },
+            { text: 'Mức Hoa Hồng', value: 'mucHoaHong', align: 'left', sortable: true },
             { text: 'Facebook', value: 'facebookAccount', align: 'left', sortable: true },
             { text: 'Địa Chỉ', value: 'diaChi', align: 'left', sortable: true },
             { text: 'Initial Name', value: 'initialName', align: 'left', sortable: true },
@@ -150,12 +152,12 @@
         },
 
         async onUpdate(item) {
-            if (item.name === '' || item.phone === '' || item.diaChi === '' || item.initialName === '' || item.cmnd === '') {
+            if (item.name === '' || item.phone === '' || item.diaChi === '' || item.initialName === '' || item.cmnd === '' || item.basicSalary === '') {
                 this.alertMessage = "Không được bỏ trống";
                 this.alertEdit = true;
             }
-            else if (isNaN(item.teachingRate) || isNaN(item.tutoringRate) || isNaN(item.basicSalary)) {
-                this.alertMessage = "Teaching Rate, Tutoring Rate, Basic Salary chỉ được nhập số";
+            else if (isNaN(item.mucHoaHong) || isNaN(item.teachingRate) || isNaN(item.tutoringRate) || isNaN(item.basicSalary)) {
+                this.alertMessage = "Teaching Rate, Tutoring Rate, Basic Salary và Mức Hoa Hồng chỉ được nhập số";
                 this.alertEdit = true;
             }
             else if (item.loaiNhanVien_CheDo.length === 0) {
@@ -179,7 +181,8 @@
                         DiaChi: item.diaChi,
                         InitialName: item.initialName,
                         CMND: item.cmnd,
-                        LoaiNhanVien_CheDo: item.loaiNhanVien_CheDo
+                        LoaiNhanVien_CheDo: item.loaiNhanVien_CheDo,
+                        MucHoaHong: item.mucHoaHong
                     }
                 })
                 .then(function (response) {
@@ -213,8 +216,8 @@
                 this.alertMessage = "Không được bỏ trống";
                 this.alert = true;
             }
-            else if (isNaN(this.newItem.teachingRate) || isNaN(this.newItem.tutoringRate) || isNaN(this.newItem.basicSalary)) {
-                this.alertMessage = "Teaching Rate, Tutoring Rate, Basic Salary chỉ được nhập số";
+            else if (isNaN(this.newItem.mucHoaHong) || isNaN(this.newItem.teachingRate) || isNaN(this.newItem.tutoringRate) || isNaN(this.newItem.basicSalary)) {
+                this.alertMessage = "Teaching Rate, Tutoring Rate, Basic Salary và Mức Hoa Hồng chỉ được nhập số";
                 this.alert = true;
             }
             else if (this.arrayLoaiNVandCD.length === 0) {
@@ -238,7 +241,8 @@
                         DiaChi: that.newItem.diaChi,
                         InitialName: that.newItem.initialName,
                         CMND: that.newItem.cmnd,
-                        LoaiNhanVien_CheDo: that.arrayLoaiNVandCD
+                        LoaiNhanVien_CheDo: that.arrayLoaiNVandCD,
+                        MucHoaHong: that.newItem.mucHoaHong
                     }
                 })
                     .then(function (response) {

@@ -43,25 +43,26 @@
                                             <td><v-text-field v-model="props.item.chiPhiMoi" :value="props.item.chiPhiMoi"></v-text-field></td>
                                             <td>{{ formatNumber(props.item.salary_Expense) }}</td>
                                             <td>
-                                                <span v-if="props.item.loaiChiPhi == 1">{{ props.item.teachingRate }}</span>
+                                                <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4">{{ props.item.teachingRate }}</span>
                                             </td>
                                             <td>
-                                                <span v-if="props.item.loaiChiPhi == 1">{{ props.item.tutoringRate }}</span>
+                                                <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4">{{ props.item.tutoringRate }}</span>
                                             </td>
                                             <td>
-                                                <span v-if="props.item.loaiChiPhi == 1"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" label="Số Giờ Dạy" v-model="props.item.soGioDay" :value="props.item.soGioDay"></v-text-field></span>
+                                                <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" label="Số Giờ Dạy" v-model="props.item.soGioDay" :value="props.item.soGioDay"></v-text-field></span>
                                             </td>
                                             <td>
-                                                <span v-if="props.item.loaiChiPhi == 1"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" label="Số Giờ Kèm" v-model="props.item.soGioKem" :value="props.item.soGioKem"></v-text-field></span>
+                                                <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" label="Số Giờ Kèm" v-model="props.item.soGioKem" :value="props.item.soGioKem"></v-text-field></span>
+                                            </td>
+                                            <td>
+                                                <span v-if="props.item.loaiChiPhi == 2 || props.item.loaiChiPhi == 4">{{ props.item.mucHoaHong }}</span>
+                                            </td>
+                                            <td>
+                                                <span v-if="props.item.loaiChiPhi == 2 || props.item.loaiChiPhi == 4"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" label="Số Học Viên" v-model="props.item.soHocVien" :value="props.item.soHocVien"></v-text-field></span>
                                             </td>
                                             <td><v-text-field label="Bonus" v-on:keyup="onTinhChiPhi(props.item)" v-model="props.item.bonus" :value="props.item.bonus"></v-text-field></td>
                                             <td><v-text-field label="Khoảng Trừ Khác" v-on:keyup="onTinhChiPhi(props.item)" v-model="props.item.minus" :value="props.item.minus"></v-text-field></td>
-
-
                                         </template>
-                                        <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                                            Không tìm thấy "{{ search }}".
-                                        </v-alert>
                                     </v-data-table>
                                     <span><b>Tổng Chi Phí: {{ formatNumber(total) }}</b></span>
                                 </v-flex>
