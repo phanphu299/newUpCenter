@@ -10,7 +10,10 @@
         dialog: false,
         alert: false,
         search: '',
-        newItem: '',
+        newItem: {
+            name: '',
+            order: 0
+        },
         itemToDelete: {},
         headers: [
             {
@@ -20,6 +23,7 @@
                 value: ''
             },
             { text: 'Tên Loại Nhân Viên', value: 'name', align: 'left', sortable: false },
+            { text: 'Thứ Tự', value: 'order', align: 'left', sortable: false },
             { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: false },
             { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: false },
             { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: false },
@@ -40,38 +44,51 @@
     methods: {
         async onUpdate(item) {
             let that = this;
-            await axios({
-                method: 'put',
-                url: '/category/UpdateLoaiGiaoVienAsync',
-                data: {
-                    Name: item.name,
-                    LoaiGiaoVienId: item.loaiGiaoVienId
-                }
-            })
-                .then(function (response) {
-                    console.log(response);
-                    if (response.data.status === "OK") {
-                        that.snackbar = true;
-                        that.messageText = 'Cập nhật thành công !!!';
-                        that.color = 'success';
-                    }
-                    else {
-                        that.snackbar = true;
-                        that.messageText = response.data.message;
-                        that.color = 'error';
+            if (isNaN(this.newItem.order)) {
+                this.snackbar = true;
+                this.messageText = 'Thứ tự phải là số!!!';
+                this.color = 'error';
+            }
+            else {
+                await axios({
+                    method: 'put',
+                    url: '/category/UpdateLoaiGiaoVienAsync',
+                    data: {
+                        Name: item.name,
+                        LoaiGiaoVienId: item.loaiGiaoVienId,
+                        Order: item.order
                     }
                 })
-                .catch(function (error) {
-                    console.log(error);
-                    that.snackbar = true;
-                    that.messageText = 'Cập nhật lỗi: ' + error;
-                    that.color = 'error';
-                });
+                    .then(function (response) {
+                        console.log(response);
+                        if (response.data.status === "OK") {
+                            that.snackbar = true;
+                            that.messageText = 'Cập nhật thành công !!!';
+                            that.color = 'success';
+                        }
+                        else {
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'error';
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        that.snackbar = true;
+                        that.messageText = 'Cập nhật lỗi: ' + error;
+                        that.color = 'error';
+                    });
+            }
         },
 
         async onSave(item) {
-            if (this.newItem === '') {
+            if (this.newItem.name === '' || this.newItem.order === 0) {
                 this.alert = true;
+            }
+            else if (isNaN(this.newItem.order)) {
+                this.snackbar = true;
+                this.messageText = 'Thứ tự phải là số!!!';
+                this.color = 'error';
             }
             else {
                 this.dialog = false;
@@ -80,7 +97,8 @@
                     method: 'post',
                     url: '/category/CreateLoaiGiaoVienAsync',
                     data: {
-                        Name: that.newItem
+                        Name: that.newItem.name,
+                        Order: that.newItem.order
                     }
                 })
                     .then(function (response) {
@@ -90,7 +108,8 @@
                             that.snackbar = true;
                             that.messageText = 'Thêm mới thành công !!!';
                             that.color = 'success';
-                            that.newItem = '';
+                            that.newItem.name = '';
+                            that.newItem.order = 0;
                         }
                         else {
                             that.snackbar = true;

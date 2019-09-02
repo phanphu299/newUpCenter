@@ -57,16 +57,45 @@
                                         <v-flex xs12 sm4>
                                             <v-select :items="itemNgayLamViec"
                                                       item-text="name"
-                                                      return-object
-                                                      v-model="newItem.ngayLamViec"
+                                                      item-value="ngayLamViecId"
+                                                      v-model="newItem.ngayLamViecId"
                                                       label="Chọn Ngày Làm Việc *">
                                             </v-select>
                                         </v-flex>
                                         <v-flex xs12 sm4>
-                                            <v-text-field label="N *" required v-model="newItem.initialName" v-on:keyup.enter="onSave"></v-text-field>
+                                            <v-menu v-model="isShowDatePickerBatDau"
+                                                    :close-on-content-click="false"
+                                                    :nudge-right="40"
+                                                    lazy
+                                                    transition="scale-transition"
+                                                    offset-y
+                                                    full-width
+                                                    min-width="290px">
+                                                <v-text-field slot="activator"
+                                                              v-model="newItem.ngayBatDau"
+                                                              label="Ngày Bắt Đầu *"
+                                                              prepend-icon="event"
+                                                              readonly></v-text-field>
+                                                <v-date-picker locale="vi-vn" v-model="newItem.ngayBatDau" v-on:input="isShowDatePickerBatDau = false"></v-date-picker>
+                                            </v-menu>
                                         </v-flex>
                                         <v-flex xs12 sm4>
-                                            <v-text-field label="CMND *" required v-model="newItem.cmnd" v-on:keyup.enter="onSave"></v-text-field>
+                                            <v-menu v-model="isShowDatePickerKetThuc"
+                                                    :close-on-content-click="false"
+                                                    :nudge-right="40"
+                                                    lazy
+                                                    transition="scale-transition"
+                                                    offset-y
+                                                    full-width
+                                                    min-width="290px">
+                                                <v-text-field slot="activator"
+                                                              v-model="newItem.ngayKetThuc"
+                                                              label="Ngày Kết Thúc"
+                                                              clearable
+                                                              prepend-icon="event"
+                                                              readonly></v-text-field>
+                                                <v-date-picker locale="vi-vn" v-model="newItem.ngayKetThuc" v-on:input="isShowDatePickerKetThuc = false"></v-date-picker>
+                                            </v-menu>
                                         </v-flex>
 
                                         <v-flex xs12 sm5>
@@ -208,6 +237,9 @@
                         </td>
                         <td>{{ props.item.initialName }}</td>
                         <td>{{ props.item.cmnd }}</td>
+                        <td>{{ props.item.ngayLamViec }}</td>
+                        <td>{{ props.item.ngayBatDau }}</td>
+                        <td>{{ props.item.ngayKetThuc }}</td>
                         <td>{{ props.item.createdDate }}</td>
                         <td>{{ props.item.createdBy }}</td>
                         <td>{{ props.item.updatedDate }}</td>
@@ -296,6 +328,50 @@
                                 <v-text-field label="CMND *" required v-model="itemToEdit.cmnd" v-on:keyup.enter="onSave"></v-text-field>
                             </v-flex>
 
+                            <v-flex xs12 sm4>
+                                <v-select :items="itemNgayLamViec"
+                                          item-text="name"
+                                          item-value="ngayLamViecId"
+                                          v-model="itemToEdit.ngayLamViecId"
+                                          label="Chọn Ngày Làm Việc *">
+                                </v-select>
+                            </v-flex>
+                            <v-flex xs12 sm4>
+                                <v-menu v-model="isShowDatePickerBatDau2"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        lazy
+                                        transition="scale-transition"
+                                        offset-y
+                                        full-width
+                                        min-width="290px">
+                                    <v-text-field slot="activator"
+                                                  v-model="itemToEdit.ngayBatDau"
+                                                  label="Ngày Bắt Đầu *"
+                                                  prepend-icon="event"
+                                                  readonly></v-text-field>
+                                    <v-date-picker locale="vi-vn" v-model="itemToEdit.ngayBatDau" v-on:input="isShowDatePickerBatDau2 = false"></v-date-picker>
+                                </v-menu>
+                            </v-flex>
+                            <v-flex xs12 sm4>
+                                <v-menu v-model="isShowDatePickerKetThuc2"
+                                        :close-on-content-click="false"
+                                        :nudge-right="40"
+                                        lazy
+                                        transition="scale-transition"
+                                        offset-y
+                                        full-width
+                                        min-width="290px">
+                                    <v-text-field slot="activator"
+                                                  v-model="itemToEdit.ngayKetThuc"
+                                                  label="Ngày Kết Thúc"
+                                                  clearable
+                                                  prepend-icon="event"
+                                                  readonly></v-text-field>
+                                    <v-date-picker locale="vi-vn" v-model="itemToEdit.ngayKetThuc" v-on:input="isShowDatePickerKetThuc2 = false"></v-date-picker>
+                                </v-menu>
+                            </v-flex>
+
                             <v-flex xs12 sm5>
                                 <v-select :items="itemLoaiGiaoVien"
                                           item-text="name"
@@ -317,7 +393,7 @@
                             <v-flex xs12 sm2>
                                 <v-tooltip top>
                                     <template v-slot:activator="{ on }">
-                                        <v-btn slot="activator" v-on="on" color="primary darken-1" fab small flat v-on:click="onAddLoaiNVCDForEdit(itemToEdit)">Thêm</v-btn>
+                                        <v-btn slot="activator" v-on="on" color="primary darken-1" small v-on:click="onAddLoaiNVCDForEdit(itemToEdit)">Thêm</v-btn>
                                     </template>
                                     <strong>Thêm Chức Danh và Chế Độ</strong>
                                 </v-tooltip>
@@ -339,7 +415,7 @@
                                             <td style="border: 1px solid #ddd; padding-right:5px; padding-top: 0px; padding-bottom: 0px">
                                                 <v-tooltip top>
                                                     <template v-slot:activator="{ on }">
-                                                        <v-btn slot="activator" v-on="on" color="error darken-1" small v-on:click="onXoaLoaiNVCDForEdit(item)"><v-icon>delete</v-icon></v-btn>
+                                                        <v-btn slot="activator" v-on="on" color="error darken-1" fab small flat v-on:click="onXoaLoaiNVCDForEdit(item)"><v-icon>delete</v-icon></v-btn>
                                                     </template>
                                                     <strong>Xóa Chức Danh và Chế Độ</strong>
                                                 </v-tooltip>

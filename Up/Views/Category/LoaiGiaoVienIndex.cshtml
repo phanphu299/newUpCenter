@@ -21,8 +21,12 @@
                             <v-card-text>
                                 <v-container grid-list-md>
                                     <v-layout wrap>
-                                        <v-flex xs12>
-                                            <v-text-field label="Tên Loại Nhân Viên *" required v-model="newItem" v-on:keyup.enter="onSave"></v-text-field>
+                                        <v-flex xs12 sm6>
+                                            <v-text-field label="Tên Loại Nhân Viên *" required v-model="newItem.name" v-on:keyup.enter="onSave"></v-text-field>
+                                        </v-flex>
+
+                                        <v-flex xs12 sm6>
+                                            <v-text-field label="Thứ Tự *" required v-model="newItem.order" v-on:keyup.enter="onSave"></v-text-field>
                                         </v-flex>
                                     </v-layout>
                                 </v-container>
@@ -75,6 +79,17 @@
                                 {{ props.item.name }}
                                 <v-text-field slot="input"
                                               v-model="props.item.name"
+                                              label="Edit"
+                                              single-line></v-text-field>
+                            </v-edit-dialog>
+                        </td>
+                        <td>
+                            <v-edit-dialog :return-value.sync="props.item.order"
+                                           lazy
+                                           v-on:save="onUpdate(props.item)">
+                                {{ props.item.order }}
+                                <v-text-field slot="input"
+                                              v-model="props.item.order"
                                               label="Edit"
                                               single-line></v-text-field>
                             </v-edit-dialog>
@@ -139,7 +154,7 @@
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/loaigiaovienindex.min.js" type="text/javascript"></script>
+<script src="~/js/loaigiaovienindex.js" type="text/javascript"></script>
 
 <style>
     .v-input__slot:before, .v-input__slot:after {

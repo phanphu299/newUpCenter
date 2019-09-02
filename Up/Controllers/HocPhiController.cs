@@ -6,7 +6,6 @@ namespace Up.Controllers
     using OfficeOpenXml;
     using OfficeOpenXml.Style;
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
     using System.Threading.Tasks;
@@ -202,11 +201,16 @@ namespace Up.Controllers
                 worksheet.Cells[3, 3].Value = "Khoảng trừ\r\ntháng trước";
                 worksheet.Cells[3, 3].Style.WrapText = true;
                 worksheet.Cells[3, 4].Value = "Nợ tháng trước";
+                worksheet.Cells[3, 4].Style.WrapText = true;
                 worksheet.Cells[3, 5].Value = "Học phí tháng này";
+                worksheet.Cells[3, 5].Style.WrapText = true;
                 worksheet.Cells[3, 6].Value = "Mua tài liệu";
+                worksheet.Cells[3, 6].Style.WrapText = true;
                 worksheet.Cells[3, 7].Value = "Khuyến mãi";
+                worksheet.Cells[3, 7].Style.WrapText = true;
                 worksheet.Cells[3, 8].Value = "Bonus";
                 worksheet.Cells[3, 9].Value = "Khoảng trừ khác";
+                worksheet.Cells[3, 9].Style.WrapText = true;
                 worksheet.Cells[3, 10].Value = "Tổng";
                 worksheet.Cells[3, 11].Value = "Chữ ký";
                 worksheet.Cells[3, 12].Value = "Ghi Chú";
@@ -261,8 +265,15 @@ namespace Up.Controllers
 
                 worksheet.PrinterSettings.Orientation = eOrientation.Landscape;
                 worksheet.Cells.AutoFitColumns();
-                worksheet.Column(11).Width = 40;
-                worksheet.Column(12).Width = 40;
+                worksheet.Column(11).Width = 14;
+                worksheet.Column(12).Width = 14;
+
+                worksheet.Column(1).Width = 3;
+                worksheet.Column(7).Width = 5;
+                worksheet.Column(9).Width = 8;
+                worksheet.Column(4).Width = 8;
+                worksheet.Column(5).Width = 8;
+                worksheet.Column(6).Width = 6;
 
                 package.Save();
             }

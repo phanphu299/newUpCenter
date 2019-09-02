@@ -25,7 +25,7 @@
             loaiGiaoVien: '',
             loaiCheDo: '',
             mucHoaHong: 0,
-            ngayLamViec: '',
+            ngayLamViecId: '',
             ngayBatDau: '',
             ngayKetThuc: ''
         },
@@ -51,6 +51,9 @@
             { text: 'Địa Chỉ', value: 'diaChi', align: 'left', sortable: true },
             { text: 'Initial Name', value: 'initialName', align: 'left', sortable: true },
             { text: 'CMND', value: 'cmnd', align: 'left', sortable: true },
+            { text: 'Ngày Làm Việc', value: 'ngayLamViec', align: 'left', sortable: true },
+            { text: 'Ngày Bắt Đầu', value: 'ngayBatDau', align: 'left', sortable: true },
+            { text: 'Ngày Kết Thúc', value: 'ngayKetThuc', align: 'left', sortable: true },
             { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: true },
             { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: true },
             { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: true },
@@ -60,7 +63,11 @@
         itemLoaiGiaoVien: [],
         itemLoaiCheDo: [],
         itemNgayLamViec: [],
-        arrayLoaiNVandCD: []
+        arrayLoaiNVandCD: [],
+        isShowDatePickerBatDau: false,
+        isShowDatePickerKetThuc: false,
+        isShowDatePickerBatDau2: false,
+        isShowDatePickerKetThuc2: false
     },
     async beforeCreate() {
         let that = this;
@@ -197,7 +204,7 @@
                         MucHoaHong: item.mucHoaHong,
                         NgayBatDau: item.ngayBatDau,
                         NgayKetThuc: item.ngayKetThuc,
-                        
+                        NgayLamViecId: item.ngayLamViecId
                     }
                 })
                 .then(function (response) {
@@ -259,7 +266,8 @@
                         LoaiNhanVien_CheDo: that.arrayLoaiNVandCD,
                         MucHoaHong: that.newItem.mucHoaHong,
                         NgayBatDau: that.newItem.ngayBatDau,
-                        NgayKetThuc: that.newItem.ngayKetThuc
+                        NgayKetThuc: that.newItem.ngayKetThuc,
+                        NgayLamViecId: that.newItem.ngayLamViecId
                     }
                 })
                     .then(function (response) {
