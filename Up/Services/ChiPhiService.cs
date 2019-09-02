@@ -2,6 +2,7 @@
 namespace Up.Services
 {
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -16,6 +17,96 @@ namespace Up.Services
         public ChiPhiService(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        private static IEnumerable<int> DaysInMonth(int year, int month, DayOfWeek dow)
+        {
+            DateTime monthStart = new DateTime(year, month, 1);
+            return Enumerable.Range(0, DateTime.DaysInMonth(year, month))
+                .Select(day => monthStart.AddDays(day))
+                .Where(date => date.DayOfWeek == dow)
+                .Select(date => date.Day);
+        }
+
+        private static IEnumerable<int> DaysInMonthWithStartDate(int year, int month, DayOfWeek dow, DateTime StartDate)
+        {
+            DateTime monthStart = new DateTime(year, month, 1);
+            return Enumerable.Range(0, DateTime.DaysInMonth(year, month))
+                .Select(day => monthStart.AddDays(day))
+                .Where(date => date.DayOfWeek == dow && date.Day >= StartDate.Day)
+                .Select(date => date.Day);
+        }
+
+        private int TongNgayLam(string NgayLam, int month, int year)
+        {
+            var _ngayLam = NgayLam.Split('-');
+            int tong = 0;
+
+            foreach (string el in _ngayLam)
+            {
+                switch (el.Trim())
+                {
+                    case "2":
+                        tong += DaysInMonth(year, month, DayOfWeek.Monday).Count();
+                        break;
+                    case "3":
+                        tong += DaysInMonth(year, month, DayOfWeek.Tuesday).Count();
+                        break;
+                    case "4":
+                        tong += DaysInMonth(year, month, DayOfWeek.Wednesday).Count();
+                        break;
+                    case "5":
+                        tong += DaysInMonth(year, month, DayOfWeek.Thursday).Count();
+                        break;
+                    case "6":
+                        tong += DaysInMonth(year, month, DayOfWeek.Friday).Count();
+                        break;
+                    case "7":
+                        tong += DaysInMonth(year, month, DayOfWeek.Saturday).Count();
+                        break;
+                    default:
+                        tong += DaysInMonth(year, month, DayOfWeek.Sunday).Count();
+                        break;
+                }
+            }
+
+            return tong;
+        }
+
+        private int TongNgayLamVoSau(string NgayLam, int month, int year, DateTime NgayBatDau)
+        {
+            var _ngayLam = NgayLam.Split('-');
+            int tongNgayHoc = 0;
+
+            foreach (string el in _ngayLam)
+            {
+                switch (el.Trim())
+                {
+                    case "2":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Monday, NgayBatDau).Count();
+                        break;
+                    case "3":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Tuesday, NgayBatDau).Count();
+                        break;
+                    case "4":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Wednesday, NgayBatDau).Count();
+                        break;
+                    case "5":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Thursday, NgayBatDau).Count();
+                        break;
+                    case "6":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Friday, NgayBatDau).Count();
+                        break;
+                    case "7":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Saturday, NgayBatDau).Count();
+                        break;
+                    default:
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Sunday, NgayBatDau).Count();
+                        break;
+                }
+            }
+
+            return tongNgayHoc;
         }
 
         public async Task<TinhChiPhiViewModel> TinhChiPhiAsync(int month, int year)
@@ -39,6 +130,9 @@ namespace Up.Services
                 SoGioKem = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoGioKem : 0,
                 SoHocVien = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoHocVien : 0,
                 DaLuu = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).DaLuu : false,
+                NgayLamViec = x.NgayLamViec.Name,
+                SoNgayLam = TongNgayLam(x.NgayLamViec.Name, month, year),
+                SoNgayLamVoSau = (x.NgayBatDau.Month == month && x.NgayBatDau.Year == year) ? TongNgayLamVoSau(x.NgayLamViec.Name, month, year, x.NgayBatDau) : 0
             })
             .ToListAsync();
 
