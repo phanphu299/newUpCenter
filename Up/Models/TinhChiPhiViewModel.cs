@@ -30,5 +30,6 @@
         public bool DaLuu { get; set; }
         public double MucHoaHong { get; set; }
         public double SoHocVien { get; set; }
+        public byte? Order { get; set; }
     }
 }

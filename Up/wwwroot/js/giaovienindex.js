@@ -168,6 +168,16 @@
         mappingEditItem(item) {
             this.editedIndex = this.khoaHocItems.indexOf(item);
             this.itemToEdit = Object.assign({}, item);
+
+            if (this.itemToEdit.ngayBatDau !== "") {
+                let [dayKG, monthKG, yearKG] = this.itemToEdit.ngayBatDau.split('/');
+                this.itemToEdit.ngayBatDau = yearKG + '-' + monthKG + '-' + dayKG;
+            }
+
+            if (this.itemToEdit.ngayKetThuc !== "") {
+                let [dayKG, monthKG, yearKG] = this.itemToEdit.ngayKetThuc.split('/');
+                this.itemToEdit.ngayKetThuc = yearKG + '-' + monthKG + '-' + dayKG;
+            }
         },
 
         async onUpdate(item) {
