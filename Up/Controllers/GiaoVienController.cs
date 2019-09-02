@@ -49,8 +49,14 @@
 
             try
             {
+                DateTime _ngayBatDau = Convert.ToDateTime(model.NgayBatDau, System.Globalization.CultureInfo.InvariantCulture);
+                DateTime? _ngayKetThuc = null;
+                if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
+                    _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
+
                 var successful = await _giaoVienService.CreateGiaoVienAsync(model.LoaiNhanVien_CheDo, model.Name, model.Phone, model.TeachingRate, model.TutoringRate,
-                    model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName, model.CMND, model.MucHoaHong, currentUser.Email);
+                    model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName, model.CMND, model.MucHoaHong, model.NgayLamViecId, _ngayBatDau, _ngayKetThuc,
+                    currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -135,8 +141,13 @@
 
             try
             {
+                DateTime _ngayBatDau = Convert.ToDateTime(model.NgayBatDau, System.Globalization.CultureInfo.InvariantCulture);
+                DateTime? _ngayKetThuc = null;
+                if(!string.IsNullOrWhiteSpace(model.NgayKetThuc))
+                    _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
                 var successful = await _giaoVienService.UpdateGiaoVienAsync(model.LoaiNhanVien_CheDo, model.GiaoVienId, model.Name, model.Phone, model.TeachingRate, model.TutoringRate,
-                    model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName, model.CMND, model.MucHoaHong, currentUser.Email);
+                    model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName,
+                    model.CMND, model.MucHoaHong, model.NgayLamViecId, _ngayBatDau, _ngayKetThuc, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel

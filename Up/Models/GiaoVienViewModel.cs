@@ -22,6 +22,10 @@
         public DateTime CreatedDate_Date { get; set; }
         public List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo { get; set; }
         public double MucHoaHong { get; set; }
+        public Guid NgayLamViecId { get; set; }
+        public string NgayLamViec { get; set; }
+        public string NgayBatDau { get; set; }
+        public string NgayKetThuc { get; set; }
     }
     public class LoaiNhanVien_CheDoViewModel
     {

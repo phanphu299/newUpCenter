@@ -18,7 +18,7 @@
             _context = context;
         }
 
-        public async Task<LoaiGiaoVienViewModel> CreateLoaiGiaoVienAsync(string Name, string LoggedEmployee)
+        public async Task<LoaiGiaoVienViewModel> CreateLoaiGiaoVienAsync(string Name, byte Order, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
                 throw new Exception("Tên Loại Nhân Viên không được để trống !!!");
@@ -28,13 +28,14 @@
             loaiGiaoVien.Name = Name;
             loaiGiaoVien.CreatedBy = LoggedEmployee;
             loaiGiaoVien.CreatedDate = DateTime.Now;
+            loaiGiaoVien.Order = Order;
 
             _context.LoaiGiaoViens.Add(loaiGiaoVien);
 
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
                 throw new Exception("Lỗi khi lưu Loại Nhân Viên !!!");
-            return new LoaiGiaoVienViewModel { LoaiGiaoVienId = loaiGiaoVien.LoaiGiaoVienId, Name = loaiGiaoVien.Name, CreatedBy = loaiGiaoVien.CreatedBy, CreatedDate = loaiGiaoVien.CreatedDate.ToString("dd/MM/yyyy") };
+            return new LoaiGiaoVienViewModel { LoaiGiaoVienId = loaiGiaoVien.LoaiGiaoVienId, Order = loaiGiaoVien.Order, Name = loaiGiaoVien.Name, CreatedBy = loaiGiaoVien.CreatedBy, CreatedDate = loaiGiaoVien.CreatedDate.ToString("dd/MM/yyyy") };
         }
 
         public async Task<bool> DeleteLoaiGiaoVienAsync(Guid LoaiGiaoVienId, string LoggedEmployee)
@@ -69,12 +70,13 @@
                     LoaiGiaoVienId = x.LoaiGiaoVienId,
                     Name = x.Name,
                     UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
+                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
+                    Order = x.Order
                 })
                 .ToListAsync();
         }
 
-        public async Task<bool> UpdateLoaiGiaoVienAsync(Guid LoaiGiaoVienId, string Name, string LoggedEmployee)
+        public async Task<bool> UpdateLoaiGiaoVienAsync(Guid LoaiGiaoVienId, string Name, byte Order, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
                 throw new Exception("Tên Loại Nhân Viên không được để trống !!!");
@@ -87,6 +89,7 @@
                 throw new Exception("Không tìm thấy Loại Nhân Viên !!!");
 
             item.Name = Name;
+            item.Order = Order;
             item.UpdatedBy = LoggedEmployee;
             item.UpdatedDate = DateTime.Now;
 

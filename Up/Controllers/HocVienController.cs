@@ -332,10 +332,10 @@
                 OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Vien");
                 int totalRows = hocVien.Count;
                 
-                worksheet.Cells[1, 1].Value = "First name";
+                worksheet.Cells[1, 1].Value = "First Name";
                 worksheet.Cells[1, 2].Value = "Mobile Phone";
-                worksheet.Cells[1, 3].Value = "Middle name";
-                worksheet.Cells[1, 4].Value = "Last name";
+                worksheet.Cells[1, 3].Value = "Middle Name";
+                worksheet.Cells[1, 4].Value = "Last Name";
 
                 worksheet.Cells["A1:D1"].Style.Font.Bold = true;
                 worksheet.Cells["A1:D1"].Style.Fill.PatternType = ExcelFillStyle.Solid;

@@ -54,6 +54,21 @@
                                             <v-text-field label="CMND *" required v-model="newItem.cmnd" v-on:keyup.enter="onSave"></v-text-field>
                                         </v-flex>
 
+                                        <v-flex xs12 sm4>
+                                            <v-select :items="itemNgayLamViec"
+                                                      item-text="name"
+                                                      return-object
+                                                      v-model="newItem.ngayLamViec"
+                                                      label="Chọn Ngày Làm Việc *">
+                                            </v-select>
+                                        </v-flex>
+                                        <v-flex xs12 sm4>
+                                            <v-text-field label="N *" required v-model="newItem.initialName" v-on:keyup.enter="onSave"></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs12 sm4>
+                                            <v-text-field label="CMND *" required v-model="newItem.cmnd" v-on:keyup.enter="onSave"></v-text-field>
+                                        </v-flex>
+
                                         <v-flex xs12 sm5>
                                             <v-select :items="itemLoaiGiaoVien"
                                                       item-text="name"
@@ -369,7 +384,7 @@
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/giaovienindex.min.js" type="text/javascript"></script>
+<script src="~/js/giaovienindex.js" type="text/javascript"></script>
 
 <style>
     .v-input__slot:before, .v-input__slot:after {

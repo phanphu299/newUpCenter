@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+
     //GIAO VIEN LA NHAN VIEN
     public class GiaoVien
     {
@@ -22,8 +23,13 @@
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
         public double MucHoaHong { get; set; }
+        public Guid NgayLamViecId { get; set; }
+        public DateTime NgayBatDau { get; set; }
+        public DateTime? NgayKetThuc { get; set; }
         //GIAO VIEN LA NHAN VIEN
-        
+
+        [ForeignKey("NgayLamViecId")]
+        public NgayLamViec NgayLamViec { get; set; }
         public ICollection<ThongKe_ChiPhi> ThongKe_ChiPhis { get; set; }
         public ICollection<NhanVien_ViTri> NhanVien_ViTris { get; set; }
     }

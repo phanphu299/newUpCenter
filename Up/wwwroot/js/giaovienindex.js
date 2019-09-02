@@ -24,7 +24,10 @@
             cmnd: '',
             loaiGiaoVien: '',
             loaiCheDo: '',
-            mucHoaHong: 0
+            mucHoaHong: 0,
+            ngayLamViec: '',
+            ngayBatDau: '',
+            ngayKetThuc: ''
         },
         itemToDelete: {},
         itemToEdit: {},
@@ -56,6 +59,7 @@
         khoaHocItems: [],
         itemLoaiGiaoVien: [],
         itemLoaiCheDo: [],
+        itemNgayLamViec: [],
         arrayLoaiNVandCD: []
     },
     async beforeCreate() {
@@ -63,6 +67,14 @@
         await axios.get('/GiaoVien/GetGiaoVienAsync')
             .then(function (response) {
                 that.khoaHocItems = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        await axios.get('/Category/GetNgayLamViecAsync')
+            .then(function (response) {
+                that.itemNgayLamViec = response.data;
             })
             .catch(function (error) {
                 console.log(error);
@@ -152,7 +164,7 @@
         },
 
         async onUpdate(item) {
-            if (item.name === '' || item.phone === '' || item.diaChi === '' || item.initialName === '' || item.cmnd === '' || item.basicSalary === '') {
+            if (item.ngayLamViec === '' || item.ngayBatDau === '' || item.name === '' || item.phone === '' || item.diaChi === '' || item.initialName === '' || item.cmnd === '' || item.basicSalary === '') {
                 this.alertMessage = "Không được bỏ trống";
                 this.alertEdit = true;
             }
@@ -182,7 +194,10 @@
                         InitialName: item.initialName,
                         CMND: item.cmnd,
                         LoaiNhanVien_CheDo: item.loaiNhanVien_CheDo,
-                        MucHoaHong: item.mucHoaHong
+                        MucHoaHong: item.mucHoaHong,
+                        NgayBatDau: item.ngayBatDau,
+                        NgayKetThuc: item.ngayKetThuc,
+                        
                     }
                 })
                 .then(function (response) {
@@ -212,7 +227,7 @@
         },
 
         async onSave(item) {
-            if (this.newItem.name === '' || this.newItem.phone === '' || this.newItem.diaChi === '' || this.newItem.initialName === '' || this.newItem.cmnd === '') {
+            if (this.newItem.ngayLamViec === '' || this.newItem.ngayBatDau === '' || this.newItem.name === '' || this.newItem.phone === '' || this.newItem.diaChi === '' || this.newItem.initialName === '' || this.newItem.cmnd === '') {
                 this.alertMessage = "Không được bỏ trống";
                 this.alert = true;
             }
@@ -242,7 +257,9 @@
                         InitialName: that.newItem.initialName,
                         CMND: that.newItem.cmnd,
                         LoaiNhanVien_CheDo: that.arrayLoaiNVandCD,
-                        MucHoaHong: that.newItem.mucHoaHong
+                        MucHoaHong: that.newItem.mucHoaHong,
+                        NgayBatDau: that.newItem.ngayBatDau,
+                        NgayKetThuc: that.newItem.ngayKetThuc
                     }
                 })
                     .then(function (response) {
