@@ -19,8 +19,6 @@ namespace Up.Models
         public string GioHocTo { get; set; }
         public Guid HocPhiId { get; set; }
         public double HocPhi { get; set; }
-        public Guid GiaoVienId { get; set; }
-        public string GiaoVien { get; set; }
         public string NgayKhaiGiang { get; set; }
         public string NgayKetThuc { get; set; }
         public string CreatedDate { get; set; }

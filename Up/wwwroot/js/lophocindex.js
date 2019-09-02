@@ -23,7 +23,6 @@
             ngayHoc: "",
             gioHocFrom: "",
             gioHocTo: "",
-            giaoVien: "",
             sach: [],
             ngayKhaiGiang: new Date().toISOString().substr(0, 10)
         },
@@ -43,7 +42,6 @@
                 value: ''
             },
             { text: 'Tên Lớp Học', value: 'name', align: 'left', sortable: true },
-            { text: 'Giáo Viên Chủ Nhiệm', value: 'giaoVien', align: 'left', sortable: true },
             { text: 'Khóa Học', value: 'khoaHoc', align: 'left', sortable: true },
             { text: 'Ngày Học', value: 'ngayHoc', align: 'left', sortable: true },
             { text: 'Giờ Học', value: 'gioHoc', align: 'left', sortable: true },
@@ -63,7 +61,6 @@
         itemNgayHoc: [],
         itemHocPhi: [],
         itemSach: [],
-        itemGiaoVien: [],
         diemDanhItems: [],
         soNgayHoc:[]
     },
@@ -116,14 +113,7 @@
             .catch(function (error) {
                 console.log(error);
             });
-
-        await axios.get('/GiaoVien/GetGiaoVienOnlyAsync')
-            .then(function (response) {
-                that.itemGiaoVien = response.data;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        
     },
 
     methods: {
@@ -147,7 +137,6 @@
                         GioHocId: item.gioHocId,
                         NgayHocId: item.ngayHocId,
                         HocPhiId: item.hocPhiId,
-                        GiaoVienId: item.giaoVienId,
                         NgayKhaiGiang: item.ngayKhaiGiang,
                         NgayKetThuc: item.ngayKetThuc,
                         IsCanceled: item.isCanceled,
@@ -300,7 +289,6 @@
                         HocPhiId: that.newItem.hocPhi,
                         NgayKhaiGiang: that.newItem.ngayKhaiGiang,
                         SachIds: that.newItem.sach,
-                        GiaoVienId: that.newItem.giaoVien
                     }
                 })
                     .then(function (response) {
@@ -315,7 +303,6 @@
                             that.newItem.gioHoc = '';
                             that.newItem.ngayHoc = '';
                             that.newItem.ngayKhaiGiang = new Date().toISOString().substr(0, 10);
-                            that.newItem.giaoVien = "";
                             that.newItem.sach = [];
                         }
                         else {

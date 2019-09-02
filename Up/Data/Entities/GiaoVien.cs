@@ -23,8 +23,7 @@
         public string UpdatedBy { get; set; }
         public double MucHoaHong { get; set; }
         //GIAO VIEN LA NHAN VIEN
-
-        public ICollection<LopHoc> LopHocs { get; set; }
+        
         public ICollection<ThongKe_ChiPhi> ThongKe_ChiPhis { get; set; }
         public ICollection<NhanVien_ViTri> NhanVien_ViTris { get; set; }
     }

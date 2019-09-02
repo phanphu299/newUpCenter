@@ -100,10 +100,6 @@
 
         public async Task<bool> DeleteGiaoVienAsync(Guid GiaoVienId, string LoggedEmployee)
         {
-            var lopHoc = await _context.LopHocs.Where(x => x.GiaoVienId == GiaoVienId).ToListAsync();
-            if (lopHoc.Any())
-                throw new Exception("Hãy xóa những lớp học của nhân viên này trước !!!");
-
             var item = await _context.GiaoViens
                                     .FindAsync(GiaoVienId);
 

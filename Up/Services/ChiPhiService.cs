@@ -20,77 +20,51 @@ namespace Up.Services
 
         public async Task<TinhChiPhiViewModel> TinhChiPhiAsync(int month, int year)
         {
-            var items = _context.ThongKe_ChiPhis.Where(x => x.NgayChiPhi.Month == month && x.NgayChiPhi.Year == year);
-            
-            if(items.Any())
+            var giaoVien = await _context
+            .GiaoViens.Where(x => x.IsDisabled == false && x.CreatedDate.Month <= month && x.CreatedDate.Year <= year)
+            .Select(x => new ChiPhiModel
             {
-                return new TinhChiPhiViewModel
-                {
-                    ChiPhiList = await _context.ThongKe_ChiPhis
-                                        .Where(x => x.NgayChiPhi.Month == month && x.NgayChiPhi.Year == year)
-                                        .Select(x => new ChiPhiModel
-                                        {
-                                            Bonus = x.Bonus,
-                                            Minus = x.Minus,
-                                            ChiPhiMoi = x.ChiPhi,
-                                            NhanVienId = x.NhanVienId,
-                                            ChiPhiCoDinhId = x.ChiPhiCoDinhId,
-                                            SoGioKem = x.SoGioKem,
-                                            SoGioDay = x.SoGioDay,
-                                            SoHocVien = x.SoHocVien,
-                                            DaLuu = x.DaLuu,
-                                            Name = x.NhanVienId != null ? x.NhanVien.Name : x.ChiPhiCoDinh.Name,
-                                            Salary_Expense = x.NhanVienId != null ? x.NhanVien.BasicSalary : x.ChiPhiCoDinh.Gia,
-                                            TeachingRate = x.NhanVienId != null ? x.NhanVien.TeachingRate : 0,
-                                            TutoringRate = x.NhanVienId != null ? x.NhanVien.TutoringRate : 0,
-                                            MucHoaHong = x.NhanVienId != null ? x.NhanVien.MucHoaHong : 0,
-                                            LoaiChiPhi = x.NhanVienId == null ? 3 : (x.NhanVien.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien.NhanVien_ViTris.Count > 1) ? 4 : (x.NhanVien.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien.NhanVien_ViTris.Count == 1) ? 1 : 2
-                                        })
-                                        .ToListAsync()
-                };
-            }
-            else
-            {
-                var giaoVien = await _context
-                .GiaoViens.Where(x => x.IsDisabled == false)
+                Name = x.Name,
+                Salary_Expense = x.BasicSalary,
+                TeachingRate = x.TeachingRate,
+                TutoringRate = x.TutoringRate,
+                MucHoaHong = x.MucHoaHong,
+                Bonus = 0,
+                Minus = 0,
+                LoaiChiPhi = (x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Count > 1) ? 4 : (x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Count == 1) ? 1 : 2,
+                ChiPhiMoi = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).ChiPhi : x.BasicSalary,
+                NhanVienId = x.GiaoVienId,
+                SoGioDay = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoGioDay : 0,
+                SoGioKem = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoGioKem : 0,
+                SoHocVien = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoHocVien : 0,
+                DaLuu = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).DaLuu : false
+            })
+            .ToListAsync();
+
+            var chiPhi = await _context.ChiPhiCoDinhs
+                .Where(x => x.IsDisabled == false)
                 .Select(x => new ChiPhiModel
                 {
                     Name = x.Name,
-                    Salary_Expense = x.BasicSalary,
-                    TeachingRate = x.TeachingRate,
-                    TutoringRate = x.TutoringRate,
-                    MucHoaHong = x.MucHoaHong,
+                    Salary_Expense = x.Gia,
                     Bonus = 0,
                     Minus = 0,
-                    LoaiChiPhi = (x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Count > 1) ? 4 : (x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Count == 1) ? 1 : 2,
-                    ChiPhiMoi = x.BasicSalary,
-                    NhanVienId = x.GiaoVienId
+                    LoaiChiPhi = 3,
+                    ChiPhiMoi = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.ChiPhiCoDinhId == x.ChiPhiCoDinhId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.ChiPhiCoDinhId == x.ChiPhiCoDinhId).ChiPhi : x.Gia,
+                    ChiPhiCoDinhId = x.ChiPhiCoDinhId,
+                    DaLuu = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.ChiPhiCoDinhId == x.ChiPhiCoDinhId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.ChiPhiCoDinhId == x.ChiPhiCoDinhId).DaLuu : false,
                 })
                 .ToListAsync();
 
-                var chiPhi = await _context.ChiPhiCoDinhs
-                    .Where(x => x.IsDisabled == false)
-                    .Select(x => new ChiPhiModel
-                    {
-                        Name = x.Name,
-                        Salary_Expense = x.Gia,
-                        Bonus = 0,
-                        Minus = 0,
-                        LoaiChiPhi = 3,
-                        ChiPhiMoi = x.Gia,
-                        ChiPhiCoDinhId = x.ChiPhiCoDinhId
-                    })
-                    .ToListAsync();
+            List<ChiPhiModel> model = new List<ChiPhiModel>();
+            model.AddRange(giaoVien);
+            model.AddRange(chiPhi);
 
-                List<ChiPhiModel> model = new List<ChiPhiModel>();
-                model.AddRange(giaoVien);
-                model.AddRange(chiPhi);
+            return new TinhChiPhiViewModel
+            {
+                ChiPhiList = model
+            };
 
-                return new TinhChiPhiViewModel
-                {
-                    ChiPhiList = model
-                };
-            }
         }
     }
 }

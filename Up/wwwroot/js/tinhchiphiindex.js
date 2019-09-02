@@ -89,6 +89,9 @@
                         that.snackbar = true;
                         that.messageText = 'Lưu Chi Phí thành công !!!';
                         that.color = 'success';
+                        for (let i = 0; i < that.chiPhiList.length; i++) {
+                            that.chiPhiList[i].daLuu = true;
+                        }
                     }
                     else {
                         that.snackbar = true;
@@ -126,6 +129,7 @@
                         that.snackbar = true;
                         that.messageText = 'Lưu Bảng Tính thành công !!!';
                         that.color = 'success';
+                        
                     }
                     else {
                         that.snackbar = true;

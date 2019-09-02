@@ -76,14 +76,6 @@
                                             </v-menu>
                                         </v-flex>
 
-                                        <v-flex xs12 sm4>
-                                            <v-select :items="itemGiaoVien"
-                                                      item-text="name"
-                                                      item-value="giaoVienId"
-                                                      v-model="newItem.giaoVien"
-                                                      label="Chọn Giáo Viên Chăm Sóc *">
-                                            </v-select>
-                                        </v-flex>
                                     </v-layout>
                                 </v-container>
                                 <small>* bắt buộc</small>
@@ -157,7 +149,6 @@
 
                         </td>
                         <td>{{ props.item.name }}</td>
-                        <td>{{ props.item.giaoVien }}</td>
                         <td>{{ props.item.khoaHoc }}</td>
                         <td>{{ props.item.ngayHoc }}</td>
                         <td>{{ props.item.gioHocFrom }} - {{ props.item.gioHocTo }}</td>
@@ -172,9 +163,6 @@
                         <td>{{ props.item.updatedDate }}</td>
                         <td>{{ props.item.updatedBy }}</td>
                     </template>
-                    <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                        Không tìm thấy "{{ search }}".
-                    </v-alert>
                 </v-data-table>
             </v-card>
         </div>
@@ -293,15 +281,6 @@
                                           item-value="hocPhiId"
                                           v-model="itemToEdit.hocPhiId"
                                           label="Chọn Học Phí *">
-                                </v-select>
-                            </v-flex>
-
-                            <v-flex xs12 sm4>
-                                <v-select :items="itemGiaoVien"
-                                          item-text="name"
-                                          item-value="giaoVienId"
-                                          v-model="itemToEdit.giaoVienId"
-                                          label="Chọn Giáo Viên *">
                                 </v-select>
                             </v-flex>
                         </v-layout>

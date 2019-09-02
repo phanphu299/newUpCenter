@@ -18,7 +18,7 @@
             _context = context;
         }
 
-        public async Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId, Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, Guid GiaoVienId, string LoggedEmployee)
+        public async Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId, Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, string LoggedEmployee)
         {
             try
             {
@@ -31,7 +31,6 @@
                 lopHoc.NgayKhaiGiang = NgayKhaiGiang;
                 lopHoc.NgayHocId = NgayHocId;
                 lopHoc.GioHocId = GioHocId;
-                lopHoc.GiaoVienId = GiaoVienId;
                 lopHoc.HocPhiId = HocPhiId;
                 lopHoc.CreatedBy = LoggedEmployee;
                 lopHoc.CreatedDate = DateTime.Now;
@@ -46,8 +45,6 @@
                     NgayHocId = lopHoc.NgayHocId,
                     NgayHoc = _context.NgayHocs.FindAsync(lopHoc.NgayHocId).Result.Name,
                     Name = lopHoc.Name,
-                    GiaoVienId = lopHoc.GiaoVienId,
-                    GiaoVien = _context.GiaoViens.FindAsync(lopHoc.GiaoVienId).Result.Name,
                     NgayKhaiGiang = lopHoc.NgayKhaiGiang.ToString("dd/MM/yyyy"),
                     KhoaHocId = lopHoc.KhoaHocId,
                     CreatedBy = lopHoc.CreatedBy,
@@ -141,8 +138,6 @@
                     IsCanceled = x.IsCanceled,
                     LopHocId = x.LopHocId,
                     NgayHocId = x.NgayHocId,
-                    GiaoVien = x.GiaoVien.Name,
-                    GiaoVienId = x.GiaoVienId,
                     NgayHoc = x.NgayHoc.Name,
                     HocPhiId = x.HocPhiId,
                     HocPhi = x.HocPhi.Gia,
@@ -264,7 +259,7 @@
         }
 
         public async Task<LopHocViewModel> UpdateLopHocAsync(Guid LopHocId, string Name, Guid KhoaHocId, Guid NgayHocId,
-            Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, DateTime? NgayKetThuc, Guid GiaoVienId, string LoggedEmployee)
+            Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, DateTime? NgayKetThuc, string LoggedEmployee)
         {
             try
             {
@@ -282,7 +277,6 @@
                 item.KhoaHocId = KhoaHocId;
                 item.NgayHocId = NgayHocId;
                 item.GioHocId = GioHocId;
-                item.GiaoVienId = GiaoVienId;
                 item.NgayKhaiGiang = NgayKhaiGiang;
                 item.UpdatedBy = LoggedEmployee;
                 item.UpdatedDate = DateTime.Now;
@@ -302,8 +296,6 @@
                     NgayKhaiGiang = item.NgayKhaiGiang.ToString("dd/MM/yyyy"),
                     KhoaHocId = item.KhoaHocId,
                     CreatedBy = item.CreatedBy,
-                    GiaoVienId = item.GiaoVienId,
-                    GiaoVien = _context.GiaoViens.FindAsync(item.GiaoVienId).Result.Name,
                     GioHocFrom = _context.GioHocs.FindAsync(item.GioHocId).Result.From,
                     GioHocTo = _context.GioHocs.FindAsync(item.GioHocId).Result.To,
                     HocPhiId = item.HocPhiId,

@@ -75,14 +75,14 @@
                                         <v-flex xs12 sm2>
                                             <v-tooltip top>
                                                 <template v-slot:activator="{ on }">
-                                                    <v-btn slot="activator" v-on="on" color="primary darken-1" fab small flat v-on:click="onAddLoaiNVCD"><v-icon>add</v-icon></v-btn>
+                                                    <v-btn slot="activator" v-on="on" color="primary darken-1" small v-on:click="onAddLoaiNVCD">Thêm</v-btn>
                                                 </template>
                                                 <strong>Thêm Chức Danh và Chế Độ</strong>
                                             </v-tooltip>
                                         </v-flex>
 
                                         <v-flex xs12 sm12>
-                                            <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;" v-if="arrayLoaiNVandCD.length > 0">
+                                            <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
                                                 <thead style="background-color: orange;">
                                                     <tr style="border: 1px solid #ddd;">
                                                         <th style="border: 1px solid #ddd;"> Vị Trí</th>
@@ -302,7 +302,7 @@
                             <v-flex xs12 sm2>
                                 <v-tooltip top>
                                     <template v-slot:activator="{ on }">
-                                        <v-btn slot="activator" v-on="on" color="primary darken-1" fab small flat v-on:click="onAddLoaiNVCDForEdit(itemToEdit)"><v-icon>add</v-icon></v-btn>
+                                        <v-btn slot="activator" v-on="on" color="primary darken-1" fab small flat v-on:click="onAddLoaiNVCDForEdit(itemToEdit)">Thêm</v-btn>
                                     </template>
                                     <strong>Thêm Chức Danh và Chế Độ</strong>
                                 </v-tooltip>
@@ -324,7 +324,7 @@
                                             <td style="border: 1px solid #ddd; padding-right:5px; padding-top: 0px; padding-bottom: 0px">
                                                 <v-tooltip top>
                                                     <template v-slot:activator="{ on }">
-                                                        <v-btn slot="activator" v-on="on" color="error darken-1" fab small flat v-on:click="onXoaLoaiNVCDForEdit(item)"><v-icon>delete</v-icon></v-btn>
+                                                        <v-btn slot="activator" v-on="on" color="error darken-1" small v-on:click="onXoaLoaiNVCDForEdit(item)"><v-icon>delete</v-icon></v-btn>
                                                     </template>
                                                     <strong>Xóa Chức Danh và Chế Độ</strong>
                                                 </v-tooltip>
