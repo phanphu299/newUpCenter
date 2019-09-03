@@ -37,76 +37,79 @@ namespace Up.Services
                 .Select(date => date.Day);
         }
 
-        private int TongNgayLam(string NgayLam, int month, int year)
+        private int TongNgayLam(string NgayLam, int month, int year, DateTime? NgayKetThuc)
         {
             var _ngayLam = NgayLam.Split('-');
-            int tong = 0;
+            List<int> tongNgayHoc = new List<int>();
 
             foreach (string el in _ngayLam)
             {
                 switch (el.Trim())
                 {
                     case "2":
-                        tong += DaysInMonth(year, month, DayOfWeek.Monday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Monday));
                         break;
                     case "3":
-                        tong += DaysInMonth(year, month, DayOfWeek.Tuesday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Tuesday));
                         break;
                     case "4":
-                        tong += DaysInMonth(year, month, DayOfWeek.Wednesday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Wednesday));
                         break;
                     case "5":
-                        tong += DaysInMonth(year, month, DayOfWeek.Thursday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Thursday));
                         break;
                     case "6":
-                        tong += DaysInMonth(year, month, DayOfWeek.Friday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Friday));
                         break;
                     case "7":
-                        tong += DaysInMonth(year, month, DayOfWeek.Saturday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Saturday));
                         break;
                     default:
-                        tong += DaysInMonth(year, month, DayOfWeek.Sunday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Sunday));
                         break;
                 }
             }
 
-            return tong;
+            if (NgayKetThuc != null && NgayKetThuc.Value.Month == month && NgayKetThuc.Value.Year == year)
+                tongNgayHoc = tongNgayHoc.Where(x => x <= NgayKetThuc.Value.Day).ToList();
+
+            return tongNgayHoc.Count;
         }
 
         private int TongNgayLamVoSau(string NgayLam, int month, int year, DateTime NgayBatDau)
         {
             var _ngayLam = NgayLam.Split('-');
-            int tongNgayHoc = 0;
+            List<int> tongNgayHoc = new List<int>();
 
             foreach (string el in _ngayLam)
             {
                 switch (el.Trim())
                 {
                     case "2":
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Monday, NgayBatDau).Count();
+                        tongNgayHoc.AddRange(DaysInMonthWithStartDate(year, month, DayOfWeek.Monday, NgayBatDau));
                         break;
                     case "3":
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Tuesday, NgayBatDau).Count();
+                        tongNgayHoc.AddRange(DaysInMonthWithStartDate(year, month, DayOfWeek.Tuesday, NgayBatDau));
                         break;
                     case "4":
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Wednesday, NgayBatDau).Count();
+                        tongNgayHoc.AddRange(DaysInMonthWithStartDate(year, month, DayOfWeek.Wednesday, NgayBatDau));
                         break;
                     case "5":
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Thursday, NgayBatDau).Count();
+                        tongNgayHoc.AddRange(DaysInMonthWithStartDate(year, month, DayOfWeek.Thursday, NgayBatDau));
                         break;
                     case "6":
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Friday, NgayBatDau).Count();
+                        tongNgayHoc.AddRange(DaysInMonthWithStartDate(year, month, DayOfWeek.Friday, NgayBatDau));
                         break;
                     case "7":
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Saturday, NgayBatDau).Count();
+                        tongNgayHoc.AddRange(DaysInMonthWithStartDate(year, month, DayOfWeek.Saturday, NgayBatDau));
                         break;
                     default:
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Sunday, NgayBatDau).Count();
+                        tongNgayHoc.AddRange(DaysInMonthWithStartDate(year, month, DayOfWeek.Sunday, NgayBatDau));
                         break;
                 }
             }
-
-            return tongNgayHoc;
+            
+            return tongNgayHoc.Count;
         }
 
         public async Task<TinhChiPhiViewModel> TinhChiPhiAsync(int month, int year)
@@ -131,9 +134,9 @@ namespace Up.Services
                 SoHocVien = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoHocVien : 0,
                 DaLuu = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).DaLuu : false,
                 NgayLamViec = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).NgayLamViec : x.NgayLamViec.Name,
-                SoNgayLam = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoNgayLam : TongNgayLam(x.NgayLamViec.Name, month, year),
-                SoNgayLamVoSau = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoNgayLamVoSau : (x.NgayBatDau.Month == month && x.NgayBatDau.Year == year) ? TongNgayLamVoSau(x.NgayLamViec.Name, month, year, x.NgayBatDau) : TongNgayLam(x.NgayLamViec.Name, month, year),
-                DailySalary = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).DailySalary : (Math.Ceiling((x.BasicSalary / TongNgayLam(x.NgayLamViec.Name, month, year)) / 10000) * 10000),
+                SoNgayLam = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoNgayLam : TongNgayLam(x.NgayLamViec.Name, month, year, null),
+                SoNgayLamVoSau = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoNgayLamVoSau : (x.NgayBatDau.Month == month && x.NgayBatDau.Year == year) ? TongNgayLamVoSau(x.NgayLamViec.Name, month, year, x.NgayBatDau) : TongNgayLam(x.NgayLamViec.Name, month, year, x.NgayKetThuc),
+                DailySalary = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).DailySalary : (Math.Ceiling((x.BasicSalary / TongNgayLam(x.NgayLamViec.Name, month, year, null)) / 10000) * 10000),
                 SoNgayNghi = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoNgayNghi : 0
             })
             .ToListAsync();
