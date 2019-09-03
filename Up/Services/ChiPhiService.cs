@@ -111,18 +111,18 @@ namespace Up.Services
 
         public async Task<TinhChiPhiViewModel> TinhChiPhiAsync(int month, int year)
         {
-            var giaoVien = await _context
-            .GiaoViens.Where(x => x.IsDisabled == false && x.NgayBatDau.Month <= month && x.NgayBatDau.Year <= year)
+            var giaoVien = await _context.GiaoViens
+            .Where(x => x.IsDisabled == false && x.NgayBatDau.Month <= month && x.NgayBatDau.Year <= year && (x.NgayKetThuc == null || (x.NgayKetThuc.Value.Month >= month && x.NgayKetThuc.Value.Year >= year)))
             .OrderBy(x => x.NhanVien_ViTris.OrderBy(m => m.ViTri.Order).First().ViTri.Order)
             .Select(x => new ChiPhiModel
             {
                 Name = x.Name,
-                Salary_Expense = x.BasicSalary,
-                TeachingRate = x.TeachingRate,
-                TutoringRate = x.TutoringRate,
-                MucHoaHong = x.MucHoaHong,
-                Bonus = 0,
-                Minus = 0,
+                Salary_Expense = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).Salary_Expense : x.BasicSalary,
+                TeachingRate = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).TeachingRate : x.TeachingRate,
+                TutoringRate = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).TutoringRate : x.TutoringRate,
+                MucHoaHong = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).MucHoaHong : x.MucHoaHong,
+                Bonus = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).Bonus : 0,
+                Minus = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).Minus : 0,
                 LoaiChiPhi = (x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Count > 1) ? 4 : (x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Count == 1) ? 1 : 2,
                 ChiPhiMoi = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).ChiPhi : x.BasicSalary,
                 NhanVienId = x.GiaoVienId,
@@ -130,11 +130,22 @@ namespace Up.Services
                 SoGioKem = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoGioKem : 0,
                 SoHocVien = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoHocVien : 0,
                 DaLuu = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).DaLuu : false,
-                NgayLamViec = x.NgayLamViec.Name,
-                SoNgayLam = TongNgayLam(x.NgayLamViec.Name, month, year),
-                SoNgayLamVoSau = (x.NgayBatDau.Month == month && x.NgayBatDau.Year == year) ? TongNgayLamVoSau(x.NgayLamViec.Name, month, year, x.NgayBatDau) : 0
+                NgayLamViec = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).NgayLamViec : x.NgayLamViec.Name,
+                SoNgayLam = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoNgayLam : TongNgayLam(x.NgayLamViec.Name, month, year),
+                SoNgayLamVoSau = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoNgayLamVoSau : (x.NgayBatDau.Month == month && x.NgayBatDau.Year == year) ? TongNgayLamVoSau(x.NgayLamViec.Name, month, year, x.NgayBatDau) : TongNgayLam(x.NgayLamViec.Name, month, year),
+                DailySalary = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).DailySalary : (Math.Ceiling((x.BasicSalary / TongNgayLam(x.NgayLamViec.Name, month, year)) / 10000) * 10000),
+                SoNgayNghi = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoNgayNghi : 0
             })
             .ToListAsync();
+
+            foreach(var item in giaoVien)
+            {
+                if(item.SoNgayLam > item.SoNgayLamVoSau)
+                {
+                    item.Salary_Expense = (Math.Ceiling((item.DailySalary * item.SoNgayLamVoSau) / 10000) * 10000);
+                    item.ChiPhiMoi = item.Salary_Expense;
+                }
+            }
 
             var chiPhi = await _context.ChiPhiCoDinhs
                 .Where(x => x.IsDisabled == false)

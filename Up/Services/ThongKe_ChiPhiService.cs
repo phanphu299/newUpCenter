@@ -42,7 +42,16 @@ namespace Up.Services
                         ChiPhiCoDinhId = item.ChiPhiCoDinhId,
                         NhanVienId = item.NhanVienId,
                         DaLuu = item.DaLuu,
-                        SoHocVien = item.SoHocVien
+                        SoHocVien = item.SoHocVien,
+                        DailySalary = item.DailySalary,
+                        NgayLamViec = item.NgayLamViec,
+                        Salary_Expense = item.Salary_Expense,
+                        SoNgayLam = item.SoNgayLam,
+                        SoNgayLamVoSau = item.SoNgayLamVoSau,
+                        SoNgayNghi = item.SoNgayNghi,
+                        TeachingRate = item.TeachingRate,
+                        TutoringRate = item.TutoringRate,
+                        MucHoaHong = item.MucHoaHong
                     };
                     await _context.ThongKe_ChiPhis.AddAsync(thongKe);
                 }

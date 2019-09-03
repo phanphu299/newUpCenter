@@ -2,7 +2,6 @@
 namespace Up.Models
 {
     using System;
-    using System.Collections.Generic;
 
     public class ThongKe_ChiPhiViewModel
     {
@@ -27,6 +26,16 @@ namespace Up.Models
         public Guid? NhanVienId { get; set; }
         public double ChiPhiMoi { get; set; }
 
+        public string NgayLamViec { get; set; }
+        public int SoNgayLam { get; set; }
+        public int SoNgayLamVoSau { get; set; }
+
+        public double SoNgayNghi { get; set; }
+        public double DailySalary { get; set; }
+        public double Salary_Expense { get; set; }
+        public double TeachingRate { get; set; }
+        public double TutoringRate { get; set; }
+        public double MucHoaHong { get; set; }
         public bool DaLuu { get; set; }
     }
 

@@ -44,11 +44,16 @@
                                                     </template>
                                                     Ngày Làm: <strong>{{ props.item.ngayLamViec }}</strong><br />
                                                     Tổng Ngày Làm: <strong>{{ props.item.soNgayLam }}</strong><br />
-                                                    Tổng Ngày Làm Vô Sau: <strong>{{ props.item.soNgayLamVoSau }}</strong>
+                                                    Tổng Ngày Thực Tế Làm: <strong>{{ props.item.soNgayLamVoSau }}</strong><br />
+                                                    Lương Mỗi Ngày: <strong>{{ props.item.dailySalary }}</strong>
                                                 </v-tooltip>
                                                 <v-icon v-if="props.item.daLuu" color="success">check_circle_outline</v-icon>
                                             </td>
+
                                             <td><v-text-field v-model="props.item.chiPhiMoi" :value="props.item.chiPhiMoi"></v-text-field></td>
+                                            <td>
+                                                <span v-if="props.item.loaiChiPhi != 3"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" label="Số Ngày Nghỉ" v-model="props.item.soNgayNghi" :value="props.item.soNgayNghi"></v-text-field></span>
+                                            </td>
                                             <td>{{ formatNumber(props.item.salary_Expense) }}</td>
                                             <td>
                                                 <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4">{{ props.item.teachingRate }}</span>
@@ -101,7 +106,7 @@
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/tinhchiphiindex.min.js" type="text/javascript"></script>
+<script src="~/js/tinhchiphiindex.js" type="text/javascript"></script>
 
 <style>
     .v-input__slot:before, .v-input__slot:after {

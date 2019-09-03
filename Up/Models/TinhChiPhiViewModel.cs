@@ -33,5 +33,8 @@
         public string NgayLamViec { get; set; }
         public int SoNgayLam { get; set; }
         public int SoNgayLamVoSau { get; set; }
+
+        public double SoNgayNghi { get; set; } = 0;
+        public double DailySalary { get; set; }
     }
 }
