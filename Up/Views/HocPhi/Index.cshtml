@@ -74,7 +74,7 @@
                                         <template slot="items" slot-scope="props">
 
                                             <td>
-                                                {{ props.item.fullName }}
+                                                {{ props.item.fullName }} <br />
                                                 <v-tooltip top v-if="props.item.hocPhiBuHocVienVaoSau > 0">
                                                     <template v-slot:activator="{ on }">
                                                         <v-icon color="error lighten-1" dark v-on="on">info</v-icon>
@@ -90,7 +90,7 @@
                                                     Dời qua tháng sau
                                                 </v-tooltip>
                                             </td>
-                                            <td><v-text-field v-model="props.item.hocPhiMoi"></v-text-field></td>
+                                            <td><span style="color: red">{{ formatNumber(props.item.hocPhiMoi) }}</span></td>
                                             <td>{{ formatNumber(props.item.tienNo) }}</td>
                                             <td>
                                                 <v-select :items="itemSach"
@@ -99,6 +99,7 @@
                                                           chips
                                                           return-object
                                                           label="Chọn Tài Liệu"
+                                                          item-disabled="isDisabled"
                                                           v-model="props.item.giaSach"
                                                           v-on:change="onchangeSach(props.item.giaSach, props.item)">
                                                     <template v-slot:selection="data">

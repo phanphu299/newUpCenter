@@ -26,6 +26,7 @@
         public Guid NgayLamViecId { get; set; }
         public DateTime NgayBatDau { get; set; }
         public DateTime? NgayKetThuc { get; set; }
+        public string NganHang { get; set; }
         //GIAO VIEN LA NHAN VIEN
 
         [ForeignKey("NgayLamViecId")]

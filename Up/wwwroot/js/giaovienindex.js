@@ -27,7 +27,8 @@
             mucHoaHong: 0,
             ngayLamViecId: '',
             ngayBatDau: '',
-            ngayKetThuc: ''
+            ngayKetThuc: '',
+            nganHang: ''
         },
         itemToDelete: {},
         itemToEdit: {},
@@ -47,6 +48,7 @@
             { text: 'Tutoring Rate', value: 'tutoringRate', align: 'left', sortable: true },
             { text: 'Lương Cơ Bản', value: 'basicSalary', align: 'left', sortable: true },
             { text: 'Mức Hoa Hồng', value: 'mucHoaHong', align: 'left', sortable: true },
+            { text: 'STK Ngân Hàng', value: 'nganHang', align: 'left', sortable: true },
             { text: 'Facebook', value: 'facebookAccount', align: 'left', sortable: true },
             { text: 'Địa Chỉ', value: 'diaChi', align: 'left', sortable: true },
             { text: 'Initial Name', value: 'initialName', align: 'left', sortable: true },
@@ -214,7 +216,8 @@
                         MucHoaHong: item.mucHoaHong,
                         NgayBatDau: item.ngayBatDau,
                         NgayKetThuc: item.ngayKetThuc,
-                        NgayLamViecId: item.ngayLamViecId
+                        NgayLamViecId: item.ngayLamViecId,
+                        NganHang: item.nganHang
                     }
                 })
                 .then(function (response) {
@@ -277,7 +280,8 @@
                         MucHoaHong: that.newItem.mucHoaHong,
                         NgayBatDau: that.newItem.ngayBatDau,
                         NgayKetThuc: that.newItem.ngayKetThuc,
-                        NgayLamViecId: that.newItem.ngayLamViecId
+                        NgayLamViecId: that.newItem.ngayLamViecId,
+                        NganHang: that.newItem.nganHang
                     }
                 })
                     .then(function (response) {
@@ -297,6 +301,13 @@
                             that.newItem.initialName = '';
                             that.newItem.cmnd = '';
                             that.arrayLoaiNVandCD = [];
+                            that.newItem.loaiGiaoVien = '';
+                            that.newItem.loaiCheDo = '';
+                            that.newItem.mucHoaHong = 0;
+                            that.newItem.ngayLamViecId = '';
+                            that.newItem.ngayBatDau = '';
+                            that.newItem.ngayKetThuc = '';
+                            that.newItem.nganHang = '';
                         }
                         else {
                             that.snackbar = true;

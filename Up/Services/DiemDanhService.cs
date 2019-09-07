@@ -98,15 +98,15 @@
             if (LopHocId == null || NgayDiemDanh == null)
                 throw new Exception("Lỗi khi Cho Lớp Học Nghỉ!!!");
 
-            var isExisting = _context.LopHoc_DiemDanhs
+            var isExisting = await _context.LopHoc_DiemDanhs
                                     .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh)
                                     .ToListAsync();
-            if (isExisting.Result.Any())
+            if (isExisting.Any())
                 throw new Exception("Lớp học đã được điểm danh ngày " + NgayDiemDanh.ToShortDateString());
 
-            var hocViens = GetHocVienByLopHoc(LopHocId);
+            var hocViens = await GetHocVienByLopHoc(LopHocId);
 
-            foreach (var item in hocViens.Result)
+            foreach (var item in hocViens)
             {
                 LopHoc_DiemDanh lopHoc_DiemDanh = new LopHoc_DiemDanh();
                 lopHoc_DiemDanh.NgayDiemDanh = NgayDiemDanh;
@@ -192,6 +192,29 @@
                                     HocVienId = x.HocVienId,
                                 })
                                 .ToListAsync();
+        }
+
+        public async Task<bool> UndoDuocNghi(Guid LopHocId, DateTime NgayDiemDanh, string LoggedEmployee)
+        {
+            if (LopHocId == null || NgayDiemDanh == null)
+                throw new Exception("Lỗi khi Cho Lớp Học Nghỉ!!!");
+
+            var items = await _context.LopHoc_DiemDanhs
+                                    .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh)
+                                    .ToListAsync();
+            if (!items.Any())
+                throw new Exception("Lớp học chưa được Cho nghỉ ngày " + NgayDiemDanh.ToShortDateString());
+
+            foreach (var item in items)
+            {
+                item.IsOff = false;
+                item.IsDuocNghi = false;
+                item.UpdatedBy = LoggedEmployee;
+                item.UpdatedDate = DateTime.Now;
+            }
+
+            var saveResult = await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

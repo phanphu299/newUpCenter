@@ -9,11 +9,11 @@
     {
         Task<List<HocVienViewModel>> GetHocVienAsync();
         Task<List<HocVienViewModel>> GetAllHocVienAsync();
-        Task<HocVienViewModel> CreateHocVienAsync(string FullName, string Phone, string FacebookAccount,
+        Task<HocVienViewModel> CreateHocVienAsync(List<LopHoc_NgayHocViewModel> LopHocList, string FullName, string Phone, string FacebookAccount,
            string ParentFullName, Guid? QuanHeId, string EnglishName,
            DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee, DateTime? NgayBatDau = null);
 
-        Task<HocVienViewModel> UpdateHocVienAsync(Guid HocVienId, string FullName, string Phone, string FacebookAccount,
+        Task<HocVienViewModel> UpdateHocVienAsync(List<LopHoc_NgayHocViewModel> LopHocList, Guid HocVienId, string FullName, string Phone, string FacebookAccount,
            string ParentFullName, Guid? QuanHeId, string EnglishName,
            DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee);
 

@@ -42,14 +42,14 @@ namespace Up.Services
 
                 return true;
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw new Exception("Lỗi thêm học viên vào lớp học cũ: " + exception.Message);
             }
         }
 
-        public async Task<HocVienViewModel> CreateHocVienAsync(string FullName, string Phone, string FacebookAccount, 
-            string ParentFullName, Guid? QuanHeId, 
+        public async Task<HocVienViewModel> CreateHocVienAsync(List<LopHoc_NgayHocViewModel> LopHocList, string FullName, string Phone, string FacebookAccount,
+            string ParentFullName, Guid? QuanHeId,
             string EnglishName, DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee, DateTime? NgayBatDau = null)
         {
             try
@@ -71,7 +71,7 @@ namespace Up.Services
 
                 _context.HocViens.Add(hocVien);
 
-                if (LopHocIds.Length > 0)
+                if (LopHocIds != null)
                 {
                     foreach (Guid item in LopHocIds)
                     {
@@ -100,6 +100,32 @@ namespace Up.Services
                     }
                 }
 
+                if(LopHocList.Any())
+                {
+                    foreach (var item in LopHocList)
+                    {
+                        HocVien_LopHoc hocVien_LopHoc = new HocVien_LopHoc();
+                        hocVien_LopHoc.HocVien_LopHocId = new Guid();
+                        hocVien_LopHoc.HocVienId = hocVien.HocVienId;
+                        hocVien_LopHoc.LopHocId = item.LopHoc.LopHocId;
+                        hocVien_LopHoc.CreatedBy = LoggedEmployee;
+                        hocVien_LopHoc.CreatedDate = DateTime.Now;
+
+                        _context.HocVien_LopHocs.Add(hocVien_LopHoc);
+
+                        HocVien_NgayHoc HV_NgayHoc = new HocVien_NgayHoc();
+                        HV_NgayHoc.HocVien_NgayHocId = new Guid();
+                        HV_NgayHoc.HocVienId = hocVien.HocVienId;
+                        HV_NgayHoc.LopHocId = item.LopHoc.LopHocId;
+                        HV_NgayHoc.NgayBatDau = Convert.ToDateTime(item.NgayHoc, System.Globalization.CultureInfo.InvariantCulture); 
+                        HV_NgayHoc.NgayKetThuc = null;
+                        HV_NgayHoc.CreatedBy = LoggedEmployee;
+                        HV_NgayHoc.CreatedDate = DateTime.Now;
+
+                        _context.HocVien_NgayHocs.Add(HV_NgayHoc);
+                    }
+                }
+
                 await _context.SaveChangesAsync();
 
                 return new HocVienViewModel
@@ -123,7 +149,19 @@ namespace Up.Services
                         IsCanceled = x.LopHoc.IsCanceled,
                         IsGraduated = x.LopHoc.IsGraduated
                     }).ToListAsync(),
-                    LopHocIds = LopHocIds
+                    LopHocIds = LopHocIds,
+                    LopHoc_NgayHocList = await _context.HocVien_LopHocs
+                                        .Where(x => x.HocVienId == hocVien.HocVienId)
+                                        .Select(x => new LopHoc_NgayHocViewModel
+                                        {
+                                            LopHoc = new LopHocViewModel
+                                            {
+                                                LopHocId = x.LopHocId,
+                                                Name = x.LopHoc.Name
+                                            },
+                                            NgayHoc = x.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.HocVienId == hocVien.HocVienId).NgayBatDau.ToString("yyyy-MM-dd")
+                                        })
+                                        .ToListAsync()
                 };
             }
             catch (Exception exception)
@@ -154,7 +192,7 @@ namespace Up.Services
                 var saveResult = await _context.SaveChangesAsync();
                 return true;
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw new Exception("Xóa lỗi: " + exception.Message);
             }
@@ -186,7 +224,19 @@ namespace Up.Services
                         Name = p.LopHoc.Name,
                         IsGraduated = p.LopHoc.IsGraduated,
                         IsCanceled = p.LopHoc.IsCanceled
-                    }).ToList()
+                    }).ToList(),
+                    LopHoc_NgayHocList = _context.HocVien_LopHocs
+                                        .Where(m => m.HocVienId == x.HocVienId)
+                                        .Select(m => new LopHoc_NgayHocViewModel
+                                        {
+                                            LopHoc = new LopHocViewModel
+                                            {
+                                                LopHocId = m.LopHocId,
+                                                Name = m.LopHoc.Name
+                                            },
+                                            NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId).NgayBatDau.ToString("yyyy-MM-dd")
+                                        })
+                                        .ToList()
                 })
                 .ToListAsync();
         }
@@ -199,7 +249,7 @@ namespace Up.Services
                 {
                     CreatedBy = x.CreatedBy,
                     CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
-                    EnglishName  = x.EnglishName,
+                    EnglishName = x.EnglishName,
                     FacebookAccount = x.FacebookAccount,
                     FullName = x.FullName,
                     HocVienId = x.HocVienId,
@@ -218,7 +268,19 @@ namespace Up.Services
                         Name = p.LopHoc.Name,
                         IsGraduated = p.LopHoc.IsGraduated,
                         IsCanceled = p.LopHoc.IsCanceled
-                    }).ToList()
+                    }).ToList(),
+                    LopHoc_NgayHocList = _context.HocVien_LopHocs
+                                        .Where(m => m.HocVienId == x.HocVienId)
+                                        .Select(m => new LopHoc_NgayHocViewModel
+                                        {
+                                            LopHoc = new LopHocViewModel
+                                            {
+                                                LopHocId = m.LopHocId,
+                                                Name = m.LopHoc.Name
+                                            },
+                                            NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId).NgayBatDau.ToString("yyyy-MM-dd")
+                                        })
+                                        .ToList()
                 })
                 .ToListAsync();
         }
@@ -233,7 +295,7 @@ namespace Up.Services
 
                 if (item == null)
                     throw new Exception("Không tìm thấy Học Viên!!!");
-                
+
                 item.UpdatedBy = LoggedEmployee;
                 item.UpdatedDate = DateTime.Now;
                 await _context.SaveChangesAsync();
@@ -246,7 +308,7 @@ namespace Up.Services
             }
         }
 
-        public async Task<HocVienViewModel> UpdateHocVienAsync(Guid HocVienId, string FullName, string Phone, string FacebookAccount,
+        public async Task<HocVienViewModel> UpdateHocVienAsync(List<LopHoc_NgayHocViewModel> LopHocList, Guid HocVienId, string FullName, string Phone, string FacebookAccount,
            string ParentFullName, Guid? QuanHeId, string EnglishName,
            DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee)
         {
@@ -279,18 +341,30 @@ namespace Up.Services
                 if (_hocVien_LopHoc.Any())
                     _context.HocVien_LopHocs.RemoveRange(_hocVien_LopHoc);
 
-                if (LopHocIds.Length > 0)
+
+                if (LopHocList.Any())
                 {
-                    foreach (Guid lophoc in LopHocIds)
+                    foreach (var itemLop in LopHocList)
                     {
                         HocVien_LopHoc hocVien_LopHoc = new HocVien_LopHoc();
-                        hocVien_LopHoc.HocVienId = new Guid();
+                        hocVien_LopHoc.HocVien_LopHocId = new Guid();
                         hocVien_LopHoc.HocVienId = item.HocVienId;
-                        hocVien_LopHoc.LopHocId = lophoc;
+                        hocVien_LopHoc.LopHocId = itemLop.LopHoc.LopHocId;
                         hocVien_LopHoc.CreatedBy = LoggedEmployee;
                         hocVien_LopHoc.CreatedDate = DateTime.Now;
 
                         _context.HocVien_LopHocs.Add(hocVien_LopHoc);
+
+                        HocVien_NgayHoc HV_NgayHoc = new HocVien_NgayHoc();
+                        HV_NgayHoc.HocVien_NgayHocId = new Guid();
+                        HV_NgayHoc.HocVienId = item.HocVienId;
+                        HV_NgayHoc.LopHocId = itemLop.LopHoc.LopHocId;
+                        HV_NgayHoc.NgayBatDau = Convert.ToDateTime(itemLop.NgayHoc, System.Globalization.CultureInfo.InvariantCulture);
+                        HV_NgayHoc.NgayKetThuc = null;
+                        HV_NgayHoc.CreatedBy = LoggedEmployee;
+                        HV_NgayHoc.CreatedDate = DateTime.Now;
+
+                        _context.HocVien_NgayHocs.Add(HV_NgayHoc);
                     }
                 }
 
@@ -319,7 +393,19 @@ namespace Up.Services
                                             LopHocId = x.LopHocId,
                                             IsCanceled = x.LopHoc.IsCanceled,
                                             IsGraduated = x.LopHoc.IsGraduated
-                                        }).ToListAsync()
+                                        }).ToListAsync(),
+                    LopHoc_NgayHocList = _context.HocVien_LopHocs
+                                        .Where(m => m.HocVienId == item.HocVienId)
+                                        .Select(m => new LopHoc_NgayHocViewModel
+                                        {
+                                            LopHoc = new LopHocViewModel
+                                            {
+                                                LopHocId = m.LopHocId,
+                                                Name = m.LopHoc.Name
+                                            },
+                                            NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == item.HocVienId).NgayBatDau.ToString("yyyy-MM-dd")
+                                        })
+                                        .ToList()
                 };
             }
             catch (Exception exception)

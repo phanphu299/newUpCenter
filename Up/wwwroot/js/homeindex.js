@@ -78,16 +78,6 @@ var vue = new Vue({
                     pointBorderColor: '#1976d2',
                     backgroundColor: 'transparent'
                 }
-                //,
-                //{
-                //    label: 'Giáo Viên Nước Ngoài',
-                //    data: [],
-                //    borderColor: '#f44336',
-                //    pointBackgroundColor: '#f44336',
-                //    borderWidth: 1,
-                //    pointBorderColor: '#f44336',
-                //    backgroundColor: 'transparent'
-                //}
             ]
         },
 
@@ -104,25 +94,19 @@ var vue = new Vue({
                 {
                     label: 'Doanh Thu Học Phí',
                     data: [],
-                    borderColor: '#4caf50',
-                    pointBackgroundColor: '#4caf50',
-                    borderWidth: 1,
-                    pointBorderColor: '#4caf50',
-                    backgroundColor: 'transparent'
-                }
-            ]
-        },
-
-        chartdataChiPhi: {
-            labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
-            datasets: [
-                {
-                    label: 'Chi Phí',
-                    data: [],
                     borderColor: '#1976d2',
                     pointBackgroundColor: '#1976d2',
                     borderWidth: 1,
                     pointBorderColor: '#1976d2',
+                    backgroundColor: 'transparent'
+                },
+                {
+                    label: 'Chi Phí',
+                    data: [],
+                    borderColor: '#f44336',
+                    pointBackgroundColor: '#f44336',
+                    borderWidth: 1,
+                    pointBorderColor: '#f44336',
                     backgroundColor: 'transparent'
                 }
             ]
@@ -183,17 +167,9 @@ var vue = new Vue({
 
             await axios.get('/ThongKe/GetThongKeDoanhThu_HocPhiAsync')
                 .then(function (response) {
-                    that.chartdataDoanhThuHocPhi.datasets[0].data = response.data;
+                    that.chartdataDoanhThuHocPhi.datasets[0].data = response.data.doanhThu;
+                    that.chartdataDoanhThuHocPhi.datasets[1].data = response.data.chiPhi;
                     that.loadedDoanhThuHocPhi = true;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-
-            await axios.get('/ThongKe/GetThongKeChiPhiAsync')
-                .then(function (response) {
-                    that.chartdataChiPhi.datasets[0].data = response.data;
-                    that.loadedChiPhi = true;
                 })
                 .catch(function (error) {
                     console.log(error);

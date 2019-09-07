@@ -40,5 +40,11 @@
         public double LastMinus { get; set; } = 0;
         public bool DaSaveNhap { get; set; } = false;
         public bool DaNo { get; set; } = false;
+        public List<LopHoc_NgayHocViewModel> LopHoc_NgayHocList { get; set; }
+    }
+    public class LopHoc_NgayHocViewModel
+    {
+        public LopHocViewModel LopHoc { get; set; }
+        public string NgayHoc { get; set; }
     }
 }

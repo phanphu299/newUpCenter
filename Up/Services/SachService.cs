@@ -59,7 +59,7 @@ namespace Up.Services
         public async Task<List<SachViewModel>> GetSachAsync()
         {
             return await _context.Sachs
-                .Where(x => x.IsDisabled == false)
+                //.Where(x => x.IsDisabled == false)
                 .Select(x => new SachViewModel
                 {
                     CreatedBy = x.CreatedBy,
@@ -68,7 +68,8 @@ namespace Up.Services
                     Name = x.Name,
                     Gia = x.Gia,
                     UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
+                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
+                    IsDisabled = x.IsDisabled
                 })
                 .ToListAsync();
         }

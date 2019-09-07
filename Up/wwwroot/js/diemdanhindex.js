@@ -127,6 +127,17 @@
                     that.snackbar = true;
                     that.messageText = 'Điểm danh thành công !!!';
                     that.color = 'success';
+
+                    let [year, month, day] = that.ngayDiemDanh.split('-');
+                    for (let hocVien of that.diemDanhItems) {
+                        for (let diemdanh of hocVien.thongKeDiemDanh) {
+                            let [yearDD, monthDD, dayDD] = diemdanh.dates.split('-');
+                            if (diemdanh.day === parseInt(day) && year === yearDD && month === monthDD) {
+                                diemdanh.isOff = true;
+                                diemdanh.duocNghi = false;
+                            }
+                        }
+                    }
                 }
                 else {
                     that.snackbar = true;
@@ -158,6 +169,16 @@
                         that.snackbar = true;
                         that.messageText = 'Điểm danh thành công !!!';
                         that.color = 'success';
+
+                        let [year, month, day] = that.ngayDiemDanh.split('-');
+                        for (let hocVien of that.diemDanhItems) {
+                            for (let diemdanh of hocVien.thongKeDiemDanh) {
+                                let [yearDD, monthDD, dayDD] = diemdanh.dates.split('-');
+                                if (diemdanh.day === parseInt(day) && year === yearDD && month === monthDD) {
+                                    diemdanh.duocNghi = true;
+                                }
+                            }
+                        }
                     }
                     else {
                         that.snackbar = true;
@@ -169,6 +190,48 @@
                     console.log(error);
                     that.snackbar = true;
                     that.messageText = 'Điểm danh lỗi: ' + error;
+                    that.color = 'error';
+                });
+        },
+
+        async UndoLopNghi() {
+            let that = this;
+            await axios({
+                method: 'post',
+                url: '/DiemDanh/UndoLopNghiAsync',
+                data: {
+                    LopHocId: this.selectedLopHoc,
+                    NgayDiemDanh: this.ngayDiemDanh
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Undo thành công !!!';
+                        that.color = 'success';
+
+                        let [year, month, day] = that.ngayDiemDanh.split('-');
+                        for (let hocVien of that.diemDanhItems) {
+                            for (let diemdanh of hocVien.thongKeDiemDanh) {
+                                let [yearDD, monthDD, dayDD] = diemdanh.dates.split('-');
+                                if (diemdanh.day === parseInt(day) && year === yearDD && month === monthDD) {
+                                    diemdanh.duocNghi = false;
+                                    diemdanh.isOff = false;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Undo lỗi: ' + error;
                     that.color = 'error';
                 });
         },
@@ -190,7 +253,7 @@
                     if (response.data.status === "OK") {
                         that.snackbar = true;
                         that.messageText = 'Điểm danh có mặt thành công !!!';
-                        that.color = 'success';
+                        that.color = 'success';                        
                     }
                     else {
                         that.snackbar = true;

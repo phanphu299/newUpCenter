@@ -19,7 +19,7 @@
             _context = context;
         }
 
-        public async Task<GiaoVienViewModel> CreateGiaoVienAsync(List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo, string Name, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, double HoaHong, Guid NgayLamViecId, DateTime NgayBatDau, DateTime? NgayKetThuc, string LoggedEmployee)
+        public async Task<GiaoVienViewModel> CreateGiaoVienAsync(List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo, string Name, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, double HoaHong, Guid NgayLamViecId, DateTime NgayBatDau, DateTime? NgayKetThuc, string NganHang, string LoggedEmployee)
         {
             try
             {
@@ -43,6 +43,7 @@
                 giaoVien.NgayKetThuc = NgayKetThuc;
                 giaoVien.NgayLamViecId = NgayLamViecId;
                 giaoVien.NgayBatDau = NgayBatDau;
+                giaoVien.NganHang = NganHang;
 
                 _context.GiaoViens.Add(giaoVien);
 
@@ -81,6 +82,7 @@
                     NgayKetThuc = giaoVien.NgayKetThuc != null ? ((DateTime)giaoVien.NgayKetThuc).ToString("dd/MM/yyyy") : "",
                     NgayLamViecId = giaoVien.NgayLamViecId,
                     NgayLamViec = _context.NgayLamViecs.FindAsync(giaoVien.NgayLamViecId).Result.Name,
+                    NganHang = giaoVien.NganHang,
                     LoaiNhanVien_CheDo = await _context.NhanVien_ViTris
                                         .Where(x => x.NhanVienId == giaoVien.GiaoVienId)
                                         .Select(x => new LoaiNhanVien_CheDoViewModel
@@ -146,6 +148,7 @@
                     NgayKetThuc = x.NgayKetThuc != null ? ((DateTime)x.NgayKetThuc).ToString("dd/MM/yyyy") : "",
                     NgayLamViecId = x.NgayLamViecId,
                     NgayLamViec = x.NgayLamViec.Name,
+                    NganHang = x.NganHang, 
                     LoaiNhanVien_CheDo = _context.NhanVien_ViTris
                                         .Where(m => m.NhanVienId == x.GiaoVienId)
                                         .Select(m => new LoaiNhanVien_CheDoViewModel
@@ -183,10 +186,6 @@
                     TutoringRate = x.TutoringRate,
                     BasicSalary = x.BasicSalary,
                     InitialName = x.InitialName,
-                    //LoaiGiaoVienId = x.LoaiGiaoVienId,
-                    //LoaiGiaoVien = x.LoaiGiaoVien.Name,
-                    //LoaiCheDoId = x.LoaiCheDoId,
-                    //LoaiCheDo = x.LoaiCheDo.Name,
                     MucHoaHong = x.MucHoaHong,
                     Name = x.Name,
                     UpdatedBy = x.UpdatedBy,
@@ -195,7 +194,7 @@
                 .ToListAsync();
         }
 
-        public async Task<GiaoVienViewModel> UpdateGiaoVienAsync(List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo, Guid GiaoVienId, string Name, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, double HoaHong, Guid NgayLamViecId, DateTime NgayBatDau, DateTime? NgayKetThuc, string LoggedEmployee)
+        public async Task<GiaoVienViewModel> UpdateGiaoVienAsync(List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo, Guid GiaoVienId, string Name, string Phone, double TeachingRate, double TutoringRate, double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, double HoaHong, Guid NgayLamViecId, DateTime NgayBatDau, DateTime? NgayKetThuc, string NganHang, string LoggedEmployee)
         {
             try
             {
@@ -225,6 +224,7 @@
                 item.NgayBatDau = NgayBatDau;
                 item.NgayKetThuc = NgayKetThuc;
                 item.NgayLamViecId = NgayLamViecId;
+                item.NganHang = NganHang;
 
                 var viTris = _context.NhanVien_ViTris.Where(x => x.NhanVienId == item.GiaoVienId);
                 _context.NhanVien_ViTris.RemoveRange(viTris);
@@ -265,6 +265,7 @@
                     NgayKetThuc = item.NgayKetThuc != null ? ((DateTime)item.NgayKetThuc).ToString("dd/MM/yyyy") : "",
                     NgayLamViecId = item.NgayLamViecId,
                     NgayLamViec = _context.NgayLamViecs.FindAsync(item.NgayLamViecId).Result.Name,
+                    NganHang = item.NganHang,
                     LoaiNhanVien_CheDo = _context.NhanVien_ViTris
                                         .Where(m => m.NhanVienId == item.GiaoVienId)
                                         .Select(m => new LoaiNhanVien_CheDoViewModel

@@ -13,12 +13,12 @@ namespace Up.Services
         Task<GiaoVienViewModel> CreateGiaoVienAsync(List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo, string Name, string Phone,
             double TeachingRate, double TutoringRate,
             double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, double HoaHong,
-            Guid NgayLamViecId, DateTime NgayBatDau, DateTime? NgayKetThuc, string LoggedEmployee);
+            Guid NgayLamViecId, DateTime NgayBatDau, DateTime? NgayKetThuc, string NganHang, string LoggedEmployee);
 
         Task<GiaoVienViewModel> UpdateGiaoVienAsync(List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo, Guid GiaoVienId, string Name,
             string Phone, double TeachingRate, double TutoringRate,
             double BasicSalary, string FacebookAccount, string DiaChi, string InitialName, string CMND, double HoaHong,
-            Guid NgayLamViecId, DateTime NgayBatDau, DateTime? NgayKetThuc, string LoggedEmployee);
+            Guid NgayLamViecId, DateTime NgayBatDau, DateTime? NgayKetThuc, string NganHang, string LoggedEmployee);
 
         Task<bool> DeleteGiaoVienAsync(Guid GiaoVienId, string LoggedEmployee);
     }

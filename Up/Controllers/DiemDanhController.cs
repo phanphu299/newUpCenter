@@ -339,6 +339,51 @@
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UndoLopNghiAsync([FromBody]Models.LopHoc_DiemDanhViewModel model)
+        {
+            if (model.LopHocId == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                DateTime _ngayDiemDanh = Convert.ToDateTime(model.NgayDiemDanh, System.Globalization.CultureInfo.InvariantCulture);
+
+                var successful = await _diemDanhService.UndoDuocNghi(model.LopHocId, _ngayDiemDanh, currentUser.Email);
+                if (successful == false)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Undo lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Undo thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> ExportDiemDanh(Guid LopHocId, int month, int year)
         {

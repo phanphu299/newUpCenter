@@ -20,6 +20,8 @@
         isShowDatePicker2: false,
         isShowDatePickerBatDau: false,
         isShowDatePickerKetThuc: false,
+        isShowDatePickerNgayHoc: false,
+        isShowDatePickerNgayHoc2: false,
         search: '',
         newItem: {
             fullName: "",
@@ -28,9 +30,10 @@
             facebookAccount: "",
             parentFullName: "",
             quanHe: "",
-            lopHoc: [],
+            lopHoc: '',
             isAppend: false,
-            ngaySinh: ""
+            ngaySinh: "",
+            ngayHoc: ''
         },
         selectedThang: '',
         selectedNam: '',
@@ -75,7 +78,8 @@
         itemNgayHoc: [],
         selectedLopHoc: {},
         selectedArrayLopHoc: [],
-        soNgayHoc: []
+        soNgayHoc: [],
+        arrayNgayHocLopHoc: []
     },
     async beforeCreate() {
         let that = this;
@@ -105,10 +109,71 @@
     },
 
     methods: {
+        async onAddNgayHocLopHoc() {
+            if (this.newItem.ngayHoc !== '' && this.newItem.lopHoc !== '') {
+                let isExisting = false;
+                this.arrayNgayHocLopHoc.map(item => {
+                    if (item.lopHoc.lopHocId === this.newItem.lopHoc.lopHocId) {
+                        isExisting = true;
+                    }
+                });
+
+                if (isExisting === false) {
+                    this.arrayNgayHocLopHoc.push({
+                        lopHoc: this.newItem.lopHoc,
+                        ngayHoc: this.newItem.ngayHoc
+                    });
+                }
+            }
+            else {
+                this.snackbar = true;
+                this.messageText = 'Phải chọn cả ngày học và lớp học trước khi thêm !!!';
+                this.color = 'error';
+            }
+        },
+
+        async onXoaNgayHocLopHoc(item) {
+            this.arrayNgayHocLopHoc = this.arrayNgayHocLopHoc
+                .filter(x => x.lopHoc.lopHocId !== item.lopHoc.lopHocId);
+        },
+
+        async onAddNgayHocLopHocForEdit(item) {
+            if (this.itemToEdit.ngayHoc !== '' && this.itemToEdit.lopHoc !== '') {
+                let isExisting = false;
+                item.lopHoc_NgayHocList.map(item => {
+                    if (item.lopHoc.lopHocId === this.itemToEdit.lopHoc.lopHocId) {
+                        isExisting = true;
+                    }
+                });
+
+                if (isExisting === false) {
+                    item.lopHoc_NgayHocList.push({
+                        lopHoc: this.itemToEdit.lopHoc,
+                        ngayHoc: this.itemToEdit.ngayHoc
+                    });
+                }
+            }
+            else {
+                this.snackbar = true;
+                this.messageText = 'Phải chọn cả ngày học và lớp học trước khi thêm !!!';
+                this.color = 'error';
+            }
+        },
+
+        async onXoaNgayHocLopHocForEdit(item) {
+            this.itemToEdit.lopHoc_NgayHocList = this.itemToEdit.lopHoc_NgayHocList
+                .filter(x => x.lopHoc.lopHocId !== item.lopHoc.lopHocId);
+        },
+
         async onUpdate(item) {
             let that = this;
             if (item.fullName === '' || item.phone === '') {
                 this.alertEdit = true;
+            }
+            else if (item.lopHoc_NgayHocList.length === 0) {
+                this.snackbar = true;
+                this.messageText = 'Phải chọn lớp học và ngày học !!!';
+                this.color = 'error';
             }
             else {
                 await axios({
@@ -123,7 +188,8 @@
                         ParentFullName: item.parentFullName,
                         QuanHeId: item.quanHeId,
                         NgaySinh: item.ngaySinh,
-                        LopHocIds: item.lopHocIds
+                        LopHocIds: item.lopHocIds,
+                        LopHoc_NgayHocList: item.lopHoc_NgayHocList
                     }
                 })
                     .then(function (response) {
@@ -313,6 +379,11 @@
             if (this.newItem.fullName === '' || this.newItem.phone === '') {
                 this.alert = true;
             }
+            else if (this.arrayNgayHocLopHoc.length === 0) {
+                this.snackbar = true;
+                this.messageText = 'Phải chọn lớp học và ngày học !!!';
+                this.color = 'error';
+            }
             else {
                 this.dialog = false;
                 let that = this;
@@ -327,7 +398,7 @@
                         NgaySinh: that.newItem.ngaySinh,
                         ParentFullName: that.newItem.parentFullName,
                         QuanHeId: that.newItem.quanHe,
-                        LopHocIds: that.newItem.lopHoc
+                        LopHoc_NgayHocList: that.arrayNgayHocLopHoc
                     }
                 })
                     .then(function (response) {

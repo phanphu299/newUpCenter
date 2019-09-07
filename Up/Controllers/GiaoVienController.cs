@@ -56,7 +56,7 @@
 
                 var successful = await _giaoVienService.CreateGiaoVienAsync(model.LoaiNhanVien_CheDo, model.Name, model.Phone, model.TeachingRate, model.TutoringRate,
                     model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName, model.CMND, model.MucHoaHong, model.NgayLamViecId, _ngayBatDau, _ngayKetThuc,
-                    currentUser.Email);
+                    model.NganHang, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -147,7 +147,7 @@
                     _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
                 var successful = await _giaoVienService.UpdateGiaoVienAsync(model.LoaiNhanVien_CheDo, model.GiaoVienId, model.Name, model.Phone, model.TeachingRate, model.TutoringRate,
                     model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName,
-                    model.CMND, model.MucHoaHong, model.NgayLamViecId, _ngayBatDau, _ngayKetThuc, currentUser.Email);
+                    model.CMND, model.MucHoaHong, model.NgayLamViecId, _ngayBatDau, _ngayKetThuc, model.NganHang, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel

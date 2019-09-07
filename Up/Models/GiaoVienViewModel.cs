@@ -26,6 +26,7 @@
         public string NgayLamViec { get; set; }
         public string NgayBatDau { get; set; }
         public string NgayKetThuc { get; set; }
+        public string NganHang { get; set; }
     }
     public class LoaiNhanVien_CheDoViewModel
     {

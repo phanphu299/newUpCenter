@@ -8,7 +8,7 @@
             <v-card>
                 <v-card-title>
                     <v-layout wrap>
-                        <v-flex xs12 sm2>
+                        <v-flex xs12 sm4>
                             <v-select v-model="selectedLopHoc"
                                       :items="itemLopHoc"
                                       item-text="name"
@@ -26,7 +26,7 @@
                             </v-select>
                         </v-flex>
 
-                        <v-flex xs12 sm2>
+                        <v-flex xs12 sm4>
                             <v-select :items="itemThang"
                                       v-model="selectedThang"
                                       chips
@@ -34,7 +34,7 @@
                                       v-on:change="onTinhDiemDanh"></v-select>
                         </v-flex>
 
-                        <v-flex xs12 sm2>
+                        <v-flex xs12 sm4>
                             <v-select :items="itemNam"
                                       v-model="selectedNam"
                                       chips
@@ -42,7 +42,7 @@
                                       v-on:change="onTinhDiemDanh"></v-select>
                         </v-flex>
 
-                        <v-flex xs12 sm2>
+                        <v-flex xs12 sm3>
                             <v-menu v-model="isShowDatePicker"
                                     :close-on-content-click="false"
                                     :nudge-right="40"
@@ -50,6 +50,7 @@
                                     transition="scale-transition"
                                     offset-y
                                     full-width
+                                    v-if="diemDanhItems.length > 0"
                                     min-width="290px">
                                 <v-text-field slot="activator"
                                               v-model="ngayDiemDanh"
@@ -61,17 +62,25 @@
                         </v-flex>
 
                         <v-flex xs12 sm2 class="text-xs-center">
-                            <v-btn v-if="selectedLopHoc!=''"
+                            <v-btn v-if="diemDanhItems.length > 0"
                                    color="info"
                                    v-on:click="DiemDanhCaLop()">
                                 Có Mặt Cả Lớp
                             </v-btn>
                         </v-flex>
                         <v-flex xs12 sm2 class="text-xs-center">
-                            <v-btn v-if="selectedLopHoc!=''"
+                            <v-btn v-if="diemDanhItems.length > 0"
                                    color="error"
                                    v-on:click="LopNghi()">
                                 Lớp Nghỉ
+                            </v-btn>
+                        </v-flex>
+
+                        <v-flex xs12 sm2 class="text-xs-center">
+                            <v-btn v-if="diemDanhItems.length > 0"
+                                   color="warning"
+                                   v-on:click="UndoLopNghi()">
+                                Hoàn Tác
                             </v-btn>
                         </v-flex>
 
@@ -86,13 +95,13 @@
                                     <thead style="background-color: orange;">
                                         <tr style="border: 1px solid #ddd;">
                                             <th style="border: 1px solid #ddd;">Học Viên</th>
-                                            <th style="border: 1px solid #ddd;" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
+                                            <th style="border: 1px solid #ddd; text-align: center" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr style="border: 1px solid #ddd;" v-for="(item, index) in diemDanhItems" :key="index">
                                             <td style="border: 1px solid #ddd;">{{ item.label }}</td>
-                                            <td style="border: 1px solid #ddd;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
+                                            <td style="border: 1px solid #ddd; text-align: center" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
                                                 @*phai~ dao~ isOff de ko sinh loi v-switch*@
                                                 <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
                                                     <span v-if="item.ngayBatDau_Year < selectedNam">
@@ -100,7 +109,7 @@
                                                             <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                         </i>
                                                         <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
-                                                            off
+                                                            OFF
                                                         </i>
                                                         <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
                                                             <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
@@ -112,7 +121,7 @@
                                                                 <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                             </i>
                                                             <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
-                                                                off
+                                                                OFF
                                                             </i>
                                                             <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
                                                                 <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
@@ -124,7 +133,7 @@
                                                                     <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                 </i>
                                                                 <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
-                                                                    off
+                                                                    OFF
                                                                 </i>
                                                                 <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
                                                                     <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
@@ -135,7 +144,7 @@
                                                                     <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                 </i>
                                                                 <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
-                                                                    off
+                                                                    OFF
                                                                 </i>
                                                                 <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
                                                                     <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
@@ -243,5 +252,6 @@
 
     .v-input--selection-controls {
         margin-top: 0px;
+        width: 0px;
     }
 </style>

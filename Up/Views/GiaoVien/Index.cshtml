@@ -98,6 +98,10 @@
                                             </v-menu>
                                         </v-flex>
 
+                                        <v-flex xs12 sm12>
+                                            <v-textarea outline label="Ngân Hàng" v-model="newItem.nganHang" v-on:keyup.enter="onSave"></v-textarea>
+                                        </v-flex>
+
                                         <v-flex xs12 sm5>
                                             <v-select :items="itemLoaiGiaoVien"
                                                       item-text="name"
@@ -129,16 +133,16 @@
                                             <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
                                                 <thead style="background-color: orange;">
                                                     <tr style="border: 1px solid #ddd;">
-                                                        <th style="border: 1px solid #ddd;"> Vị Trí</th>
-                                                        <th style="border: 1px solid #ddd;"> Chế Độ</th>
-                                                        <th style="border: 1px solid #ddd;"> Xóa</th>
+                                                        <th style="border: 1px solid #ddd; text-align:center"> Vị Trí</th>
+                                                        <th style="border: 1px solid #ddd; text-align:center"> Chế Độ</th>
+                                                        <th style="border: 1px solid #ddd; text-align:center"> Xóa</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr style="border: 1px solid #ddd;" v-for="(item,i) in arrayLoaiNVandCD" :key="i">
-                                                        <td style="border: 1px solid #ddd; padding-right:5px; padding-top: 0px; padding-bottom: 0px">{{ item.loaiGiaoVien.name }}</td>
-                                                        <td style="border: 1px solid #ddd; padding-right:5px; padding-top: 0px; padding-bottom: 0px">{{ item.loaiCheDo.name }}</td>
-                                                        <td style="border: 1px solid #ddd; padding-right:5px; padding-top: 0px; padding-bottom: 0px">
+                                                        <td style="border: 1px solid #ddd; vertical-align: middle; text-align:center; padding-right:5px; padding-top: 0px; padding-bottom: 0px">{{ item.loaiGiaoVien.name }}</td>
+                                                        <td style="border: 1px solid #ddd; vertical-align: middle; text-align:center; padding-right:5px; padding-top: 0px; padding-bottom: 0px">{{ item.loaiCheDo.name }}</td>
+                                                        <td style="border: 1px solid #ddd; vertical-align: middle; text-align:center; padding-right:5px; padding-top: 0px; padding-bottom: 0px">
                                                             <v-tooltip top>
                                                                 <template v-slot:activator="{ on }">
                                                                     <v-btn slot="activator" v-on="on" color="error darken-1" fab small flat v-on:click="onXoaLoaiNVCD(item)"><v-icon>delete</v-icon></v-btn>
@@ -226,6 +230,14 @@
                         <td>{{ props.item.tutoringRate }}</td>
                         <td>{{ props.item.basicSalary }}</td>
                         <td>{{ props.item.mucHoaHong }}</td>
+                        <td>
+                            <v-tooltip top>
+                                <template slot="activator" slot-scope="{ on }">
+                                    <span v-on="on" v-if="props.item.nganHang">{{ props.item.nganHang | truncate(10, '...')}}</span>
+                                </template>
+                                <span>{{ props.item.nganHang}}</span>
+                            </v-tooltip>
+                        </td>
                         <td>{{ props.item.facebookAccount }}</td>
                         <td>
                             <v-tooltip top>
@@ -370,6 +382,10 @@
                                                   readonly></v-text-field>
                                     <v-date-picker locale="vi-vn" v-model="itemToEdit.ngayKetThuc" v-on:input="isShowDatePickerKetThuc2 = false"></v-date-picker>
                                 </v-menu>
+                            </v-flex>
+
+                            <v-flex xs12 sm12>
+                                <v-textarea outline label="Ngân Hàng" v-model="itemToEdit.nganHang" v-on:keyup.enter="onSave"></v-textarea>
                             </v-flex>
 
                             <v-flex xs12 sm5>

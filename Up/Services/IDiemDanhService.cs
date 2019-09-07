@@ -13,5 +13,6 @@
         Task<bool> DuocNghi(Guid LopHocId, DateTime NgayDiemDanh, string LoggedEmployee);
         Task<List<DiemDanhViewModel>> GetDiemDanhByHocVienAndLopHoc(Guid HocVienId, Guid LopHocId);
         Task<List<DiemDanhViewModel>> GetDiemDanhByLopHoc(Guid LopHocId, int month, int year);
+        Task<bool> UndoDuocNghi(Guid LopHocId, DateTime NgayDiemDanh, string LoggedEmployee);
     }
 }

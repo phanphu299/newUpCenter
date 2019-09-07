@@ -72,7 +72,7 @@
                 if(!string.IsNullOrWhiteSpace(model.NgaySinh) || model.NgaySinh != "")
                     _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
 
-                var successful = await _hocVienService.CreateHocVienAsync(model.FullName, model.Phone, model.FacebookAccount, model.ParentFullName,
+                var successful = await _hocVienService.CreateHocVienAsync(model.LopHoc_NgayHocList, model.FullName, model.Phone, model.FacebookAccount, model.ParentFullName,
                     model.QuanHeId, model.EnglishName, _ngaySinh, model.LopHocIds, currentUser.Email);
                 if (successful == null)
                 {
@@ -286,7 +286,7 @@
                 if (!string.IsNullOrWhiteSpace(model.NgaySinh) || model.NgaySinh != "")
                     _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
 
-                var successful = await _hocVienService.UpdateHocVienAsync(model.HocVienId, model.FullName, model.Phone,
+                var successful = await _hocVienService.UpdateHocVienAsync(model.LopHoc_NgayHocList, model.HocVienId, model.FullName, model.Phone,
                    model.FacebookAccount, model.ParentFullName, model.QuanHeId,
                    model.EnglishName, _ngaySinh, model.LopHocIds, currentUser.Email);
                 if (successful == null)
@@ -508,6 +508,7 @@
                                 Guid? quanHe = null;
 
                                 var successful = await _hocVienService.CreateHocVienAsync(
+                                    new List<LopHoc_NgayHocViewModel>(),
                                     worksheet.Cells[row, 1].Value.ToString().Trim(),
                                     worksheet.Cells[row, 3].Value.ToString().Trim(),
                                     worksheet.Cells[row, 4].Value == null ? "" : worksheet.Cells[row, 4].Value.ToString().Trim(),

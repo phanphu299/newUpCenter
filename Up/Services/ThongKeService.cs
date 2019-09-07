@@ -71,7 +71,7 @@
             try
             {
                 var quocTe = await _context.HocViens
-                .Where(x => (x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId != LoaiKhoaHocEnums.GiaoTiep.ToId()) && x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId != LoaiKhoaHocEnums.ThieuNhi.ToId())) && x.IsDisabled == false)
+                .Where(x => (!x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && !x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId())) && x.IsDisabled == false)
                 .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
                 .OrderBy(x => x.CreatedDate)
 
