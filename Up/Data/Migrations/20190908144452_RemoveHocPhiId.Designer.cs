@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Up.Data;
 
 namespace Up.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190908144452_RemoveHocPhiId")]
+    partial class RemoveHocPhiId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +47,8 @@ namespace Up.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d99a702e-f698-4341-8d03-c6a6f94386a2",
-                            ConcurrencyStamp = "312edc53-e8cd-4476-ae27-9a1ec1ebbe83",
+                            Id = "704fa17d-fc45-437c-af4c-6c9458eff969",
+                            ConcurrencyStamp = "80495d2f-0a63-4660-a8a2-2325e7924993",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -783,6 +785,8 @@ namespace Up.Data.Migrations
                     b.Property<double>("Minus");
 
                     b.Property<DateTime>("NgayDong");
+
+                    b.Property<double>("No");
 
                     b.Property<string>("UpdatedBy");
 

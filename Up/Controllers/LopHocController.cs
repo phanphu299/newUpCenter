@@ -66,7 +66,7 @@ namespace Up.Controllers
             {
                 DateTime _ngayKhaiGiang = Convert.ToDateTime(model.NgayKhaiGiang, System.Globalization.CultureInfo.InvariantCulture);
 
-                var successful = await _lopHocService.CreateLopHocAsync(model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang, currentUser.Email);
+                var successful = await _lopHocService.CreateLopHocAsync(model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, _ngayKhaiGiang, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -157,7 +157,7 @@ namespace Up.Controllers
                     _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
 
                 var successful = await _lopHocService.UpdateLopHocAsync(model.LopHocId, model.Name,
-                    model.KhoaHocId, model.NgayHocId, model.GioHocId, model.HocPhiId, _ngayKhaiGiang,
+                    model.KhoaHocId, model.NgayHocId, model.GioHocId, _ngayKhaiGiang,
                     _ngayKetThuc, currentUser.Email);
                 if (successful == null)
                 {

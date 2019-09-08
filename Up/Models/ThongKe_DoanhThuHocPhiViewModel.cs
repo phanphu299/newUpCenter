@@ -23,7 +23,6 @@ namespace Up.Models
         public string GhiChu { get; set; }
         public Guid[] SachIds { get; set; }
         public bool DaDong { get; set; }
-        public double No { get; set; }
 
         public double HocPhiMoi { get; set; }
         public SachViewModel[] GiaSach { get; set; }

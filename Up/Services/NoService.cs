@@ -71,8 +71,8 @@ namespace Up.Services
                     item.UpdatedDate = DateTime.Now;
                 }
 
-                //var doanhThu = _context.ThongKe_DoanhThuHocPhis.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayDong.Month == NgayNo.Month && x.NgayDong.Year == NgayNo.Year);
-                //_context.ThongKe_DoanhThuHocPhis.RemoveRange(doanhThu);
+                var doanhThu = await _context.ThongKe_DoanhThuHocPhis.FirstOrDefaultAsync(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayDong.Month == NgayNo.Month && x.NgayDong.Year == NgayNo.Year);
+                doanhThu.DaDong = false;
 
                 await _context.SaveChangesAsync();
                 return true;

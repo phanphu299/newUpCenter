@@ -23,7 +23,6 @@
             ngayHoc: "",
             gioHocFrom: "",
             gioHocTo: "",
-            sach: [],
             ngayKhaiGiang: new Date().toISOString().substr(0, 10)
         },
         selectedThang: '',
@@ -45,7 +44,6 @@
             { text: 'Khóa Học', value: 'khoaHoc', align: 'left', sortable: true },
             { text: 'Ngày Học', value: 'ngayHoc', align: 'left', sortable: true },
             { text: 'Giờ Học', value: 'gioHoc', align: 'left', sortable: true },
-            { text: 'Học Phí', value: 'hocPhi', align: 'left', sortable: true },
             { text: 'Hủy Lớp', value: 'isCanceled', align: 'left', sortable: true },
             { text: 'Tốt Nghiệp', value: 'isGraduated', align: 'left', sortable: true },
             { text: 'Ngày Khai Giảng', value: 'ngayKhaiGiang', align: 'left', sortable: true },
@@ -59,8 +57,6 @@
         itemKhoaHoc: [],
         itemGioHoc: [],
         itemNgayHoc: [],
-        itemHocPhi: [],
-        itemSach: [],
         diemDanhItems: [],
         soNgayHoc:[]
     },
@@ -97,22 +93,6 @@
             .catch(function (error) {
                 console.log(error);
             });
-
-        await axios.get('/category/GetHocPhiAsync')
-            .then(function (response) {
-                that.itemHocPhi = response.data;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        await axios.get('/category/GetSachAsync')
-            .then(function (response) {
-                that.itemSach = response.data;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
         
     },
 
@@ -136,12 +116,10 @@
                         KhoaHocId: item.khoaHocId,
                         GioHocId: item.gioHocId,
                         NgayHocId: item.ngayHocId,
-                        HocPhiId: item.hocPhiId,
                         NgayKhaiGiang: item.ngayKhaiGiang,
                         NgayKetThuc: item.ngayKetThuc,
                         IsCanceled: item.isCanceled,
-                        IsGraduated: item.isGraduated,
-                        SachIds: item.sachIds
+                        IsGraduated: item.isGraduated
                     }
                 })
                     .then(function (response) {
@@ -286,9 +264,7 @@
                         KhoaHocId: that.newItem.khoaHoc,
                         GioHocId: that.newItem.gioHoc,
                         NgayHocId: that.newItem.ngayHoc,
-                        HocPhiId: that.newItem.hocPhi,
-                        NgayKhaiGiang: that.newItem.ngayKhaiGiang,
-                        SachIds: that.newItem.sach,
+                        NgayKhaiGiang: that.newItem.ngayKhaiGiang
                     }
                 })
                     .then(function (response) {
@@ -303,7 +279,6 @@
                             that.newItem.gioHoc = '';
                             that.newItem.ngayHoc = '';
                             that.newItem.ngayKhaiGiang = new Date().toISOString().substr(0, 10);
-                            that.newItem.sach = [];
                         }
                         else {
                             that.snackbar = true;

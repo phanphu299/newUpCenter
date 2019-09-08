@@ -18,7 +18,7 @@
             _context = context;
         }
 
-        public async Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId, Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, string LoggedEmployee)
+        public async Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId, Guid GioHocId, DateTime NgayKhaiGiang, string LoggedEmployee)
         {
             try
             {
@@ -31,7 +31,6 @@
                 lopHoc.NgayKhaiGiang = NgayKhaiGiang;
                 lopHoc.NgayHocId = NgayHocId;
                 lopHoc.GioHocId = GioHocId;
-                lopHoc.HocPhiId = HocPhiId;
                 lopHoc.CreatedBy = LoggedEmployee;
                 lopHoc.CreatedDate = DateTime.Now;
 
@@ -53,8 +52,6 @@
                     CreatedDate = lopHoc.CreatedDate.ToString("dd/MM/yyyy"),
                     IsCanceled = lopHoc.IsCanceled,
                     IsGraduated = lopHoc.IsGraduated,
-                    HocPhiId = lopHoc.HocPhiId,
-                    HocPhi = _context.HocPhis.FindAsync(lopHoc.HocPhiId).Result.Gia,
                     KhoaHoc = _context.KhoaHocs.FindAsync(lopHoc.KhoaHocId).Result.Name,
                     NgayKetThuc = lopHoc.NgayKetThuc != null ? ((DateTime)lopHoc.NgayKetThuc).ToString("dd/MM/yyyy") : ""
                 };
@@ -139,8 +136,6 @@
                     LopHocId = x.LopHocId,
                     NgayHocId = x.NgayHocId,
                     NgayHoc = x.NgayHoc.Name,
-                    HocPhiId = x.HocPhiId,
-                    HocPhi = x.HocPhi.Gia,
                     NgayKhaiGiang = x.NgayKhaiGiang.ToString("dd/MM/yyyy"),
                     NgayKetThuc = x.NgayKetThuc != null ? ((DateTime)x.NgayKetThuc).ToString("dd/MM/yyyy") : "",
                     UpdatedBy = x.UpdatedBy,
@@ -259,11 +254,11 @@
         }
 
         public async Task<LopHocViewModel> UpdateLopHocAsync(Guid LopHocId, string Name, Guid KhoaHocId, Guid NgayHocId,
-            Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, DateTime? NgayKetThuc, string LoggedEmployee)
+            Guid GioHocId, DateTime NgayKhaiGiang, DateTime? NgayKetThuc, string LoggedEmployee)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(Name) || KhoaHocId == null || NgayHocId == null || GioHocId == null || NgayKhaiGiang == null || HocPhiId == null)
+                if (string.IsNullOrWhiteSpace(Name) || KhoaHocId == null || NgayHocId == null || GioHocId == null || NgayKhaiGiang == null)
                     throw new Exception("Tên Lớp Học, Khóa Học, Ngày Học, Giờ Học, Ngày Khai Giảng không được để trống !!!");
 
                 var item = await _context.LopHocs
@@ -280,7 +275,6 @@
                 item.NgayKhaiGiang = NgayKhaiGiang;
                 item.UpdatedBy = LoggedEmployee;
                 item.UpdatedDate = DateTime.Now;
-                item.HocPhiId = HocPhiId;
 
                 if (NgayKetThuc != null)
                     item.NgayKetThuc = NgayKetThuc;
@@ -298,8 +292,6 @@
                     CreatedBy = item.CreatedBy,
                     GioHocFrom = _context.GioHocs.FindAsync(item.GioHocId).Result.From,
                     GioHocTo = _context.GioHocs.FindAsync(item.GioHocId).Result.To,
-                    HocPhiId = item.HocPhiId,
-                    HocPhi = _context.HocPhis.FindAsync(item.HocPhiId).Result.Gia,
                     CreatedDate = item.CreatedDate.ToString("dd/MM/yyyy"),
                     IsCanceled = item.IsCanceled,
                     IsGraduated = item.IsGraduated,

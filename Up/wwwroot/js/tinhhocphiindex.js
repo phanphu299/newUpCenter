@@ -11,11 +11,13 @@
         selectedLopHoc: '',
         selectedThang: '',
         selectedNam: '',
+        selectedHocPhi: '',
         itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
         itemKhuyenMai: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100],
         itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0],
         itemLopHoc: [],
         itemSach: [],
+        itemHocPhi: [],
         tongNgayHoc: 0,
         tongNgayDuocNghi: 0,
         tongHocPhi: 0,
@@ -46,6 +48,14 @@
         await axios.get('/Category/GetSachAsync')
             .then(function (response) {
                 that.itemSach = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        await axios.get('/Category/GetHocPhiAsync')
+            .then(function (response) {
+                that.itemHocPhi = response.data;
             })
             .catch(function (error) {
                 console.log(error);
@@ -120,11 +130,11 @@
 
         async onTinhTien() {
             let that = this;
-            if (this.selectedLopHoc !== '' && this.selectedNam !== '' && this.selectedThang !== '') {
+            if (this.selectedLopHoc !== '' && this.selectedNam !== '' && this.selectedThang !== '' && this.selectedHocPhi !== '') {
                 if (this.khuyenMai === "") {
                     this.khuyenMai = 0;
                 }
-                await axios.get('/HocPhi/GetTinhHocPhiAsync?LopHocId=' + this.selectedLopHoc.lopHocId + '&Month=' + this.selectedThang + '&Year=' + this.selectedNam)
+                await axios.get('/HocPhi/GetTinhHocPhiAsync?LopHocId=' + this.selectedLopHoc.lopHocId + '&Month=' + this.selectedThang + '&Year=' + this.selectedNam + '&HocPhi=' + this.selectedHocPhi)
                     .then(function (response) {
                         that.tongNgayHoc = response.data.soNgayHoc;
                         that.tongNgayDuocNghi = response.data.soNgayDuocNghi;
@@ -187,7 +197,7 @@
                 this.color = 'error';
             }
             else {
-                let Sachs = item.giaSach != null ? item.giaSach.map(m => m.sachId) : [];
+                let Sachs = item.giaSach !== null ? item.giaSach.map(m => m.sachId) : [];
                 await axios({
                     method: 'post',
                     url: '/HocPhi/LuuDoanhThu_HocPhiAsync',
@@ -212,6 +222,7 @@
                             that.messageText = 'Lưu Doanh Thu thành công !!!';
                             that.color = 'success';
                             item.daDongHocPhi = true;
+                            item.daNo = false;
                         }
                         else {
                             that.snackbar = true;

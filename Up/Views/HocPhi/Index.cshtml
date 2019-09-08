@@ -8,11 +8,10 @@
             <v-card>
                 <v-card-title>
                     <v-layout wrap>
-                        <v-flex xs12 sm4>
+                        <v-flex xs12 sm3>
                             <v-select v-model="selectedLopHoc"
                                       :items="itemLopHoc"
                                       item-text="name"
-                                      item-value="lopHocId"
                                       attach
                                       return-object
                                       chips
@@ -28,7 +27,7 @@
                             </v-select>
                         </v-flex>
 
-                        <v-flex xs12 sm4>
+                        <v-flex xs12 sm3>
                             <v-select :items="itemThang"
                                       v-model="selectedThang"
                                       chips
@@ -36,14 +35,28 @@
                                       v-on:change="onTinhTien"></v-select>
                         </v-flex>
 
-                        <v-flex xs12 sm4>
+                        <v-flex xs12 sm3>
                             <v-select :items="itemNam"
                                       v-model="selectedNam"
                                       chips
                                       label="Chọn Năm"
                                       v-on:change="onTinhTien"></v-select>
                         </v-flex>
-                        
+
+                        <v-flex xs12 sm3>
+                            <v-select :items="itemHocPhi"
+                                      v-model="selectedHocPhi"
+                                      item-text="gia"
+                                      item-value="gia"
+                                      chips
+                                      label="Chọn Học Phí"
+                                      v-on:change="onTinhTien"></v-select>
+                        </v-flex>
+
+                        <v-flex xs12 sm2>
+                            <v-btn color="primary" v-on:click="onTinhTien" v-if="selectedNam !== '' && selectedThang !== '' && selectedHocPhi !== ''">Refresh</v-btn>
+                        </v-flex>
+
                         <v-flex xs12 sm2 v-if="hocVienList.length > 0">
                             <v-btn color="success" v-on:click="onExport">Xuất Excel</v-btn>
                         </v-flex>

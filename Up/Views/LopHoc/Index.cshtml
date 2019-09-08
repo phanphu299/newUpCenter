@@ -51,14 +51,6 @@
                                             </v-select>
                                         </v-flex>
                                         <v-flex xs12 sm4>
-                                            <v-select :items="itemHocPhi"
-                                                      item-text="gia"
-                                                      item-value="hocPhiId"
-                                                      v-model="newItem.hocPhi"
-                                                      label="Chọn Học Phí *">
-                                            </v-select>
-                                        </v-flex>
-                                        <v-flex xs12 sm4>
                                             <v-menu v-model="isShowDatePicker"
                                                     :close-on-content-click="false"
                                                     :nudge-right="40"
@@ -152,7 +144,6 @@
                         <td>{{ props.item.khoaHoc }}</td>
                         <td>{{ props.item.ngayHoc }}</td>
                         <td>{{ props.item.gioHocFrom }} - {{ props.item.gioHocTo }}</td>
-                        <td>{{ formatNumber(props.item.hocPhi) }}</td>
                         <td><v-switch v-model="props.item.isCanceled" color="success" hide-details v-on:change="onToggleCanceled(props.item.lopHocId)"></v-switch></td>
                         <td><v-switch v-model="props.item.isGraduated" color="success" hide-details v-on:change="onToggleGraduated(props.item.lopHocId)"></v-switch></td>
                         <td>{{ props.item.ngayKhaiGiang }}</td>
@@ -273,15 +264,6 @@
                                                   readonly></v-text-field>
                                     <v-date-picker locale="vi-vn" v-model="itemToEdit.ngayKetThuc" v-on:input="isShowDatePicker3 = false"></v-date-picker>
                                 </v-menu>
-                            </v-flex>
-
-                            <v-flex xs12 sm4>
-                                <v-select :items="itemHocPhi"
-                                          item-text="gia"
-                                          item-value="hocPhiId"
-                                          v-model="itemToEdit.hocPhiId"
-                                          label="Chọn Học Phí *">
-                                </v-select>
                             </v-flex>
                         </v-layout>
                     </v-container>

@@ -36,9 +36,9 @@ namespace Up.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTinhHocPhiAsync(Guid LopHocId, int Month, int Year)
+        public async Task<IActionResult> GetTinhHocPhiAsync(Guid LopHocId, int Month, int Year, double HocPhi)
         {
-            var model = await _hocPhiService.TinhHocPhiAsync(LopHocId, Month, Year);
+            var model = await _hocPhiService.TinhHocPhiAsync(LopHocId, Month, Year, HocPhi);
             return Json(model);
         }
 
@@ -58,7 +58,7 @@ namespace Up.Controllers
                 {
                     var sachIds = item.GiaSach != null ? item.GiaSach.Select(x => x.SachId).ToArray() : new Guid[0];
                     await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(item.LopHocId, item.HocVienId,
-                    item.HocPhiMoi, _ngayDong, item.Bonus, item.Minus, item.KhuyenMai, item.GhiChu, sachIds, item.No, false, currentUser.Email);
+                    item.HocPhiMoi, _ngayDong, item.Bonus, item.Minus, item.KhuyenMai, item.GhiChu, sachIds, false, currentUser.Email);
                 }
 
                 return Json(new Models.ResultModel
@@ -96,7 +96,7 @@ namespace Up.Controllers
             {
                 DateTime _ngayDong = new DateTime(model.year, model.month, 1);
                 var successful = await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(model.LopHocId, model.HocVienId,
-                    model.HocPhi, _ngayDong, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, model.No, true, currentUser.Email);
+                    model.HocPhi, _ngayDong, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, true, currentUser.Email);
                 if (successful == false)
                 {
                     return Json(new Models.ResultModel

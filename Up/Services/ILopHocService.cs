@@ -14,10 +14,10 @@
         Task<List<LopHocViewModel>> GetLopHocByHocVienIdAsync(Guid HocVienId);
 
         Task<LopHocViewModel> CreateLopHocAsync(string Name, Guid KhoaHocId, Guid NgayHocId,
-            Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang, string LoggedEmployee);
+            Guid GioHocId, DateTime NgayKhaiGiang, string LoggedEmployee);
 
         Task<LopHocViewModel> UpdateLopHocAsync(Guid LopHocId, string Name, Guid KhoaHocId,
-            Guid NgayHocId, Guid GioHocId, Guid HocPhiId, DateTime NgayKhaiGiang,
+            Guid NgayHocId, Guid GioHocId, DateTime NgayKhaiGiang,
             DateTime? NgayKetThuc, string LoggedEmployee);
 
         Task<bool> ToggleHuyLopAsync(Guid LopHocId, string LoggedEmployee);

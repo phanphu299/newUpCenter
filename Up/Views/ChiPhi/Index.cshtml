@@ -26,6 +26,10 @@
                         </v-flex>
 
                         <v-flex xs12 sm2>
+                            <v-btn color="primary" v-on:click="onTinhTien" v-if="selectedNam !== '' && selectedThang !== ''">Refresh</v-btn>
+                        </v-flex>
+
+                        <v-flex xs12 sm2>
                             <v-btn color="success" v-on:click="onLuuChiPhi" v-if="chiPhiList.length > 0">Lưu Chi Phí</v-btn>
                         </v-flex>
 
@@ -56,10 +60,10 @@
                                             </td>
                                             <td>{{ formatNumber(props.item.salary_Expense) }}</td>
                                             <td>
-                                                <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4">{{ props.item.teachingRate }}</span>
+                                                <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4">{{ props.item.teachingRate }}/giờ</span>
                                             </td>
                                             <td>
-                                                <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4">{{ props.item.tutoringRate }}</span>
+                                                <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4">{{ props.item.tutoringRate }}/giờ</span>
                                             </td>
                                             <td>
                                                 <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" label="Số Giờ Dạy" v-model="props.item.soGioDay" :value="props.item.soGioDay"></v-text-field></span>
@@ -68,7 +72,7 @@
                                                 <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" label="Số Giờ Kèm" v-model="props.item.soGioKem" :value="props.item.soGioKem"></v-text-field></span>
                                             </td>
                                             <td>
-                                                <span v-if="props.item.loaiChiPhi == 2 || props.item.loaiChiPhi == 4">{{ props.item.mucHoaHong }}</span>
+                                                <span v-if="props.item.loaiChiPhi == 2 || props.item.loaiChiPhi == 4">{{ props.item.mucHoaHong }}/học viên</span>
                                             </td>
                                             <td>
                                                 <span v-if="props.item.loaiChiPhi == 2 || props.item.loaiChiPhi == 4"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" label="Số Học Viên" v-model="props.item.soHocVien" :value="props.item.soHocVien"></v-text-field></span>
@@ -87,7 +91,7 @@
                                 <v-btn color="primary" v-on:click="onLuuNhapChiPhi" v-if="chiPhiList.length > 0">Lưu Bảng Tính</v-btn>
                             </v-flex>
                         </v-layout>
-            </v-card>
+</v-card>
         </div>
 
         <v-snackbar v-model="snackbar"

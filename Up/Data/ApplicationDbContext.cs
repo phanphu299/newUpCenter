@@ -59,11 +59,6 @@
                 .WithMany(b => b.LopHocs)
                 .HasForeignKey(p => p.GioHocId);
 
-            builder.Entity<LopHoc>()
-                .HasOne(p => p.HocPhi)
-                .WithMany(b => b.LopHocs)
-                .HasForeignKey(p => p.HocPhiId);
-
             // HOCVIEN RELATIONSHIPS
             builder.Entity<HocVien>()
                 .HasOne(p => p.QuanHe)

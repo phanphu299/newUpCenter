@@ -183,7 +183,7 @@
         },
 
         async onUpdate(item) {
-            if (item.ngayLamViec === '' || item.ngayBatDau === '' || item.name === '' || item.phone === '' || item.diaChi === '' || item.initialName === '' || item.cmnd === '' || item.basicSalary === '') {
+            if (item.ngayLamViecId === '' || item.ngayLamViec === '' || item.ngayBatDau === '' || item.name === '' || item.phone === '' || item.diaChi === '' || item.initialName === '' || item.cmnd === '' || item.basicSalary === '') {
                 this.alertMessage = "Không được bỏ trống";
                 this.alertEdit = true;
             }
@@ -247,7 +247,7 @@
         },
 
         async onSave(item) {
-            if (this.newItem.ngayLamViec === '' || this.newItem.ngayBatDau === '' || this.newItem.name === '' || this.newItem.phone === '' || this.newItem.diaChi === '' || this.newItem.initialName === '' || this.newItem.cmnd === '') {
+            if (this.newItem.ngayLamViecId === '' || this.newItem.ngayLamViec === '' || this.newItem.ngayBatDau === '' || this.newItem.name === '' || this.newItem.phone === '' || this.newItem.diaChi === '' || this.newItem.initialName === '' || this.newItem.cmnd === '') {
                 this.alertMessage = "Không được bỏ trống";
                 this.alert = true;
             }

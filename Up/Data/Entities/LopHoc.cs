@@ -14,7 +14,6 @@
         public Guid KhoaHocId { get; set; }
         public Guid NgayHocId { get; set; }
         public Guid GioHocId { get; set; }
-        public Guid HocPhiId { get; set; }
         public DateTime NgayKhaiGiang { get; set; }
         public DateTime? NgayKetThuc { get; set; }
         public DateTime CreatedDate { get; set; }
@@ -28,8 +27,6 @@
         public GioHoc GioHoc { get; set; }
         [ForeignKey("NgayHocId")]
         public NgayHoc NgayHoc { get; set; }
-        [ForeignKey("HocPhiId")]
-        public HocPhi HocPhi { get; set; }
         public ICollection<LopHoc_DiemDanh> LopHoc_DiemDanhs { get; set; }
         public ICollection<HocVien_LopHoc> HocVien_LopHocs { get; set; }
         public ICollection<HocVien_NgayHoc> HocVien_NgayHocs { get; set; }
