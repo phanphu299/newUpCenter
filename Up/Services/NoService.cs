@@ -87,21 +87,16 @@ namespace Up.Services
         {
             try
             {
-                
+
                 var item = await _context.HocVien_Nos
                                     .Where(x => x.LopHocId == LopHocId && x.HocVienId == HocVienId)
                                     .Where(x => x.NgayNo.Month == Month && x.NgayNo.Year == Year)
                                     .SingleOrDefaultAsync();
 
-                if (item != null)
-                {
-                    item.IsDisabled = true;
-                    item.UpdatedBy = LoggedEmployee;
-                    item.UpdatedDate = DateTime.Now;
+                _context.HocVien_Nos.Remove(item);
 
-                    await _context.SaveChangesAsync();
-                }
-                
+                await _context.SaveChangesAsync();
+
                 return true;
             }
             catch (Exception exception)

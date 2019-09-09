@@ -12,7 +12,7 @@
         selectedNam: '',
         itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
         itemKhuyenMai: ['5', '10', '15', '20', '25', '30', '35', '40', '45', '50'],
-        itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0],
+        itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0, parseInt(new Date().toISOString().substr(0, 4)) + 1],
         chiPhiList: [],
         headers: [
             { text: 'Tên', align: 'left', sortable: true },
@@ -75,6 +75,12 @@
                 chiPhiMoi = chiPhiMoi + this.chiPhiList[i].chiPhiMoi;
                 this.chiPhiList[i].year = this.selectedNam;
                 this.chiPhiList[i].month = this.selectedThang;
+                if (isNaN(this.chiPhiList[i].bonus) || this.chiPhiList[i].bonus === '') {
+                    this.chiPhiList[i].bonus = 0;
+                }
+                if (isNaN(this.chiPhiList[i].minus) || this.chiPhiList[i].minus === '') {
+                    this.chiPhiList[i].minus = 0;
+                }
             }
 
             await axios({
@@ -115,6 +121,12 @@
                 chiPhiMoi = chiPhiMoi + this.chiPhiList[i].chiPhiMoi;
                 this.chiPhiList[i].year = this.selectedNam;
                 this.chiPhiList[i].month = this.selectedThang;
+                if (isNaN(this.chiPhiList[i].bonus)) {
+                    this.chiPhiList[i].bonus = 0;
+                }
+                if (isNaN(this.chiPhiList[i].minus)) {
+                    this.chiPhiList[i].minus = 0;
+                }
             }
 
             await axios({

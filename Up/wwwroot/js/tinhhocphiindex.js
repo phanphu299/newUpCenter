@@ -14,7 +14,7 @@
         selectedHocPhi: '',
         itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
         itemKhuyenMai: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100],
-        itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0],
+        itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0, parseInt(new Date().toISOString().substr(0, 4)) + 1],
         itemLopHoc: [],
         itemSach: [],
         itemHocPhi: [],
@@ -77,7 +77,7 @@
             if (value === undefined) {
                 value = 0;
             }
-            item.hocPhiMoi = item.hocPhiFixed - ((item.hocPhiFixed * value) / 100);
+            item.hocPhiMoi = item.hocPhiFixed + item.tienNo - ((item.hocPhiFixed * value) / 100);
             item.hocPhiMoi = (Math.ceil(item.hocPhiMoi / 10000) * 10000);
             if (item.lastGiaSach !== null) {
                 for (let i = 0; i < item.lastGiaSach.length; i++) {
@@ -198,6 +198,12 @@
             }
             else {
                 let Sachs = item.giaSach !== null ? item.giaSach.map(m => m.sachId) : [];
+                if (isNaN(item.bonus) || item.bonus === '') {
+                    item.bonus = 0;
+                }
+                if (isNaN(item.minus) || item.minus === '') {
+                    item.minus = 0;
+                }
                 await axios({
                     method: 'post',
                     url: '/HocPhi/LuuDoanhThu_HocPhiAsync',
@@ -211,8 +217,7 @@
                         Minus: item.minus,
                         KhuyenMai: item.khuyenMai,
                         GhiChu: item.ghiChu,
-                        SachIds: Sachs,
-                        No: item.tienNo
+                        SachIds: Sachs
                     }
                 })
                     .then(function (response) {
@@ -247,15 +252,21 @@
                 this.color = 'error';
             }
             else {
+                let Sachs = item.giaSach !== null ? item.giaSach.map(m => m.sachId) : [];
                 await axios({
                     method: 'post',
                     url: '/HocPhi/LuuNo_HocPhiAsync',
                     data: {
                         LopHocId: this.selectedLopHoc.lopHocId,
                         HocVienId: item.hocVienId,
-                        TienNo: item.hocPhiMoi,
+                        HocPhi: item.hocPhiMoi,
                         month: this.selectedThang,
-                        year: this.selectedNam
+                        year: this.selectedNam,
+                        Bonus: item.bonus,
+                        Minus: item.minus,
+                        KhuyenMai: item.khuyenMai,
+                        GhiChu: item.ghiChu,
+                        SachIds: Sachs
                     }
                 })
                     .then(function (response) {

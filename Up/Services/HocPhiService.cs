@@ -88,37 +88,37 @@ namespace Up.Services
                                     .SingleOrDefaultAsync();
 
             var ngayHoc = item.NgayHoc.Name.Split('-');
-            int tongNgayHoc = 0;
+            List<int> tongNgayHoc = new List<int>();
 
             foreach (string el in ngayHoc)
             {
                 switch (el.Trim())
                 {
                     case "2":
-                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Monday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Monday));
                         break;
                     case "3":
-                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Tuesday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Tuesday));
                         break;
                     case "4":
-                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Wednesday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Wednesday));
                         break;
                     case "5":
-                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Thursday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Thursday));
                         break;
                     case "6":
-                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Friday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Friday));
                         break;
                     case "7":
-                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Saturday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Saturday));
                         break;
                     default:
-                        tongNgayHoc += DaysInMonth(year, month, DayOfWeek.Sunday).Count();
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Sunday));
                         break;
                 }
             }
 
-            return tongNgayHoc;
+            return tongNgayHoc.Count;
         }
 
         private static IEnumerable<int> DaysInMonth(int year, int month, DayOfWeek dow)
@@ -247,7 +247,7 @@ namespace Up.Services
             {
                 subMonth--;
             }
-            int soNgayHoc = await TinhSoNgayHocAsync(LopHocId, month, month);
+            int soNgayHoc = await TinhSoNgayHocAsync(LopHocId, month, year);
 
             var hocPhiMoiNgay = HocPhi / soNgayHoc;
 
@@ -331,12 +331,13 @@ namespace Up.Services
                                                         .Select(t => new SachViewModel { Gia = t.Sach.Gia, SachId = t.SachId, Name = t.Sach.Name }).ToArray()
                                                         : null,
                                             DaDongHocPhi = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear && m.LopHocId == LopHocId && m.DaDong == true),
-                                            DaNo = x.HocVien.HocVien_Nos.Any(m => m.NgayNo.Month == currentMonth && m.NgayNo.Year == currentYear && m.LopHocId == LopHocId && m.IsDisabled == false)
+                                            DaNo = x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) != null ? x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).DaNo : x.HocVien.HocVien_Nos.Any(m => m.NgayNo.Month == currentMonth && m.NgayNo.Year == currentYear && m.LopHocId == LopHocId && m.IsDisabled == false)
                                         })
                                         .ToListAsync();
 
                 foreach (var item in model)
                 {
+                    var giaSach = item.GiaSach != null ? item.GiaSach.Select(x => x.Gia).Sum() : 0;
                     if (!string.IsNullOrWhiteSpace(item.NgayBatDauHoc))
                     {
                         int ngayDuocNghi = 0;
@@ -349,24 +350,30 @@ namespace Up.Services
                             }
                         }
 
+                        
                         if (_ngayBatDauHoc.Month == currentMonth && _ngayBatDauHoc.Year == currentYear)
                         {
                             var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayBatDauHoc, LopHocId);
+                            
                             if (soNgayHocVienVaoSau < SoNgayHoc)
                             {
                                 item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau);
-
-                                item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                                item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                                
+                                item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                                item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai/100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                             }
                         }
                         else
                         {
                             item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * ngayDuocNghi;
-
-                            item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                            item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                            
+                            item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                            item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                         }
+                    }
+                    else
+                    {
+                        item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo) / 10000) * 10000);
                     }
                     //item.HocPhiFixed = item.HocPhiMoi;
                     item.LastBonus = item.Bonus;
