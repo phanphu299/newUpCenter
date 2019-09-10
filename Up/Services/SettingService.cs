@@ -14,11 +14,13 @@ namespace Up.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public SettingService(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public SettingService(ApplicationDbContext context, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<bool> ActiveAsync(string UserId)
@@ -84,7 +86,35 @@ namespace Up.Services
             return true;
         }
 
-        public async Task<bool> CreateNewUserAsync(string Email)
+        public async Task<RoleViewModel> CreateNewRoleAsync(string Name)
+        {
+            try
+            {
+                var isExisting = await _roleManager.RoleExistsAsync(Name);
+                if (!isExisting)
+                {
+                    var role = new IdentityRole();
+                    role.Name = Name;
+                    await _roleManager.CreateAsync(role);
+
+                    return new RoleViewModel
+                    {
+                        Role = role.Name,
+                        Id = role.Id
+                    };
+                }
+                else
+                {
+                    throw new Exception("Tên role đã tồn tại !!!");
+                }
+            }
+            catch(Exception exception)
+            {
+                throw new Exception("Lỗi khi tạo role: " + exception.Message);
+            }
+        }
+
+        public async Task<AccountInfo> CreateNewUserAsync(string Email)
         {
             try
             {
@@ -97,7 +127,15 @@ namespace Up.Services
                     };
 
                     IdentityResult result = _userManager.CreateAsync(user, "M@tkhau@123").Result;
-                    return result.Succeeded;
+                    if (result.Succeeded)
+                        return new AccountInfo
+                        {
+                            Id = user.Id,
+                            Email = user.Email,
+                            Roles = _userManager.GetRolesAsync(user).Result
+                        };
+                    else
+                        return null;
                 }
                 else
                 {
@@ -152,7 +190,7 @@ namespace Up.Services
             return await _context.Roles.Select(x => new RoleViewModel
             {
                 Id = x.Id,
-                Role = x.Name
+                Role = x.Name,
             }).ToListAsync();
         }
 
@@ -174,6 +212,33 @@ namespace Up.Services
             }
 
             return userList;
+        }
+
+        public async Task<bool> RemoveUserAsync(string UserId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(UserId);
+
+                var rolesForUser = await _userManager.GetRolesAsync(user);
+
+                if (rolesForUser.Count() > 0)
+                {
+                    foreach (var item in rolesForUser.ToList())
+                    {
+                        // item should be the name of the role
+                        var result = await _userManager.RemoveFromRoleAsync(user, item);
+                    }
+                }
+
+                //Delete User
+                await _userManager.DeleteAsync(user);
+                return true;
+            }
+            catch(Exception Exception)
+            {
+                throw new Exception(Exception.Message);
+            }
         }
     }
 }

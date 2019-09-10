@@ -12,8 +12,10 @@ namespace Up.Services
         Task<bool> ChangePasswordAsync(string UserId, string NewPassword = "M@tkhau@123");
         Task<bool> DisableAsync(string UserId);
         Task<bool> ActiveAsync(string UserId);
+        Task<bool> RemoveUserAsync(string UserId);
         Task<List<RoleViewModel>> GetAllRolesAsync();
         Task<AccountInfo> AddRolesToUserAsync(string UserId, List<string> RoleIds);
-        Task<bool> CreateNewUserAsync(string Email);
+        Task<AccountInfo> CreateNewUserAsync(string Email);
+        Task<RoleViewModel> CreateNewRoleAsync(string Name);
     }
 }

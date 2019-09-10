@@ -54,11 +54,13 @@
         },
 
         async onSave() {
+            this.dialog = false;
             if (this.newItem !== "") {
                 let that = this;
                 await axios.get('/Setting/CreateNewUserAsync?Email=' + this.newItem)
                     .then(function (response) {
                         if (response.data.status === "OK") {
+                            that.userItems.splice(0, 0, response.data.result);
                             that.snackbar = true;
                             that.messageText = 'Tạo tài khoản thành công !!!';
                             that.color = 'success';
@@ -146,6 +148,30 @@
                     console.log(error);
                     that.snackbar = true;
                     that.messageText = 'Khóa tài khoản lỗi: ' + error;
+                    that.color = 'error';
+                });
+        },
+
+        async Xoa(item) {
+            let that = this;
+            await axios.get('/Setting/RemoveUserAsync?Id=' + item.id)
+                .then(function (response) {
+                    if (response.data.status === "OK") {
+                        that.userItems.splice(that.userItems.indexOf(item), 1);
+                        that.snackbar = true;
+                        that.messageText = 'Xóa tài khoản thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Xóa tài khoản lỗi: ' + error;
                     that.color = 'error';
                 });
         },

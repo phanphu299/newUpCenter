@@ -230,7 +230,7 @@ namespace Up.Controllers
             try
             {
                 var successful = await _settingService.CreateNewUserAsync(Email);
-                if (!successful)
+                if (successful == null)
                 {
                     return Json(new Models.ResultModel
                     {
@@ -242,7 +242,100 @@ namespace Up.Controllers
                 return Json(new Models.ResultModel
                 {
                     Status = "OK",
-                    Message = "Tạo tài khoản thành công !!!"
+                    Message = "Tạo tài khoản thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RemoveUserAsync(string Id)
+        {
+            if (string.IsNullOrWhiteSpace(Id))
+            {
+                return RedirectToAction("AccountIndexAsync");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("AccountIndexAsync");
+            }
+
+            try
+            {
+                var successful = await _settingService.RemoveUserAsync(Id);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa tài khoản lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa tài khoản thành công !!!",
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        public async Task<IActionResult> RoleIndexAsync()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateNewRoleAsync(string Name)
+        {
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                return RedirectToAction("RoleIndexAsync");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("RoleIndexAsync");
+            }
+
+            try
+            {
+                var successful = await _settingService.CreateNewRoleAsync(Name);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Tạo role lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Tạo role thành công !!!",
+                    Result = successful
                 });
             }
             catch (Exception exception)
