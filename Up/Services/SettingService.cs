@@ -214,6 +214,16 @@ namespace Up.Services
             return userList;
         }
 
+        public async Task<List<AccountInfo>> GetAllUsersByRoleNameAsync(string RoleName)
+        {
+            var users = await _userManager.GetUsersInRoleAsync(RoleName);
+            return users.Select(x => new AccountInfo
+            {
+                Email = x.Email,
+                Id = x.Id,
+            }).ToList();
+        }
+
         public async Task<bool> RemoveUserAsync(string UserId)
         {
             try

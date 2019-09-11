@@ -35,6 +35,8 @@
         public DbSet<ThongKe_DoanhThuHocPhi_TaiLieu> ThongKe_DoanhThuHocPhi_TaiLieus { get; set; }
         public DbSet<NhanVien_ViTri> NhanVien_ViTris { get; set; }
         public DbSet<NgayLamViec> NgayLamViecs { get; set; }
+        public DbSet<Quyen> Quyens { get; set; }
+        public DbSet<Quyen_Role> Quyen_Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

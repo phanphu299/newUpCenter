@@ -63,7 +63,9 @@
                             <v-tooltip top>
                                 <template v-slot:activator="{ on }">
                                     <v-btn color="primary" v-on="on"
-                                           flat icon>
+                                           flat icon
+                                           v-on:click.stop="dialogUser = true"
+                                           v-on:click="mappingQuyenRoleItem(props.item)">
                                         <v-icon>info</v-icon>
                                     </v-btn>
                                 </template>
@@ -72,8 +74,11 @@
 
                             <v-tooltip top>
                                 <template v-slot:activator="{ on }">
-                                    <v-btn flat icon v-on="on"
-                                           color="success">
+                                    <v-btn flat icon
+                                           color="success"
+                                           v-on="on"
+                                           v-on:click.stop="dialogQuyen = true"
+                                           v-on:click="mappingQuyenRoleItem(props.item)">
                                         <v-icon>security</v-icon>
                                     </v-btn>
                                 </template>
@@ -91,44 +96,54 @@
             </v-card>
 
 
-            @*Edit Dialog*@
-            @*<v-dialog v-model="dialogEditRole" persistent max-width="600px">
+            @*Users Dialog*@
+            <v-dialog v-model="dialogUser" persistent max-width="600px">
+                    <v-card>
+                        <v-card-title>
+                            <span class="headline">Danh Sách Account Thuộc Role '{{ itemToEdit.role }}'</span>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-container grid-list-md>
+                                <v-layout wrap>
+
+                                    <v-flex xs12 sm12>
+                                        <v-chip v-for="item in itemUsers" text-color="white" color="success" :key="item.id">{{ item.email }}</v-chip>
+                                    </v-flex>
+                                </v-layout>
+                            </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="secondary darken-1" flat v-on:click="dialogUser = false">Đóng</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+
+            @*Quyền Dialog*@
+            <v-dialog v-model="dialogQuyen" persistent max-width="800px">
                 <v-card>
                     <v-card-title>
-                        <span class="headline">Cập Nhật Role Cho '{{ itemToEditRole.email }}'</span>
+                        <span class="headline">Xem/Cập Nhật Quyền Cho Role '{{ itemToEdit.role }}'</span>
                     </v-card-title>
                     <v-card-text>
                         <v-container grid-list-md>
                             <v-layout wrap>
 
-                                <v-flex xs12 sm12>
-                                    <v-select v-model="itemToEditRole.roleIds"
-                                              :items="itemRoles"
-                                              item-text="role"
-                                              item-value="id"
-                                              chips
-                                              label="Chọn Role"
-                                              multiple>
-                                        <template v-slot:selection="data">
-                                            <v-chip :selected="data.selected"
-                                                    color="green"
-                                                    text-color="white">
-                                                <span>({{ data.item.role }})</span>
-
-                                            </v-chip>
-                                        </template>
-                                    </v-select>
+                                <v-flex xs12 sm4 v-for="item in itemQuyens" :key="item.id">
+                                    <v-checkbox v-model="item.isTrue"
+                                                :label="item.name"></v-checkbox>
                                 </v-flex>
+
                             </v-layout>
                         </v-container>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="secondary darken-1" flat v-on:click="dialogEditRole = false">Đóng</v-btn>
-                        <v-btn color="blue darken-1 white--text" v-on:click="onUpdateRole(itemToEditRole)">Lưu</v-btn>
+                        <v-btn color="secondary darken-1" flat v-on:click="dialogQuyen = false">Đóng</v-btn>
+                        <v-btn color="blue darken-1 white--text" v-on:click="onUpdateQuyenRole(itemToEdit)">Lưu</v-btn>
                     </v-card-actions>
                 </v-card>
-            </v-dialog>*@
+            </v-dialog>
 
             <v-snackbar v-model="snackbar"
                         :color="color"

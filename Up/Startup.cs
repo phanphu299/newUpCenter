@@ -73,6 +73,7 @@ namespace Up
             services.AddScoped<IChiPhiService, ChiPhiService>();
             services.AddScoped<IThongKe_ChiPhiService, ThongKe_ChiPhiService>();
             services.AddScoped<INgayLamViecService, NgayLamViecService>();
+            services.AddScoped<IQuyenService, QuyenService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

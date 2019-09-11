@@ -18,9 +18,12 @@
         ],
         roleItems: [],
         dialogEditRole: false,
+        dialogQuyen: false,
+        dialogUser: false,
         itemToEdit: {},
         editedIndex: -1,
-        itemRoles: [],
+        itemQuyens: [],
+        itemUsers: [],
         dialog: false,
         alert: false,
         newItem: "",
@@ -39,9 +42,32 @@
             });
     },
     methods: {
-        mappingEditRoleItem(item) {
-            this.editedIndex = this.userItems.indexOf(item);
+        async mappingUserRoleItem(item) {
+            let that = this;
+            this.editedIndex = this.roleItems.indexOf(item);
             this.itemToEdit = Object.assign({}, item);
+
+            await axios.get('/Setting/GetQuyenByRoleIdAsync?RoleId=' + item.id)
+                .then(function (response) {
+                    that.itemQuyens = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
+        async mappingQuyenRoleItem(item) {
+            let that = this;
+            this.editedIndex = this.roleItems.indexOf(item);
+            this.itemToEdit = Object.assign({}, item);
+
+            await axios.get('/Setting/GetAccountByRoleNameAsync?RoleName=' + item.role)
+                .then(function (response) {
+                    that.itemUsers = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
 
         async onSave() {
@@ -74,29 +100,28 @@
             }
         },
         
-        async onUpdateRole(item) {
+        async onUpdateQuyenRole(item) {
             var that = this;
             await axios({
                 method: 'put',
-                url: '/Setting/UpdateRoleAsync',
+                url: '/Setting/AddQuyenToRoleAsync',
                 data: {
-                    Id: item.id,
-                    RoleIds: item.roleIds
+                    QuyenList: that.itemQuyens,
+                    RoleId: item.id
                 }
             })
                 .then(function (response) {
                     if (response.data.status === "OK") {
-                        Object.assign(that.userItems[that.editedIndex], response.data.result);
                         that.snackbar = true;
                         that.messageText = 'Cập nhật thành công !!!';
                         that.color = 'success';
-                        that.dialogEditRole = false;
+                        that.dialogQuyen = false;
                     }
                     else {
                         that.snackbar = true;
                         that.messageText = response.data.message;
                         that.color = 'error';
-                        that.dialogEditRole = false;
+                        that.dialogQuyen = false;
                     }
                 })
                 .catch(function (error) {
@@ -104,7 +129,7 @@
                     that.snackbar = true;
                     that.messageText = 'Cập nhật lỗi: ' + error;
                     that.color = 'error';
-                    that.dialogEditRole = false;
+                    that.dialogQuyen = false;
                 });
         }
     }
