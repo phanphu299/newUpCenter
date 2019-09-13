@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Threading.Tasks;
+    using Up.Extensions;
     using Up.Services;
 
     public class CategoryController : Controller
@@ -583,6 +584,7 @@
             }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////
+        [ServiceFilter(typeof(Read_HocPhi))]
         public async Task<IActionResult> HocPhiIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -594,7 +596,7 @@
         [HttpGet]
         public async Task<IActionResult> GetHocPhiAsync()
         {
-            var model = await _hocPhiService.GetHocPhiAsync();
+            var model = await _hocPhiService.GetHocPhiAsync(User);
             return Json(model);
         }
 

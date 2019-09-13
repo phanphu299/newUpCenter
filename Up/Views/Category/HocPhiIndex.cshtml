@@ -7,7 +7,7 @@
 
             <v-card>
                 <v-card-title>
-                    <v-dialog v-model="dialog" persistent max-width="600px">
+                    <v-dialog v-model="dialog" persistent max-width="600px" v-if="khoaHocItems.length != undefined && khoaHocItems[0].canContribute">
                         <v-btn color="primary"
                                slot="activator"
                                class="white--text">
@@ -82,7 +82,7 @@
                               :search="search">
                     <template slot="items" slot-scope="props">
                         <td>
-                            <v-tooltip top>
+                            <v-tooltip top v-if="props.item.canContribute">
                                 <template v-slot:activator="{ on }">
                                     <v-btn flat icon slot="activator"
                                            v-on="on"
@@ -95,7 +95,7 @@
                                 <strong>Xóa</strong>
                             </v-tooltip>
 
-                            <v-tooltip top>
+                            <v-tooltip top v-if="props.item.canContribute">
                                 <template v-slot:activator="{ on }">
                                     <v-btn color="primary"
                                            flat icon

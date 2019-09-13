@@ -78,7 +78,7 @@
                                            color="success"
                                            v-on="on"
                                            v-on:click.stop="dialogQuyen = true"
-                                           v-on:click="mappingQuyenRoleItem(props.item)">
+                                           v-on:click="mappingUserRoleItem(props.item)">
                                         <v-icon>security</v-icon>
                                     </v-btn>
                                 </template>
@@ -86,7 +86,17 @@
                             </v-tooltip>
 
                         </td>
-                        <td>{{ props.item.role }}</td>
+                        <td>
+                            <v-edit-dialog :return-value.sync="props.item.role"
+                                           lazy
+                                           v-on:save="onUpdate(props.item.id, props.item.role)">
+                                {{ props.item.role }}
+                                <v-text-field slot="input"
+                                              v-model="props.item.role"
+                                              label="Edit"
+                                              single-line></v-text-field>
+                            </v-edit-dialog>
+                        </td>
 
                     </template>
                     <v-alert slot="no-results" :value="true" color="error" icon="warning">

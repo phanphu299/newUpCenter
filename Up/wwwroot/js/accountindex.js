@@ -89,7 +89,7 @@
                 .then(function (response) {
                     if (response.data.status === "OK") {
                         that.snackbar = true;
-                        that.messageText = 'Reset thành công !!!';
+                        that.messageText = 'Reset thành công, Mật khẩu : M@tkhau@123 !!!';
                         that.color = 'success';
                     }
                     else {

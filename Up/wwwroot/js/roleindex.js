@@ -70,6 +70,30 @@
                 });
         },
 
+        async onUpdate(id, name) {
+            let that = this;
+            await axios.get('/Setting/EditRoleAsync?RoleId=' + id + '&Name=' + name)
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Cập nhật thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Cập nhật lỗi: ' + error;
+                    that.color = 'error';
+                });
+        },
+
         async onSave() {
             if (this.newItem !== "") {
                 this.dialog = false;

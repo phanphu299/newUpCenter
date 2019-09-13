@@ -22,6 +22,9 @@
         {
             try
             {
+                var oldQuyen = await _context.Quyen_Roles.Where(x => x.RoleId == model.RoleId).ToListAsync();
+                _context.Quyen_Roles.RemoveRange(oldQuyen);
+
                 foreach (var item in model.QuyenList)
                 {
                     if (item.IsTrue)

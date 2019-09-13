@@ -1,22 +1,27 @@
 ﻿
 namespace Up.Services
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Data;
     using Up.Data.Entities;
+    using Up.Enums;
     using Up.Models;
 
     public class HocPhiService : IHocPhiService
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public HocPhiService(ApplicationDbContext context)
+        public HocPhiService(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee)
@@ -62,8 +67,29 @@ namespace Up.Services
             return saveResult == 1;
         }
 
-        public async Task<List<HocPhiViewModel>> GetHocPhiAsync()
+        public async Task<List<HocPhiViewModel>> GetHocPhiAsync(ClaimsPrincipal User)
         {
+            var CurUser = await _userManager.GetUserAsync(User);
+
+            var roles = await _userManager.GetRolesAsync(CurUser);
+
+            var quyen_roles = _context.Quyen_Roles
+                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_HocPhi)
+                .Select(x => x.RoleId).ToList();
+
+            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
+
+            bool canContribute = false;
+
+            foreach (string role in roles)
+            {
+                if (allRoles.Contains(role))
+                {
+                    canContribute = true;
+                    break;
+                }
+            }
+
             return await _context.HocPhis
                 .Where(x => x.IsDisabled == false)
                 .Select(x => new HocPhiViewModel
@@ -75,7 +101,8 @@ namespace Up.Services
                     NgayApDung = x.NgayApDung == null ? "" : ((DateTime)x.NgayApDung).ToString("dd/MM/yyyy"),
                     GhiChu = x.GhiChu,
                     UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
+                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
+                    CanContribute = canContribute
                 })
                 .ToListAsync();
         }

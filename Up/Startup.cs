@@ -12,6 +12,7 @@ namespace Up
     using Microsoft.Extensions.DependencyInjection;
     using System;
     using Up.Data;
+    using Up.Extensions;
     using Up.Services;
 
     public class Startup
@@ -74,6 +75,8 @@ namespace Up
             services.AddScoped<IThongKe_ChiPhiService, ThongKe_ChiPhiService>();
             services.AddScoped<INgayLamViecService, NgayLamViecService>();
             services.AddScoped<IQuyenService, QuyenService>();
+
+            services.AddScoped<Read_HocPhi>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

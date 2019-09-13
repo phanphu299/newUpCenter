@@ -165,6 +165,28 @@ namespace Up.Services
             return true;
         }
 
+        public async Task<bool> EditRolesAsync(string RoleId, string Name)
+        {
+            try
+            {
+                var role = await _roleManager.FindByIdAsync(RoleId);
+
+                if (role == null)
+                    throw new Exception("Không tìm thấy role !!!");
+
+                role.Name = Name;
+
+                // Update the Role using UpdateAsync
+                var result = await _roleManager.UpdateAsync(role);
+
+                return result.Succeeded;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Lỗi khi sửa role: " + exception.Message);
+            }
+        }
+
         public async Task<List<AccountInfo>> GetAdminsAsync()
         {
             var admins = (await _userManager

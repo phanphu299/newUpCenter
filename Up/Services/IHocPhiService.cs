@@ -3,12 +3,13 @@ namespace Up.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Models;
 
     public interface IHocPhiService
     {
-        Task<List<HocPhiViewModel>> GetHocPhiAsync();
+        Task<List<HocPhiViewModel>> GetHocPhiAsync(ClaimsPrincipal User);
         Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee);
         Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee);
         Task<bool> DeleteHocPhiAsync(Guid HocPhiId, string LoggedEmployee);

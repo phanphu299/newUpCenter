@@ -430,5 +430,47 @@ namespace Up.Controllers
                 });
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditRoleAsync(string RoleId, string Name)
+        {
+            if (string.IsNullOrWhiteSpace(RoleId))
+            {
+                return RedirectToAction("RoleIndexAsync");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("RoleIndexAsync");
+            }
+
+            try
+            {
+                var successful = await _settingService.EditRolesAsync(RoleId, Name);
+                if (!successful)
+                {
+                    return Json(new ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
+
+                return Json(new ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!",
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
     }
 }
