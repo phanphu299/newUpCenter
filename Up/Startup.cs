@@ -77,6 +77,9 @@ namespace Up
             services.AddScoped<IQuyenService, QuyenService>();
 
             services.AddScoped<Read_HocPhi>();
+            services.AddScoped<Read_NgayHoc>();
+            services.AddScoped<Read_KhoaHoc>();
+            services.AddScoped<Read_GioHoc>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

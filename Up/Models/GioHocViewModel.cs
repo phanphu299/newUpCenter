@@ -11,5 +11,6 @@ namespace Up.Models
         public string CreatedBy { get; set; }
         public string UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
+        public bool CanContribute { get; set; }
     }
 }

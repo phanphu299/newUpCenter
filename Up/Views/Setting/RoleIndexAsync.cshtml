@@ -89,6 +89,7 @@
                         <td>
                             <v-edit-dialog :return-value.sync="props.item.role"
                                            lazy
+                                           v-if="props.item.role != 'Admin'"
                                            v-on:save="onUpdate(props.item.id, props.item.role)">
                                 {{ props.item.role }}
                                 <v-text-field slot="input"
@@ -96,6 +97,7 @@
                                               label="Edit"
                                               single-line></v-text-field>
                             </v-edit-dialog>
+                            <span v-else>{{ props.item.role }}</span>
                         </td>
 
                     </template>

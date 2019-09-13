@@ -1,24 +1,55 @@
 ﻿namespace Up.Services
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Data;
     using Up.Data.Entities;
+    using Up.Enums;
     using Up.Models;
 
     public class GioHocService: IGioHocService
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public GioHocService(ApplicationDbContext context)
+        public GioHocService(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        public async Task<GioHocViewModel> CreateGioHocAsync(string From, string To, string LoggedEmployee)
+        public async Task<bool> CanContributeAsync(ClaimsPrincipal User)
+        {
+
+            var CurUser = await _userManager.GetUserAsync(User);
+
+            var roles = await _userManager.GetRolesAsync(CurUser);
+
+            var quyen_roles = _context.Quyen_Roles
+                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_GioHoc)
+                .Select(x => x.RoleId).ToList();
+
+            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
+
+            bool canContribute = false;
+
+            foreach (string role in roles)
+            {
+                if (allRoles.Contains(role))
+                {
+                    canContribute = true;
+                    break;
+                }
+            }
+            return canContribute;
+        }
+
+        public async Task<GioHocViewModel> CreateGioHocAsync(string From, string To, string LoggedEmployee, ClaimsPrincipal User)
         {
             if (string.IsNullOrWhiteSpace(From) || string.IsNullOrWhiteSpace(To))
                 throw new Exception("Giờ Học không được để trống !!!");
@@ -35,7 +66,17 @@
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
                 throw new Exception("Lỗi khi lưu Giờ Học !!!");
-            return new GioHocViewModel { GioHocId = gioHoc.GioHocId, To = gioHoc.To, From = gioHoc.From, CreatedBy = gioHoc.CreatedBy, CreatedDate = gioHoc.CreatedDate.ToString("dd/MM/yyyy") };
+
+            bool canContribute = await CanContributeAsync(User);
+
+            return new GioHocViewModel {
+                GioHocId = gioHoc.GioHocId,
+                To = gioHoc.To,
+                From = gioHoc.From,
+                CreatedBy = gioHoc.CreatedBy,
+                CreatedDate = gioHoc.CreatedDate.ToString("dd/MM/yyyy"),
+                CanContribute = canContribute
+            };
         }
 
         public async Task<bool> DeleteGioHocAsync(Guid GioHocId, string LoggedEmployee)
@@ -59,8 +100,9 @@
             return saveResult == 1;
         }
 
-        public async Task<List<GioHocViewModel>> GetGioHocAsync()
+        public async Task<List<GioHocViewModel>> GetGioHocAsync(ClaimsPrincipal User)
         {
+            bool canContribute = await CanContributeAsync(User);
             return await _context.GioHocs
                 .Where(x => x.IsDisabled == false)
                 .Select(x => new GioHocViewModel
@@ -71,12 +113,13 @@
                     From = x.From,
                     To = x.To,
                     UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
+                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
+                    CanContribute = canContribute
                 })
                 .ToListAsync();
         }
 
-        public async Task<GioHocViewModel> UpdateGioHocAsync(Guid GioHocId, string From, string To, string LoggedEmployee)
+        public async Task<GioHocViewModel> UpdateGioHocAsync(Guid GioHocId, string From, string To, string LoggedEmployee, ClaimsPrincipal User)
         {
             if (string.IsNullOrWhiteSpace(From) || string.IsNullOrWhiteSpace(To))
                 throw new Exception("Giờ Học không được để trống !!!");
@@ -94,6 +137,8 @@
             item.UpdatedDate = DateTime.Now;
 
             var saveResult = await _context.SaveChangesAsync();
+            bool canContribute = await CanContributeAsync(User);
+
             return new GioHocViewModel
             {
                 From = item.From,
@@ -102,7 +147,8 @@
                 UpdatedBy = item.UpdatedBy,
                 GioHocId = item.GioHocId,
                 UpdatedDate = item.UpdatedDate != null ? ((DateTime)item.UpdatedDate).ToString("dd/MM/yyyy") : "",
-                CreatedDate = item.CreatedDate != null ? ((DateTime)item.CreatedDate).ToString("dd/MM/yyyy") : ""
+                CreatedDate = item.CreatedDate != null ? ((DateTime)item.CreatedDate).ToString("dd/MM/yyyy") : "",
+                CanContribute = canContribute
             };
         }
     }

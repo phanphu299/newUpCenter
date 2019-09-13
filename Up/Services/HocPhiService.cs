@@ -24,7 +24,7 @@ namespace Up.Services
             _userManager = userManager;
         }
 
-        public async Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee)
+        public async Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee, ClaimsPrincipal User)
         {
             HocPhi hocPhi = new HocPhi();
             hocPhi.HocPhiId = new Guid();
@@ -39,6 +39,9 @@ namespace Up.Services
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
                 throw new Exception("Lỗi khi lưu Học Phí !!!");
+
+            bool canContribute = await CanContributeAsync(User);
+
             return new HocPhiViewModel
             {
                 HocPhiId = hocPhi.HocPhiId,
@@ -46,7 +49,8 @@ namespace Up.Services
                 GhiChu = hocPhi.GhiChu,
                 NgayApDung = hocPhi.NgayApDung?.ToString("dd/MM/yyyy"),
                 CreatedBy = hocPhi.CreatedBy,
-                CreatedDate = hocPhi.CreatedDate.ToString("dd/MM/yyyy")
+                CreatedDate = hocPhi.CreatedDate.ToString("dd/MM/yyyy"),
+                CanContribute = canContribute
             };
         }
 
@@ -69,26 +73,7 @@ namespace Up.Services
 
         public async Task<List<HocPhiViewModel>> GetHocPhiAsync(ClaimsPrincipal User)
         {
-            var CurUser = await _userManager.GetUserAsync(User);
-
-            var roles = await _userManager.GetRolesAsync(CurUser);
-
-            var quyen_roles = _context.Quyen_Roles
-                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_HocPhi)
-                .Select(x => x.RoleId).ToList();
-
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
-
-            bool canContribute = false;
-
-            foreach (string role in roles)
-            {
-                if (allRoles.Contains(role))
-                {
-                    canContribute = true;
-                    break;
-                }
-            }
+            bool canContribute = await CanContributeAsync(User);
 
             return await _context.HocPhis
                 .Where(x => x.IsDisabled == false)
@@ -166,7 +151,7 @@ namespace Up.Services
                 .Select(date => date.Day);
         }
 
-        public async Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee)
+        public async Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee, ClaimsPrincipal User)
         {
             var item = await _context.HocPhis
                                     .Where(x => x.HocPhiId == HocPhiId)
@@ -182,6 +167,8 @@ namespace Up.Services
             item.UpdatedDate = DateTime.Now;
 
             var saveResult = await _context.SaveChangesAsync();
+            bool canContribute = await CanContributeAsync(User);
+
             return new HocPhiViewModel
             {
                 GhiChu = item.GhiChu,
@@ -191,7 +178,8 @@ namespace Up.Services
                 UpdatedBy = item.UpdatedBy,
                 CreatedDate = item.CreatedDate != null ? ((DateTime)item.CreatedDate).ToString("dd/MM/yyyy") : "",
                 UpdatedDate = item.UpdatedDate != null ? ((DateTime)item.UpdatedDate).ToString("dd/MM/yyyy") : "",
-                NgayApDung = item.NgayApDung != null ? ((DateTime)item.NgayApDung).ToString("dd/MM/yyyy") : ""
+                NgayApDung = item.NgayApDung != null ? ((DateTime)item.NgayApDung).ToString("dd/MM/yyyy") : "",
+                CanContribute = canContribute
             };
         }
 
@@ -454,6 +442,31 @@ namespace Up.Services
             }
 
             return tongNgayHoc.OrderBy(x => x).ToList();
+        }
+
+        public async Task<bool> CanContributeAsync(ClaimsPrincipal User)
+        {
+            var CurUser = await _userManager.GetUserAsync(User);
+
+            var roles = await _userManager.GetRolesAsync(CurUser);
+
+            var quyen_roles = _context.Quyen_Roles
+                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_HocPhi)
+                .Select(x => x.RoleId).ToList();
+
+            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
+
+            bool canContribute = false;
+
+            foreach (string role in roles)
+            {
+                if (allRoles.Contains(role))
+                {
+                    canContribute = true;
+                    break;
+                }
+            }
+            return canContribute;
         }
     }
 }

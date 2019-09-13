@@ -14,11 +14,15 @@
             </ul>
             <!-- profile-dropdown -->
             <ul id="profile-dropdown" class="dropdown-content">
-                <li>
-                    <a asp-area="" asp-controller="Setting" asp-action="AccountIndexAsync" class="grey-text text-darken-1">
-                        <i class="material-icons">people</i> Tài Khoản
-                    </a>
-                </li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a asp-area="" asp-controller="Setting" asp-action="AccountIndexAsync" class="grey-text text-darken-1">
+                            <i class="material-icons">people</i> Tài Khoản
+                        </a>
+                    </li>
+                }
+
                 <li>
                     <a id="change-password" asp-area="Identity" asp-page="/Account/Manage/ChangePassword" class="grey-text text-darken-1">
                         <i class="material-icons">settings</i> Đổi mật khẩu

@@ -1,24 +1,55 @@
 ﻿namespace Up.Services
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Data;
     using Up.Data.Entities;
+    using Up.Enums;
     using Up.Models;
 
     public class NgayHocService: INgayHocService
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public NgayHocService(ApplicationDbContext context)
+        public NgayHocService(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        public async Task<NgayHocViewModel> CreateNgayHocAsync(string Name, string LoggedEmployee)
+        public async Task<bool> CanContributeAsync(ClaimsPrincipal User)
+        {
+            var CurUser = await _userManager.GetUserAsync(User);
+
+            var roles = await _userManager.GetRolesAsync(CurUser);
+
+            var quyen_roles = _context.Quyen_Roles
+                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_NgayHoc)
+                .Select(x => x.RoleId).ToList();
+
+            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
+
+            bool canContribute = false;
+
+            foreach (string role in roles)
+            {
+                if (allRoles.Contains(role))
+                {
+                    canContribute = true;
+                    break;
+                }
+            }
+
+            return canContribute;
+        }
+
+        public async Task<NgayHocViewModel> CreateNgayHocAsync(string Name, string LoggedEmployee, ClaimsPrincipal User)
         {
             if (string.IsNullOrWhiteSpace(Name))
                 throw new Exception("Tên Ngày Học không được để trống !!!");
@@ -33,8 +64,17 @@
 
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult != 1)
-                throw new Exception("Lỗi khi lưu Lớp Học !!!");
-            return new NgayHocViewModel { NgayHocId = ngayHoc.NgayHocId, Name = ngayHoc.Name, CreatedBy = ngayHoc.CreatedBy, CreatedDate = ngayHoc.CreatedDate.ToString("dd/MM/yyyy") };
+                throw new Exception("Lỗi khi lưu Ngày Học !!!");
+
+            bool canContribute = await CanContributeAsync(User);
+
+            return new NgayHocViewModel {
+                NgayHocId = ngayHoc.NgayHocId,
+                Name = ngayHoc.Name,
+                CreatedBy = ngayHoc.CreatedBy,
+                CreatedDate = ngayHoc.CreatedDate.ToString("dd/MM/yyyy"),
+                CanContribute = canContribute
+            };
         }
 
         public async Task<bool> CreateUpdateHocVien_NgayHocAsync(Guid HocVienId, Guid LopHocId, DateTime NgayBatDau, DateTime? NgayKetThuc, string LoggedEmployee)
@@ -103,8 +143,9 @@
                                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<NgayHocViewModel>> GetNgayHocAsync()
+        public async Task<List<NgayHocViewModel>> GetNgayHocAsync(ClaimsPrincipal User)
         {
+            bool canContribute = await CanContributeAsync(User);
             return await _context.NgayHocs
                 .Where(x => x.IsDisabled == false)
                 .Select(x => new NgayHocViewModel
@@ -114,7 +155,8 @@
                     NgayHocId = x.NgayHocId,
                     Name = x.Name,
                     UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
+                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
+                    CanContribute = canContribute
                 })
                 .ToListAsync();
         }

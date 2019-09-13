@@ -10,8 +10,8 @@ namespace Up.Services
     public interface IHocPhiService
     {
         Task<List<HocPhiViewModel>> GetHocPhiAsync(ClaimsPrincipal User);
-        Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee);
-        Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee);
+        Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee, ClaimsPrincipal User);
+        Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee, ClaimsPrincipal User);
         Task<bool> DeleteHocPhiAsync(Guid HocPhiId, string LoggedEmployee);
 
         Task<int> TinhSoNgayHocAsync(Guid LopHocId, int month, int year);
@@ -19,5 +19,7 @@ namespace Up.Services
         Task<int> TinhSoNgayDuocChoNghiAsync(Guid LopHocId, int month, int year);
         Task<List<HocVienViewModel>> GetHocVien_No_NgayHocAsync(Guid LopHocId, int month, int year, double HocPhi, int SoNgayHoc, double HocPhiMoiNgay);
         Task<TinhHocPhiViewModel> TinhHocPhiAsync(Guid LopHocId, int month, int year, double HocPhi);
+
+        Task<bool> CanContributeAsync(ClaimsPrincipal User);
     }
 }

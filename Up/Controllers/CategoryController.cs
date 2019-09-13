@@ -36,6 +36,7 @@
             _userManager = userManager;
         }
 
+        [ServiceFilter(typeof(Read_KhoaHoc))]
         public async Task<IActionResult> KhoaHocIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -47,7 +48,7 @@
         [HttpGet]
         public async Task<IActionResult> GetKhoaHocAsync()
         {
-            var model = await _khoaHocService.GetKhoaHocAsync();
+            var model = await _khoaHocService.GetKhoaHocAsync(User);
             return Json(model);
         }
 
@@ -61,7 +62,7 @@
             }
 
             try {
-                var successful = await _khoaHocService.CreateKhoaHocAsync(model.Name, currentUser.Email);
+                var successful = await _khoaHocService.CreateKhoaHocAsync(model.Name, currentUser.Email, User);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -309,6 +310,7 @@
             }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////
+        [ServiceFilter(typeof(Read_NgayHoc))]
         public async Task<IActionResult> NgayHocIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -320,7 +322,7 @@
         [HttpGet]
         public async Task<IActionResult> GetNgayHocAsync()
         {
-            var model = await _ngayHocService.GetNgayHocAsync();
+            var model = await _ngayHocService.GetNgayHocAsync(User);
             return Json(model);
         }
 
@@ -335,7 +337,7 @@
             
             try
             {
-                var successful = await _ngayHocService.CreateNgayHocAsync(model.Name, currentUser.Email);
+                var successful = await _ngayHocService.CreateNgayHocAsync(model.Name, currentUser.Email, User);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -446,6 +448,7 @@
             }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////
+        [ServiceFilter(typeof(Read_GioHoc))]
         public async Task<IActionResult> GioHocIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -457,7 +460,7 @@
         [HttpGet]
         public async Task<IActionResult> GetGioHocAsync()
         {
-            var model = await _gioHocService.GetGioHocAsync();
+            var model = await _gioHocService.GetGioHocAsync(User);
             return Json(model);
         }
 
@@ -472,7 +475,7 @@
 
             try
             {
-                var successful = await _gioHocService.CreateGioHocAsync(model.From, model.To, currentUser.Email);
+                var successful = await _gioHocService.CreateGioHocAsync(model.From, model.To, currentUser.Email, User);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -515,7 +518,7 @@
 
             try
             {
-                var successful = await _gioHocService.UpdateGioHocAsync(model.GioHocId, model.From, model.To, currentUser.Email);
+                var successful = await _gioHocService.UpdateGioHocAsync(model.GioHocId, model.From, model.To, currentUser.Email, User);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -613,7 +616,7 @@
             {
                 DateTime _ngayApDung = Convert.ToDateTime(model.NgayApDung, System.Globalization.CultureInfo.InvariantCulture);
 
-                var successful = await _hocPhiService.CreateHocPhiAsync(model.Gia, model.GhiChu, _ngayApDung, currentUser.Email);
+                var successful = await _hocPhiService.CreateHocPhiAsync(model.Gia, model.GhiChu, _ngayApDung, currentUser.Email, User);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -657,7 +660,7 @@
             try
             {
                 DateTime _ngayApDung = Convert.ToDateTime(model.NgayApDung, System.Globalization.CultureInfo.InvariantCulture);
-                var successful = await _hocPhiService.UpdateHocPhiAsync(model.HocPhiId, model.Gia, model.GhiChu, _ngayApDung, currentUser.Email);
+                var successful = await _hocPhiService.UpdateHocPhiAsync(model.HocPhiId, model.Gia, model.GhiChu, _ngayApDung, currentUser.Email, User);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel

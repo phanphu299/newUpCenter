@@ -7,9 +7,10 @@
 
             <v-card>
                 <v-card-title>
-                    <v-dialog v-model="dialog" persistent max-width="600px">
+                    <v-dialog v-model="dialog" persistent max-width="600px"v-if="khoaHocItems.length != 0">
                         <v-btn color="primary"
                                slot="activator"
+                               v-if="khoaHocItems[0].canContribute"
                                class="white--text">
                             Thêm Mới
                             <v-icon right dark>add</v-icon>
@@ -55,7 +56,7 @@
                               :search="search">
                     <template slot="items" slot-scope="props">
                         <td>
-                            <v-tooltip top>
+                            <v-tooltip top v-if="props.item.canContribute">
                                 <template v-slot:activator="{ on }">
                                     <v-btn flat icon slot="activator"
                                            v-on="on"
@@ -72,6 +73,7 @@
                         <td>
                             <v-edit-dialog :return-value.sync="props.item.name"
                                            lazy
+                                            v-if="props.item.canContribute"
                                            v-on:save="onUpdate(props.item)">
                                 {{ props.item.name }}
                                 <v-text-field slot="input"
@@ -79,6 +81,7 @@
                                               label="Edit"
                                               single-line></v-text-field>
                             </v-edit-dialog>
+                            <span v-else>{{ props.item.name }}</span>
                         </td>
                         <td>{{ props.item.createdDate }}</td>
                         <td>{{ props.item.createdBy }}</td>

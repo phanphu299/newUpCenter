@@ -7,9 +7,10 @@
 
             <v-card>
                 <v-card-title>
-                    <v-dialog v-model="dialog" persistent max-width="600px" v-if="khoaHocItems.length != undefined && khoaHocItems[0].canContribute">
+                    <v-dialog v-model="dialog" persistent max-width="600px" v-if="khoaHocItems.length != 0">
                         <v-btn color="primary"
                                slot="activator"
+                               v-if="khoaHocItems[0].canContribute"
                                class="white--text">
                             Thêm Mới
                             <v-icon right dark>add</v-icon>
