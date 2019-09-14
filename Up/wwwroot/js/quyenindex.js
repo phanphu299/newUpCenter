@@ -38,5 +38,18 @@
             });
     },
     methods: {
+        async mappingRoleItem(item) {
+            let that = this;
+            this.editedIndex = this.quyenItems.indexOf(item);
+            this.itemToEdit = Object.assign({}, item);
+
+            await axios.get('/Setting/GetRoleByQuyenIdAsync?QuyenId=' + item.quyenId)
+                .then(function (response) {
+                    that.itemRoles = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
     }
 });

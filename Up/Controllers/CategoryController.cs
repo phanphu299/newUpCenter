@@ -42,13 +42,14 @@
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
+            ViewBag.CanContribute = await _khoaHocService.CanContributeAsync(User);
             return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetKhoaHocAsync()
         {
-            var model = await _khoaHocService.GetKhoaHocAsync(User);
+            var model = await _khoaHocService.GetKhoaHocAsync();
             return Json(model);
         }
 
@@ -62,7 +63,7 @@
             }
 
             try {
-                var successful = await _khoaHocService.CreateKhoaHocAsync(model.Name, currentUser.Email, User);
+                var successful = await _khoaHocService.CreateKhoaHocAsync(model.Name, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -316,13 +317,14 @@
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
+            ViewBag.CanContribute = await _ngayHocService.CanContributeAsync(User);
             return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetNgayHocAsync()
         {
-            var model = await _ngayHocService.GetNgayHocAsync(User);
+            var model = await _ngayHocService.GetNgayHocAsync();
             return Json(model);
         }
 
@@ -337,7 +339,7 @@
             
             try
             {
-                var successful = await _ngayHocService.CreateNgayHocAsync(model.Name, currentUser.Email, User);
+                var successful = await _ngayHocService.CreateNgayHocAsync(model.Name, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -454,13 +456,14 @@
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
+            ViewBag.CanContribute = await _gioHocService.CanContributeAsync(User);
             return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetGioHocAsync()
         {
-            var model = await _gioHocService.GetGioHocAsync(User);
+            var model = await _gioHocService.GetGioHocAsync();
             return Json(model);
         }
 
@@ -475,7 +478,7 @@
 
             try
             {
-                var successful = await _gioHocService.CreateGioHocAsync(model.From, model.To, currentUser.Email, User);
+                var successful = await _gioHocService.CreateGioHocAsync(model.From, model.To, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -518,7 +521,7 @@
 
             try
             {
-                var successful = await _gioHocService.UpdateGioHocAsync(model.GioHocId, model.From, model.To, currentUser.Email, User);
+                var successful = await _gioHocService.UpdateGioHocAsync(model.GioHocId, model.From, model.To, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -593,13 +596,14 @@
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
+            ViewBag.CanContribute = await _hocPhiService.CanContributeAsync(User);
             return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetHocPhiAsync()
         {
-            var model = await _hocPhiService.GetHocPhiAsync(User);
+            var model = await _hocPhiService.GetHocPhiAsync();
             return Json(model);
         }
 
@@ -616,7 +620,7 @@
             {
                 DateTime _ngayApDung = Convert.ToDateTime(model.NgayApDung, System.Globalization.CultureInfo.InvariantCulture);
 
-                var successful = await _hocPhiService.CreateHocPhiAsync(model.Gia, model.GhiChu, _ngayApDung, currentUser.Email, User);
+                var successful = await _hocPhiService.CreateHocPhiAsync(model.Gia, model.GhiChu, _ngayApDung, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -660,7 +664,7 @@
             try
             {
                 DateTime _ngayApDung = Convert.ToDateTime(model.NgayApDung, System.Globalization.CultureInfo.InvariantCulture);
-                var successful = await _hocPhiService.UpdateHocPhiAsync(model.HocPhiId, model.Gia, model.GhiChu, _ngayApDung, currentUser.Email, User);
+                var successful = await _hocPhiService.UpdateHocPhiAsync(model.HocPhiId, model.Gia, model.GhiChu, _ngayApDung, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel
@@ -729,11 +733,13 @@
             }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////
+        [ServiceFilter(typeof(Read_TaiLieu))]
         public async Task<IActionResult> SachIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
+            ViewBag.CanContribute = await _sachService.CanContributeAsync(User);
             return View();
         }
 

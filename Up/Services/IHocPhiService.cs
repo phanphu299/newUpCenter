@@ -9,9 +9,9 @@ namespace Up.Services
 
     public interface IHocPhiService
     {
-        Task<List<HocPhiViewModel>> GetHocPhiAsync(ClaimsPrincipal User);
-        Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee, ClaimsPrincipal User);
-        Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee, ClaimsPrincipal User);
+        Task<List<HocPhiViewModel>> GetHocPhiAsync();
+        Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee);
+        Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee);
         Task<bool> DeleteHocPhiAsync(Guid HocPhiId, string LoggedEmployee);
 
         Task<int> TinhSoNgayHocAsync(Guid LopHocId, int month, int year);

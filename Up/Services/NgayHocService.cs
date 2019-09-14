@@ -49,7 +49,7 @@
             return canContribute;
         }
 
-        public async Task<NgayHocViewModel> CreateNgayHocAsync(string Name, string LoggedEmployee, ClaimsPrincipal User)
+        public async Task<NgayHocViewModel> CreateNgayHocAsync(string Name, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
                 throw new Exception("Tên Ngày Học không được để trống !!!");
@@ -66,14 +66,11 @@
             if (saveResult != 1)
                 throw new Exception("Lỗi khi lưu Ngày Học !!!");
 
-            bool canContribute = await CanContributeAsync(User);
-
             return new NgayHocViewModel {
                 NgayHocId = ngayHoc.NgayHocId,
                 Name = ngayHoc.Name,
                 CreatedBy = ngayHoc.CreatedBy,
                 CreatedDate = ngayHoc.CreatedDate.ToString("dd/MM/yyyy"),
-                CanContribute = canContribute
             };
         }
 
@@ -143,9 +140,8 @@
                                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<NgayHocViewModel>> GetNgayHocAsync(ClaimsPrincipal User)
+        public async Task<List<NgayHocViewModel>> GetNgayHocAsync()
         {
-            bool canContribute = await CanContributeAsync(User);
             return await _context.NgayHocs
                 .Where(x => x.IsDisabled == false)
                 .Select(x => new NgayHocViewModel
@@ -156,7 +152,6 @@
                     Name = x.Name,
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
-                    CanContribute = canContribute
                 })
                 .ToListAsync();
         }

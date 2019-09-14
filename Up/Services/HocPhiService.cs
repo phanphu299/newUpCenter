@@ -24,7 +24,7 @@ namespace Up.Services
             _userManager = userManager;
         }
 
-        public async Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee, ClaimsPrincipal User)
+        public async Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee)
         {
             HocPhi hocPhi = new HocPhi();
             hocPhi.HocPhiId = new Guid();
@@ -40,8 +40,6 @@ namespace Up.Services
             if (saveResult != 1)
                 throw new Exception("Lỗi khi lưu Học Phí !!!");
 
-            bool canContribute = await CanContributeAsync(User);
-
             return new HocPhiViewModel
             {
                 HocPhiId = hocPhi.HocPhiId,
@@ -50,7 +48,6 @@ namespace Up.Services
                 NgayApDung = hocPhi.NgayApDung?.ToString("dd/MM/yyyy"),
                 CreatedBy = hocPhi.CreatedBy,
                 CreatedDate = hocPhi.CreatedDate.ToString("dd/MM/yyyy"),
-                CanContribute = canContribute
             };
         }
 
@@ -71,10 +68,8 @@ namespace Up.Services
             return saveResult == 1;
         }
 
-        public async Task<List<HocPhiViewModel>> GetHocPhiAsync(ClaimsPrincipal User)
+        public async Task<List<HocPhiViewModel>> GetHocPhiAsync()
         {
-            bool canContribute = await CanContributeAsync(User);
-
             return await _context.HocPhis
                 .Where(x => x.IsDisabled == false)
                 .Select(x => new HocPhiViewModel
@@ -87,7 +82,6 @@ namespace Up.Services
                     GhiChu = x.GhiChu,
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
-                    CanContribute = canContribute
                 })
                 .ToListAsync();
         }
@@ -151,7 +145,7 @@ namespace Up.Services
                 .Select(date => date.Day);
         }
 
-        public async Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee, ClaimsPrincipal User)
+        public async Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee)
         {
             var item = await _context.HocPhis
                                     .Where(x => x.HocPhiId == HocPhiId)
@@ -167,7 +161,6 @@ namespace Up.Services
             item.UpdatedDate = DateTime.Now;
 
             var saveResult = await _context.SaveChangesAsync();
-            bool canContribute = await CanContributeAsync(User);
 
             return new HocPhiViewModel
             {
@@ -179,7 +172,6 @@ namespace Up.Services
                 CreatedDate = item.CreatedDate != null ? ((DateTime)item.CreatedDate).ToString("dd/MM/yyyy") : "",
                 UpdatedDate = item.UpdatedDate != null ? ((DateTime)item.UpdatedDate).ToString("dd/MM/yyyy") : "",
                 NgayApDung = item.NgayApDung != null ? ((DateTime)item.NgayApDung).ToString("dd/MM/yyyy") : "",
-                CanContribute = canContribute
             };
         }
 

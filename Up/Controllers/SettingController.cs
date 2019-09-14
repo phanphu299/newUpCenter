@@ -389,6 +389,13 @@ namespace Up.Controllers
             return Json(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetRoleByQuyenIdAsync(int QuyenId)
+        {
+            var model = await _quyenService.GetRoleByQuyenIdAsync(QuyenId);
+            return Json(model);
+        }
+
         [HttpPut]
         public async Task<IActionResult> AddQuyenToRoleAsync([FromBody]AddQuyenToRoleViewModel model)
         {

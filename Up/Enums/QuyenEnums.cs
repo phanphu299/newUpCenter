@@ -10,6 +10,8 @@ namespace Up.Enums
         Read_KhoaHoc,
         Contribute_KhoaHoc,
         Read_GioHoc,
-        Contribute_GioHoc
+        Contribute_GioHoc,
+        Read_TaiLieu,
+        Contribute_TaiLieu,
     }
 }

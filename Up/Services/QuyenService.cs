@@ -78,5 +78,16 @@
 
             return quyenList;
         }
+
+        public async Task<List<RoleViewModel>> GetRoleByQuyenIdAsync(int QuyenId)
+        {
+            var quyenByRole = _context.Quyen_Roles.Where(x => x.QuyenId == QuyenId).Select(x => x.RoleId);
+
+            return await _context.Roles.Where(x => quyenByRole.Contains(x.Id)).Select(x => new RoleViewModel
+            {
+                Id = x.Id,
+                Role = x.Name,
+            }).ToListAsync();
+        }
     }
 }

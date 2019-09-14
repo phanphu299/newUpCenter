@@ -48,7 +48,7 @@
             return canContribute;
         }
 
-        public async Task<KhoaHocViewModel> CreateKhoaHocAsync(string Name, string LoggedEmployee, ClaimsPrincipal User)
+        public async Task<KhoaHocViewModel> CreateKhoaHocAsync(string Name, string LoggedEmployee)
         {
             if (string.IsNullOrWhiteSpace(Name))
                 throw new Exception("Tên Khóa Học không được để trống !!!");
@@ -65,14 +65,11 @@
             if (saveResult != 1)
                 throw new Exception("Lỗi khi lưu Khóa Học !!!");
 
-            bool canContribute = await CanContributeAsync(User);
-
             return new KhoaHocViewModel {
                 KhoaHocId = khoaHoc.KhoaHocId,
                 Name = khoaHoc.Name,
                 CreatedBy = khoaHoc.CreatedBy,
                 CreatedDate = khoaHoc.CreatedDate.ToString("dd/MM/yyyy"),
-                CanContribute = canContribute
             };
         }
 
@@ -96,10 +93,8 @@
             return saveResult == 1;
         }
 
-        public async Task<List<KhoaHocViewModel>> GetKhoaHocAsync(ClaimsPrincipal User)
+        public async Task<List<KhoaHocViewModel>> GetKhoaHocAsync()
         {
-            bool canContribute = await CanContributeAsync(User);
-
             return await _context.KhoaHocs
                 .Where(x => x.IsDisabled == false)
                 .Select(x => new KhoaHocViewModel
@@ -110,7 +105,6 @@
                     Name = x.Name,
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
-                    CanContribute = canContribute
                 })
                 .ToListAsync();
         }

@@ -80,6 +80,7 @@ namespace Up
             services.AddScoped<Read_NgayHoc>();
             services.AddScoped<Read_KhoaHoc>();
             services.AddScoped<Read_GioHoc>();
+            services.AddScoped<Read_TaiLieu>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

@@ -10,5 +10,7 @@ namespace Up.Services
         Task<List<QuyenViewModel>> GetAllAsync();
         Task<List<QuyenViewModel>> GetAllByRoleIdAsync(string RoleId);
         Task<bool> AddQuyenToRoleAsync(AddQuyenToRoleViewModel model);
+
+        Task<List<RoleViewModel>> GetRoleByQuyenIdAsync(int QuyenId);
     }
 }
