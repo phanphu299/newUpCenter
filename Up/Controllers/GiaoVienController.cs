@@ -1,11 +1,14 @@
 ﻿namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Threading.Tasks;
+    using Up.Extensions;
     using Up.Services;
 
+    [Authorize]
     public class GiaoVienController : Controller
     {
         private readonly IGiaoVienService _giaoVienService;
@@ -17,10 +20,13 @@
             _userManager = userManager;
         }
 
+        [ServiceFilter(typeof(Read_NhanVien))]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
+
+            ViewBag.CanContribute = await _giaoVienService.CanContributeAsync(User);
             return View();
         }
 

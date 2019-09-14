@@ -81,6 +81,14 @@ namespace Up
             services.AddScoped<Read_KhoaHoc>();
             services.AddScoped<Read_GioHoc>();
             services.AddScoped<Read_TaiLieu>();
+            services.AddScoped<Read_LopHoc>();
+            services.AddScoped<Read_HocVien>();
+            services.AddScoped<Read_HocVien_Export>();
+            services.AddScoped<Read_QuanHe>();
+            services.AddScoped<Read_ViTriCongViec>();
+            services.AddScoped<Read_CheDoHopTac>();
+            services.AddScoped<Read_NgayLamViec>();
+            services.AddScoped<Read_NhanVien>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

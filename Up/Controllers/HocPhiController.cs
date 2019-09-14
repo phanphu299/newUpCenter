@@ -1,6 +1,7 @@
 ﻿
 namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using OfficeOpenXml;
@@ -11,6 +12,7 @@ namespace Up.Controllers
     using System.Threading.Tasks;
     using Up.Services;
 
+    [Authorize]
     public class HocPhiController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;

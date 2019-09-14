@@ -1,6 +1,7 @@
 ﻿
 namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System;
@@ -8,6 +9,7 @@ namespace Up.Controllers
     using System.Threading.Tasks;
     using Up.Services;
 
+    [Authorize]
     public class ChiPhiController : Controller
     {
         private readonly IChiPhiService _chiPhiService;

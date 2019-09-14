@@ -1,12 +1,15 @@
 ﻿
 namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Threading.Tasks;
+    using Up.Extensions;
     using Up.Services;
 
+    [Authorize]
     public class LopHocController : Controller
     {
         private readonly ILopHocService _lopHocService;
@@ -18,10 +21,13 @@ namespace Up.Controllers
             _userManager = userManager;
         }
 
+        [ServiceFilter(typeof(Read_LopHoc))]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
+
+            ViewBag.CanContribute = await _lopHocService.CanContributeAsync(User);
             return View();
         }
 

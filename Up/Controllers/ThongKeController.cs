@@ -1,5 +1,6 @@
 ﻿namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System.Linq;
@@ -7,6 +8,7 @@
     using Up.Models;
     using Up.Services;
 
+    [Authorize]
     public class ThongKeController : Controller
     {
         private readonly IThongKeService _thongKeService;

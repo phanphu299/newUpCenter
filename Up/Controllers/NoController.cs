@@ -1,12 +1,14 @@
 ﻿
 namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Threading.Tasks;
     using Up.Services;
 
+    [Authorize]
     public class NoController : Controller
     {
         private readonly INoService _noService;

@@ -7,172 +7,175 @@
 
             <v-card>
                 <v-card-title>
-                    <v-dialog v-model="dialog" persistent max-width="600px">
-                        <v-btn color="primary"
-                               slot="activator"
-                               class="white--text">
-                            Thêm Mới
-                            <v-icon right dark>add</v-icon>
-                        </v-btn>
-                        <v-card>
-                            <v-card-title>
-                                <span class="headline">Thêm Nhân Viên Mới</span>
-                            </v-card-title>
-                            <v-card-text>
-                                <v-container grid-list-md>
-                                    <v-layout wrap>
-                                        <v-flex xs12 sm4>
-                                            <v-text-field label="Tên Nhân Viên *" required v-model="newItem.name" v-on:keyup.enter="onSave"></v-text-field>
-                                        </v-flex>
-                                        <v-flex xs12 sm4>
-                                            <v-text-field label="Số Điện Thoại *" required v-model="newItem.phone" v-on:keyup.enter="onSave"></v-text-field>
-                                        </v-flex>
-                                        <v-flex xs12 sm4>
-                                            <v-text-field label="Facebook" v-model="newItem.facebookAccount" v-on:keyup.enter="onSave"></v-text-field>
-                                        </v-flex>
+                    @if (ViewBag.CanContribute)
+                    {
+                        <v-dialog v-model="dialog" persistent max-width="600px">
+                            <v-btn color="primary"
+                                   slot="activator"
+                                   class="white--text">
+                                Thêm Mới
+                                <v-icon right dark>add</v-icon>
+                            </v-btn>
+                            <v-card>
+                                <v-card-title>
+                                    <span class="headline">Thêm Nhân Viên Mới</span>
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-container grid-list-md>
+                                        <v-layout wrap>
+                                            <v-flex xs12 sm4>
+                                                <v-text-field label="Tên Nhân Viên *" required v-model="newItem.name" v-on:keyup.enter="onSave"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm4>
+                                                <v-text-field label="Số Điện Thoại *" required v-model="newItem.phone" v-on:keyup.enter="onSave"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm4>
+                                                <v-text-field label="Facebook" v-model="newItem.facebookAccount" v-on:keyup.enter="onSave"></v-text-field>
+                                            </v-flex>
 
-                                        <v-flex xs12 sm3>
-                                            <v-text-field label="Teaching Rate" v-model="newItem.teachingRate" v-on:keyup.enter="onSave"></v-text-field>
-                                        </v-flex>
-                                        <v-flex xs12 sm3>
-                                            <v-text-field label="Tutoring Rate" v-model="newItem.tutoringRate" v-on:keyup.enter="onSave"></v-text-field>
-                                        </v-flex>
-                                        <v-flex xs12 sm3>
-                                            <v-text-field label="Lương Cơ Bản *" required v-model="newItem.basicSalary" v-on:keyup.enter="onSave"></v-text-field>
-                                        </v-flex>
-                                        <v-flex xs12 sm3>
-                                            <v-text-field label="Mức Hoa Hồng" v-model="newItem.mucHoaHong" v-on:keyup.enter="onSave"></v-text-field>
-                                        </v-flex>
+                                            <v-flex xs12 sm3>
+                                                <v-text-field label="Teaching Rate" v-model="newItem.teachingRate" v-on:keyup.enter="onSave"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm3>
+                                                <v-text-field label="Tutoring Rate" v-model="newItem.tutoringRate" v-on:keyup.enter="onSave"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm3>
+                                                <v-text-field label="Lương Cơ Bản *" required v-model="newItem.basicSalary" v-on:keyup.enter="onSave"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm3>
+                                                <v-text-field label="Mức Hoa Hồng" v-model="newItem.mucHoaHong" v-on:keyup.enter="onSave"></v-text-field>
+                                            </v-flex>
 
-                                        <v-flex xs12 sm4>
-                                            <v-text-field label="Địa Chỉ *" required v-model="newItem.diaChi" v-on:keyup.enter="onSave"></v-text-field>
-                                        </v-flex>
-                                        <v-flex xs12 sm4>
-                                            <v-text-field label="Initial Name *" required v-model="newItem.initialName" v-on:keyup.enter="onSave"></v-text-field>
-                                        </v-flex>
-                                        <v-flex xs12 sm4>
-                                            <v-text-field label="CMND *" required v-model="newItem.cmnd" v-on:keyup.enter="onSave"></v-text-field>
-                                        </v-flex>
+                                            <v-flex xs12 sm4>
+                                                <v-text-field label="Địa Chỉ *" required v-model="newItem.diaChi" v-on:keyup.enter="onSave"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm4>
+                                                <v-text-field label="Initial Name *" required v-model="newItem.initialName" v-on:keyup.enter="onSave"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm4>
+                                                <v-text-field label="CMND *" required v-model="newItem.cmnd" v-on:keyup.enter="onSave"></v-text-field>
+                                            </v-flex>
 
-                                        <v-flex xs12 sm4>
-                                            <v-select :items="itemNgayLamViec"
-                                                      item-text="name"
-                                                      item-value="ngayLamViecId"
-                                                      v-model="newItem.ngayLamViecId"
-                                                      label="Chọn Ngày Làm Việc *">
-                                            </v-select>
-                                        </v-flex>
-                                        <v-flex xs12 sm4>
-                                            <v-menu v-model="isShowDatePickerBatDau"
-                                                    :close-on-content-click="false"
-                                                    :nudge-right="40"
-                                                    lazy
-                                                    transition="scale-transition"
-                                                    offset-y
-                                                    full-width
-                                                    min-width="290px">
-                                                <v-text-field slot="activator"
-                                                              v-model="newItem.ngayBatDau"
-                                                              label="Ngày Bắt Đầu *"
-                                                              prepend-icon="event"
-                                                              readonly></v-text-field>
-                                                <v-date-picker locale="vi-vn" v-model="newItem.ngayBatDau" v-on:input="isShowDatePickerBatDau = false"></v-date-picker>
-                                            </v-menu>
-                                        </v-flex>
-                                        <v-flex xs12 sm4>
-                                            <v-menu v-model="isShowDatePickerKetThuc"
-                                                    :close-on-content-click="false"
-                                                    :nudge-right="40"
-                                                    lazy
-                                                    transition="scale-transition"
-                                                    offset-y
-                                                    full-width
-                                                    min-width="290px">
-                                                <v-text-field slot="activator"
-                                                              v-model="newItem.ngayKetThuc"
-                                                              label="Ngày Kết Thúc"
-                                                              clearable
-                                                              prepend-icon="event"
-                                                              readonly></v-text-field>
-                                                <v-date-picker locale="vi-vn" v-model="newItem.ngayKetThuc" v-on:input="isShowDatePickerKetThuc = false"></v-date-picker>
-                                            </v-menu>
-                                        </v-flex>
+                                            <v-flex xs12 sm4>
+                                                <v-select :items="itemNgayLamViec"
+                                                          item-text="name"
+                                                          item-value="ngayLamViecId"
+                                                          v-model="newItem.ngayLamViecId"
+                                                          label="Chọn Ngày Làm Việc *">
+                                                </v-select>
+                                            </v-flex>
+                                            <v-flex xs12 sm4>
+                                                <v-menu v-model="isShowDatePickerBatDau"
+                                                        :close-on-content-click="false"
+                                                        :nudge-right="40"
+                                                        lazy
+                                                        transition="scale-transition"
+                                                        offset-y
+                                                        full-width
+                                                        min-width="290px">
+                                                    <v-text-field slot="activator"
+                                                                  v-model="newItem.ngayBatDau"
+                                                                  label="Ngày Bắt Đầu *"
+                                                                  prepend-icon="event"
+                                                                  readonly></v-text-field>
+                                                    <v-date-picker locale="vi-vn" v-model="newItem.ngayBatDau" v-on:input="isShowDatePickerBatDau = false"></v-date-picker>
+                                                </v-menu>
+                                            </v-flex>
+                                            <v-flex xs12 sm4>
+                                                <v-menu v-model="isShowDatePickerKetThuc"
+                                                        :close-on-content-click="false"
+                                                        :nudge-right="40"
+                                                        lazy
+                                                        transition="scale-transition"
+                                                        offset-y
+                                                        full-width
+                                                        min-width="290px">
+                                                    <v-text-field slot="activator"
+                                                                  v-model="newItem.ngayKetThuc"
+                                                                  label="Ngày Kết Thúc"
+                                                                  clearable
+                                                                  prepend-icon="event"
+                                                                  readonly></v-text-field>
+                                                    <v-date-picker locale="vi-vn" v-model="newItem.ngayKetThuc" v-on:input="isShowDatePickerKetThuc = false"></v-date-picker>
+                                                </v-menu>
+                                            </v-flex>
 
-                                        <v-flex xs12 sm12>
-                                            <v-textarea outline label="Ngân Hàng" v-model="newItem.nganHang" v-on:keyup.enter="onSave"></v-textarea>
-                                        </v-flex>
+                                            <v-flex xs12 sm12>
+                                                <v-textarea outline label="Ngân Hàng" v-model="newItem.nganHang" v-on:keyup.enter="onSave"></v-textarea>
+                                            </v-flex>
 
-                                        <v-flex xs12 sm5>
-                                            <v-select :items="itemLoaiGiaoVien"
-                                                      item-text="name"
-                                                      return-object
-                                                      v-model="newItem.loaiGiaoVien"
-                                                      label="Chọn Loại Nhân Viên *">
-                                            </v-select>
-                                        </v-flex>
+                                            <v-flex xs12 sm5>
+                                                <v-select :items="itemLoaiGiaoVien"
+                                                          item-text="name"
+                                                          return-object
+                                                          v-model="newItem.loaiGiaoVien"
+                                                          label="Chọn Loại Nhân Viên *">
+                                                </v-select>
+                                            </v-flex>
 
-                                        <v-flex xs12 sm5>
-                                            <v-select :items="itemLoaiCheDo"
-                                                      item-text="name"
-                                                      return-object
-                                                      v-model="newItem.loaiCheDo"
-                                                      label="Chọn Loại Chế Độ *">
-                                            </v-select>
-                                        </v-flex>
+                                            <v-flex xs12 sm5>
+                                                <v-select :items="itemLoaiCheDo"
+                                                          item-text="name"
+                                                          return-object
+                                                          v-model="newItem.loaiCheDo"
+                                                          label="Chọn Loại Chế Độ *">
+                                                </v-select>
+                                            </v-flex>
 
-                                        <v-flex xs12 sm2>
-                                            <v-tooltip top>
-                                                <template v-slot:activator="{ on }">
-                                                    <v-btn slot="activator" v-on="on" color="primary darken-1" small v-on:click="onAddLoaiNVCD">Thêm</v-btn>
-                                                </template>
-                                                <strong>Thêm Chức Danh và Chế Độ</strong>
-                                            </v-tooltip>
-                                        </v-flex>
+                                            <v-flex xs12 sm2>
+                                                <v-tooltip top>
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-btn slot="activator" v-on="on" color="primary darken-1" small v-on:click="onAddLoaiNVCD">Thêm</v-btn>
+                                                    </template>
+                                                    <strong>Thêm Chức Danh và Chế Độ</strong>
+                                                </v-tooltip>
+                                            </v-flex>
 
-                                        <v-flex xs12 sm12>
-                                            <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
-                                                <thead style="background-color: orange;">
-                                                    <tr style="border: 1px solid #ddd;">
-                                                        <th style="border: 1px solid #ddd; text-align:center"> Vị Trí</th>
-                                                        <th style="border: 1px solid #ddd; text-align:center"> Chế Độ</th>
-                                                        <th style="border: 1px solid #ddd; text-align:center"> Xóa</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr style="border: 1px solid #ddd;" v-for="(item,i) in arrayLoaiNVandCD" :key="i">
-                                                        <td style="border: 1px solid #ddd; vertical-align: middle; text-align:center; padding-right:5px; padding-top: 0px; padding-bottom: 0px">{{ item.loaiGiaoVien.name }}</td>
-                                                        <td style="border: 1px solid #ddd; vertical-align: middle; text-align:center; padding-right:5px; padding-top: 0px; padding-bottom: 0px">{{ item.loaiCheDo.name }}</td>
-                                                        <td style="border: 1px solid #ddd; vertical-align: middle; text-align:center; padding-right:5px; padding-top: 0px; padding-bottom: 0px">
-                                                            <v-tooltip top>
-                                                                <template v-slot:activator="{ on }">
-                                                                    <v-btn slot="activator" v-on="on" color="error darken-1" fab small flat v-on:click="onXoaLoaiNVCD(item)"><v-icon>delete</v-icon></v-btn>
-                                                                </template>
-                                                                <strong>Xóa Chức Danh và Chế Độ</strong>
-                                                            </v-tooltip>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </v-flex>
+                                            <v-flex xs12 sm12>
+                                                <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
+                                                    <thead style="background-color: orange;">
+                                                        <tr style="border: 1px solid #ddd;">
+                                                            <th style="border: 1px solid #ddd; text-align:center"> Vị Trí</th>
+                                                            <th style="border: 1px solid #ddd; text-align:center"> Chế Độ</th>
+                                                            <th style="border: 1px solid #ddd; text-align:center"> Xóa</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr style="border: 1px solid #ddd;" v-for="(item,i) in arrayLoaiNVandCD" :key="i">
+                                                            <td style="border: 1px solid #ddd; vertical-align: middle; text-align:center; padding-right:5px; padding-top: 0px; padding-bottom: 0px">{{ item.loaiGiaoVien.name }}</td>
+                                                            <td style="border: 1px solid #ddd; vertical-align: middle; text-align:center; padding-right:5px; padding-top: 0px; padding-bottom: 0px">{{ item.loaiCheDo.name }}</td>
+                                                            <td style="border: 1px solid #ddd; vertical-align: middle; text-align:center; padding-right:5px; padding-top: 0px; padding-bottom: 0px">
+                                                                <v-tooltip top>
+                                                                    <template v-slot:activator="{ on }">
+                                                                        <v-btn slot="activator" v-on="on" color="error darken-1" fab small flat v-on:click="onXoaLoaiNVCD(item)"><v-icon>delete</v-icon></v-btn>
+                                                                    </template>
+                                                                    <strong>Xóa Chức Danh và Chế Độ</strong>
+                                                                </v-tooltip>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </v-flex>
 
-                                    </v-layout>
-                                </v-container>
-                                <small>* bắt buộc</small>
-                                <v-alert v-model="alert"
-                                         dismissible
-                                         color="warning"
-                                         icon="priority_high"
-                                         outline>
-                                    {{ alertMessage }}
-                                </v-alert>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="secondary darken-1" flat v-on:click="dialog = false">Đóng</v-btn>
-                                <v-btn color="blue darken-1 white--text" v-on:click="onSave">Lưu</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
+                                        </v-layout>
+                                    </v-container>
+                                    <small>* bắt buộc</small>
+                                    <v-alert v-model="alert"
+                                             dismissible
+                                             color="warning"
+                                             icon="priority_high"
+                                             outline>
+                                        {{ alertMessage }}
+                                    </v-alert>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="secondary darken-1" flat v-on:click="dialog = false">Đóng</v-btn>
+                                    <v-btn color="blue darken-1 white--text" v-on:click="onSave">Lưu</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    }
 
                     <v-spacer></v-spacer>
                     <v-text-field v-model="search"
@@ -187,31 +190,34 @@
                     <template slot="items" slot-scope="props">
                         <td class="justify-center layout px-0">
 
-                            <v-tooltip top>
-                                <template v-slot:activator="{ on }">
-                                    <v-btn flat icon slot="activator"
-                                           v-on="on"
-                                           color="red"
-                                           v-on:click.stop="deleteDialog = true"
-                                           v-on:click="itemToDelete = props.item">
-                                        <v-icon>delete</v-icon>
-                                    </v-btn>
-                                </template>
-                                <strong>Xóa</strong>
-                            </v-tooltip>
+                            @if (ViewBag.CanContribute)
+                            {
+                                <v-tooltip top>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn flat icon slot="activator"
+                                               v-on="on"
+                                               color="red"
+                                               v-on:click.stop="deleteDialog = true"
+                                               v-on:click="itemToDelete = props.item">
+                                            <v-icon>delete</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <strong>Xóa</strong>
+                                </v-tooltip>
 
-                            <v-tooltip top>
-                                <template v-slot:activator="{ on }">
-                                    <v-btn color="primary"
-                                           flat icon
-                                           v-on="on"
-                                           v-on:click.stop="dialogEdit = true"
-                                           v-on:click="mappingEditItem(props.item)">
-                                        <v-icon>edit</v-icon>
-                                    </v-btn>
-                                </template>
-                                <strong>Sửa</strong>
-                            </v-tooltip>
+                                <v-tooltip top>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn color="primary"
+                                               flat icon
+                                               v-on="on"
+                                               v-on:click.stop="dialogEdit = true"
+                                               v-on:click="mappingEditItem(props.item)">
+                                            <v-icon>edit</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <strong>Sửa</strong>
+                                </v-tooltip>
+                            }
 
                         </td>
                         <td>{{ props.item.name }}</td>

@@ -7,41 +7,44 @@
 
             <v-card>
                 <v-card-title>
-                    <v-dialog v-model="dialog" persistent max-width="600px">
-                        <v-btn color="primary"
-                               slot="activator"
-                               class="white--text">
-                            Thêm Mới
-                            <v-icon right dark>add</v-icon>
-                        </v-btn>
-                        <v-card>
-                            <v-card-title>
-                                <span class="headline">Thêm Loại Chế Độ Mới</span>
-                            </v-card-title>
-                            <v-card-text>
-                                <v-container grid-list-md>
-                                    <v-layout wrap>
-                                        <v-flex xs12>
-                                            <v-text-field label="Tên Loại Chế Độ *" required v-model="newItem" v-on:keyup.enter="onSave"></v-text-field>
-                                        </v-flex>
-                                    </v-layout>
-                                </v-container>
-                                <small>* bắt buộc</small>
-                                <v-alert v-model="alert"
-                                         dismissible
-                                         color="warning"
-                                         icon="priority_high"
-                                         outline>
-                                    Không được bỏ trống
-                                </v-alert>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="secondary darken-1" flat v-on:click="dialog = false">Đóng</v-btn>
-                                <v-btn color="blue darken-1 white--text" v-on:click="onSave">Lưu</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
+                    @if (ViewBag.CanContribute)
+                    {
+                        <v-dialog v-model="dialog" persistent max-width="600px">
+                            <v-btn color="primary"
+                                   slot="activator"
+                                   class="white--text">
+                                Thêm Mới
+                                <v-icon right dark>add</v-icon>
+                            </v-btn>
+                            <v-card>
+                                <v-card-title>
+                                    <span class="headline">Thêm Loại Chế Độ Mới</span>
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-container grid-list-md>
+                                        <v-layout wrap>
+                                            <v-flex xs12>
+                                                <v-text-field label="Tên Loại Chế Độ *" required v-model="newItem" v-on:keyup.enter="onSave"></v-text-field>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-container>
+                                    <small>* bắt buộc</small>
+                                    <v-alert v-model="alert"
+                                             dismissible
+                                             color="warning"
+                                             icon="priority_high"
+                                             outline>
+                                        Không được bỏ trống
+                                    </v-alert>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="secondary darken-1" flat v-on:click="dialog = false">Đóng</v-btn>
+                                    <v-btn color="blue darken-1 white--text" v-on:click="onSave">Lưu</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    }
 
                     <v-spacer></v-spacer>
                     <v-text-field v-model="search"
@@ -55,29 +58,41 @@
                               :search="search">
                     <template slot="items" slot-scope="props">
                         <td>
-                            <v-tooltip top>
-                                <template v-slot:activator="{ on }">
-                                    <v-btn flat icon slot="activator"
-                                           v-on="on"
-                                           color="red"
-                                           v-on:click.stop="deleteDialog = true"
-                                           v-on:click="itemToDelete = props.item">
-                                        <v-icon>delete</v-icon>
-                                    </v-btn>
-                                </template>
-                                <strong>Xóa</strong>
-                            </v-tooltip>
+                            @if (ViewBag.CanContribute)
+                            {
+                                <v-tooltip top>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn flat icon slot="activator"
+                                               v-on="on"
+                                               color="red"
+                                               v-on:click.stop="deleteDialog = true"
+                                               v-on:click="itemToDelete = props.item">
+                                            <v-icon>delete</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <strong>Xóa</strong>
+                                </v-tooltip>
+                            }
+
                         </td>
                         <td>
-                            <v-edit-dialog :return-value.sync="props.item.name"
-                                           lazy
-                                           v-on:save="onUpdate(props.item)">
-                                {{ props.item.name }}
-                                <v-text-field slot="input"
-                                              v-model="props.item.name"
-                                              label="Edit"
-                                              single-line></v-text-field>
-                            </v-edit-dialog>
+                            @if (ViewBag.CanContribute)
+                            {
+                                <v-edit-dialog :return-value.sync="props.item.name"
+                                               lazy
+                                               v-on:save="onUpdate(props.item)">
+                                    {{ props.item.name }}
+                                    <v-text-field slot="input"
+                                                  v-model="props.item.name"
+                                                  label="Edit"
+                                                  single-line></v-text-field>
+                                </v-edit-dialog>
+                            }
+                            else
+                            {
+                                <span>{{ props.item.name }}</span>
+                            }
+
                         </td>
                         <td>{{ props.item.createdDate }}</td>
                         <td>{{ props.item.createdBy }}</td>

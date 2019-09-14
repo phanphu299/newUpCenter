@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Models;
 
@@ -22,5 +23,7 @@
         Task<bool> ToggleChenAsync(Guid HocVienId, string LoggedEmployee);
 
         Task<bool> AddToUnavailableClassAsync(List<Guid> LopHocId, Guid HocVienId, string LoggedEmployee);
+
+        Task<bool> CanContributeAsync(ClaimsPrincipal User);
     }
 }

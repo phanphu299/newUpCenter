@@ -3,6 +3,7 @@ namespace Up.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Models;
 
@@ -21,5 +22,6 @@ namespace Up.Services
             Guid NgayLamViecId, DateTime NgayBatDau, DateTime? NgayKetThuc, string NganHang, string LoggedEmployee);
 
         Task<bool> DeleteGiaoVienAsync(Guid GiaoVienId, string LoggedEmployee);
+        Task<bool> CanContributeAsync(ClaimsPrincipal User);
     }
 }

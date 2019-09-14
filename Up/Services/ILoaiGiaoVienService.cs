@@ -3,6 +3,7 @@ namespace Up.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Models;
 
@@ -12,5 +13,6 @@ namespace Up.Services
         Task<LoaiGiaoVienViewModel> CreateLoaiGiaoVienAsync(string Name, byte Order, string LoggedEmployee);
         Task<bool> UpdateLoaiGiaoVienAsync(Guid LoaiGiaoVienId, string Name, byte Order, string LoggedEmployee);
         Task<bool> DeleteLoaiGiaoVienAsync(Guid LoaiGiaoVienId, string LoggedEmployee);
+        Task<bool> CanContributeAsync(ClaimsPrincipal User);
     }
 }

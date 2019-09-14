@@ -1,5 +1,6 @@
 ﻿namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using OfficeOpenXml;
@@ -10,9 +11,11 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Up.Extensions;
     using Up.Models;
     using Up.Services;
 
+    [Authorize]
     public class HocVienController : Controller
     {
         private readonly IHocVienService _hocVienService;
@@ -28,13 +31,17 @@
             _userManager = userManager;
         }
 
+        [ServiceFilter(typeof(Read_HocVien))]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
+
+            ViewBag.CanContribute = await _hocVienService.CanContributeAsync(User);
             return View();
         }
 
+        [ServiceFilter(typeof(Read_HocVien_Export))]
         public async Task<IActionResult> ExportIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);

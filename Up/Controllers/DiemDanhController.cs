@@ -11,7 +11,9 @@
     using System.Drawing;
     using Up.Models;
     using OfficeOpenXml;
+    using Microsoft.AspNetCore.Authorization;
 
+    [Authorize]
     public class DiemDanhController : Controller
     {
         private readonly IDiemDanhService _diemDanhService;

@@ -1,5 +1,6 @@
 ﻿namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System;
@@ -7,6 +8,7 @@
     using Up.Extensions;
     using Up.Services;
 
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly IKhoaHocService _khoaHocService;
@@ -174,11 +176,13 @@
             }
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////
+        [ServiceFilter(typeof(Read_QuanHe))]
         public async Task<IActionResult> QuanHeIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
+            ViewBag.CanContribute = await _quanHeService.CanContributeAsync(User);
             return View();
         }
 
@@ -874,11 +878,13 @@
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
+        [ServiceFilter(typeof(Read_ViTriCongViec))]
         public async Task<IActionResult> LoaiGiaoVienIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
+            ViewBag.CanContribute = await _loaiGiaoVienService.CanContributeAsync(User);
             return View();
         }
 
@@ -1012,11 +1018,13 @@
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
+        [ServiceFilter(typeof(Read_NgayLamViec))]
         public async Task<IActionResult> NgayLamViecIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
+            ViewBag.CanContribute = await _ngayLamViecService.CanContributeAsync(User);
             return View();
         }
 
@@ -1150,11 +1158,13 @@
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////
+        [ServiceFilter(typeof(Read_CheDoHopTac))]
         public async Task<IActionResult> LoaiCheDoIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
+            ViewBag.CanContribute = await _loaiCheDoService.CanContributeAsync(User);
             return View();
         }
 

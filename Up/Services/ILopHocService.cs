@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Models;
 
@@ -25,5 +26,7 @@
         Task<bool> ToggleTotNghiepAsync(Guid LopHocId, string LoggedEmployee);
 
         Task<bool> DeleteLopHocAsync(Guid LopHocId, string LoggedEmployee);
+
+        Task<bool> CanContributeAsync(ClaimsPrincipal User);
     }
 }
