@@ -6,6 +6,13 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="NewFolder\**" />
+    <Content Remove="NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="NewFolder\**" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="4.5.3.2" />

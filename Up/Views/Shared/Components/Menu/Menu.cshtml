@@ -1,0 +1,304 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model Up.Models.ListQuyenViewModel
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<aside id="left-sidebar-nav" class="nav-expanded nav-lock nav-collapsible">
+    <div class="brand-sidebar">
+        <h1 class="logo-wrapper">
+            <a asp-controller="Home" asp-action="Index" class="brand-logo darken-1">
+                <img src="~/layout_page/images/logo/new_logo.png" alt="materialize logo">
+                <span class="logo-text hide-on-med-and-down">UP Center</span>
+            </a>
+        </h1>
+    </div>
+    <ul id="slide-out" class="side-nav fixed leftside-navigation">
+        <li class="no-padding">
+            <ul class="collapsible" data-collapsible="accordion">
+                <li class="bold">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="waves-effect waves-cyan">
+                        <i class="material-icons">dashboard</i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                @if (Model.CanViewLopHoc || Model.CanViewTaiLieu)
+                {
+                    <li class="bold">
+                        <a class="collapsible-header waves-effect waves-cyan">
+                            <i class="material-icons">dvr</i>
+                            <span class="nav-text">Danh Mục</span>
+                        </a>
+                        <div class="collapsible-body">
+                            <ul>
+                                @if (Model.CanViewLopHoc)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="LopHoc" asp-action="Index">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Lớp Học</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (Model.CanViewTaiLieu)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Category" asp-action="SachIndex">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Tài Liệu</span>
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+                @if (Model.CanViewKhoaHoc || Model.CanViewNgayHoc || Model.CanViewHocPhi || Model.CanViewGioHoc)
+                {
+                    <li class="bold">
+                        <a class="collapsible-header waves-effect waves-cyan">
+                            <i class="material-icons">class</i>
+                            <span class="nav-text">Thông Tin Khóa Học</span>
+                        </a>
+                        <div class="collapsible-body">
+                            <ul>
+                                @if (Model.CanViewKhoaHoc)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Category" asp-action="KhoaHocIndex">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Khóa Học</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (Model.CanViewNgayHoc)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Category" asp-action="NgayHocIndex">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Ngày Học</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (Model.CanViewHocPhi)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Category" asp-action="HocPhiIndex">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Học Phí</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (Model.CanViewGioHoc)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Category" asp-action="GioHocIndex">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Giờ Học</span>
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+                @if (Model.CanViewHocVien || Model.CanViewQuanHe)
+                {
+                    <li class="bold">
+                        <a class="collapsible-header waves-effect waves-cyan">
+                            <i class="material-icons">school</i>
+                            <span class="nav-text">Quản Lý Học Viên</span>
+                        </a>
+                        <div class="collapsible-body">
+                            <ul>
+                                @if (Model.CanViewHocVien)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="HocVien" asp-action="Index">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Học Viên</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (Model.CanViewHocVien)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Category" asp-action="QuanHeIndex">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Quan Hệ</span>
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+                @if (Model.CanViewVitri || Model.CanViewCheDo || Model.CanViewNgayLamViec || Model.CanViewNhanVien)
+                {
+                    <li class="bold">
+                        <a class="collapsible-header waves-effect waves-cyan">
+                            <i class="material-icons">people</i>
+                            <span class="nav-text">Quản Lý Nhân Viên</span>
+                        </a>
+                        <div class="collapsible-body">
+                            <ul>
+                                @if (Model.CanViewVitri)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Category" asp-action="LoaiGiaoVienIndex">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Vị Trí Công Việc</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (Model.CanViewCheDo)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Category" asp-action="LoaiCheDoIndex">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Chế Độ Hợp Tác</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (Model.CanViewNgayLamViec)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Category" asp-action="NgayLamViecIndex">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Ngày Làm Việc</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                @if (Model.CanViewNhanVien)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="GiaoVien" asp-action="Index">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Nhân Viên</span>
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+                @if (Model.CanViewChiPhiCoDinh || Model.CanViewNo || Model.CanViewTinhHocPhi || Model.CanViewTinhLuong)
+                {
+                    <li class="bold">
+                        <a class="collapsible-header waves-effect waves-cyan">
+                            <i class="material-icons">attach_money</i>
+                            <span class="nav-text">Doanh Thu & Chi Phí</span>
+                        </a>
+                        <div class="collapsible-body">
+                            <ul>
+                                @if (Model.CanViewChiPhiCoDinh)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="Category" asp-action="StaticExpenseIndex">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Chi Phí Cố Định</span>
+                                        </a>
+                                    </li>
+                                }
+
+
+                                @if (Model.CanViewNo)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="No" asp-action="Index">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Học Viên Nợ</span>
+                                        </a>
+                                    </li>
+                                }
+
+
+                                @if (Model.CanViewTinhHocPhi)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="HocPhi" asp-action="Index">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Quản Lý Học Phí</span>
+                                        </a>
+                                    </li>
+                                }
+
+
+                                @if (Model.CanViewTinhLuong)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="ChiPhi" asp-action="Index">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Tính Lương/Chi Phí</span>
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+                @if (Model.CanViewDiemDanh)
+                {
+                    <li class="bold">
+                        <a asp-area="" asp-controller="DiemDanh" asp-action="Index" class="waves-effect waves-cyan">
+                            <i class="material-icons">list_alt</i>
+                            <span class="nav-text">Điểm Danh</span>
+                        </a>
+                    </li>
+                }
+
+
+                @if (Model.CanViewDiemDanh_Export)
+                {
+                    <li class="bold">
+                        <a asp-area="" asp-controller="DiemDanh" asp-action="ExportIndex" class="waves-effect waves-cyan">
+                            <i class="material-icons">
+                                check_circle_outline
+                            </i>
+                            <span class="nav-text">Export Điểm Danh</span>
+                        </a>
+                    </li>
+                }
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="bold">
+                        <a asp-area="" asp-controller="HocVien" asp-action="ExportIndex" class="waves-effect waves-cyan">
+                            <i class="material-icons">
+                                perm_contact_calendar
+                            </i>
+                            <span class="nav-text">Export Học Viên</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </li>
+    </ul>
+    <a href="index.html#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only gradient-45deg-light-blue-cyan gradient-shadow">
+        <i class="material-icons">menu</i>
+    </a>
+</aside>
