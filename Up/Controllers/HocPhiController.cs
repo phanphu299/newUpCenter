@@ -10,6 +10,7 @@ namespace Up.Controllers
     using System.Drawing;
     using System.Linq;
     using System.Threading.Tasks;
+    using Up.Extensions;
     using Up.Services;
 
     [Authorize]
@@ -30,16 +31,26 @@ namespace Up.Controllers
             _noService = noService;
         }
 
+        [ServiceFilter(typeof(Read_TinhHocPhi))]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
+
+            ViewBag.CanContribute = await _hocPhiService.CanContributeTinhHocPhiAsync(User);
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTinhHocPhiAsync(Guid LopHocId, int Month, int Year, double HocPhi)
+        public async Task<IActionResult> GetTinhHocPhiAsync(Guid LopHocId, int Month, int Year, double HocPhi, Guid HocPhiId)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var updateHocPhi = await _lopHocService.UpdateHocPhiLopHocAsync(LopHocId, HocPhiId, Month, Year, currentUser.Email);
             var model = await _hocPhiService.TinhHocPhiAsync(LopHocId, Month, Year, HocPhi);
             return Json(model);
         }

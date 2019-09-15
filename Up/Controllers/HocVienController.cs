@@ -41,7 +41,7 @@
             return View();
         }
 
-        [ServiceFilter(typeof(Read_HocVien_Export))]
+        [Authorize(Roles = Constants.Admin)]
         public async Task<IActionResult> ExportIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);

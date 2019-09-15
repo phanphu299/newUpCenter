@@ -1,4 +1,8 @@
-﻿<aside id="left-sidebar-nav" class="nav-expanded nav-lock nav-collapsible">
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<aside id="left-sidebar-nav" class="nav-expanded nav-lock nav-collapsible">
     <div class="brand-sidebar">
         <h1 class="logo-wrapper">
             <a asp-controller="Home" asp-action="Index" class="brand-logo darken-1">
@@ -188,14 +192,17 @@
                         <span class="nav-text">Export Điểm Danh</span>
                     </a>
                 </li>
-                <li class="bold">
-                    <a asp-area="" asp-controller="HocVien" asp-action="ExportIndex" class="waves-effect waves-cyan">
-                        <i class="material-icons">
-                            perm_contact_calendar
-                        </i>
-                        <span class="nav-text">Export Học Viên</span>
-                    </a>
-                </li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="bold">
+                        <a asp-area="" asp-controller="HocVien" asp-action="ExportIndex" class="waves-effect waves-cyan">
+                            <i class="material-icons">
+                                perm_contact_calendar
+                            </i>
+                            <span class="nav-text">Export Học Viên</span>
+                        </a>
+                    </li>
+                }
             </ul>
         </li>
     </ul>

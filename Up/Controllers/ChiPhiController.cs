@@ -7,6 +7,7 @@ namespace Up.Controllers
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Up.Extensions;
     using Up.Services;
 
     [Authorize]
@@ -23,10 +24,13 @@ namespace Up.Controllers
             _userManager = userManager;
         }
 
+        [ServiceFilter(typeof(Read_TinhLuong))]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
+
+            ViewBag.CanContribute = await _chiPhiService.CanContributeAsync(User);
             return View();
         }
 

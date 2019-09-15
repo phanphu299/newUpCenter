@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Up.Data;
 
 namespace Up.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190915032606_Addclolumhocphi")]
+    partial class Addclolumhocphi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +47,8 @@ namespace Up.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d19477af-1dc0-4daf-b8f6-8fec745b49db",
-                            ConcurrencyStamp = "207cbcfc-84d3-4b31-b5cb-b880f27aa45f",
+                            Id = "77d51877-e22f-4044-a320-0e0da0b582a8",
+                            ConcurrencyStamp = "3f4318f8-158b-4144-9c04-a4ba83483141",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -516,6 +518,8 @@ namespace Up.Data.Migrations
 
                     b.Property<Guid>("GioHocId");
 
+                    b.Property<Guid?>("HocPhiId");
+
                     b.Property<bool>("IsCanceled");
 
                     b.Property<bool>("IsDisabled");
@@ -539,6 +543,8 @@ namespace Up.Data.Migrations
                     b.HasKey("LopHocId");
 
                     b.HasIndex("GioHocId");
+
+                    b.HasIndex("HocPhiId");
 
                     b.HasIndex("KhoaHocId");
 
@@ -577,28 +583,6 @@ namespace Up.Data.Migrations
                     b.HasIndex("LopHocId");
 
                     b.ToTable("LopHoc_DiemDanhs");
-                });
-
-            modelBuilder.Entity("Up.Data.Entities.LopHoc_HocPhi", b =>
-                {
-                    b.Property<Guid>("LopHoc_HocPhiId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("HocPhiId");
-
-                    b.Property<Guid>("LopHocId");
-
-                    b.Property<int>("Nam");
-
-                    b.Property<int>("Thang");
-
-                    b.HasKey("LopHoc_HocPhiId");
-
-                    b.HasIndex("HocPhiId");
-
-                    b.HasIndex("LopHocId");
-
-                    b.ToTable("LopHoc_HocPhis");
                 });
 
             modelBuilder.Entity("Up.Data.Entities.NgayHoc", b =>
@@ -978,6 +962,10 @@ namespace Up.Data.Migrations
                         .HasForeignKey("GioHocId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("Up.Data.Entities.HocPhi", "HocPhi")
+                        .WithMany("LopHocs")
+                        .HasForeignKey("HocPhiId");
+
                     b.HasOne("Up.Data.Entities.KhoaHoc", "KhoaHoc")
                         .WithMany("LopHocs")
                         .HasForeignKey("KhoaHocId")
@@ -998,19 +986,6 @@ namespace Up.Data.Migrations
 
                     b.HasOne("Up.Data.Entities.LopHoc", "LopHoc")
                         .WithMany("LopHoc_DiemDanhs")
-                        .HasForeignKey("LopHocId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Up.Data.Entities.LopHoc_HocPhi", b =>
-                {
-                    b.HasOne("Up.Data.Entities.HocPhi", "HocPhi")
-                        .WithMany("LopHoc_HocPhis")
-                        .HasForeignKey("HocPhiId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Up.Data.Entities.LopHoc", "LopHoc")
-                        .WithMany("LopHoc_HocPhis")
                         .HasForeignKey("LopHocId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

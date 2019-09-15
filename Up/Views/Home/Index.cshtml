@@ -1,48 +1,77 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
 <div class="container" id="HomeIndex">
     <!--card stats start-->
     <div id="ecommerce-offer">
-        <div class="row">
-            <div class="col s12 m3">
-                <div class="card gradient-shadow gradient-45deg-light-blue-cyan border-radius-3">
-                    <div class="card-content center">
-                        <img src="~/layout_page/images/icon/giaovien.png" class="width-40">
-                        <h5 class="white-text lighten-4">{{ thongKeTong.hocVien }}</h5>
-                        <p class="white-text lighten-4">Học Viên</p>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="row">
+                <div class="col s12 m3">
+                    <div class="card gradient-shadow gradient-45deg-light-blue-cyan border-radius-3">
+                        <div class="card-content center">
+                            <img src="~/layout_page/images/icon/giaovien.png" class="width-40">
+                            <h5 class="white-text lighten-4">{{ thongKeTong.hocVien }}</h5>
+                            <p class="white-text lighten-4">Học Viên</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m3">
+                    <div class="card gradient-shadow gradient-45deg-amber-amber border-radius-3">
+                        <div class="card-content center">
+                            <img src="~/layout_page/images/icon/hocvien.png" class="width-40">
+                            <h5 class="white-text lighten-4">{{ thongKeTong.giaoVien }}</h5>
+                            <p class="white-text lighten-4">Giáo Viên</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m3">
+                    <div class="card gradient-shadow gradient-45deg-green-teal border-radius-3">
+                        <div class="card-content center">
+                            <img src="~/layout_page/images/icon/doanhthu.png" class="width-40">
+                            <h5 class="white-text lighten-4">{{ formatNumber(thongKeTong.doanhThu) }}</h5>
+                            <p class="white-text lighten-4">Doanh Thu</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m3">
+                    <div class="card gradient-shadow gradient-45deg-red-pink border-radius-3">
+                        <div class="card-content center">
+                            <img src="~/layout_page/images/icon/chiphi.png" class="width-40">
+                            <h5 class="white-text lighten-4">{{ formatNumber(thongKeTong.chiPhi) }}</h5>
+                            <p class="white-text lighten-4">Chi Phí</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col s12 m3">
-                <div class="card gradient-shadow gradient-45deg-amber-amber border-radius-3">
-                    <div class="card-content center">
-                        <img src="~/layout_page/images/icon/hocvien.png" class="width-40">
-                        <h5 class="white-text lighten-4">{{ thongKeTong.giaoVien }}</h5>
-                        <p class="white-text lighten-4">Giáo Viên</p>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col s12 m6">
+                    <div class="card gradient-shadow gradient-45deg-light-blue-cyan border-radius-3">
+                        <div class="card-content center">
+                            <img src="~/layout_page/images/icon/giaovien.png" class="width-40">
+                            <h5 class="white-text lighten-4">{{ thongKeTong.hocVien }}</h5>
+                            <p class="white-text lighten-4">Học Viên</p>
+                        </div>  
+                    </div>
+                </div>
+                <div class="col s12 m6">
+                    <div class="card gradient-shadow gradient-45deg-amber-amber border-radius-3">
+                        <div class="card-content center">
+                            <img src="~/layout_page/images/icon/hocvien.png" class="width-40">
+                            <h5 class="white-text lighten-4">{{ thongKeTong.giaoVien }}</h5>
+                            <p class="white-text lighten-4">Giáo Viên</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col s12 m3">
-                <div class="card gradient-shadow gradient-45deg-green-teal border-radius-3">
-                    <div class="card-content center">
-                        <img src="~/layout_page/images/icon/doanhthu.png" class="width-40">
-                        <h5 class="white-text lighten-4">{{ formatNumber(thongKeTong.doanhThu) }}</h5>
-                        <p class="white-text lighten-4">Doanh Thu</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m3">
-                <div class="card gradient-shadow gradient-45deg-red-pink border-radius-3">
-                    <div class="card-content center">
-                        <img src="~/layout_page/images/icon/chiphi.png" class="width-40">
-                        <h5 class="white-text lighten-4">{{ formatNumber(thongKeTong.chiPhi) }}</h5>
-                        <p class="white-text lighten-4">Chi Phí</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        }
     </div>
     <div id="sales-chart">
         <div class="row">
@@ -68,23 +97,26 @@
 
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col s12">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="row">
+                                <div class="col s12">
 
-                                <div class="col s12 m6 l6">
-                                    <header style="color:#1976d2">Doanh Thu/Chi Phí</header>
-                                    <line-chart v-if="loadedDoanhThuHocPhi"
-                                                :chartdata="chartdataDoanhThuHocPhi" />
+                                    <div class="col s12 m6 l6">
+                                        <header style="color:#1976d2">Doanh Thu/Chi Phí</header>
+                                        <line-chart v-if="loadedDoanhThuHocPhi"
+                                                    :chartdata="chartdataDoanhThuHocPhi" />
+                                    </div>
+
+                                    <div class="col s12 m6 l6">
+                                        <header style="color:#1976d2">Học Viên Nợ</header>
+                                        <line-chart v-if="loadedNo"
+                                                    :chartdata="chartdataNo" />
+                                    </div>
+
                                 </div>
-
-                                <div class="col s12 m6 l6">
-                                    <header style="color:#1976d2">Học Viên Nợ</header>
-                                    <line-chart v-if="loadedNo"
-                                                :chartdata="chartdataNo" />
-                                </div>
-
                             </div>
-                        </div>
+                        }
                     </div>
                 </div>
             </div>

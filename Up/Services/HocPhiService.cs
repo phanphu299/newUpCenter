@@ -460,5 +460,30 @@ namespace Up.Services
             }
             return canContribute;
         }
+
+        public async Task<bool> CanContributeTinhHocPhiAsync(ClaimsPrincipal User)
+        {
+            var CurUser = await _userManager.GetUserAsync(User);
+
+            var roles = await _userManager.GetRolesAsync(CurUser);
+
+            var quyen_roles = _context.Quyen_Roles
+                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_TinhHocPhi)
+                .Select(x => x.RoleId).ToList();
+
+            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
+
+            bool canContribute = false;
+
+            foreach (string role in roles)
+            {
+                if (allRoles.Contains(role))
+                {
+                    canContribute = true;
+                    break;
+                }
+            }
+            return canContribute;
+        }
     }
 }

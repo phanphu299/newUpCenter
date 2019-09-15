@@ -14,5 +14,7 @@
         public string CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
+
+        public ICollection<LopHoc_HocPhi> LopHoc_HocPhis { get; set; }
     }
 }

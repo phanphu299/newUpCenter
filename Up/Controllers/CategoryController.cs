@@ -1298,11 +1298,13 @@
         }
 
         /// /////////////////////////////////////////////////////////////////////////////////////////////////////
+        [ServiceFilter(typeof(Read_ChiPhiCoDinh))]
         public async Task<IActionResult> StaticExpenseIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
+            ViewBag.CanContribute = await _chiPhiCoDinhService.CanContributeAsync(User);
             return View();
         }
 

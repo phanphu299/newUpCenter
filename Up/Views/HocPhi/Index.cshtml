@@ -47,7 +47,7 @@
                             <v-select :items="itemHocPhi"
                                       v-model="selectedHocPhi"
                                       item-text="gia"
-                                      item-value="gia"
+                                      return-object
                                       chips
                                       label="Chọn Học Phí"
                                       v-on:change="onTinhTien"></v-select>
@@ -57,9 +57,13 @@
                             <v-btn color="primary" v-on:click="onTinhTien" v-if="selectedNam !== '' && selectedThang !== '' && selectedHocPhi !== ''">Refresh</v-btn>
                         </v-flex>
 
-                        <v-flex xs12 sm2 v-if="hocVienList.length > 0">
-                            <v-btn color="success" v-on:click="onExport">Xuất Excel</v-btn>
-                        </v-flex>
+                        @if (ViewBag.CanContribute)
+                        {
+                            <v-flex xs12 sm2 v-if="hocVienList.length > 0">
+                                <v-btn color="success" v-on:click="onExport">Xuất Excel</v-btn>
+                            </v-flex>
+                        }
+
                         <div v-if="hocVienList.length > 0">
                             Số ngày học tháng này:
                             <span style="color:red">{{tongNgayHoc}}</span>
@@ -138,44 +142,47 @@
                                             <td><v-text-field v-model="props.item.minus" v-on:keyup="onMinusHocPhi(props.item.minus, props.item)"></v-text-field></td>
                                             <td><v-text-field v-model="props.item.ghiChu"></v-text-field></td>
                                             <td>
-                                                <v-tooltip top>
-                                                    <template v-slot:activator="{ on }">
-                                                        <v-btn flat icon
-                                                               small
-                                                               color="success"
-                                                               v-on="on"
-                                                               v-on:click="onLuu(props.item)">
-                                                            <v-icon>check</v-icon>
-                                                        </v-btn>
-                                                    </template>
-                                                    <strong>Đóng tiền và Lưu</strong>
-                                                </v-tooltip>
+                                                @if (ViewBag.CanContribute)
+                                                {
+                                                    <v-tooltip top>
+                                                        <template v-slot:activator="{ on }">
+                                                            <v-btn flat icon
+                                                                   small
+                                                                   color="success"
+                                                                   v-on="on"
+                                                                   v-on:click="onLuu(props.item)">
+                                                                <v-icon>check</v-icon>
+                                                            </v-btn>
+                                                        </template>
+                                                        <strong>Đóng tiền và Lưu</strong>
+                                                    </v-tooltip>
 
-                                                <v-tooltip top>
-                                                    <template v-slot:activator="{ on }">
-                                                        <v-btn flat icon
-                                                               small
-                                                               color="warning"
-                                                               v-on="on"
-                                                               v-on:click="onNo(props.item)">
-                                                            <v-icon>move_to_inbox</v-icon>
-                                                        </v-btn>
-                                                    </template>
-                                                    <strong>Nợ và Lưu</strong>
-                                                </v-tooltip>
+                                                    <v-tooltip top>
+                                                        <template v-slot:activator="{ on }">
+                                                            <v-btn flat icon
+                                                                   small
+                                                                   color="warning"
+                                                                   v-on="on"
+                                                                   v-on:click="onNo(props.item)">
+                                                                <v-icon>move_to_inbox</v-icon>
+                                                            </v-btn>
+                                                        </template>
+                                                        <strong>Nợ và Lưu</strong>
+                                                    </v-tooltip>
 
-                                                <v-tooltip top>
-                                                    <template v-slot:activator="{ on }">
-                                                        <v-btn flat icon
-                                                               small
-                                                               color="error"
-                                                               v-on="on"
-                                                               v-on:click="onUndo(props.item)">
-                                                            <v-icon>restore</v-icon>
-                                                        </v-btn>
-                                                    </template>
-                                                    <strong>Undo</strong>
-                                                </v-tooltip>
+                                                    <v-tooltip top>
+                                                        <template v-slot:activator="{ on }">
+                                                            <v-btn flat icon
+                                                                   small
+                                                                   color="error"
+                                                                   v-on="on"
+                                                                   v-on:click="onUndo(props.item)">
+                                                                <v-icon>restore</v-icon>
+                                                            </v-btn>
+                                                        </template>
+                                                        <strong>Undo</strong>
+                                                    </v-tooltip>
+                                                }
                                             </td>
 
                                         </template>
@@ -183,9 +190,13 @@
                                     <span><b>Tổng Học Phí: {{ formatNumber(total) }}</b></span>
                                     <v-layout>
                                         <v-spacer></v-spacer>
-                                        <v-flex xs12 sm2 v-if="hocVienList.length > 0">
-                                            <v-btn color="primary" v-on:click="onLuuNhap">Lưu Bảng Tính</v-btn>
-                                        </v-flex>
+                                        @if (ViewBag.CanContribute)
+                                        {
+                                            <v-flex xs12 sm2 v-if="hocVienList.length > 0">
+                                                <v-btn color="primary" v-on:click="onLuuNhap">Lưu Bảng Tính</v-btn>
+                                            </v-flex>
+                                        }
+
                                     </v-layout>
                                 </v-flex>
                             </v-layout>
@@ -210,24 +221,24 @@
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/tinhhocphiindex.min.js" type="text/javascript"></script>
+<script src="~/js/tinhhocphiindex.js" type="text/javascript"></script>
 
 <style>
     .v-input__slot:before, .v-input__slot:after {
-        display: none
+                                            display: none
     }
 
     .v-small-dialog a {
-        text-decoration-style: dashed;
-        text-decoration-line: underline;
-        text-decoration-color: #0088cc;
+                                            text-decoration-style: dashed;
+                                            text-decoration-line: underline;
+                                            text-decoration-color: #0088cc;
     }
 
-    td, th {
-        padding: unset;
-    }
+                                        td, th {
+                                            padding: unset;
+                                        }
 
     .red-header{
-        color: red !important
+                                            color: red !important
     }
 </style>

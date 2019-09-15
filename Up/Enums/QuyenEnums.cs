@@ -27,5 +27,18 @@ namespace Up.Enums
         Contribute_NgayLamViec,
         Read_NhanVien,
         Contribute_NhanVien,
+        Read_ChiPhiCoDinh,
+        Contribute_ChiPhiCoDinh,
+
+        Read_No,
+        Contribute_No,
+        Read_TinhHocPhi,
+        Contribute_TinhHocPhi,
+        Read_TinhLuong,
+        Contribute_TinhLuong,
+        Read_DiemDanh,
+        Contribute_DiemDanh,
+        Read_DiemDanh_Export,
+        Contribute_DiemDanh_Export,
     }
 }

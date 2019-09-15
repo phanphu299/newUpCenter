@@ -12,6 +12,8 @@
         selectedThang: '',
         selectedNam: '',
         selectedHocPhi: '',
+        selectedLastThang: '',
+        selectedLastHocPhi: '',
         itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
         itemKhuyenMai: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100],
         itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0, parseInt(new Date().toISOString().substr(0, 4)) + 1],
@@ -130,11 +132,42 @@
 
         async onTinhTien() {
             let that = this;
+            debugger;
+            if (this.selectedThang !== this.selectedLastThang) {
+                this.selectedNam = '';
+                this.selectedLastThang = this.selectedThang;
+                this.selectedHocPhi = '';
+                this.selectedLastHocPhi = '';
+            }
+
+            if (this.selectedLopHoc !== '' && this.selectedNam !== '' && this.selectedThang !== '') {
+                await axios.get('/LopHoc/GetAvailableLopHocWithTimeAsync?Thang=' + this.selectedThang + '&Nam=' + this.selectedNam)
+                    .then(function (response) {
+                        that.itemLopHoc = response.data;
+                        for (let i = 0; i < that.itemLopHoc.length; i++) {
+                            if (that.selectedLopHoc.lopHocId === that.itemLopHoc[i].lopHocId) {
+                                that.selectedLopHoc = that.itemLopHoc[i];
+                            }
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+            if (this.selectedHocPhi === this.selectedLastHocPhi) {
+                if (this.selectedLopHoc !== '' && this.selectedNam !== '' && this.selectedThang !== '' && this.selectedLopHoc.hocPhi !== null) {
+                    this.selectedHocPhi = this.selectedLopHoc.hocPhi;
+                    this.selectedLastHocPhi = this.selectedLopHoc.hocPhi;
+                }
+            }
+            
+            
             if (this.selectedLopHoc !== '' && this.selectedNam !== '' && this.selectedThang !== '' && this.selectedHocPhi !== '') {
                 if (this.khuyenMai === "") {
                     this.khuyenMai = 0;
                 }
-                await axios.get('/HocPhi/GetTinhHocPhiAsync?LopHocId=' + this.selectedLopHoc.lopHocId + '&Month=' + this.selectedThang + '&Year=' + this.selectedNam + '&HocPhi=' + this.selectedHocPhi)
+                await axios.get('/HocPhi/GetTinhHocPhiAsync?LopHocId=' + this.selectedLopHoc.lopHocId + '&Month=' + this.selectedThang + '&Year=' + this.selectedNam + '&HocPhi=' + this.selectedHocPhi.gia + '&HocPhiId=' + this.selectedHocPhi.hocPhiId)
                     .then(function (response) {
                         that.tongNgayHoc = response.data.soNgayHoc;
                         that.tongNgayDuocNghi = response.data.soNgayDuocNghi;

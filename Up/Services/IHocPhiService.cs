@@ -21,5 +21,7 @@ namespace Up.Services
         Task<TinhHocPhiViewModel> TinhHocPhiAsync(Guid LopHocId, int month, int year, double HocPhi);
 
         Task<bool> CanContributeAsync(ClaimsPrincipal User);
+
+        Task<bool> CanContributeTinhHocPhiAsync(ClaimsPrincipal User);
     }
 }

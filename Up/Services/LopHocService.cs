@@ -124,14 +124,20 @@
             }
         }
 
-        public async Task<List<LopHocViewModel>> GetAvailableLopHocAsync()
+        public async Task<List<LopHocViewModel>> GetAvailableLopHocAsync(int? Thang = null, int? Nam = null)
         {
             return await _context.LopHocs
                 .Where(x => x.IsDisabled == false && x.IsCanceled == false && x.IsGraduated == false)
                 .Select(x => new LopHocViewModel
                 {
                     Name = x.Name,
-                    LopHocId = x.LopHocId
+                    LopHocId = x.LopHocId,
+                    HocPhi = !x.LopHoc_HocPhis.Any(m => m.Nam == Nam && m.Thang == Thang) ? null : 
+                    new HocPhiViewModel
+                    {
+                        HocPhiId = x.LopHoc_HocPhis.FirstOrDefault(m => m.Nam == Nam && m.Thang == Thang).HocPhiId,
+                        Gia = x.LopHoc_HocPhis.FirstOrDefault(m => m.Nam == Nam && m.Thang == Thang).HocPhi.Gia
+                    }
                 })
                 .ToListAsync();
         }
@@ -281,6 +287,40 @@
             catch (Exception exception)
             {
                 throw new Exception("Cập nhật lỗi: " + exception.Message);
+            }
+        }
+
+        public async Task<bool> UpdateHocPhiLopHocAsync(Guid LopHocId, Guid HocPhiId, int Thang, int Nam, string LoggedEmployee)
+        {
+            try
+            {
+                var item = await _context.LopHoc_HocPhis
+                                        .Where(x => x.LopHocId == LopHocId && x.Thang == Thang && x.Nam == Nam)
+                                        .SingleOrDefaultAsync();
+
+                if (item == null)
+                {
+                    LopHoc_HocPhi thongKe = new LopHoc_HocPhi
+                    {
+                        LopHocId = LopHocId,
+                        Nam = Nam,
+                        Thang = Thang,
+                        HocPhiId = HocPhiId
+                    };
+                    await _context.LopHoc_HocPhis.AddAsync(thongKe);
+                }
+                else
+                {
+                    item.HocPhiId = HocPhiId;
+                }
+
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch(Exception exception)
+            {
+                throw new Exception("Lỗi khi cập nhật Học Phí: " + exception.Message);
             }
         }
 

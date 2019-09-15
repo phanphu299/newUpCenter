@@ -12,6 +12,7 @@
     using Up.Models;
     using OfficeOpenXml;
     using Microsoft.AspNetCore.Authorization;
+    using Up.Extensions;
 
     [Authorize]
     public class DiemDanhController : Controller
@@ -29,17 +30,23 @@
             _userManager = userManager;
         }
 
+        [ServiceFilter(typeof(Read_DiemDanh))]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
+
+            ViewBag.CanContribute = await _diemDanhService.CanContributeAsync(User);
             return View();
         }
 
+        [ServiceFilter(typeof(Read_DiemDanh_Export))]
         public async Task<IActionResult> ExportIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
+
+            ViewBag.CanContribute = await _diemDanhService.CanContributeExportAsync(User);
             return View();
         }
 

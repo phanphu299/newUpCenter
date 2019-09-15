@@ -27,10 +27,12 @@
         public GioHoc GioHoc { get; set; }
         [ForeignKey("NgayHocId")]
         public NgayHoc NgayHoc { get; set; }
+
         public ICollection<LopHoc_DiemDanh> LopHoc_DiemDanhs { get; set; }
         public ICollection<HocVien_LopHoc> HocVien_LopHocs { get; set; }
         public ICollection<HocVien_NgayHoc> HocVien_NgayHocs { get; set; }
         public ICollection<HocVien_No> HocVien_Nos { get; set; }
         public ICollection<ThongKe_DoanhThuHocPhi> ThongKe_DoanhThuHocPhis { get; set; }
+        public ICollection<LopHoc_HocPhi> LopHoc_HocPhis { get; set; }
     }
 }

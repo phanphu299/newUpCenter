@@ -61,28 +61,31 @@
                             </v-menu>
                         </v-flex>
 
-                        <v-flex xs12 sm2 class="text-xs-center">
-                            <v-btn v-if="diemDanhItems.length > 0"
-                                   color="info"
-                                   v-on:click="DiemDanhCaLop()">
-                                Có Mặt Cả Lớp
-                            </v-btn>
-                        </v-flex>
-                        <v-flex xs12 sm2 class="text-xs-center">
-                            <v-btn v-if="diemDanhItems.length > 0"
-                                   color="error"
-                                   v-on:click="LopNghi()">
-                                Lớp Nghỉ
-                            </v-btn>
-                        </v-flex>
+                        @if (ViewBag.CanContribute)
+                        {
+                            <v-flex xs12 sm2 class="text-xs-center">
+                                <v-btn v-if="diemDanhItems.length > 0"
+                                       color="info"
+                                       v-on:click="DiemDanhCaLop()">
+                                    Có Mặt Cả Lớp
+                                </v-btn>
+                            </v-flex>
+                            <v-flex xs12 sm2 class="text-xs-center">
+                                <v-btn v-if="diemDanhItems.length > 0"
+                                       color="error"
+                                       v-on:click="LopNghi()">
+                                    Lớp Nghỉ
+                                </v-btn>
+                            </v-flex>
 
-                        <v-flex xs12 sm2 class="text-xs-center">
-                            <v-btn v-if="diemDanhItems.length > 0"
-                                   color="warning"
-                                   v-on:click="UndoLopNghi()">
-                                Hoàn Tác
-                            </v-btn>
-                        </v-flex>
+                            <v-flex xs12 sm2 class="text-xs-center">
+                                <v-btn v-if="diemDanhItems.length > 0"
+                                       color="warning"
+                                       v-on:click="UndoLopNghi()">
+                                    Hoàn Tác
+                                </v-btn>
+                            </v-flex>
+                        }
 
                     </v-layout>
                 </v-card-title>
@@ -106,48 +109,108 @@
                                                 <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
                                                     <span v-if="item.ngayBatDau_Year < selectedNam">
                                                         <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
-                                                            <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                            @if (ViewBag.CanContribute)
+                                                            {
+                                                                <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                            }
+                                                            else
+                                                            {
+                                                                <v-switch readonly v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                            }
                                                         </i>
                                                         <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
                                                             OFF
                                                         </i>
                                                         <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
-                                                            <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                            @if (ViewBag.CanContribute)
+                                                            {<v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                            }
+                                                            else
+                                                            {
+                                                                <v-switch v-model="content.isOff" readonly color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                            }
                                                         </i>
                                                     </span>
                                                     <span v-else-if="item.ngayBatDau_Year == selectedNam">
                                                         <span v-if="item.ngayBatDau_Month < selectedThang">
                                                             <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
-                                                                <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                @if (ViewBag.CanContribute)
+                                                                {
+                                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <v-switch v-model="content.isOff" readonly color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                }
                                                             </i>
                                                             <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
                                                                 OFF
                                                             </i>
                                                             <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
-                                                                <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                @if (ViewBag.CanContribute)
+                                                                {
+                                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <v-switch readonly v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                }
+
                                                             </i>
                                                         </span>
                                                         <span v-else-if="item.ngayBatDau_Month == selectedThang">
                                                             <span v-if="item.ngayBatDau_Day < column">
                                                                 <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
-                                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    @if (ViewBag.CanContribute)
+                                                                    {
+                                                                        <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <v-switch readonly v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    }
+
                                                                 </i>
                                                                 <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
                                                                     OFF
                                                                 </i>
                                                                 <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
-                                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    @if (ViewBag.CanContribute)
+                                                                    {
+                                                                        <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <v-switch readonly v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    }
+
                                                                 </i>
                                                             </span>
                                                             <span v-else-if="item.ngayBatDau_Day == column">
                                                                 <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
-                                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    @if (ViewBag.CanContribute)
+                                                                    {
+                                                                        <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <v-switch v-model="content.isOff" readonly color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    }
+
                                                                 </i>
                                                                 <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
                                                                     OFF
                                                                 </i>
                                                                 <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
-                                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    @if (ViewBag.CanContribute)
+                                                                    {
+                                                                        <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <v-switch v-model="content.isOff" readonly color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    }
+
                                                                 </i>
                                                             </span>
                                                             <span v-else>

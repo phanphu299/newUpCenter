@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Models;
 
@@ -14,5 +15,8 @@
         Task<List<DiemDanhViewModel>> GetDiemDanhByHocVienAndLopHoc(Guid HocVienId, Guid LopHocId);
         Task<List<DiemDanhViewModel>> GetDiemDanhByLopHoc(Guid LopHocId, int month, int year);
         Task<bool> UndoDuocNghi(Guid LopHocId, DateTime NgayDiemDanh, string LoggedEmployee);
+
+        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<bool> CanContributeExportAsync(ClaimsPrincipal User);
     }
 }

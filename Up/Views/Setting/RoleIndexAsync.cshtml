@@ -7,6 +7,14 @@
             </div>
             <v-card>
                 <v-card-title>
+                    <v-btn color="success"
+                           slot="activator"
+                           href="/Setting/AccountIndexAsync"
+                           class="white--text">
+                        Trở Lại
+                        <v-icon right dark>keyboard_arrow_left</v-icon>
+                    </v-btn>
+
                     <v-dialog v-model="dialog" persistent max-width="800px">
                         <v-btn color="primary"
                                slot="activator"
@@ -40,13 +48,7 @@
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
-                    <v-btn color="success"
-                           slot="activator"
-                           href="/Setting/AccountIndexAsync"
-                           class="white--text">
-                        Trở Lại
-                        <v-icon right dark>keyboard_arrow_left</v-icon>
-                    </v-btn>
+
                     <v-spacer></v-spacer>
                     <v-text-field v-model="search"
                                   append-icon="search"
@@ -141,7 +143,7 @@
                         <v-container grid-list-md>
                             <v-layout wrap>
 
-                                <v-flex xs12 sm4 v-for="item in itemQuyens" :key="item.id">
+                                <v-flex xs12 sm6 v-for="item in itemQuyens" :key="item.id">
                                     <v-checkbox v-model="item.isTrue"
                                                 :label="item.name"></v-checkbox>
                                 </v-flex>

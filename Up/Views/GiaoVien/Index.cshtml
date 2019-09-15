@@ -1,4 +1,8 @@
-﻿<div id="GiaoVienIndex">
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<div id="GiaoVienIndex">
     <v-app>
         <div class="container">
             <div class="col s10 m6 l6">
@@ -232,10 +236,20 @@
                             </v-tooltip>
                         </td>
                         <td>{{ props.item.phone }}</td>
-                        <td>{{ props.item.teachingRate }}</td>
-                        <td>{{ props.item.tutoringRate }}</td>
-                        <td>{{ props.item.basicSalary }}</td>
-                        <td>{{ props.item.mucHoaHong }}</td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td>{{ props.item.teachingRate }}</td>
+                            <td>{{ props.item.tutoringRate }}</td>
+                            <td>{{ props.item.basicSalary }}</td>
+                            <td>{{ props.item.mucHoaHong }}</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
                         <td>
                             <v-tooltip top>
                                 <template slot="activator" slot-scope="{ on }">

@@ -155,7 +155,7 @@
                             }
                             else
                             {
-                                <v-switch v-model="props.item.isCanceled" disabled color="success" hide-details v-on:change="onToggleCanceled(props.item.lopHocId)"></v-switch>
+                                <v-switch v-model="props.item.isCanceled" readonly color="success" hide-details v-on:change="onToggleCanceled(props.item.lopHocId)"></v-switch>
                             }
 
                         </td>
@@ -166,7 +166,7 @@
                             }
                             else
                             {
-                                <v-switch v-model="props.item.isGraduated" disabled color="success" hide-details v-on:change="onToggleGraduated(props.item.lopHocId)"></v-switch>
+                                <v-switch v-model="props.item.isGraduated" readonly color="success" hide-details v-on:change="onToggleGraduated(props.item.lopHocId)"></v-switch>
                             }
                         </td>
                         <td>{{ props.item.ngayKhaiGiang }}</td>

@@ -10,12 +10,12 @@ namespace Up.Extensions
     using Up.Data;
     using Up.Enums;
 
-    public class Read_HocVien_Export : IActionFilter
+    public class Read_DiemDanh : IActionFilter
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public Read_HocVien_Export(UserManager<IdentityUser> userManager, ApplicationDbContext context)
+        public Read_DiemDanh(UserManager<IdentityUser> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _context = context;
@@ -33,7 +33,7 @@ namespace Up.Extensions
             var roles = _userManager.GetRolesAsync(CurUser).Result;
 
             var quyen_roles = _context.Quyen_Roles
-                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_HocVien)
+                .Where(x => x.QuyenId == (int)QuyenEnums.Read_DiemDanh || x.QuyenId == (int)QuyenEnums.Contribute_DiemDanh)
                 .Select(x => x.RoleId).ToList();
 
             var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);

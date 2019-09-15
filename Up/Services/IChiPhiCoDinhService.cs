@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Models;
 
@@ -11,5 +12,7 @@
         Task<ChiPhiCoDinhViewModel> CreateChiPhiCoDinhAsync(double Gia, string Name, string LoggedEmployee);
         Task<ChiPhiCoDinhViewModel> UpdateChiPhiCoDinhAsync(Guid ChiPhiCoDinhId, double Gia, string Name, string LoggedEmployee);
         Task<bool> DeleteChiPhiCoDinhAsync(Guid ChiPhiCoDinhId, string LoggedEmployee);
+
+        Task<bool> CanContributeAsync(ClaimsPrincipal User);
     }
 }

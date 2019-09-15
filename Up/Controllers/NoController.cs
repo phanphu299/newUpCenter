@@ -6,6 +6,7 @@ namespace Up.Controllers
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Threading.Tasks;
+    using Up.Extensions;
     using Up.Services;
 
     [Authorize]
@@ -20,6 +21,7 @@ namespace Up.Controllers
             _userManager = userManager;
         }
 
+        [ServiceFilter(typeof(Read_No))]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);

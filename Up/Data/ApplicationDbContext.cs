@@ -37,6 +37,7 @@
         public DbSet<NgayLamViec> NgayLamViecs { get; set; }
         public DbSet<Quyen> Quyens { get; set; }
         public DbSet<Quyen_Role> Quyen_Roles { get; set; }
+        public DbSet<LopHoc_HocPhi> LopHoc_HocPhis { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
