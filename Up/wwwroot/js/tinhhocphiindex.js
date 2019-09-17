@@ -14,6 +14,7 @@
         selectedHocPhi: '',
         selectedLastThang: '',
         selectedLastHocPhi: '',
+        selectedLastLopHoc: '',
         itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
         itemKhuyenMai: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100],
         itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0, parseInt(new Date().toISOString().substr(0, 4)) + 1],
@@ -132,10 +133,17 @@
 
         async onTinhTien() {
             let that = this;
-            debugger;
+            that.hocVienList = [];
             if (this.selectedThang !== this.selectedLastThang) {
                 this.selectedNam = '';
                 this.selectedLastThang = this.selectedThang;
+                this.selectedHocPhi = '';
+                this.selectedLastHocPhi = '';
+            }
+
+            if (this.selectedLopHoc !== this.selectedLastLopHoc) {
+                this.selectedNam = '';
+                this.selectedLastLopHoc = this.selectedLopHoc;
                 this.selectedHocPhi = '';
                 this.selectedLastHocPhi = '';
             }
