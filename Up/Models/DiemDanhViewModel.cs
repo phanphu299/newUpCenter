@@ -15,5 +15,6 @@ namespace Up.Models
         public int Day { get; set; }
 
         public DateTime NgayBatDau { get; set; }
+        public DateTime? NgayKetThuc { get; set; }
     }
 }

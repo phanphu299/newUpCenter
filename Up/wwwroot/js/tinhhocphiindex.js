@@ -2,6 +2,7 @@
     el: '#HocPhiIndex',
     data: {
         title: 'Tính Học Phí',
+        search: '',
         messageText: '',
         color: '',
         timeout: 3000,
@@ -27,7 +28,7 @@
         hocPhiMoiNgay: 0,
         hocVienList: [],
         headers: [
-            { text: 'Tên HV', align: 'left', sortable: true },
+            { text: 'Tên HV', value: 'fullName', align: 'left', sortable: true },
             { text: 'Học Phí Tháng', align: 'left', sortable: true, class: "red-header" },
             { text: 'Nợ', align: 'left', sortable: true },
             { text: 'Tài Liệu', align: 'left', sortable: true },
@@ -134,6 +135,7 @@
         async onTinhTien() {
             let that = this;
             that.hocVienList = [];
+            debugger;
             if (this.selectedThang !== this.selectedLastThang) {
                 this.selectedNam = '';
                 this.selectedLastThang = this.selectedThang;
@@ -157,6 +159,9 @@
                                 that.selectedLopHoc = that.itemLopHoc[i];
                             }
                         }
+                        that.selectedLastHocPhi = that.selectedHocPhi;
+                        that.selectedLastLopHoc = that.selectedLopHoc;
+                        that.selectedLastThang = that.selectedLastThang;
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -164,7 +169,7 @@
             }
 
             if (this.selectedHocPhi === this.selectedLastHocPhi) {
-                if (this.selectedLopHoc !== '' && this.selectedNam !== '' && this.selectedThang !== '' && this.selectedLopHoc.hocPhi !== null) {
+                if (this.selectedHocPhi === '' && this.selectedLopHoc !== '' && this.selectedNam !== '' && this.selectedThang !== '' && this.selectedLopHoc.hocPhi !== null) {
                     this.selectedHocPhi = this.selectedLopHoc.hocPhi;
                     this.selectedLastHocPhi = this.selectedLopHoc.hocPhi;
                 }
@@ -187,7 +192,13 @@
                             that.hocVienList[i].year = that.selectedNam;
                             that.hocVienList[i].month = that.selectedThang;
                             that.hocVienList[i].lopHocId = that.selectedLopHoc.lopHocId;
+                            that.hocVienList[i].hocPhiMoi = (Math.ceil(that.hocVienList[i].hocPhiMoi / 10000) * 10000);
+                            that.hocVienList[i].hocPhiFixed = (Math.ceil(that.hocVienList[i].hocPhiFixed / 10000) * 10000);
                         }
+
+                        that.selectedLastHocPhi = that.selectedHocPhi;
+                        that.selectedLastLopHoc = that.selectedLopHoc;
+                        that.selectedLastThang = that.selectedLastThang;
                     })
                     .catch(function (error) {
                         console.log(error);

@@ -80,6 +80,9 @@
                             NgayBatDau_Day = x.Select(m => m.NgayBatDau).First().Day,
                             NgayBatDau_Month = x.Select(m => m.NgayBatDau).First().Month,
                             NgayBatDau_Year = x.Select(m => m.NgayBatDau).First().Year,
+                            NgayKetThuc_Day = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Day : 0,
+                            NgayKetThuc_Month = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Month : 0,
+                            NgayKetThuc_Year = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Year : 0,
                             ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
                             {
                                 Dates = m.NgayDiemDanh_Date,
@@ -132,6 +135,9 @@
                             NgayBatDau_Day = x.Select(m => m.NgayBatDau).First().Day,
                             NgayBatDau_Month = x.Select(m => m.NgayBatDau).First().Month,
                             NgayBatDau_Year = x.Select(m => m.NgayBatDau).First().Year,
+                            NgayKetThuc_Day = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Day : 0,
+                            NgayKetThuc_Month = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Month : 0,
+                            NgayKetThuc_Year = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Year : 0,
                             ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
                             {
                                 Dates = m.NgayDiemDanh_Date,

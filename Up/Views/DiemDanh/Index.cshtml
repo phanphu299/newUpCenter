@@ -111,11 +111,11 @@
                                                         <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
                                                             @if (ViewBag.CanContribute)
                                                             {
-                                                                <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                             }
                                                             else
                                                             {
-                                                                <v-switch readonly v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" readonly v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                             }
                                                         </i>
                                                         <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
@@ -123,11 +123,12 @@
                                                         </i>
                                                         <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
                                                             @if (ViewBag.CanContribute)
-                                                            {<v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                            {
+                                                                <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                             }
                                                             else
                                                             {
-                                                                <v-switch v-model="content.isOff" readonly color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" v-model="content.isOff" readonly color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                             }
                                                         </i>
                                                     </span>
@@ -136,11 +137,11 @@
                                                             <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
                                                                 @if (ViewBag.CanContribute)
                                                                 {
-                                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <v-switch v-model="content.isOff" readonly color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" v-model="content.isOff" readonly color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                 }
                                                             </i>
                                                             <i v-else-if="content.day == column && content.isOff == false && content.duocNghi == true">
@@ -149,11 +150,11 @@
                                                             <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
                                                                 @if (ViewBag.CanContribute)
                                                                 {
-                                                                    <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <v-switch readonly v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                    <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" readonly v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                 }
 
                                                             </i>
@@ -163,11 +164,11 @@
                                                                 <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
                                                                     @if (ViewBag.CanContribute)
                                                                     {
-                                                                        <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                        <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                     }
                                                                     else
                                                                     {
-                                                                        <v-switch readonly v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                        <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" readonly v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                     }
 
                                                                 </i>
@@ -177,11 +178,11 @@
                                                                 <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
                                                                     @if (ViewBag.CanContribute)
                                                                     {
-                                                                        <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                        <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                     }
                                                                     else
                                                                     {
-                                                                        <v-switch readonly v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                        <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" readonly v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                     }
 
                                                                 </i>
@@ -190,11 +191,11 @@
                                                                 <i v-if="content.day == column && content.isOff == false && content.duocNghi == false">
                                                                     @if (ViewBag.CanContribute)
                                                                     {
-                                                                        <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                        <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                     }
                                                                     else
                                                                     {
-                                                                        <v-switch v-model="content.isOff" readonly color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                        <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" v-model="content.isOff" readonly color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                     }
 
                                                                 </i>
@@ -204,11 +205,11 @@
                                                                 <i v-else-if="content.day == column && content.isOff == true && content.duocNghi == false">
                                                                     @if (ViewBag.CanContribute)
                                                                     {
-                                                                        <v-switch v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                        <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" v-model="content.isOff" color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                     }
                                                                     else
                                                                     {
-                                                                        <v-switch v-model="content.isOff" readonly color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
+                                                                        <v-switch v-if="item.ngayKetThuc_Year === 0 || (item.ngayKetThuc_Year !== 0 && item.ngayKetThuc_Year >= selectedNam && (item.ngayKetThuc_Month > selectedThang || (item.ngayKetThuc_Month == selectedThang && item.ngayKetThuc_Day > column)))" v-model="content.isOff" readonly color="success" v-on:change="onDiemDanhNew(item.hocVienId, column, content.isOff)" hide-details></v-switch>
                                                                     }
 
                                                                 </i>

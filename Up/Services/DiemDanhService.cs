@@ -206,7 +206,7 @@
 
             return await _context.HocVien_LopHocs
                                 .Where(x => x.LopHocId == LopHocId)
-                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= month && m.NgayKetThuc.Value.Year >= year)) && x.HocVien.IsDisabled == false && x.HocVien.HocVien_NgayHocs.Any(m => m.NgayBatDau.Month <= month && m.NgayBatDau.Year <= year))
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= month && m.NgayKetThuc.Value.Year >= year)) && x.HocVien.IsDisabled == false && x.HocVien.HocVien_NgayHocs.Any(m => m.NgayBatDau.Month <= month && m.NgayBatDau.Year <= year))
                                 .GroupJoin(_context.LopHoc_DiemDanhs,
                                 i => i.HocVienId,
                                 p => p.HocVienId,
@@ -227,7 +227,8 @@
                                         HocVien = temp0.i.HocVien.FullName,
                                         NgayDiemDanh_Date = (cat == null) ? new DateTime() : cat.NgayDiemDanh,
                                         HocVienId = temp0.i.HocVienId,
-                                        NgayBatDau = temp0.i.HocVien.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayBatDau
+                                        NgayBatDau = temp0.i.HocVien.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayBatDau,
+                                        NgayKetThuc = temp0.i.HocVien.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayKetThuc
                                     }
                                 )
                                 .ToListAsync();

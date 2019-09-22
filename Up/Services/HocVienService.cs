@@ -274,7 +274,9 @@ namespace Up.Services
 
         public async Task<List<HocVienViewModel>> GetHocVienAsync()
         {
-            return await _context.HocViens
+            try
+            {
+                return await _context.HocViens
                 .Where(x => x.IsDisabled == false)
                 .Select(x => new HocVienViewModel
                 {
@@ -309,11 +311,16 @@ namespace Up.Services
                                                 LopHocId = m.LopHocId,
                                                 Name = m.LopHoc.Name
                                             },
-                                            NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId).NgayBatDau.ToString("yyyy-MM-dd")
+                                            NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId) != null ? m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId).NgayBatDau.ToString("yyyy-MM-dd") : ""
                                         })
                                         .ToList()
                 })
                 .ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<bool> ToggleChenAsync(Guid HocVienId, string LoggedEmployee)
@@ -386,16 +393,22 @@ namespace Up.Services
 
                         _context.HocVien_LopHocs.Add(hocVien_LopHoc);
 
-                        HocVien_NgayHoc HV_NgayHoc = new HocVien_NgayHoc();
-                        HV_NgayHoc.HocVien_NgayHocId = new Guid();
-                        HV_NgayHoc.HocVienId = item.HocVienId;
-                        HV_NgayHoc.LopHocId = itemLop.LopHoc.LopHocId;
-                        HV_NgayHoc.NgayBatDau = Convert.ToDateTime(itemLop.NgayHoc, System.Globalization.CultureInfo.InvariantCulture);
-                        HV_NgayHoc.NgayKetThuc = null;
-                        HV_NgayHoc.CreatedBy = LoggedEmployee;
-                        HV_NgayHoc.CreatedDate = DateTime.Now;
+                        var _hocVien_NgayHoc = await _context.HocVien_NgayHocs
+                                                    .FirstOrDefaultAsync(x => x.HocVienId == item.HocVienId && x.LopHocId == itemLop.LopHoc.LopHocId);
 
-                        _context.HocVien_NgayHocs.Add(HV_NgayHoc);
+                        if(_hocVien_NgayHoc == null)
+                        {
+                            HocVien_NgayHoc HV_NgayHoc = new HocVien_NgayHoc();
+                            HV_NgayHoc.HocVien_NgayHocId = new Guid();
+                            HV_NgayHoc.HocVienId = item.HocVienId;
+                            HV_NgayHoc.LopHocId = itemLop.LopHoc.LopHocId;
+                            HV_NgayHoc.NgayBatDau = Convert.ToDateTime(itemLop.NgayHoc, System.Globalization.CultureInfo.InvariantCulture);
+                            HV_NgayHoc.NgayKetThuc = null;
+                            HV_NgayHoc.CreatedBy = LoggedEmployee;
+                            HV_NgayHoc.CreatedDate = DateTime.Now;
+
+                            _context.HocVien_NgayHocs.Add(HV_NgayHoc);
+                        }
                     }
                 }
 

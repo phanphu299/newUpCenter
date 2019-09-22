@@ -296,24 +296,28 @@ namespace Up.Services
                 var model = await _context.HocVien_LopHocs
                                         .Include(x => x.HocVien)
                                         .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
-                                        .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.NgayBatDau.Month <= currentMonth && m.NgayBatDau.Year <= currentYear && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= currentMonth && m.NgayKetThuc.Value.Year >= currentYear))))
+                                        .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && m.NgayBatDau.Month <= currentMonth && m.NgayBatDau.Year <= currentYear && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= currentMonth && m.NgayKetThuc.Value.Year >= currentYear))))
                                         .Select(x => new HocVienViewModel
                                         {
                                             FullName = x.HocVien.FullName,
                                             HocVienId = x.HocVienId,
                                             NgayBatDauHoc = x.HocVien.HocVien_NgayHocs
                                                             .Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId)
-                                                            .FirstOrDefault() == null ?
+                                                            .FirstOrDefault().NgayBatDau.ToString("dd/MM/yyyy"),
+                                            NgayKetThuc = x.HocVien.HocVien_NgayHocs
+                                                            .Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId)
+                                                            .FirstOrDefault().NgayKetThuc == null ?
                                                             "" :
                                                             x.HocVien.HocVien_NgayHocs
                                                             .Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId)
-                                                            .FirstOrDefault().NgayBatDau.ToString("dd/MM/yyyy"),
+                                                            .FirstOrDefault().NgayKetThuc.Value.ToString("dd/MM/yyyy"),
                                             TienNo = x.HocVien.HocVien_Nos
                                                             .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year)
                                                             .Any() ?
                                                             x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo) :
                                                             0,
-                                            HocPhiMoi = (Math.Ceiling(HocPhi / 10000) * 10000),
+                                            //HocPhiMoi = (Math.Ceiling(HocPhi / 10000) * 10000),
+                                            HocPhiMoi = HocPhi,
                                             DaSaveNhap = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear && m.LopHocId == LopHocId),
                                             Bonus = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
                                                             x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).Bonus
@@ -327,7 +331,8 @@ namespace Up.Services
                                             GhiChu = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) ?
                                                             x.LopHoc.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).GhiChu
                                                             : "",
-                                            HocPhiFixed = (Math.Ceiling(HocPhi / 10000) * 10000),
+                                            //HocPhiFixed = (Math.Ceiling(HocPhi / 10000) * 10000),
+                                            HocPhiFixed = HocPhi,
 
                                             GiaSach = x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) == null ?
                                                         null :
@@ -357,30 +362,50 @@ namespace Up.Services
                             }
                         }
 
-                        
+                        var soNgayTruSauNghi = 0;
+                        if(!string.IsNullOrWhiteSpace(item.NgayKetThuc))
+                        {
+                            DateTime _ngayKetThuc = new DateTime(int.Parse(item.NgayKetThuc.Substring(6)), int.Parse(item.NgayKetThuc.Substring(3, 2)), int.Parse(item.NgayKetThuc.Substring(0, 2)));
+                            if (_ngayKetThuc.Month == currentMonth && _ngayKetThuc.Year == currentYear)
+                                soNgayTruSauNghi = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayKetThuc, LopHocId);
+                        }
+
+
                         if (_ngayBatDauHoc.Month == currentMonth && _ngayBatDauHoc.Year == currentYear)
                         {
                             var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayBatDauHoc, LopHocId);
                             
-                            if (soNgayHocVienVaoSau < SoNgayHoc)
-                            {
-                                item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau);
+                            //if (soNgayHocVienVaoSau < SoNgayHoc)
+                            //{
+                                item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau )) + (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgay * ngayDuocNghi);
                                 
-                                item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                                item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai/100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                            }
+                                //item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                                //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai/100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+
+                                item.HocPhiFixed = item.HocPhiFixed - item.HocPhiBuHocVienVaoSau;
+                                item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau;
+                            //}
+                            //else
+                            //{
+                            //    item.HocPhiFixed = item.HocPhiFixed;
+                            //    item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo;
+                            //}
                         }
                         else
                         {
-                            item.HocPhiBuHocVienVaoSau = HocPhiMoiNgay * ngayDuocNghi;
-                            
-                            item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                            item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                            item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgay * ngayDuocNghi);
+
+                            //item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                            //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+
+                            item.HocPhiFixed = item.HocPhiFixed - item.HocPhiBuHocVienVaoSau;
+                            item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau;
                         }
                     }
                     else
                     {
-                        item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo) / 10000) * 10000);
+                        //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo) / 10000) * 10000);
+                        item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo;
                     }
                     //item.HocPhiFixed = item.HocPhiMoi;
                     item.LastBonus = item.Bonus;

@@ -82,11 +82,16 @@
                             <span style="color:red">{{formatNumber(hocPhiMoiNgay)}}</span>
                         </div>
 
-
                         <v-container fluid v-if="hocVienList.length > 0">
+                            <v-text-field v-model="search"
+                                          append-icon="search"
+                                          label="Tìm Kiếm"
+                                          single-line
+                                          hide-details></v-text-field>
                             <v-layout wrap>
                                 <v-flex>
                                     <v-data-table :headers="headers"
+                                                  :search="search"
                                                   :items="hocVienList">
                                         <template slot="items" slot-scope="props">
 
@@ -202,7 +207,7 @@
                             </v-layout>
                         </v-container>
 
-            </v-card>
+</v-card>
         </div>
 
         <v-snackbar v-model="snackbar"
