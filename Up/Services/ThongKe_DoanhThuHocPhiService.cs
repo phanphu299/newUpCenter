@@ -133,6 +133,7 @@ namespace Up.Services
                 if (item != null)
                 {
                     item.DaDong = false;
+                    item.DaNo = false;
                     item.UpdatedDate = DateTime.Now;
                     item.UpdatedBy = LoggedEmployee;
 

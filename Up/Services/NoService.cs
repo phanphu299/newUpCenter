@@ -93,9 +93,12 @@ namespace Up.Services
                                     .Where(x => x.NgayNo.Month == Month && x.NgayNo.Year == Year)
                                     .SingleOrDefaultAsync();
 
-                _context.HocVien_Nos.Remove(item);
+                if(item != null)
+                {
+                    _context.HocVien_Nos.Remove(item);
 
-                await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                }
 
                 return true;
             }
