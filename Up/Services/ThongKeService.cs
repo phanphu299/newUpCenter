@@ -96,8 +96,8 @@
             {
                 var fullTime = await _context.GiaoViens
                 .Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiCheDoEnums.FullTime.ToId()) && x.IsDisabled == false)
-                .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
-                .OrderBy(x => x.CreatedDate)
+                .Where(x => x.NgayBatDau <= DateTime.Now && x.NgayBatDau.Year == DateTime.Now.Year)
+                .OrderBy(x => x.NgayBatDau)
 
                 .Select(g => new GiaoVienViewModel
                 {
@@ -120,8 +120,8 @@
             {
                 var partTime = await _context.GiaoViens
                 .Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiCheDoEnums.PartTime.ToId()) && x.IsDisabled == false)
-                .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
-                .OrderBy(x => x.CreatedDate)
+                .Where(x => x.NgayBatDau <= DateTime.Now && x.NgayBatDau.Year == DateTime.Now.Year)
+                .OrderBy(x => x.NgayBatDau)
 
                 .Select(g => new GiaoVienViewModel
                 {

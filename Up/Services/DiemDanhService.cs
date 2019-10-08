@@ -206,7 +206,7 @@
 
             return await _context.HocVien_LopHocs
                                 .Where(x => x.LopHocId == LopHocId)
-                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= month && m.NgayKetThuc.Value.Year >= year)) && x.HocVien.IsDisabled == false && x.HocVien.HocVien_NgayHocs.Any(m => m.NgayBatDau.Month <= month && m.NgayBatDau.Year <= year))
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && m.NgayKetThuc == null || ((m.NgayKetThuc.Value.Month >= month && m.NgayKetThuc.Value.Year == year) || m.NgayKetThuc.Value.Year < year)) && x.HocVien.IsDisabled == false && x.HocVien.HocVien_NgayHocs.Any(m => ((m.NgayBatDau.Month <= month && m.NgayBatDau.Year == year) || m.NgayBatDau.Year < year)))
                                 .GroupJoin(_context.LopHoc_DiemDanhs,
                                 i => i.HocVienId,
                                 p => p.HocVienId,

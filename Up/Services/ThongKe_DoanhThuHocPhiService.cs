@@ -84,8 +84,11 @@ namespace Up.Services
                     item.HocPhi = HocPhi;
                     item.UpdatedBy = LoggedEmployee;
                     item.UpdatedDate = DateTime.Now;
-                    item.DaDong = DaDong;
-                    item.DaNo = DaNo;
+                    if(DaDong != false || DaNo != false)
+                    {
+                        item.DaDong = DaDong;
+                        item.DaNo = DaNo;
+                    }
 
                     if(DaDong == true)
                     {

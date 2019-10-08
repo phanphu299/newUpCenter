@@ -190,7 +190,7 @@ namespace Up.Services
                                                 LopHocId = x.LopHocId,
                                                 Name = x.LopHoc.Name
                                             },
-                                            NgayHoc = x.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.HocVienId == hocVien.HocVienId).NgayBatDau.ToString("yyyy-MM-dd")
+                                            NgayHoc = x.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.HocVienId == hocVien.HocVienId) != null ? x.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.HocVienId == hocVien.HocVienId).NgayBatDau.ToString("yyyy-MM-dd") : ""
                                         })
                                         .ToListAsync()
                 };
@@ -265,7 +265,7 @@ namespace Up.Services
                                                 LopHocId = m.LopHocId,
                                                 Name = m.LopHoc.Name
                                             },
-                                            NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId).NgayBatDau.ToString("yyyy-MM-dd")
+                                            NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId) != null ? m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId).NgayBatDau.ToString("yyyy-MM-dd") : ""
                                         })
                                         .ToList()
                 })
@@ -447,7 +447,7 @@ namespace Up.Services
                                                 LopHocId = m.LopHocId,
                                                 Name = m.LopHoc.Name
                                             },
-                                            NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == item.HocVienId).NgayBatDau.ToString("yyyy-MM-dd")
+                                            NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == item.HocVienId) != null ? m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == item.HocVienId).NgayBatDau.ToString("yyyy-MM-dd") : ""
                                         })
                                         .ToList()
                 };
