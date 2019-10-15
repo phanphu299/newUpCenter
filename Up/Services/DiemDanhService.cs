@@ -80,10 +80,10 @@
                 if (LopHocId == null || isOff == null || NgayDiemDanh == null)
                     throw new Exception("Lỗi khi Điểm Danh!!!");
 
-                var isExisting = _context.LopHoc_DiemDanhs
+                var isExisting = await _context.LopHoc_DiemDanhs
                                         .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh)
                                         .ToListAsync();
-                if (isExisting.Result.Any())
+                if (isExisting.Any())
                     throw new Exception("Lớp học đã được điểm danh ngày " + NgayDiemDanh.ToShortDateString());
 
                 var hocViens = GetHocVienByLopHoc(LopHocId);
@@ -261,13 +261,14 @@
             if (!items.Any())
                 throw new Exception("Lớp học chưa được Cho nghỉ ngày " + NgayDiemDanh.ToShortDateString());
 
-            foreach (var item in items)
-            {
-                item.IsOff = false;
-                item.IsDuocNghi = false;
-                item.UpdatedBy = LoggedEmployee;
-                item.UpdatedDate = DateTime.Now;
-            }
+            //foreach (var item in items)
+            //{
+            //    item.IsOff = false;
+            //    item.IsDuocNghi = false;
+            //    item.UpdatedBy = LoggedEmployee;
+            //    item.UpdatedDate = DateTime.Now;
+            //}
+            _context.RemoveRange(items);
 
             var saveResult = await _context.SaveChangesAsync();
             return true;

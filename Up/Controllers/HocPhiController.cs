@@ -224,8 +224,8 @@ namespace Up.Controllers
                 worksheet.Cells[3, 6].Style.WrapText = true;
                 worksheet.Cells[3, 7].Value = "Khuyến mãi";
                 worksheet.Cells[3, 7].Style.WrapText = true;
-                worksheet.Cells[3, 8].Value = "Bonus";
-                worksheet.Cells[3, 9].Value = "Khoảng trừ khác";
+                worksheet.Cells[3, 8].Value = "(+) khác";
+                worksheet.Cells[3, 9].Value = "(-) khác";
                 worksheet.Cells[3, 9].Style.WrapText = true;
                 worksheet.Cells[3, 10].Value = "Tổng";
                 worksheet.Cells[3, 11].Value = "Chữ ký";
@@ -233,12 +233,16 @@ namespace Up.Controllers
                 worksheet.Cells["A3:L3"].Style.Font.Bold = true;
                 worksheet.Cells["A3:L3"].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 worksheet.Cells["A3:L3"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells["A3:L3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells["A3:L3"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
                 var modelCells = worksheet.Cells["A3"];
                 string modelRange = "A3:L" + (totalRows + 3);
                 var modelTable = worksheet.Cells[modelRange];
 
-                
+                string modelRange2 = "C4:L" + (totalRows + 3);
+                var modelTable2 = worksheet.Cells[modelRange2];
+                modelTable2.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                 // Assign borders
                 modelTable.Style.Border.Top.Style = ExcelBorderStyle.Thin;
@@ -285,11 +289,12 @@ namespace Up.Controllers
                 worksheet.Column(12).Width = 14;
 
                 worksheet.Column(1).Width = 3;
-                worksheet.Column(7).Width = 5;
-                worksheet.Column(9).Width = 8;
+                worksheet.Column(7).Width = 8;
+                worksheet.Column(8).Width = 9;
+                worksheet.Column(9).Width = 9;
                 worksheet.Column(4).Width = 8;
-                worksheet.Column(5).Width = 8;
-                worksheet.Column(6).Width = 6;
+                worksheet.Column(5).Width = 11;
+                worksheet.Column(6).Width = 9;
 
                 package.Save();
             }
