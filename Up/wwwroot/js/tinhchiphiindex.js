@@ -25,8 +25,8 @@
             { text: 'Số Giờ Kèm', align: 'left', sortable: true },
             { text: 'Hoa Hồng', align: 'left', sortable: true },
             { text: 'Số HV', align: 'left', sortable: true },
-            { text: 'Bonus', align: 'left', sortable: true },
-            { text: 'Khoảng Trừ Khác', align: 'left', sortable: true }
+            { text: '(+) Khác', align: 'left', sortable: true },
+            { text: '(-) Khác', align: 'left', sortable: true }
         ]
 
     },

@@ -91,7 +91,7 @@
                         <td>
                             <v-edit-dialog :return-value.sync="props.item.role"
                                            lazy
-                                           v-if="props.item.role != 'Admin'"
+                                           v-if="props.item.role != 'Admin' && props.item.role != 'Chart_DoanhThu' && props.item.role != 'Chart_GiaoVien' && props.item.role != 'Chart_HocVien' && props.item.role != 'Chart_No' && props.item.role != 'TK_DoanhThu' && props.item.role != 'TK_GiaoVien' && props.item.role != 'TK_HocVien' && props.item.role != 'TK_ChiPhi'"
                                            v-on:save="onUpdate(props.item.id, props.item.role)">
                                 {{ props.item.role }}
                                 <v-text-field slot="input"

@@ -46,6 +46,16 @@
 
             builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.Admin, NormalizedName = Constants.Admin.ToUpper() });
 
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.Chart_DoanhThu, NormalizedName = Constants.Chart_DoanhThu.ToUpper() });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.Chart_GiaoVien, NormalizedName = Constants.Chart_GiaoVien.ToUpper() });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.Chart_HocVien, NormalizedName = Constants.Chart_HocVien.ToUpper() });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.Chart_No, NormalizedName = Constants.Chart_No.ToUpper() });
+
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.TK_ChiPhi, NormalizedName = Constants.TK_ChiPhi.ToUpper() });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.TK_DoanhThu, NormalizedName = Constants.TK_DoanhThu.ToUpper() });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.TK_GiaoVien, NormalizedName = Constants.TK_GiaoVien.ToUpper() });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.TK_HocVien, NormalizedName = Constants.TK_HocVien.ToUpper() });
+
             // LOPHOC RELATIONSHIPS
             builder.Entity<LopHoc>()
                 .HasOne(p => p.KhoaHoc)

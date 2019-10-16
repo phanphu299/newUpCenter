@@ -254,7 +254,7 @@ namespace Up.Controllers
                 {
                     worksheet.Cells[i + 4, 1].Value = i + 1;
                     worksheet.Cells[i + 4, 2].Value = model.HocVienList[i].FullName;
-                    worksheet.Cells[i + 4, 3].Value = model.HocVienList[i].HocPhiBuHocVienVaoSau;
+                    worksheet.Cells[i + 4, 3].Value = (Math.Ceiling(model.HocVienList[i].HocPhiBuHocVienVaoSau / 10000) * 10000);
                     worksheet.Cells[i + 4, 4].Value = model.HocVienList[i].TienNo;
                     worksheet.Cells[i + 4, 5].Value = model.HocVienList[i].HocPhiFixed;
 

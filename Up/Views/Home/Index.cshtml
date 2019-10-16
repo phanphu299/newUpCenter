@@ -7,123 +7,125 @@
 
 <div class="container" id="HomeIndex">
     <!--card stats start-->
-    <div id="ecommerce-offer">
-        @if (User.IsInRole("Admin"))
-        {
-            <div class="row">
-                <div class="col s12 m3">
-                    <div class="card gradient-shadow gradient-45deg-light-blue-cyan border-radius-3">
-                        <div class="card-content center">
-                            <img src="~/layout_page/images/icon/giaovien.png" class="width-40">
-                            <h5 class="white-text lighten-4">{{ thongKeTong.hocVien }}</h5>
-                            <p class="white-text lighten-4">Học Viên</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col s12 m3">
-                    <div class="card gradient-shadow gradient-45deg-amber-amber border-radius-3">
-                        <div class="card-content center">
-                            <img src="~/layout_page/images/icon/hocvien.png" class="width-40">
-                            <h5 class="white-text lighten-4">{{ thongKeTong.giaoVien }}</h5>
-                            <p class="white-text lighten-4">Giáo Viên</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col s12 m3">
-                    <div class="card gradient-shadow gradient-45deg-green-teal border-radius-3">
-                        <div class="card-content center">
-                            <img src="~/layout_page/images/icon/doanhthu.png" class="width-40">
-                            <h5 class="white-text lighten-4">{{ formatNumber(thongKeTong.doanhThu) }}</h5>
-                            <p class="white-text lighten-4">Doanh Thu</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col s12 m3">
-                    <div class="card gradient-shadow gradient-45deg-red-pink border-radius-3">
-                        <div class="card-content center">
-                            <img src="~/layout_page/images/icon/chiphi.png" class="width-40">
-                            <h5 class="white-text lighten-4">{{ formatNumber(thongKeTong.chiPhi) }}</h5>
-                            <p class="white-text lighten-4">Chi Phí</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="row">
-                <div class="col s12 m6">
-                    <div class="card gradient-shadow gradient-45deg-light-blue-cyan border-radius-3">
-                        <div class="card-content center">
-                            <img src="~/layout_page/images/icon/giaovien.png" class="width-40">
-                            <h5 class="white-text lighten-4">{{ thongKeTong.hocVien }}</h5>
-                            <p class="white-text lighten-4">Học Viên</p>
-                        </div>  
-                    </div>
-                </div>
-                <div class="col s12 m6">
-                    <div class="card gradient-shadow gradient-45deg-amber-amber border-radius-3">
-                        <div class="card-content center">
-                            <img src="~/layout_page/images/icon/hocvien.png" class="width-40">
-                            <h5 class="white-text lighten-4">{{ thongKeTong.giaoVien }}</h5>
-                            <p class="white-text lighten-4">Giáo Viên</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-    <div id="sales-chart">
-        <div class="row">
-            <div class="col s12 m12 l12">
-                <div id="revenue-chart" class="card">
-                    <div class="card-content">
-                        <h4 class="header mt-0">
-                            THỐNG KÊ
-                        </h4>
 
-                        @if (User.IsInRole("Admin"))
-                        {
+    @if (User.IsInRole("Admin") || User.IsInRole("TK_ChiPhi") || User.IsInRole("TK_DoanhThu") || User.IsInRole("TK_GiaoVien") || User.IsInRole("TK_HocVien"))
+    {
+        <div id="ecommerce-offer">
+            <div class="row">
+                @if (User.IsInRole("TK_HocVien") || User.IsInRole("Admin"))
+                {
+                    <div class="col s12 m3">
+                        <div class="card gradient-shadow gradient-45deg-light-blue-cyan border-radius-3">
+                            <div class="card-content center">
+                                <img src="~/layout_page/images/icon/giaovien.png" class="width-40">
+                                <h5 class="white-text lighten-4">{{ thongKeTong.hocVien }}</h5>
+                                <p class="white-text lighten-4">Học Viên</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (User.IsInRole("TK_GiaoVien") || User.IsInRole("Admin"))
+                {
+                    <div class="col s12 m3">
+                        <div class="card gradient-shadow gradient-45deg-amber-amber border-radius-3">
+                            <div class="card-content center">
+                                <img src="~/layout_page/images/icon/hocvien.png" class="width-40">
+                                <h5 class="white-text lighten-4">{{ thongKeTong.giaoVien }}</h5>
+                                <p class="white-text lighten-4">Giáo Viên</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (User.IsInRole("TK_DoanhThu") || User.IsInRole("Admin"))
+                {
+                    <div class="col s12 m3">
+                        <div class="card gradient-shadow gradient-45deg-green-teal border-radius-3">
+                            <div class="card-content center">
+                                <img src="~/layout_page/images/icon/doanhthu.png" class="width-40">
+                                <h5 class="white-text lighten-4">{{ formatNumber(thongKeTong.doanhThu) }}</h5>
+                                <p class="white-text lighten-4">Doanh Thu</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (User.IsInRole("TK_ChiPhi") || User.IsInRole("Admin"))
+                {
+                    <div class="col s12 m3">
+                        <div class="card gradient-shadow gradient-45deg-red-pink border-radius-3">
+                            <div class="card-content center">
+                                <img src="~/layout_page/images/icon/chiphi.png" class="width-40">
+                                <h5 class="white-text lighten-4">{{ formatNumber(thongKeTong.chiPhi) }}</h5>
+                                <p class="white-text lighten-4">Chi Phí</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+
+
+
+    @if (User.IsInRole("Admin") || User.IsInRole("Chart_DoanhThu") || User.IsInRole("Chart_GiaoVien") || User.IsInRole("Chart_HocVien") || User.IsInRole("Chart_No"))
+    {
+        <div id="sales-chart">
+            <div class="row">
+                <div class="col s12 m12 l12">
+                    <div id="revenue-chart" class="card">
+                        <div class="card-content">
+                            <h4 class="header mt-0">
+                                THỐNG KÊ
+                            </h4>
                             <div class="row">
                                 <div class="col s12">
+                                    @if (User.IsInRole("Chart_HocVien") || User.IsInRole("Admin"))
+                                    {
+                                        <div class="col s12 m6 l6">
+                                            <header style="color:#1976d2">Học Viên</header>
+                                            <line-chart v-if="loadedHocVien"
+                                                        :chartdata="chartdataHocVien" />
+                                        </div>
+                                    }
 
-                                    <div class="col s12 m6 l6">
-                                        <header style="color:#1976d2">Học Viên</header>
-                                        <line-chart v-if="loadedHocVien"
-                                                    :chartdata="chartdataHocVien" />
-                                    </div>
-                                    <div class="col s12 m6 l6">
-                                        <header style="color:#1976d2">Giáo Viên</header>
-                                        <line-chart v-if="loadedGiaoVien"
-                                                    :chartdata="chartdataGiaoVien" />
-                                    </div>
+                                    @if (User.IsInRole("Chart_GiaoVien") || User.IsInRole("Admin"))
+                                    {
+                                        <div class="col s12 m6 l6">
+                                            <header style="color:#1976d2">Giáo Viên</header>
+                                            <line-chart v-if="loadedGiaoVien"
+                                                        :chartdata="chartdataGiaoVien" />
+                                        </div>
+                                    }
 
+                                    @if (User.IsInRole("Chart_DoanhThu") || User.IsInRole("Admin"))
+                                    {
+                                        <div class="col s12 m6 l6">
+                                            <header style="color:#1976d2">Doanh Thu/Chi Phí</header>
+                                            <line-chart v-if="loadedDoanhThuHocPhi"
+                                                        :chartdata="chartdataDoanhThuHocPhi" />
+                                        </div>
+                                    }
+
+                                    @if (User.IsInRole("Chart_No") || User.IsInRole("Admin"))
+                                    {
+                                        <div class="col s12 m6 l6">
+                                            <header style="color:#1976d2">Học Viên Nợ</header>
+                                            <line-chart v-if="loadedNo"
+                                                        :chartdata="chartdataNo" />
+                                        </div>
+                                    }
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col s12">
-
-                                    <div class="col s12 m6 l6">
-                                        <header style="color:#1976d2">Doanh Thu/Chi Phí</header>
-                                        <line-chart v-if="loadedDoanhThuHocPhi"
-                                                    :chartdata="chartdataDoanhThuHocPhi" />
-                                    </div>
-
-                                    <div class="col s12 m6 l6">
-                                        <header style="color:#1976d2">Học Viên Nợ</header>
-                                        <line-chart v-if="loadedNo"
-                                                    :chartdata="chartdataNo" />
-                                    </div>
-
-                                </div>
-                            </div>
-                        }
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
+
     <!--end container-->
 </div>
 
