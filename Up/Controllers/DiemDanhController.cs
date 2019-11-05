@@ -70,9 +70,10 @@
             var list = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId, month, year);
             List<ThongKeModel> model = new List<ThongKeModel>();
             var soNgayHoc = await _hocPhiService.SoNgayHocAsync(LopHocId, month, year);
-            if (list.Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year).Any())
-            {
+            //if (list.Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year).Any())
+            //{
                 model = list
+                        .Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year)
                         .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
                         {
                             Label = x.Key,
@@ -124,47 +125,47 @@
 
                     hocVien.ThongKeDiemDanh = diemDanhModel;
                 }
-            }
-            else if (list.Where(x => (x.NgayDiemDanh_Date.Month < month && x.NgayDiemDanh_Date.Year == year) || x.NgayDiemDanh_Date.Year < year).Any())
-            {
-                model = list
-                        .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
-                        {
-                            Label = x.Key,
-                            HocVienId = x.Select(m => m.HocVienId).First(),
-                            NgayBatDau_Day = x.Select(m => m.NgayBatDau).First().Day,
-                            NgayBatDau_Month = x.Select(m => m.NgayBatDau).First().Month,
-                            NgayBatDau_Year = x.Select(m => m.NgayBatDau).First().Year,
-                            NgayKetThuc_Day = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Day : 0,
-                            NgayKetThuc_Month = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Month : 0,
-                            NgayKetThuc_Year = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Year : 0,
-                            ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
-                            {
-                                Dates = m.NgayDiemDanh_Date,
-                                DuocNghi = m.IsDuocNghi,
-                                IsOff = m.IsOff,
-                                Day = m.NgayDiemDanh_Date.Day
-                            }).ToList()
-                        }).ToList();
+            //}
+            //else if (list.Where(x => (x.NgayDiemDanh_Date.Month < month && x.NgayDiemDanh_Date.Year == year) || x.NgayDiemDanh_Date.Year < year).Any())
+            //{
+            //    model = list
+            //            .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
+            //            {
+            //                Label = x.Key,
+            //                HocVienId = x.Select(m => m.HocVienId).First(),
+            //                NgayBatDau_Day = x.Select(m => m.NgayBatDau).First().Day,
+            //                NgayBatDau_Month = x.Select(m => m.NgayBatDau).First().Month,
+            //                NgayBatDau_Year = x.Select(m => m.NgayBatDau).First().Year,
+            //                NgayKetThuc_Day = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Day : 0,
+            //                NgayKetThuc_Month = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Month : 0,
+            //                NgayKetThuc_Year = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Year : 0,
+            //                ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
+            //                {
+            //                    Dates = m.NgayDiemDanh_Date,
+            //                    DuocNghi = m.IsDuocNghi,
+            //                    IsOff = m.IsOff,
+            //                    Day = m.NgayDiemDanh_Date.Day
+            //                }).ToList()
+            //            }).ToList();
 
-                foreach (var hocVien in model)
-                {
-                    List<ThongKeDiemDanhModel> diemDanhModel = new List<ThongKeDiemDanhModel>();
-                    foreach (int ngayHoc in soNgayHoc)
-                    {
-                        diemDanhModel.Add(new ThongKeDiemDanhModel
-                        {
-                            //phai~ dao~ isOff de ko sinh loi v-switch
-                            DuocNghi = false,
-                            IsOff = false,
-                            Day = ngayHoc,
-                            Dates = new DateTime(year, month, ngayHoc)
-                        });
-                    }
+            //    foreach (var hocVien in model)
+            //    {
+            //        List<ThongKeDiemDanhModel> diemDanhModel = new List<ThongKeDiemDanhModel>();
+            //        foreach (int ngayHoc in soNgayHoc)
+            //        {
+            //            diemDanhModel.Add(new ThongKeDiemDanhModel
+            //            {
+            //                //phai~ dao~ isOff de ko sinh loi v-switch
+            //                DuocNghi = false,
+            //                IsOff = false,
+            //                Day = ngayHoc,
+            //                Dates = new DateTime(year, month, ngayHoc)
+            //            });
+            //        }
 
-                    hocVien.ThongKeDiemDanh = diemDanhModel;
-                }
-            }
+            //        hocVien.ThongKeDiemDanh = diemDanhModel;
+            //    }
+            //}
                         
             return Json(
                 model

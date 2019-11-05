@@ -346,9 +346,10 @@ namespace Up.Services
                                             DaNo = x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) != null ? x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).DaNo : x.HocVien.HocVien_Nos.Any(m => m.NgayNo.Month == currentMonth && m.NgayNo.Year == currentYear && m.LopHocId == LopHocId && m.IsDisabled == false)
                                         })
                                         .ToListAsync();
-
+                int index = 1;
                 foreach (var item in model)
                 {
+                    item.Stt = index;
                     var giaSach = item.GiaSach != null ? item.GiaSach.Select(x => x.Gia).Sum() : 0;
                     if (!string.IsNullOrWhiteSpace(item.NgayBatDauHoc))
                     {
@@ -411,8 +412,9 @@ namespace Up.Services
                     item.LastBonus = item.Bonus;
                     item.LastMinus = item.Minus;
                     item.LastGiaSach = item.GiaSach;
+                    index++;
                 }
-                return model;
+                return model.OrderBy(x => x.Stt).ToList();
             }
             catch(Exception exception)
             {

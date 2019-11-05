@@ -28,6 +28,7 @@
         hocPhiMoiNgay: 0,
         hocVienList: [],
         headers: [
+            { text: 'STT', value: 'stt', align: 'left', sortable: true },
             { text: 'Tên HV', value: 'fullName', align: 'left', sortable: true },
             { text: 'Học Phí Tháng', align: 'left', sortable: true, class: "red-header" },
             { text: 'Nợ', align: 'left', sortable: true },

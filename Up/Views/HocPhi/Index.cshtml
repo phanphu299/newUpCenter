@@ -94,7 +94,7 @@
                                                   :search="search"
                                                   :items="hocVienList">
                                         <template slot="items" slot-scope="props">
-
+                                            <td>{{ props.item.stt }}</td>
                                             <td>
                                                 {{ props.item.fullName }} <br />
                                                 <v-tooltip top v-if="props.item.hocPhiBuHocVienVaoSau > 0">

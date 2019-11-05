@@ -44,7 +44,9 @@
     methods: {
         async onTinhChiPhi(item) {
             if (!isNaN(item.soNgayNghi) && !isNaN(item.soHocVien) && !isNaN(item.soGioDay) && !isNaN(item.soGioKem) && !isNaN(item.bonus) && !isNaN(item.minus)) {
+                (Math.ceil(item.hocPhiMoi / 10000) * 10000);
                 item.chiPhiMoi = item.salary_Expense - (item.dailySalary * item.soNgayNghi) + (item.mucHoaHong * item.soHocVien) + (item.soGioKem * item.tutoringRate) + (item.soGioDay * item.teachingRate) + (item.bonus * 1) - (item.minus * 1);
+                item.chiPhiMoi = (Math.ceil(item.chiPhiMoi / 10000) * 10000);
             }
         },
 
