@@ -73,7 +73,6 @@
             //if (list.Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year).Any())
             //{
                 model = list
-                        .Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year)
                         .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
                         {
                             Label = x.Key,
@@ -84,14 +83,16 @@
                             NgayKetThuc_Day = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Day : 0,
                             NgayKetThuc_Month = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Month : 0,
                             NgayKetThuc_Year = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Year : 0,
-                            ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
+                            ThongKeDiemDanh = x.Where(m => m.NgayDiemDanh_Date.Month == month && m.NgayDiemDanh_Date.Year == year)
+                            .Select(m => new ThongKeDiemDanhModel
                             {
                                 Dates = m.NgayDiemDanh_Date,
                                 DuocNghi = m.IsDuocNghi,
                                 IsOff = m.IsOff,
                                 Day = m.NgayDiemDanh_Date.Day
                             }).ToList()
-                        }).ToList();
+                        })
+                        .ToList();
 
                 foreach (var hocVien in model)
                 {
