@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Up.Data;
 
 namespace Up.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191207183118_AddThongKeTable")]
+    partial class AddThongKeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +47,8 @@ namespace Up.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c8efd191-74a9-4a5d-b8af-94a31306d3e8",
-                            ConcurrencyStamp = "775515d2-3bf5-4b27-918f-96e7567defb1",
+                            Id = "1125aa5c-e1fb-4325-9352-2d5d4583de2c",
+                            ConcurrencyStamp = "71078112-3c49-46ff-8a2c-be6fc6cd1a2d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

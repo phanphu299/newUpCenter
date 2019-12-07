@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Up.Data;
+    using Up.Data.Entities;
     using Up.Enums;
     using Up.Models;
 
@@ -18,19 +19,43 @@
             _context = context;
         }
 
-        public async Task<List<HocVienViewModel>> GetHocVienGiaoTiepAsync()
+        public async Task<List<ThongKeModel>> GetHocVienGiaoTiepAsync()
         {
             try
             {
-                var giaoTiep = await _context.HocViens
-                .Where(x => x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && x.IsDisabled == false)
-                .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
-                .OrderBy(x => x.CreatedDate)
-                
-                .Select(g => new HocVienViewModel
+                //tinh tong hoc vien theo tháng
+                var thongke = await _context.ThongKeHocVienTheoThangs
+                    .FirstOrDefaultAsync(x => x.LoaiHocVien == (byte)LoaiHocVienEnums.GiaoTiep && x.Date.Month == DateTime.Now.Month && x.Date.Year == DateTime.Now.Year);
+                if(thongke == null)
                 {
-                    HocVienId = g.HocVienId,
-                    CreatedDate_Date = g.CreatedDate
+                    ThongKeHocVienTheoThang thongKeHocVien = new ThongKeHocVienTheoThang {
+                        Date = DateTime.Now,
+                        LoaiHocVien = (byte)LoaiHocVienEnums.GiaoTiep,
+                        ThongKeHocVienTheoThangId = new Guid(),
+                        SoLuong = await _context.HocViens
+                            .Where(x => x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync()
+                    };
+                    await _context.ThongKeHocVienTheoThangs.AddAsync(thongKeHocVien);
+                }
+                else
+                {
+                    var soLuong = await _context.HocViens
+                            .Where(x => x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync();
+                    if (thongke.SoLuong != soLuong)
+                    {
+                        thongke.SoLuong = soLuong;
+                    }
+                }
+                await _context.SaveChangesAsync();
+
+                var giaoTiep = await _context.ThongKeHocVienTheoThangs
+                .Where(x => x.LoaiHocVien == (byte)LoaiHocVienEnums.GiaoTiep && x.Date.Year == DateTime.Now.Year)
+                .OrderBy(x => x.Date)
+                
+                .Select(g => new ThongKeModel
+                {
+                    Data = g.SoLuong,
+                    Date = g.Date
                 })
                 .ToListAsync();
 
@@ -42,19 +67,44 @@
             }
         }
 
-        public async Task<List<HocVienViewModel>> GetHocVienThieuNhiAsync()
+        public async Task<List<ThongKeModel>> GetHocVienThieuNhiAsync()
         {
             try
             {
-                var thieuNhi = await _context.HocViens
-                .Where(x => x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId()) && x.IsDisabled == false)
-                .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
-                .OrderBy(x => x.CreatedDate)
-
-                .Select(g => new HocVienViewModel
+                //tinh tong hoc vien theo tháng
+                var thongke = await _context.ThongKeHocVienTheoThangs
+                    .FirstOrDefaultAsync(x => x.LoaiHocVien == (byte)LoaiHocVienEnums.ThieuNhi && x.Date.Month == DateTime.Now.Month && x.Date.Year == DateTime.Now.Year);
+                if (thongke == null)
                 {
-                    HocVienId = g.HocVienId,
-                    CreatedDate_Date = g.CreatedDate
+                    ThongKeHocVienTheoThang thongKeHocVien = new ThongKeHocVienTheoThang
+                    {
+                        Date = DateTime.Now,
+                        LoaiHocVien = (byte)LoaiHocVienEnums.ThieuNhi,
+                        ThongKeHocVienTheoThangId = new Guid(),
+                        SoLuong = await _context.HocViens
+                            .Where(x => x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId()) && x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync()
+                    };
+                    await _context.ThongKeHocVienTheoThangs.AddAsync(thongKeHocVien);
+                }
+                else
+                {
+                    var soLuong = await _context.HocViens
+                            .Where(x => x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId()) && x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync();
+                    if (thongke.SoLuong != soLuong)
+                    {
+                        thongke.SoLuong = soLuong;
+                    }
+                }
+                await _context.SaveChangesAsync();
+
+                var thieuNhi = await _context.ThongKeHocVienTheoThangs
+                .Where(x => x.LoaiHocVien == (byte)LoaiHocVienEnums.ThieuNhi && x.Date.Year == DateTime.Now.Year)
+                .OrderBy(x => x.Date)
+
+                .Select(g => new ThongKeModel
+                {
+                    Data = g.SoLuong,
+                    Date = g.Date
                 })
                 .ToListAsync();
 
@@ -66,19 +116,44 @@
             }
         }
 
-        public async Task<List<HocVienViewModel>> GetHocVienCCQuocTeAsync()
+        public async Task<List<ThongKeModel>> GetHocVienCCQuocTeAsync()
         {
             try
             {
-                var quocTe = await _context.HocViens
-                .Where(x => (!x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && !x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId())) && x.IsDisabled == false)
-                .Where(x => x.CreatedDate.Year == DateTime.Now.Year)
-                .OrderBy(x => x.CreatedDate)
-
-                .Select(g => new HocVienViewModel
+                //tinh tong hoc vien theo tháng
+                var thongke = await _context.ThongKeHocVienTheoThangs
+                    .FirstOrDefaultAsync(x => x.LoaiHocVien == (byte)LoaiHocVienEnums.QuocTe && x.Date.Month == DateTime.Now.Month && x.Date.Year == DateTime.Now.Year);
+                if (thongke == null)
                 {
-                    HocVienId = g.HocVienId,
-                    CreatedDate_Date = g.CreatedDate
+                    ThongKeHocVienTheoThang thongKeHocVien = new ThongKeHocVienTheoThang
+                    {
+                        Date = DateTime.Now,
+                        LoaiHocVien = (byte)LoaiHocVienEnums.QuocTe,
+                        ThongKeHocVienTheoThangId = new Guid(),
+                        SoLuong = await _context.HocViens
+                            .Where(x => (!x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && !x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId())) && x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync()
+                    };
+                    await _context.ThongKeHocVienTheoThangs.AddAsync(thongKeHocVien);
+                }
+                else
+                {
+                    var soLuong = await _context.HocViens
+                            .Where(x => (!x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && !x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId())) && x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync();
+                    if (thongke.SoLuong != soLuong)
+                    {
+                        thongke.SoLuong = soLuong;
+                    }
+                }
+                await _context.SaveChangesAsync();
+
+                var quocTe = await _context.ThongKeHocVienTheoThangs
+                .Where(x => x.LoaiHocVien == (byte)LoaiHocVienEnums.QuocTe && x.Date.Year == DateTime.Now.Year)
+                .OrderBy(x => x.Date)
+
+                .Select(g => new ThongKeModel
+                {
+                    Data = g.SoLuong,
+                    Date = g.Date
                 })
                 .ToListAsync();
 
@@ -90,19 +165,44 @@
             }
         }
 
-        public async Task<List<GiaoVienViewModel>> GetGiaoVienFullTimeAsync()
+        public async Task<List<ThongKeModel>> GetGiaoVienFullTimeAsync()
         {
             try
             {
-                var fullTime = await _context.GiaoViens
-                .Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiCheDoEnums.FullTime.ToId()) && x.IsDisabled == false)
-                .Where(x => x.NgayBatDau <= DateTime.Now && x.NgayBatDau.Year == DateTime.Now.Year)
-                .OrderBy(x => x.NgayBatDau)
-
-                .Select(g => new GiaoVienViewModel
+                //tinh tong giao vien theo tháng
+                var thongke = await _context.ThongKeGiaoVienTheoThangs
+                    .FirstOrDefaultAsync(x => x.LoaiGiaoVien == (byte)LoaiGiaoVienEnums.FullTime && x.Date.Month == DateTime.Now.Month && x.Date.Year == DateTime.Now.Year);
+                if (thongke == null)
                 {
-                    GiaoVienId = g.GiaoVienId,
-                    CreatedDate_Date = g.CreatedDate
+                    ThongKeGiaoVienTheoThang thongKeHocVien = new ThongKeGiaoVienTheoThang
+                    {
+                        Date = DateTime.Now,
+                        LoaiGiaoVien = (byte)LoaiGiaoVienEnums.FullTime,
+                        ThongKeGiaoVienTheoThangId = new Guid(),
+                        SoLuong = await _context.GiaoViens
+                            .Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiCheDoEnums.FullTime.ToId()) && x.IsDisabled == false).CountAsync()
+                    };
+                    await _context.ThongKeGiaoVienTheoThangs.AddAsync(thongKeHocVien);
+                }
+                else
+                {
+                    var soLuong = await _context.GiaoViens
+                            .Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiCheDoEnums.FullTime.ToId()) && x.IsDisabled == false).CountAsync();
+                    if (thongke.SoLuong != soLuong)
+                    {
+                        thongke.SoLuong = soLuong;
+                    }
+                }
+                await _context.SaveChangesAsync();
+
+                var fullTime = await _context.ThongKeGiaoVienTheoThangs
+                .Where(x => x.LoaiGiaoVien == (byte)LoaiGiaoVienEnums.FullTime && x.Date.Year == DateTime.Now.Year)
+                .OrderBy(x => x.Date)
+
+                .Select(g => new ThongKeModel
+                {
+                    Data = g.SoLuong,
+                    Date = g.Date
                 })
                 .ToListAsync();
 
@@ -114,19 +214,44 @@
             }
         }
 
-        public async Task<List<GiaoVienViewModel>> GetGiaoVienPartTimeAsync()
+        public async Task<List<ThongKeModel>> GetGiaoVienPartTimeAsync()
         {
             try
             {
-                var partTime = await _context.GiaoViens
-                .Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiCheDoEnums.PartTime.ToId()) && x.IsDisabled == false)
-                .Where(x => x.NgayBatDau <= DateTime.Now && x.NgayBatDau.Year == DateTime.Now.Year)
-                .OrderBy(x => x.NgayBatDau)
-
-                .Select(g => new GiaoVienViewModel
+                //tinh tong giao vien theo tháng
+                var thongke = await _context.ThongKeGiaoVienTheoThangs
+                    .FirstOrDefaultAsync(x => x.LoaiGiaoVien == (byte)LoaiGiaoVienEnums.PartTime && x.Date.Month == DateTime.Now.Month && x.Date.Year == DateTime.Now.Year);
+                if (thongke == null)
                 {
-                    GiaoVienId = g.GiaoVienId,
-                    CreatedDate_Date = g.CreatedDate
+                    ThongKeGiaoVienTheoThang thongKeHocVien = new ThongKeGiaoVienTheoThang
+                    {
+                        Date = DateTime.Now,
+                        LoaiGiaoVien = (byte)LoaiGiaoVienEnums.PartTime,
+                        ThongKeGiaoVienTheoThangId = new Guid(),
+                        SoLuong = await _context.GiaoViens
+                            .Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiCheDoEnums.PartTime.ToId()) && x.IsDisabled == false).CountAsync()
+                    };
+                    await _context.ThongKeGiaoVienTheoThangs.AddAsync(thongKeHocVien);
+                }
+                else
+                {
+                    var soLuong = await _context.GiaoViens
+                            .Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiCheDoEnums.PartTime.ToId()) && x.IsDisabled == false).CountAsync();
+                    if (thongke.SoLuong != soLuong)
+                    {
+                        thongke.SoLuong = soLuong;
+                    }
+                }
+                await _context.SaveChangesAsync();
+
+                var partTime = await _context.ThongKeGiaoVienTheoThangs
+                .Where(x => x.LoaiGiaoVien == (byte)LoaiGiaoVienEnums.PartTime && x.Date.Year == DateTime.Now.Year)
+                .OrderBy(x => x.Date)
+
+                .Select(g => new ThongKeModel
+                {
+                    Data = g.SoLuong,
+                    Date = g.Date
                 })
                 .ToListAsync();
 
@@ -178,7 +303,7 @@
         {
             try
             {
-                return await _context.HocViens.Where(x => x.IsDisabled == false).CountAsync();
+                return await _context.HocViens.Where(x => x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync();
             }
             catch (Exception exception)
             {

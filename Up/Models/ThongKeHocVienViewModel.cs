@@ -24,6 +24,7 @@
         public int NgayKetThuc_Day { get; set; }
         public int NgayKetThuc_Month { get; set; }
         public int NgayKetThuc_Year { get; set; }
+        public DateTime Date { get; set; }
     }
 
     public class ThongKeDiemDanhModel

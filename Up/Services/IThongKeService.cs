@@ -6,12 +6,12 @@
 
     public interface IThongKeService
     {
-        Task<List<HocVienViewModel>> GetHocVienGiaoTiepAsync();
-        Task<List<HocVienViewModel>> GetHocVienThieuNhiAsync();
-        Task<List<HocVienViewModel>> GetHocVienCCQuocTeAsync();
+        Task<List<ThongKeModel>> GetHocVienGiaoTiepAsync();
+        Task<List<ThongKeModel>> GetHocVienThieuNhiAsync();
+        Task<List<ThongKeModel>> GetHocVienCCQuocTeAsync();
 
-        Task<List<GiaoVienViewModel>> GetGiaoVienFullTimeAsync();
-        Task<List<GiaoVienViewModel>> GetGiaoVienPartTimeAsync();
+        Task<List<ThongKeModel>> GetGiaoVienFullTimeAsync();
+        Task<List<ThongKeModel>> GetGiaoVienPartTimeAsync();
         //Task<List<GiaoVienViewModel>> GetGiaoVienNuocNgoaiAsync();
 
         Task<int> GetTongGiaoVienAsync();

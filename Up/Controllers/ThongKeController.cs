@@ -30,48 +30,63 @@
         [HttpGet]
         public async Task<IActionResult> GetThongKeHocVienAsync()
         {
-            var giaoTiep = _thongKeService.GetHocVienGiaoTiepAsync()
-                .Result
-                .GroupBy(p => p.CreatedDate_Date.Month)
-                                .Select(g => new ThongKeModel
-                                {
-                                    Label = g.Key.ToString(),
-                                    Data = g.Count(),
-                                });
+            var giaoTiep = await _thongKeService.GetHocVienGiaoTiepAsync();
+                //.Result
+                //.GroupBy(p => p.Date.Month)
+                //                .Select(g => new ThongKeModel
+                //                {
+                //                    Label = g.Key.ToString(),
+                //                    Data = g.Count(),
+                //                });
 
             var listGiaoTiep = Enumerable.Repeat(0.0, 12).ToList();
-            foreach (var item in giaoTiep)
+            //foreach (var item in giaoTiep)
+            //{
+            //    listGiaoTiep[int.Parse(item.Label) - 1] = item.Data;
+            //}
+            for(int i = 0; i < listGiaoTiep.Count; i++)
             {
-                listGiaoTiep[int.Parse(item.Label) - 1] = item.Data;
+                var item = giaoTiep.FirstOrDefault(x => x.Date.Month == (i + 1));
+                listGiaoTiep[i] = item == null ? 0.0 : item.Data;
             }
 
-            var thieuNhi = _thongKeService.GetHocVienThieuNhiAsync()
-                .Result
-                .GroupBy(p => p.CreatedDate_Date.Month)
-                                .Select(g => new ThongKeModel
-                                {
-                                    Label = g.Key.ToString(),
-                                    Data = g.Count(),
-                                });
+            var thieuNhi = await _thongKeService.GetHocVienThieuNhiAsync();
+                //.Result
+                //.GroupBy(p => p.Date.Month)
+                //                .Select(g => new ThongKeModel
+                //                {
+                //                    Label = g.Key.ToString(),
+                //                    Data = g.Count(),
+                //                });
 
             var listThieuNhi = Enumerable.Repeat(0.0, 12).ToList();
-            foreach (var item in thieuNhi)
+            //foreach (var item in thieuNhi)
+            //{
+            //    listThieuNhi[int.Parse(item.Label) - 1] = item.Data;
+            //}
+            for (int i = 0; i < listThieuNhi.Count; i++)
             {
-                listThieuNhi[int.Parse(item.Label) - 1] = item.Data;
+                var item = thieuNhi.FirstOrDefault(x => x.Date.Month == (i + 1));
+                listThieuNhi[i] = item == null ? 0.0 : item.Data;
             }
 
-            var quocTe = _thongKeService.GetHocVienCCQuocTeAsync()
-                .Result
-                .GroupBy(p => p.CreatedDate_Date.Month)
-                                .Select(g => new ThongKeModel
-                                {
-                                    Label = g.Key.ToString(),
-                                    Data = g.Count(),
-                                });
+            var quocTe = await _thongKeService.GetHocVienCCQuocTeAsync();
+                //.Result
+                //.GroupBy(p => p.Date.Month)
+                //                .Select(g => new ThongKeModel
+                //                {
+                //                    Label = g.Key.ToString(),
+                //                    Data = g.Count(),
+                //                });
             var listQuocTe = Enumerable.Repeat(0.0, 12).ToList();
-            foreach (var item in quocTe)
+            //foreach (var item in quocTe)
+            //{
+            //    listQuocTe[int.Parse(item.Label) - 1] = item.Data;
+            //}
+            for (int i = 0; i < listQuocTe.Count; i++)
             {
-                listQuocTe[int.Parse(item.Label) - 1] = item.Data;
+                var item = quocTe.FirstOrDefault(x => x.Date.Month == (i + 1));
+                listQuocTe[i] = item == null ? 0.0 : item.Data;
             }
 
             return Json(new ThongKeHocVienViewModel
@@ -85,34 +100,44 @@
         [HttpGet]
         public async Task<IActionResult> GetThongKeGiaoVienAsync()
         {
-            var fullTime = _thongKeService.GetGiaoVienFullTimeAsync()
-                .Result
-                .GroupBy(p => p.CreatedDate_Date.Month)
-                                .Select(g => new ThongKeModel
-                                {
-                                    Label = g.Key.ToString(),
-                                    Data = g.Count(),
-                                });
+            var fullTime = await _thongKeService.GetGiaoVienFullTimeAsync();
+                //.Result
+                //.GroupBy(p => p.Date.Month)
+                //                .Select(g => new ThongKeModel
+                //                {
+                //                    Label = g.Key.ToString(),
+                //                    Data = g.Count(),
+                //                });
 
             var listFullTime = Enumerable.Repeat(0.0, 12).ToList();
-            foreach (var item in fullTime)
+            //foreach (var item in fullTime)
+            //{
+            //    listFullTime[int.Parse(item.Label) - 1] = item.Data;
+            //}
+            for (int i = 0; i < listFullTime.Count; i++)
             {
-                listFullTime[int.Parse(item.Label) - 1] = item.Data;
+                var item = fullTime.FirstOrDefault(x => x.Date.Month == (i + 1));
+                listFullTime[i] = item == null ? 0.0 : item.Data;
             }
 
-            var partTime = _thongKeService.GetGiaoVienPartTimeAsync()
-                .Result
-                .GroupBy(p => p.CreatedDate_Date.Month)
-                                .Select(g => new ThongKeModel
-                                {
-                                    Label = g.Key.ToString(),
-                                    Data = g.Count(),
-                                });
+            var partTime = await _thongKeService.GetGiaoVienPartTimeAsync();
+                //.Result
+                //.GroupBy(p => p.Date.Month)
+                //                .Select(g => new ThongKeModel
+                //                {
+                //                    Label = g.Key.ToString(),
+                //                    Data = g.Count(),
+                //                });
 
             var listPartTime = Enumerable.Repeat(0.0, 12).ToList();
-            foreach (var item in partTime)
+            //foreach (var item in partTime)
+            //{
+            //    listPartTime[int.Parse(item.Label) - 1] = item.Data;
+            //}
+            for (int i = 0; i < listPartTime.Count; i++)
             {
-                listPartTime[int.Parse(item.Label) - 1] = item.Data;
+                var item = partTime.FirstOrDefault(x => x.Date.Month == (i + 1));
+                listPartTime[i] = item == null ? 0.0 : item.Data;
             }
 
             return Json(new ThongKeGiaoVienViewModel

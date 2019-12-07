@@ -366,7 +366,22 @@
                     worksheet.Cells[i + 2, 2].Value = hocVien[i].Phone;
                     string lopHoc = "";
                     if (hocVien[i].IsDisabled || hocVien[i].LopHocList.Any(x => x.IsDisabled || x.IsGraduated || x.IsCanceled))
-                        lopHoc = "BL-" + String.Join(", ", hocVien[i].LopHocList.Select(x => x.Name.Substring(2) + "-" + x.Name.Substring(0,2)).ToArray());
+                    {
+                        if(!hocVien[i].LopHocList.Any())
+                        {
+                            lopHoc = "BL";
+                        }
+                        foreach(var item in hocVien[i].LopHocList.Where(x => x.IsDisabled || x.IsGraduated || x.IsCanceled))
+                        {
+                            lopHoc += "BL-" + item.Name.Substring(2) + "-" + item.Name.Substring(0, 2) + ", ";
+                        }
+
+                        foreach (var item in hocVien[i].LopHocList.Where(x => !x.IsDisabled && !x.IsGraduated && !x.IsCanceled))
+                        {
+                            lopHoc += item.Name.Substring(2) + "-" + item.Name.Substring(0, 2) + ", ";
+                        }
+                    }
+                        //lopHoc = "BL-" + String.Join(", ", hocVien[i].LopHocList.Select(x => x.Name.Substring(2) + "-" + x.Name.Substring(0,2)).ToArray());
                     else
                         lopHoc = String.Join(", ", hocVien[i].LopHocList.Select(x => x.Name).ToArray());
                     worksheet.Cells[i + 2, 3].Value = lopHoc;
