@@ -23,28 +23,25 @@
     },
     async beforeCreate() {
         let that = this;
-        await axios.get('/LopHoc/GetAvailableLopHocAsync')
+        //await axios.get('/LopHoc/GetAvailableLopHocAsync')
+        //    .then(function (response) {
+        //        that.itemLopHoc = response.data;
+        //    })
+        //    .catch(function (error) {
+        //        console.log(error);
+        //    });
+
+        await axios.get('/No/GetNoAsync')
             .then(function (response) {
-                that.itemLopHoc = response.data;
+                that.hocVienList = response.data;
             })
             .catch(function (error) {
                 console.log(error);
             });
     },
     methods: {
-        async GetHocVienNoByLopHoc() {
-            let that = this;
-            await axios.get('/No/GetNoByLopHocAsync?LopHocId=' + this.selectedLopHoc)
-                .then(function (response) {
-                    that.hocVienList = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        },
-
         formatNumber(val) {
             return val.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
-        },
+        }
     }
 });

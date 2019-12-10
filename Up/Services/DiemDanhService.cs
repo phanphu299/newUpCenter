@@ -203,10 +203,13 @@
         {
             if (LopHocId == null)
                 throw new Exception("Không tìm thấy Lớp Học!");
-
-            return await _context.HocVien_LopHocs
-                                .Where(x => x.LopHocId == LopHocId)
-                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && m.NgayKetThuc == null || ((m.NgayKetThuc.Value.Month >= month && m.NgayKetThuc.Value.Year == year) || m.NgayKetThuc.Value.Year < year)) && x.HocVien.IsDisabled == false && x.HocVien.HocVien_NgayHocs.Any(m => ((m.NgayBatDau.Month <= month && m.NgayBatDau.Year == year) || m.NgayBatDau.Year < year)))
+            try
+            {
+                return _context.HocVien_LopHocs
+                                .Include(x => x.LopHoc)
+                                .Include(x => x.HocVien.HocVien_NgayHocs)
+                                .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
+                                .Where(x => x.LopHoc.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null || ((m.NgayKetThuc.Value.Month >= month && m.NgayKetThuc.Value.Year == year) || m.NgayKetThuc.Value.Year < year)) && x.HocVien.HocVien_NgayHocs.Any(m => ((m.NgayBatDau.Month <= month && m.NgayBatDau.Year == year) || m.NgayBatDau.Year < year)))
                                 .GroupJoin(_context.LopHoc_DiemDanhs,
                                 i => i.HocVienId,
                                 p => p.HocVienId,
@@ -216,8 +219,8 @@
                                     i = i,
                                     g = g
                                 })
-                                .SelectMany (
-                                temp0 => temp0.g.DefaultIfEmpty (),
+                                .SelectMany(
+                                temp0 => temp0.g.DefaultIfEmpty(),
                                 (temp0, cat) =>
                                     new DiemDanhViewModel
                                     {
@@ -227,11 +230,16 @@
                                         HocVien = temp0.i.HocVien.FullName,
                                         NgayDiemDanh_Date = (cat == null) ? new DateTime() : cat.NgayDiemDanh,
                                         HocVienId = temp0.i.HocVienId,
-                                        NgayBatDau = temp0.i.HocVien.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayBatDau,
-                                        NgayKetThuc = temp0.i.HocVien.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayKetThuc
+                                        NgayBatDau = temp0.i.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayBatDau,
+                                        NgayKetThuc = temp0.i.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayKetThuc
                                     }
                                 )
-                                .ToListAsync();
+                                .ToList();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<List<HocVienViewModel>> GetHocVienByLopHoc(Guid LopHocId)

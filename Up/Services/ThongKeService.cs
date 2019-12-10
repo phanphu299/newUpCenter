@@ -32,15 +32,15 @@
                         Date = DateTime.Now,
                         LoaiHocVien = (byte)LoaiHocVienEnums.GiaoTiep,
                         ThongKeHocVienTheoThangId = new Guid(),
-                        SoLuong = await _context.HocViens
-                            .Where(x => x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync()
+                        SoLuong = await _context.HocVien_LopHocs
+                            .Where(x => x.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId() && x.HocVien.IsDisabled == false && x.LopHoc.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)).CountAsync()
                     };
                     await _context.ThongKeHocVienTheoThangs.AddAsync(thongKeHocVien);
                 }
                 else
                 {
-                    var soLuong = await _context.HocViens
-                            .Where(x => x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync();
+                    var soLuong = await _context.HocVien_LopHocs
+                            .Where(x => x.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId() && x.HocVien.IsDisabled == false && x.LopHoc.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)).CountAsync();
                     if (thongke.SoLuong != soLuong)
                     {
                         thongke.SoLuong = soLuong;
@@ -81,15 +81,15 @@
                         Date = DateTime.Now,
                         LoaiHocVien = (byte)LoaiHocVienEnums.ThieuNhi,
                         ThongKeHocVienTheoThangId = new Guid(),
-                        SoLuong = await _context.HocViens
-                            .Where(x => x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId()) && x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync()
+                        SoLuong = await _context.HocVien_LopHocs
+                            .Where(x => x.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId() && x.HocVien.IsDisabled == false && x.LopHoc.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)).CountAsync()
                     };
                     await _context.ThongKeHocVienTheoThangs.AddAsync(thongKeHocVien);
                 }
                 else
                 {
-                    var soLuong = await _context.HocViens
-                            .Where(x => x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId()) && x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync();
+                    var soLuong = await _context.HocVien_LopHocs
+                            .Where(x => x.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId() && x.HocVien.IsDisabled == false && x.LopHoc.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)).CountAsync();
                     if (thongke.SoLuong != soLuong)
                     {
                         thongke.SoLuong = soLuong;
@@ -120,7 +120,6 @@
         {
             try
             {
-                //tinh tong hoc vien theo tháng
                 var thongke = await _context.ThongKeHocVienTheoThangs
                     .FirstOrDefaultAsync(x => x.LoaiHocVien == (byte)LoaiHocVienEnums.QuocTe && x.Date.Month == DateTime.Now.Month && x.Date.Year == DateTime.Now.Year);
                 if (thongke == null)
@@ -130,15 +129,15 @@
                         Date = DateTime.Now,
                         LoaiHocVien = (byte)LoaiHocVienEnums.QuocTe,
                         ThongKeHocVienTheoThangId = new Guid(),
-                        SoLuong = await _context.HocViens
-                            .Where(x => (!x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && !x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId())) && x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync()
+                        SoLuong = await _context.HocVien_LopHocs
+                            .Where(x => x.LopHoc.KhoaHocId != LoaiKhoaHocEnums.GiaoTiep.ToId() && x.LopHoc.KhoaHocId != LoaiKhoaHocEnums.ThieuNhi.ToId() && x.HocVien.IsDisabled == false && x.LopHoc.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)).CountAsync()
                     };
                     await _context.ThongKeHocVienTheoThangs.AddAsync(thongKeHocVien);
                 }
                 else
                 {
-                    var soLuong = await _context.HocViens
-                            .Where(x => (!x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && !x.HocVien_LopHocs.Any(p => p.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId())) && x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync();
+                    var soLuong = await _context.HocVien_LopHocs
+                            .Where(x => x.LopHoc.KhoaHocId != LoaiKhoaHocEnums.GiaoTiep.ToId() && x.LopHoc.KhoaHocId != LoaiKhoaHocEnums.ThieuNhi.ToId() && x.HocVien.IsDisabled == false && x.LopHoc.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)).CountAsync();
                     if (thongke.SoLuong != soLuong)
                     {
                         thongke.SoLuong = soLuong;
@@ -303,7 +302,7 @@
         {
             try
             {
-                return await _context.HocViens.Where(x => x.IsDisabled == false && !x.HocVien_NgayHocs.Any(p => p.NgayKetThuc != null)).CountAsync();
+                return await _context.HocVien_LopHocs.Where(x => x.HocVien.IsDisabled == false && x.LopHoc.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)).CountAsync();
             }
             catch (Exception exception)
             {

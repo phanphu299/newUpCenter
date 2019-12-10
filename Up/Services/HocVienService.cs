@@ -254,7 +254,8 @@ namespace Up.Services
                         LopHocId = p.LopHocId,
                         Name = p.LopHoc.Name,
                         IsGraduated = p.LopHoc.IsGraduated,
-                        IsCanceled = p.LopHoc.IsCanceled
+                        IsCanceled = p.LopHoc.IsCanceled,
+                        HocVienNghi = p.HocVien.HocVien_NgayHocs.FirstOrDefault(n => n.LopHocId == p.LopHocId).NgayKetThuc == null ? false : p.HocVien.HocVien_NgayHocs.FirstOrDefault(n => n.LopHocId == p.LopHocId).NgayKetThuc < DateTime.Now ? true : false
                     }).ToList(),
                     LopHoc_NgayHocList = _context.HocVien_LopHocs
                                         .Where(m => m.HocVienId == x.HocVienId)

@@ -35,5 +35,12 @@ namespace Up.Controllers
             var model = await _noService.GetHocVien_NoByLopHoc(LopHocId);
             return Json(model);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetNoAsync()
+        {
+            var model = await _noService.GetHocVien_No();
+            return Json(model);
+        }
     }
 }

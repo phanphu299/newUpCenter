@@ -19,6 +19,24 @@ namespace Up.Services
             _context = context;
         }
 
+        public async Task<List<NoViewModel>> GetHocVien_No()
+        {
+            return await _context.HocVien_Nos
+                .Where(x => x.IsDisabled == false)
+                .Select(x => new NoViewModel
+                {
+                    CreatedBy = x.CreatedBy,
+                    CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
+                    LopHocId = x.LopHocId,
+                    HocVienId = x.HocVienId,
+                    LopHoc = x.LopHoc.Name,
+                    NgayNo = x.NgayNo.ToString("dd/MM/yyyy"),
+                    TienNo = x.TienNo,
+                    HocVien = x.HocVien.FullName
+                })
+                .ToListAsync();
+        }
+
         public async Task<List<NoViewModel>> GetHocVien_NoByLopHoc(Guid LopHocId)
         {
             return await _context.HocVien_Nos
