@@ -372,14 +372,14 @@
                             lopHoc = "BL";
                         }
 
-                        foreach(var item in hocVien[i].LopHocList.Where(x => x.IsDisabled || x.IsGraduated || x.IsCanceled || x.HocVienNghi))
-                        {
-                            lopHoc += "BL-" + item.Name.Substring(2) + "-" + item.Name.Substring(0, 2) + ", ";
-                        }
-
                         foreach (var item in hocVien[i].LopHocList.Where(x => !x.IsDisabled && !x.IsGraduated && !x.IsCanceled && !x.HocVienNghi))
                         {
-                            lopHoc += item.Name + ", ";
+                            lopHoc += item.Name + " ";
+                        }
+
+                        foreach (var item in hocVien[i].LopHocList.Where(x => x.IsDisabled || x.IsGraduated || x.IsCanceled || x.HocVienNghi))
+                        {
+                            lopHoc += "BL-" + item.Name.Substring(2) + "-" + item.Name.Substring(0, 2) + " ";
                         }
                     }
                     else
