@@ -32,8 +32,10 @@
                         Date = DateTime.Now,
                         LoaiHocVien = (byte)LoaiHocVienEnums.GiaoTiep,
                         ThongKeHocVienTheoThangId = new Guid(),
-                        SoLuong = await _context.HocViens
-                            .Where(x => x.HocVien_LopHocs.Any(m => m.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && x.IsDisabled == false && x.HocVien_NgayHocs.All(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now))
+                        SoLuong = await _context.HocVien_LopHocs
+                            .Where(x => x.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId())
+                            .Where(x => x.HocVien.IsDisabled == false)
+                            .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == x.LopHoc.LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)))
                             .Select(x => x.HocVienId)
                             .Distinct()
                             .CountAsync()
@@ -42,8 +44,10 @@
                 }
                 else
                 {
-                    var soLuong = await _context.HocViens
-                            .Where(x => x.HocVien_LopHocs.Any(m => m.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId()) && x.IsDisabled == false && x.HocVien_NgayHocs.All(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now))
+                    var soLuong = await _context.HocVien_LopHocs
+                            .Where(x => x.LopHoc.KhoaHocId == LoaiKhoaHocEnums.GiaoTiep.ToId())
+                            .Where(x => x.HocVien.IsDisabled == false)
+                            .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == x.LopHoc.LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)))
                             .Select(x => x.HocVienId)
                             .Distinct()
                             .CountAsync();
@@ -87,8 +91,10 @@
                         Date = DateTime.Now,
                         LoaiHocVien = (byte)LoaiHocVienEnums.ThieuNhi,
                         ThongKeHocVienTheoThangId = new Guid(),
-                        SoLuong = await _context.HocViens
-                            .Where(x => x.HocVien_LopHocs.Any(m => m.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId()) && x.IsDisabled == false && x.HocVien_NgayHocs.All(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now))
+                        SoLuong = await _context.HocVien_LopHocs
+                            .Where(x => x.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId())
+                            .Where(x => x.HocVien.IsDisabled == false)
+                            .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == x.LopHoc.LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)))
                             .Select(x => x.HocVienId)
                             .Distinct()
                             .CountAsync()
@@ -97,8 +103,10 @@
                 }
                 else
                 {
-                    var soLuong = await _context.HocViens
-                            .Where(x => x.HocVien_LopHocs.Any(m => m.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId()) && x.IsDisabled == false && x.HocVien_NgayHocs.All(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now))
+                    var soLuong = await _context.HocVien_LopHocs
+                            .Where(x => x.LopHoc.KhoaHocId == LoaiKhoaHocEnums.ThieuNhi.ToId())
+                            .Where(x => x.HocVien.IsDisabled == false)
+                            .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == x.LopHoc.LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)))
                             .Select(x => x.HocVienId)
                             .Distinct()
                             .CountAsync();
@@ -141,8 +149,10 @@
                         Date = DateTime.Now,
                         LoaiHocVien = (byte)LoaiHocVienEnums.QuocTe,
                         ThongKeHocVienTheoThangId = new Guid(),
-                        SoLuong = await _context.HocViens
-                            .Where(x => x.HocVien_LopHocs.Any(m => m.LopHoc.KhoaHocId != LoaiKhoaHocEnums.GiaoTiep.ToId() && m.LopHoc.KhoaHocId != LoaiKhoaHocEnums.ThieuNhi.ToId()) && x.IsDisabled == false && x.HocVien_NgayHocs.All(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now))
+                        SoLuong = await _context.HocVien_LopHocs
+                            .Where(x => x.LopHoc.KhoaHocId != LoaiKhoaHocEnums.GiaoTiep.ToId() && x.LopHoc.KhoaHocId != LoaiKhoaHocEnums.ThieuNhi.ToId())
+                            .Where(x => x.HocVien.IsDisabled == false)
+                            .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == x.LopHoc.LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)))
                             .Select(x => x.HocVienId)
                             .Distinct()
                             .CountAsync()
@@ -151,9 +161,11 @@
                 }
                 else
                 {
-                    var soLuong = await _context.HocViens
-                            .Where(x => x.HocVien_LopHocs.Any(m => m.LopHoc.KhoaHocId != LoaiKhoaHocEnums.GiaoTiep.ToId() && m.LopHoc.KhoaHocId != LoaiKhoaHocEnums.ThieuNhi.ToId()) && x.IsDisabled == false && x.HocVien_NgayHocs.All(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now))
-                            .Select(x => x.HocVienId)
+                    var soLuong = await _context.HocVien_LopHocs
+                        .Where(x => x.LopHoc.KhoaHocId != LoaiKhoaHocEnums.GiaoTiep.ToId() && x.LopHoc.KhoaHocId != LoaiKhoaHocEnums.ThieuNhi.ToId())
+                        .Where(x => x.HocVien.IsDisabled == false)
+                        .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == x.LopHoc.LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)))
+                        .Select(x => x.HocVienId)
                             .Distinct()
                             .CountAsync();
                     if (thongke.SoLuong != soLuong)
@@ -320,9 +332,10 @@
         {
             try
             {
-                return await _context.HocViens
-                    .Where(x => x.IsDisabled == false && x.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now))
-                    .Select(x => x.HocVienId)
+                return await _context.HocVien_LopHocs
+                            .Where(x => x.HocVien.IsDisabled == false)
+                            .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == x.LopHoc.LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)))
+                            .Select(x => x.HocVienId)
                     .Distinct()
                     .CountAsync();
             }

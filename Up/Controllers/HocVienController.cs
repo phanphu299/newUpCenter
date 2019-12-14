@@ -383,7 +383,7 @@
                         }
                     }
                     else
-                        lopHoc = String.Join(", ", hocVien[i].LopHocList.Select(x => x.Name).ToArray());
+                        lopHoc = String.Join(" ", hocVien[i].LopHocList.Select(x => x.Name).ToArray());
                     worksheet.Cells[i + 2, 3].Value = lopHoc;
                     worksheet.Cells[i + 2, 4].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
                 }
