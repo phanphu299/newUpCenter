@@ -157,9 +157,22 @@
                                     .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh)
                                     .ToListAsync();
             if (isExisting.Any())
-                throw new Exception("Lớp học đã được điểm danh ngày " + NgayDiemDanh.ToShortDateString());
+                _context.LopHoc_DiemDanhs.RemoveRange(isExisting);
+            //throw new Exception("Lớp học đã được điểm danh ngày " + NgayDiemDanh.ToShortDateString());
 
-            var hocViens = await GetHocVienByLopHoc(LopHocId);
+            var hocViens = await _context.HocVien_LopHocs
+                                .Include(x => x.LopHoc)
+                                .Include(x => x.HocVien.HocVien_NgayHocs)
+                                .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc.Value >= NgayDiemDanh)))
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayBatDau <= NgayDiemDanh)))
+                                .Select(x => new HocVienViewModel
+                                {
+                                    FullName = x.HocVien.FullName,
+                                    EnglishName = x.HocVien.EnglishName,
+                                    HocVienId = x.HocVienId,
+                                })
+                                .ToListAsync();
 
             foreach (var item in hocViens)
             {
@@ -209,7 +222,8 @@
                                 .Include(x => x.LopHoc)
                                 .Include(x => x.HocVien.HocVien_NgayHocs)
                                 .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
-                                .Where(x => x.LopHoc.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null || ((m.NgayKetThuc.Value.Month >= month && m.NgayKetThuc.Value.Year == year) || m.NgayKetThuc.Value.Year < year)) && x.HocVien.HocVien_NgayHocs.Any(m => ((m.NgayBatDau.Month <= month && m.NgayBatDau.Year == year) || m.NgayBatDau.Year < year)))
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= month && m.NgayKetThuc.Value.Year == year) || m.NgayKetThuc.Value.Year > year)))
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayBatDau.Month <= month && m.NgayBatDau.Year == year) || m.NgayBatDau.Year < year))
                                 .GroupJoin(_context.LopHoc_DiemDanhs,
                                 i => i.HocVienId,
                                 p => p.HocVienId,
@@ -247,8 +261,12 @@
             if (LopHocId == null)
                 throw new Exception("Không tìm thấy Lớp Học!");
 
-            return await _context.HocVien_LopHocs.Where(x => x.LopHocId == LopHocId)
-                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.NgayKetThuc == null) && x.HocVien.IsDisabled == false)
+            return await _context.HocVien_LopHocs
+                                .Include(x => x.LopHoc)
+                                .Include(x => x.HocVien.HocVien_NgayHocs)
+                                .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc.Value >= DateTime.Now)))
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayBatDau <= DateTime.Now)))
                                 .Select(x => new HocVienViewModel
                                 {
                                     FullName = x.HocVien.FullName,

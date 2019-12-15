@@ -294,9 +294,13 @@ namespace Up.Services
                                                 .ToListAsync();
 
                 var model = await _context.HocVien_LopHocs
-                                        .Include(x => x.HocVien)
+                                        .Include(x => x.LopHoc)
+                                        .Include(x => x.HocVien.HocVien_NgayHocs)
                                         .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
-                                        .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && ((m.NgayBatDau.Month <= currentMonth && m.NgayBatDau.Year == currentYear) || m.NgayBatDau.Year < currentYear) && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= currentMonth && m.NgayKetThuc.Value.Year >= currentYear))))
+                                        .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= currentMonth && m.NgayKetThuc.Value.Year == currentYear) || m.NgayKetThuc.Value.Year > currentYear)))
+                                        .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayBatDau.Month <= currentMonth && m.NgayBatDau.Year == currentYear) || m.NgayBatDau.Year < currentYear))
+
+                                        //.Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && ((m.NgayBatDau.Month <= currentMonth && m.NgayBatDau.Year == currentYear) || m.NgayBatDau.Year < currentYear) && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= currentMonth && m.NgayKetThuc.Value.Year >= currentYear))))
                                         .Select(x => new HocVienViewModel
                                         {
                                             FullName = x.HocVien.FullName,

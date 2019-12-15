@@ -22,7 +22,7 @@ namespace Up.Services
         public async Task<List<NoViewModel>> GetHocVien_No()
         {
             return await _context.HocVien_Nos
-                .Where(x => x.IsDisabled == false)
+                .Where(x => x.IsDisabled == false && x.HocVien.IsDisabled == false)
                 .Select(x => new NoViewModel
                 {
                     CreatedBy = x.CreatedBy,
@@ -40,7 +40,7 @@ namespace Up.Services
         public async Task<List<NoViewModel>> GetHocVien_NoByLopHoc(Guid LopHocId)
         {
             return await _context.HocVien_Nos
-                .Where(x => x.LopHocId == LopHocId && x.IsDisabled == false)
+                .Where(x => x.LopHocId == LopHocId && x.IsDisabled == false && x.HocVien.IsDisabled == false)
                 .Select(x => new NoViewModel
                 {
                     CreatedBy = x.CreatedBy,

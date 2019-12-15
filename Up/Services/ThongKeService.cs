@@ -373,7 +373,7 @@
             try
             {
                 var no = await _context.HocVien_Nos
-                .Where(x => x.NgayNo.Year == DateTime.Now.Year)
+                .Where(x => x.NgayNo.Year == DateTime.Now.Year && x.HocVien.IsDisabled == false)
                 .OrderBy(x => x.NgayNo)
 
                 .Select(g => new NoViewModel

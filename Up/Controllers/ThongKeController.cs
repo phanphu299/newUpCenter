@@ -31,19 +31,8 @@
         public async Task<IActionResult> GetThongKeHocVienAsync()
         {
             var giaoTiep = await _thongKeService.GetHocVienGiaoTiepAsync();
-                //.Result
-                //.GroupBy(p => p.Date.Month)
-                //                .Select(g => new ThongKeModel
-                //                {
-                //                    Label = g.Key.ToString(),
-                //                    Data = g.Count(),
-                //                });
 
             var listGiaoTiep = Enumerable.Repeat(0.0, 12).ToList();
-            //foreach (var item in giaoTiep)
-            //{
-            //    listGiaoTiep[int.Parse(item.Label) - 1] = item.Data;
-            //}
             for(int i = 0; i < listGiaoTiep.Count; i++)
             {
                 var item = giaoTiep.FirstOrDefault(x => x.Date.Month == (i + 1));
@@ -51,19 +40,8 @@
             }
 
             var thieuNhi = await _thongKeService.GetHocVienThieuNhiAsync();
-                //.Result
-                //.GroupBy(p => p.Date.Month)
-                //                .Select(g => new ThongKeModel
-                //                {
-                //                    Label = g.Key.ToString(),
-                //                    Data = g.Count(),
-                //                });
 
             var listThieuNhi = Enumerable.Repeat(0.0, 12).ToList();
-            //foreach (var item in thieuNhi)
-            //{
-            //    listThieuNhi[int.Parse(item.Label) - 1] = item.Data;
-            //}
             for (int i = 0; i < listThieuNhi.Count; i++)
             {
                 var item = thieuNhi.FirstOrDefault(x => x.Date.Month == (i + 1));
@@ -71,18 +49,7 @@
             }
 
             var quocTe = await _thongKeService.GetHocVienCCQuocTeAsync();
-                //.Result
-                //.GroupBy(p => p.Date.Month)
-                //                .Select(g => new ThongKeModel
-                //                {
-                //                    Label = g.Key.ToString(),
-                //                    Data = g.Count(),
-                //                });
             var listQuocTe = Enumerable.Repeat(0.0, 12).ToList();
-            //foreach (var item in quocTe)
-            //{
-            //    listQuocTe[int.Parse(item.Label) - 1] = item.Data;
-            //}
             for (int i = 0; i < listQuocTe.Count; i++)
             {
                 var item = quocTe.FirstOrDefault(x => x.Date.Month == (i + 1));
@@ -101,39 +68,19 @@
         public async Task<IActionResult> GetThongKeGiaoVienAsync()
         {
             var fullTime = await _thongKeService.GetGiaoVienFullTimeAsync();
-                //.Result
-                //.GroupBy(p => p.Date.Month)
-                //                .Select(g => new ThongKeModel
-                //                {
-                //                    Label = g.Key.ToString(),
-                //                    Data = g.Count(),
-                //                });
 
             var listFullTime = Enumerable.Repeat(0.0, 12).ToList();
-            //foreach (var item in fullTime)
-            //{
-            //    listFullTime[int.Parse(item.Label) - 1] = item.Data;
-            //}
+
             for (int i = 0; i < listFullTime.Count; i++)
             {
                 var item = fullTime.FirstOrDefault(x => x.Date.Month == (i + 1));
                 listFullTime[i] = item == null ? 0.0 : item.Data;
             }
 
+
             var partTime = await _thongKeService.GetGiaoVienPartTimeAsync();
-                //.Result
-                //.GroupBy(p => p.Date.Month)
-                //                .Select(g => new ThongKeModel
-                //                {
-                //                    Label = g.Key.ToString(),
-                //                    Data = g.Count(),
-                //                });
 
             var listPartTime = Enumerable.Repeat(0.0, 12).ToList();
-            //foreach (var item in partTime)
-            //{
-            //    listPartTime[int.Parse(item.Label) - 1] = item.Data;
-            //}
             for (int i = 0; i < listPartTime.Count; i++)
             {
                 var item = partTime.FirstOrDefault(x => x.Date.Month == (i + 1));
