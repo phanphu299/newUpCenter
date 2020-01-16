@@ -148,7 +148,9 @@ namespace Up.Services
         public async Task<TinhChiPhiViewModel> TinhChiPhiAsync(int month, int year)
         {
             var giaoVien = await _context.GiaoViens
-            .Where(x => x.IsDisabled == false && x.NgayBatDau.Month <= month && x.NgayBatDau.Year <= year && (x.NgayKetThuc == null || (x.NgayKetThuc.Value.Month >= month && x.NgayKetThuc.Value.Year >= year)))
+            .Where(x => x.IsDisabled == false)
+            .Where(x => (x.NgayBatDau.Month <= month && x.NgayBatDau.Year == year) || x.NgayBatDau.Year < year)
+            .Where(x => (x.NgayKetThuc == null || (x.NgayKetThuc.Value.Month >= month && x.NgayKetThuc.Value.Year == year) || x.NgayKetThuc.Value.Year > year))
             .OrderBy(x => x.NhanVien_ViTris.OrderBy(m => m.ViTri.Order).First().ViTri.Order)
             .Select(x => new ChiPhiModel
             {
@@ -174,14 +176,14 @@ namespace Up.Services
             })
             .ToListAsync();
 
-            foreach(var item in giaoVien)
+            foreach (var item in giaoVien)
             {
-                if(item.SoNgayLam > item.SoNgayLamVoSau)
+                if (item.SoNgayLam > item.SoNgayLamVoSau)
                 {
                     item.Salary_Expense = /*(Math.Ceiling(*/(item.DailySalary * item.SoNgayLamVoSau)/* / 10000) * 10000)*/;
                     item.ChiPhiMoi = item.Salary_Expense;
                 }
-                item.ChiPhiMoi =  (Math.Ceiling(item.ChiPhiMoi / 10000) * 10000);
+                item.ChiPhiMoi = (Math.Ceiling(item.ChiPhiMoi / 10000) * 10000);
             }
 
             var chiPhi = await _context.ChiPhiCoDinhs
