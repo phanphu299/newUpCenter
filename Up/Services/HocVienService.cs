@@ -374,7 +374,7 @@ namespace Up.Services
                 item.UpdatedDate = DateTime.Now;
 
                 var _hocVien_LopHoc = await _context.HocVien_LopHocs
-                                                    .Where(x => x.HocVienId == item.HocVienId && x.LopHoc.IsCanceled == false && x.LopHoc.IsDisabled == false && x.LopHoc.IsGraduated == false)
+                                                    .Where(x => x.HocVienId == item.HocVienId)
                                                     .ToListAsync();
 
                 if (_hocVien_LopHoc.Any())
