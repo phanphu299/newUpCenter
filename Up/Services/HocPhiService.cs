@@ -432,10 +432,18 @@ namespace Up.Services
 
         private double TinhNo(IEnumerable<HocVien_No> noList, Guid lopHocId)
         {
-            var khacLop = noList.Where(x => x.LopHocId != lopHocId);
+            double tongNoKhacLop = 0;
+            var lopList = noList.Where(x => x.LopHocId != lopHocId).Select(x => x.LopHocId).Distinct();
+
+            foreach(Guid item in lopList)
+            {
+                var no = noList.Where(x => x.LopHocId == item).OrderByDescending(m => m.NgayNo).FirstOrDefault();
+                tongNoKhacLop += no != null ? no.TienNo : 0;
+            }
+
             var cungLop = noList.Where(x => x.LopHocId == lopHocId).OrderByDescending(m => m.NgayNo).FirstOrDefault();
 
-            return khacLop.Sum(p => p.TienNo) + cungLop.TienNo;
+            return tongNoKhacLop + (cungLop != null ? cungLop.TienNo : 0);
         }
 
         public async Task<List<int>> SoNgayHocAsync(Guid LopHocId, int month, int year)
