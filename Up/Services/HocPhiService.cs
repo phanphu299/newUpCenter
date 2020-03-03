@@ -255,8 +255,12 @@ namespace Up.Services
                 subMonth--;
             }
             int soNgayHoc = await TinhSoNgayHocAsync(LopHocId, month, year);
+            int soNgayHocCu = await TinhSoNgayHocAsync(LopHocId, subMonth, subYear);
 
             var hocPhiMoiNgay = HocPhi / soNgayHoc;
+
+            var hocPhiCu = await _context.LopHoc_HocPhis.Include(x => x.HocPhi).FirstOrDefaultAsync(x => x.Thang == subMonth && x.Nam == subYear && x.LopHocId == LopHocId);
+            var hocPhiMoiNgayCu = hocPhiCu == null ? (HocPhi / soNgayHocCu) : (hocPhiCu.HocPhi.Gia / soNgayHocCu);
 
             return new TinhHocPhiViewModel
             {
@@ -264,11 +268,11 @@ namespace Up.Services
                 SoNgayDuocNghi = soNgayDuocNghi,
                 HocPhi = HocPhi,
                 SoNgayHoc = soNgayHoc,
-                HocVienList = await GetHocVien_No_NgayHocAsync(LopHocId, month, year, HocPhi, soNgayHoc, hocPhiMoiNgay)
+                HocVienList = await GetHocVien_No_NgayHocAsync(LopHocId, month, year, HocPhi, soNgayHoc, hocPhiMoiNgay, hocPhiMoiNgayCu)
             };
         }
 
-        public async Task<List<HocVienViewModel>> GetHocVien_No_NgayHocAsync(Guid LopHocId, int month, int year, double HocPhi, int SoNgayHoc, double HocPhiMoiNgay)
+        public async Task<List<HocVienViewModel>> GetHocVien_No_NgayHocAsync(Guid LopHocId, int month, int year, double HocPhi, int SoNgayHoc, double HocPhiMoiNgay, double HocPhiMoiNgayCu)
         {
             try
             {
@@ -382,7 +386,7 @@ namespace Up.Services
                             
                             //if (soNgayHocVienVaoSau < SoNgayHoc)
                             //{
-                                item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau )) + (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgay * ngayDuocNghi);
+                                item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau )) + (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi);
                                 
                                 //item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                                 //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai/100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
@@ -398,7 +402,7 @@ namespace Up.Services
                         }
                         else
                         {
-                            item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgay * ngayDuocNghi);
+                            item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi);
 
                             //item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                             //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);

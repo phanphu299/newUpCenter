@@ -98,6 +98,7 @@ namespace Up.Services
         {
             return await _context.Sachs
                 //.Where(x => x.IsDisabled == false)
+                .OrderBy(x => x.Name)
                 .Select(x => new SachViewModel
                 {
                     CreatedBy = x.CreatedBy,

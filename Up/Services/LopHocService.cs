@@ -128,6 +128,7 @@
         {
             return await _context.LopHocs
                 .Where(x => x.IsDisabled == false && x.IsCanceled == false && x.IsGraduated == false)
+                .OrderBy(x => x.Name)
                 .Select(x => new LopHocViewModel
                 {
                     Name = x.Name,
