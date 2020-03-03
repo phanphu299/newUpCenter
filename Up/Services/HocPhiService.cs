@@ -318,7 +318,7 @@ namespace Up.Services
                                             TienNo = x.HocVien.HocVien_Nos
                                                             .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year)
                                                             .Any() ?
-                                                            x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year).Sum(p => p.TienNo) :
+                                                            TinhNo(x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year), LopHocId) :
                                                             0,
                                             //HocPhiMoi = (Math.Ceiling(HocPhi / 10000) * 10000),
                                             HocPhiMoi = HocPhi,
@@ -424,6 +424,14 @@ namespace Up.Services
             {
                 throw new Exception(exception.Message);
             }
+        }
+
+        private double TinhNo(IEnumerable<HocVien_No> noList, Guid lopHocId)
+        {
+            var khacLop = noList.Where(x => x.LopHocId != lopHocId);
+            var cungLop = noList.Where(x => x.LopHocId == lopHocId).OrderByDescending(m => m.NgayNo).FirstOrDefault();
+
+            return khacLop.Sum(p => p.TienNo) + cungLop.TienNo;
         }
 
         public async Task<List<int>> SoNgayHocAsync(Guid LopHocId, int month, int year)
