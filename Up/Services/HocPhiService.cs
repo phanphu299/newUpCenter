@@ -323,6 +323,8 @@ namespace Up.Services
                                                             .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year)
                                                             .Any() ?
                                                             TinhNo(x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year), LopHocId) :
+                                                            x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == month && m.NgayDong.Year == year && m.DaNo) != null ?
+                                                            x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == month && m.NgayDong.Year == year && m.DaNo).HocPhi :
                                                             0,
                                             //HocPhiMoi = (Math.Ceiling(HocPhi / 10000) * 10000),
                                             HocPhiMoi = HocPhi,
