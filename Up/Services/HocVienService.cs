@@ -80,7 +80,7 @@ namespace Up.Services
         }
 
         public async Task<HocVienViewModel> CreateHocVienAsync(List<LopHoc_NgayHocViewModel> LopHocList, string FullName, string Phone, string OtherPhone, string FacebookAccount,
-            string ParentFullName, Guid? QuanHeId,
+            string ParentFullName, string ParentPhone, Guid? QuanHeId,
             string EnglishName, DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee, DateTime? NgayBatDau = null)
         {
             try
@@ -94,6 +94,7 @@ namespace Up.Services
                 hocVien.Phone = Phone;
                 hocVien.OtherPhone = OtherPhone;
                 hocVien.FacebookAccount = FacebookAccount;
+                hocVien.ParentPhone = ParentPhone;
                 hocVien.ParentFullName = ParentFullName;
                 hocVien.QuanHeId = QuanHeId;
                 hocVien.EnglishName = EnglishName;
@@ -171,6 +172,7 @@ namespace Up.Services
                     FacebookAccount = hocVien.FacebookAccount,
                     IsDisabled = hocVien.IsDisabled,
                     ParentFullName = hocVien.ParentFullName,
+                    ParentPhone = hocVien.ParentPhone,
                     Phone = hocVien.Phone,
                     OtherPhone = hocVien.OtherPhone,
                     HocVienId = hocVien.HocVienId,
@@ -245,6 +247,7 @@ namespace Up.Services
                     IsDisabled = x.IsDisabled,
                     NgaySinh = x.NgaySinh == null ? "" : x.NgaySinh.Value.ToString("dd/MM/yyyy"),
                     ParentFullName = x.ParentFullName,
+                    ParentPhone = x.ParentPhone,
                     Phone = x.Phone,
                     OtherPhone = x.OtherPhone,
                     QuanHe = x.QuanHe.Name,
@@ -293,6 +296,7 @@ namespace Up.Services
                     IsDisabled = x.IsDisabled,
                     NgaySinh = x.NgaySinh == null ? "" : x.NgaySinh.Value.ToString("dd/MM/yyyy"),
                     ParentFullName = x.ParentFullName,
+                    ParentPhone = x.ParentPhone,
                     Phone = x.Phone,
                     OtherPhone = x.OtherPhone,
                     QuanHe = x.QuanHe.Name,
@@ -352,7 +356,7 @@ namespace Up.Services
         }
 
         public async Task<HocVienViewModel> UpdateHocVienAsync(List<LopHoc_NgayHocViewModel> LopHocList, Guid HocVienId, string FullName, string Phone, string OtherPhone, string FacebookAccount,
-           string ParentFullName, Guid? QuanHeId, string EnglishName,
+           string ParentFullName, string ParentPhone, Guid? QuanHeId, string EnglishName,
            DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee)
         {
             try
@@ -373,6 +377,7 @@ namespace Up.Services
                 item.OtherPhone = OtherPhone;
                 item.FacebookAccount = FacebookAccount;
                 item.ParentFullName = ParentFullName;
+                item.ParentPhone = ParentPhone;
                 item.EnglishName = EnglishName;
                 item.NgaySinh = NgaySinh;
                 item.UpdatedBy = LoggedEmployee;
@@ -426,6 +431,7 @@ namespace Up.Services
                     EnglishName = item.EnglishName,
                     HocVienId = item.HocVienId,
                     ParentFullName = item.ParentFullName,
+                    ParentPhone = item.ParentPhone,
                     FacebookAccount = item.FacebookAccount,
                     Phone = item.Phone,
                     OtherPhone = item.OtherPhone,

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Up.Data;
 
 namespace Up.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200318140322_AddOtherPhone")]
+    partial class AddOtherPhone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +47,8 @@ namespace Up.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e73411f5-a39c-4c96-b7ee-e79478f87841",
-                            ConcurrencyStamp = "3f092f15-7c5b-4e97-a559-15ebcc792df4",
+                            Id = "3b6b7c84-4226-4925-96e2-001ce95e8cb7",
+                            ConcurrencyStamp = "59609e18-dfc3-48d2-9d43-ffafaf95fb32",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -335,8 +337,6 @@ namespace Up.Data.Migrations
                     b.Property<string>("OtherPhone");
 
                     b.Property<string>("ParentFullName");
-
-                    b.Property<string>("ParentPhone");
 
                     b.Property<string>("Phone");
 

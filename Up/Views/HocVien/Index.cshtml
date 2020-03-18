@@ -37,20 +37,16 @@
                                     <v-container grid-list-md>
                                         <v-layout wrap>
 
-                                            <v-flex xs12 sm4>
+                                            <v-flex xs12 sm3>
                                                 <v-text-field label="Họ Và Tên *" required v-model="newItem.fullName"></v-text-field>
                                             </v-flex>
-                                            <v-flex xs12 sm4>
+                                            <v-flex xs12 sm3>
                                                 <v-text-field label="English Name" required v-model="newItem.englishName"></v-text-field>
                                             </v-flex>
-                                            <v-flex xs12 sm4>
-                                                <v-text-field label="Số Điện Thoại *" required v-model="newItem.phone"></v-text-field>
-                                            </v-flex>
-
-                                            <v-flex xs12 sm4>
+                                            <v-flex xs12 sm3>
                                                 <v-text-field label="Facebook" required v-model="newItem.facebookAccount"></v-text-field>
                                             </v-flex>
-                                            <v-flex xs12 sm4>
+                                            <v-flex xs12 sm3>
                                                 <v-menu v-model="isShowDatePicker"
                                                         :close-on-content-click="false"
                                                         :nudge-right="40"
@@ -67,8 +63,18 @@
                                                     <v-date-picker locale="vi-vn" v-model="newItem.ngaySinh" v-on:input="isShowDatePicker = false"></v-date-picker>
                                                 </v-menu>
                                             </v-flex>
-                                            <v-flex xs12 sm4>
+
+                                            <v-flex xs12 sm3>
+                                                <v-text-field label="SĐT *" required v-model="newItem.phone"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm3>
+                                                <v-text-field label="SĐT Khác" v-model="newItem.otherPhone"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm3>
                                                 <v-text-field label="Họ Tên Phụ Huynh" v-model="newItem.parentFullName"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm3>
+                                                <v-text-field label="SĐT Phụ Huynh" v-model="newItem.parentPhone"></v-text-field>
                                             </v-flex>
 
                                             <v-flex xs12 sm2>
@@ -270,6 +276,7 @@
                         <td>{{ props.item.otherPhone }}</td>
                         <td>{{ props.item.facebookAccount }}</td>
                         <td>{{ props.item.parentFullName }}</td>
+                        <td>{{ props.item.parentPhone }}</td>
                         <td>{{ props.item.quanHe }}</td>
                         <td>{{ props.item.createdDate }}</td>
                         <td>{{ props.item.createdBy }}</td>
@@ -326,20 +333,16 @@
                     <v-container grid-list-md>
                         <v-layout wrap>
 
-                            <v-flex xs12 sm4>
+                            <v-flex xs12 sm3>
                                 <v-text-field label="Họ Và Tên *" required v-model="itemToEdit.fullName"></v-text-field>
                             </v-flex>
-                            <v-flex xs12 sm4>
+                            <v-flex xs12 sm3>
                                 <v-text-field label="English Name" required v-model="itemToEdit.englishName"></v-text-field>
                             </v-flex>
-                            <v-flex xs12 sm4>
-                                <v-text-field label="Số Điện Thoại *" required v-model="itemToEdit.phone"></v-text-field>
-                            </v-flex>
-
-                            <v-flex xs12 sm4>
+                            <v-flex xs12 sm3>
                                 <v-text-field label="Facebook" required v-model="itemToEdit.facebookAccount"></v-text-field>
                             </v-flex>
-                            <v-flex xs12 sm4>
+                            <v-flex xs12 sm3>
                                 <v-menu v-model="isShowDatePicker2"
                                         :close-on-content-click="false"
                                         :nudge-right="40"
@@ -356,8 +359,18 @@
                                     <v-date-picker locale="vi-vn" v-model="itemToEdit.ngaySinh" v-on:input="isShowDatePicker2 = false"></v-date-picker>
                                 </v-menu>
                             </v-flex>
-                            <v-flex xs12 sm4>
+
+                            <v-flex xs12 sm3>
+                                <v-text-field label="SĐT *" required v-model="itemToEdit.phone"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm3>
+                                <v-text-field label="SĐT Khác" v-model="itemToEdit.otherPhone"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm3>
                                 <v-text-field label="Họ Tên Phụ Huynh" v-model="itemToEdit.parentFullName"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm3>
+                                <v-text-field label="SĐT Phụ Huynh" v-model="itemToEdit.parentPhone"></v-text-field>
                             </v-flex>
 
                             <v-flex xs12 sm2>
@@ -728,7 +741,7 @@
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/hocvienindex.js" type="text/javascript"></script>
+<script src="~/js/hocvienindex.min.js" type="text/javascript"></script>
 
 <style>
     .v-input__slot:before, .v-input__slot:after {

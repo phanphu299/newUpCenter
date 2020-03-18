@@ -79,7 +79,7 @@
                 if(!string.IsNullOrWhiteSpace(model.NgaySinh) || model.NgaySinh != "")
                     _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
 
-                var successful = await _hocVienService.CreateHocVienAsync(model.LopHoc_NgayHocList, model.FullName, model.Phone, model.OtherPhone, model.FacebookAccount, model.ParentFullName,
+                var successful = await _hocVienService.CreateHocVienAsync(model.LopHoc_NgayHocList, model.FullName, model.Phone, model.OtherPhone, model.FacebookAccount, model.ParentFullName, model.ParentPhone,
                     model.QuanHeId, model.EnglishName, _ngaySinh, model.LopHocIds, currentUser.Email);
                 if (successful == null)
                 {
@@ -294,7 +294,7 @@
                     _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
 
                 var successful = await _hocVienService.UpdateHocVienAsync(model.LopHoc_NgayHocList, model.HocVienId, model.FullName, model.Phone, model.OtherPhone,
-                   model.FacebookAccount, model.ParentFullName, model.QuanHeId,
+                   model.FacebookAccount, model.ParentFullName, model.ParentPhone, model.QuanHeId,
                    model.EnglishName, _ngaySinh, model.LopHocIds, currentUser.Email);
                 if (successful == null)
                 {
@@ -338,18 +338,63 @@
                 var hocVien = _hocVienService.GetAllHocVienAsync().Result;
                 OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Vien");
                 int totalRows = hocVien.Count;
-                
+
+                int phuHuynhRows = 0;
+                int i = 0;
+                foreach (var itemHocVien in hocVien)
+                {
+                    worksheet.Cells[i + 2, 1].Value = itemHocVien.FullName;
+                    worksheet.Cells[i + 2, 2].Value = itemHocVien.Phone;
+                    worksheet.Cells[i + 2, 3].Value = itemHocVien.OtherPhone;
+                    string lopHoc = "";
+                    if (itemHocVien.IsDisabled || itemHocVien.LopHocList.Any(x => x.IsDisabled || x.IsGraduated || x.IsCanceled || x.HocVienNghi))
+                    {
+                        if (!itemHocVien.LopHocList.Any())
+                        {
+                            lopHoc = "BL";
+                        }
+
+                        foreach (var item in itemHocVien.LopHocList.Where(x => !x.IsDisabled && !x.IsGraduated && !x.IsCanceled && !x.HocVienNghi))
+                        {
+                            lopHoc += item.Name + " ";
+                        }
+
+                        foreach (var item in itemHocVien.LopHocList.Where(x => x.IsDisabled || x.IsGraduated || x.IsCanceled || x.HocVienNghi))
+                        {
+                            lopHoc += "BL-" + item.Name.Substring(2) + "-" + item.Name.Substring(0, 2) + " ";
+                        }
+                    }
+                    else
+                        lopHoc = String.Join(" ", itemHocVien.LopHocList.Select(x => x.Name).ToArray());
+                    worksheet.Cells[i + 2, 4].Value = lopHoc;
+                    //worksheet.Cells[i + 2, 5].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
+                    i++;
+                    if (!string.IsNullOrWhiteSpace(itemHocVien.ParentFullName) && !string.IsNullOrWhiteSpace(itemHocVien.ParentPhone) && itemHocVien.QuanHeId != null)
+                    {
+                        phuHuynhRows++;
+
+                        worksheet.Cells[i + 2, 1].Value = itemHocVien.FullName;
+                        worksheet.Cells[i + 2, 2].Value = itemHocVien.ParentPhone;
+                        worksheet.Cells[i + 2, 3].Value = "";
+                        worksheet.Cells[i + 2, 4].Value = lopHoc;
+                        worksheet.Cells[i + 2, 5].Value = itemHocVien.QuanHe + " " + itemHocVien.ParentFullName;
+
+                        i++;
+                    }
+                }
+
                 worksheet.Cells[1, 1].Value = "First Name";
                 worksheet.Cells[1, 2].Value = "Mobile Phone";
-                worksheet.Cells[1, 3].Value = "Middle Name";
-                worksheet.Cells[1, 4].Value = "Last Name";
+                worksheet.Cells[1, 3].Value = "Other Phone";
+                worksheet.Cells[1, 4].Value = "Middle Name";
+                worksheet.Cells[1, 5].Value = "Last Name";
 
-                worksheet.Cells["A1:D1"].Style.Font.Bold = true;
-                worksheet.Cells["A1:D1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A1:D1"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells["A1:E1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:E1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A1:E1"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 var modelCells = worksheet.Cells["A1"];
-                string modelRange = "A1:D" + (totalRows + 1);
+                string modelRange = "A1:E" + (totalRows + 1 + phuHuynhRows);
                 var modelTable = worksheet.Cells[modelRange];
 
 
@@ -359,35 +404,7 @@
                 modelTable.Style.Border.Left.Style = ExcelBorderStyle.Thin;
                 modelTable.Style.Border.Right.Style = ExcelBorderStyle.Thin;
                 modelTable.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-
-                for (int i = 0; i < totalRows; i++)
-                {
-                    worksheet.Cells[i + 2, 1].Value = hocVien[i].FullName;
-                    worksheet.Cells[i + 2, 2].Value = hocVien[i].Phone;
-                    string lopHoc = "";
-                    if (hocVien[i].IsDisabled || hocVien[i].LopHocList.Any(x => x.IsDisabled || x.IsGraduated || x.IsCanceled || x.HocVienNghi))
-                    {
-                        if(!hocVien[i].LopHocList.Any())
-                        {
-                            lopHoc = "BL";
-                        }
-
-                        foreach (var item in hocVien[i].LopHocList.Where(x => !x.IsDisabled && !x.IsGraduated && !x.IsCanceled && !x.HocVienNghi))
-                        {
-                            lopHoc += item.Name + " ";
-                        }
-
-                        foreach (var item in hocVien[i].LopHocList.Where(x => x.IsDisabled || x.IsGraduated || x.IsCanceled || x.HocVienNghi))
-                        {
-                            lopHoc += "BL-" + item.Name.Substring(2) + "-" + item.Name.Substring(0, 2) + " ";
-                        }
-                    }
-                    else
-                        lopHoc = String.Join(" ", hocVien[i].LopHocList.Select(x => x.Name).ToArray());
-                    worksheet.Cells[i + 2, 3].Value = lopHoc;
-                    worksheet.Cells[i + 2, 4].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
-                }
-
+                
                 worksheet.PrinterSettings.Orientation = eOrientation.Landscape;
                 worksheet.Cells.AutoFitColumns();
 
@@ -434,18 +451,20 @@
                 worksheet.Cells[2, 1].Value = "Họ và Tên";
                 worksheet.Cells[2, 2].Value = "English Name";
                 worksheet.Cells[2, 3].Value = "Số Điện Thoại";
-                worksheet.Cells[2, 4].Value = "Facebook";
-                worksheet.Cells[2, 5].Value = "Ngày Sinh (yyyy-mm-dd)";
-                worksheet.Cells[2, 6].Value = "Người Thân";
-                worksheet.Cells[2, 7].Value = "ID Quan Hệ";
-                worksheet.Cells[2, 8].Value = "Ngày Bắt Đầu (yyyy-mm-dd)";
+                worksheet.Cells[2, 4].Value = "Số Điện Thoại Khác";
+                worksheet.Cells[2, 5].Value = "Facebook";
+                worksheet.Cells[2, 6].Value = "Ngày Sinh (yyyy-mm-dd)";
+                worksheet.Cells[2, 7].Value = "Người Thân";
+                worksheet.Cells[2, 8].Value = "SĐT Người Thân";
+                worksheet.Cells[2, 9].Value = "ID Quan Hệ";
+                worksheet.Cells[2, 10].Value = "Ngày Bắt Đầu (yyyy-mm-dd)";
 
-                worksheet.Cells["A2:H2"].Style.Font.Bold = true;
-                worksheet.Cells["A2:H2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A2:H2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells["A2:J2"].Style.Font.Bold = true;
+                worksheet.Cells["A2:J2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A2:J2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 var modelCells = worksheet.Cells["A2"];
-                string modelRange = "A2:H22";
+                string modelRange = "A2:J22";
                 var modelTable = worksheet.Cells[modelRange];
 
 
@@ -520,12 +539,12 @@
                                 worksheet.Cells[row, 3].Value != null)
                             {
                                 DateTime? _ngaySinh = null;
-                                if(worksheet.Cells[row, 5].Value != null)
-                                    _ngaySinh = Convert.ToDateTime(worksheet.Cells[row, 5].Value.ToString().Trim() + " 00:00:00", System.Globalization.CultureInfo.InvariantCulture);
+                                if(worksheet.Cells[row, 6].Value != null)
+                                    _ngaySinh = Convert.ToDateTime(worksheet.Cells[row, 6].Value.ToString().Trim() + " 00:00:00", System.Globalization.CultureInfo.InvariantCulture);
 
                                 DateTime? _ngayBatDau = null;
-                                if (worksheet.Cells[row, 8].Value != null)
-                                    _ngayBatDau = Convert.ToDateTime(worksheet.Cells[row, 8].Value.ToString().Trim() + " 00:00:00", System.Globalization.CultureInfo.InvariantCulture);
+                                if (worksheet.Cells[row, 10].Value != null)
+                                    _ngayBatDau = Convert.ToDateTime(worksheet.Cells[row, 10].Value.ToString().Trim() + " 00:00:00", System.Globalization.CultureInfo.InvariantCulture);
 
                                 Guid? quanHe = null;
 
@@ -533,10 +552,11 @@
                                     new List<LopHoc_NgayHocViewModel>(),
                                     worksheet.Cells[row, 1].Value.ToString().Trim(),
                                     worksheet.Cells[row, 3].Value.ToString().Trim(),
-                                    worksheet.Cells[row, 3].Value.ToString().Trim(),
                                     worksheet.Cells[row, 4].Value == null ? "" : worksheet.Cells[row, 4].Value.ToString().Trim(),
-                                    worksheet.Cells[row, 6].Value == null ? "" : worksheet.Cells[row, 6].Value.ToString().Trim(),
-                                    worksheet.Cells[row, 7].Value == null ? quanHe : new Guid(worksheet.Cells[row, 7].Value.ToString().Trim()),
+                                    worksheet.Cells[row, 5].Value == null ? "" : worksheet.Cells[row, 5].Value.ToString().Trim(),
+                                    worksheet.Cells[row, 7].Value == null ? "" : worksheet.Cells[row, 7].Value.ToString().Trim(),
+                                    worksheet.Cells[row, 8].Value == null ? "" : worksheet.Cells[row, 8].Value.ToString().Trim(),
+                                    worksheet.Cells[row, 9].Value == null ? quanHe : new Guid(worksheet.Cells[row, 9].Value.ToString().Trim()),
                                     worksheet.Cells[row, 2].Value == null ? "" : worksheet.Cells[row, 2].Value.ToString().Trim(),
                                     _ngaySinh,
                                     lopHocIds.ToArray(),
