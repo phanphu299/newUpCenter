@@ -27,6 +27,7 @@
             fullName: "",
             englishName: "",
             phone: "",
+            otherPhone: "",
             facebookAccount: "",
             parentFullName: "",
             quanHe: "",
@@ -57,6 +58,7 @@
             { text: 'Ngày Sinh', value: 'ngaySinh', align: 'left', sortable: true },
             { text: 'English Name', value: 'englishName', align: 'left', sortable: true },
             { text: 'SĐT', value: 'phone', align: 'left', sortable: true },
+            { text: 'SĐT Khác', value: 'phone', align: 'left', sortable: true },
             { text: 'Facebook', value: 'facebookAccount', align: 'left', sortable: true },
             { text: 'Họ Tên Phụ Huynh', value: 'parentFullName', align: 'left', sortable: true },
             { text: 'Quan Hệ', value: 'quanHe', align: 'left', sortable: true },
@@ -184,6 +186,7 @@
                         FullName: item.fullName,
                         EnglishName: item.englishName,
                         Phone: item.phone,
+                        OtherPhone: item.otherPhone,
                         FacebookAccount: item.facebookAccount,
                         ParentFullName: item.parentFullName,
                         QuanHeId: item.quanHeId,
@@ -394,6 +397,7 @@
                         FullName: that.newItem.fullName,
                         EnglishName: that.newItem.englishName,
                         Phone: that.newItem.phone,
+                        OtherPhone: that.newItem.otherPhone,
                         FacebookAccount: that.newItem.facebookAccount,
                         NgaySinh: that.newItem.ngaySinh,
                         ParentFullName: that.newItem.parentFullName,
@@ -411,6 +415,7 @@
                             that.newItem.fullName = '';
                             that.newItem.englishName = '';
                             that.newItem.phone = '';
+                            that.newItem.otherPhone = '';
                             that.newItem.facebookAccount = '';
                             that.newItem.ngaySinh = '';
 

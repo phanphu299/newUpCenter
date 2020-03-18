@@ -9,6 +9,7 @@
         public Guid HocVienId { get; set; }
         public string FullName { get; set; }
         public string Phone { get; set; }
+        public string OtherPhone { get; set; }
         public string FacebookAccount { get; set; }
         public string ParentFullName { get; set; }
         public Guid? QuanHeId { get; set; }

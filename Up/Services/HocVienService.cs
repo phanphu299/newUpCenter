@@ -79,7 +79,7 @@ namespace Up.Services
             }
         }
 
-        public async Task<HocVienViewModel> CreateHocVienAsync(List<LopHoc_NgayHocViewModel> LopHocList, string FullName, string Phone, string FacebookAccount,
+        public async Task<HocVienViewModel> CreateHocVienAsync(List<LopHoc_NgayHocViewModel> LopHocList, string FullName, string Phone, string OtherPhone, string FacebookAccount,
             string ParentFullName, Guid? QuanHeId,
             string EnglishName, DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee, DateTime? NgayBatDau = null)
         {
@@ -92,6 +92,7 @@ namespace Up.Services
                 HocVien hocVien = new HocVien();
                 hocVien.FullName = FullName;
                 hocVien.Phone = Phone;
+                hocVien.OtherPhone = OtherPhone;
                 hocVien.FacebookAccount = FacebookAccount;
                 hocVien.ParentFullName = ParentFullName;
                 hocVien.QuanHeId = QuanHeId;
@@ -171,6 +172,7 @@ namespace Up.Services
                     IsDisabled = hocVien.IsDisabled,
                     ParentFullName = hocVien.ParentFullName,
                     Phone = hocVien.Phone,
+                    OtherPhone = hocVien.OtherPhone,
                     HocVienId = hocVien.HocVienId,
                     QuanHe = _context.QuanHes.FindAsync(hocVien.QuanHeId).Result == null ? "" : _context.QuanHes.FindAsync(hocVien.QuanHeId).Result.Name,
                     LopHocList = await _context.HocVien_LopHocs.Where(x => x.HocVienId == hocVien.HocVienId).Select(x => new LopHocViewModel
@@ -244,6 +246,7 @@ namespace Up.Services
                     NgaySinh = x.NgaySinh == null ? "" : x.NgaySinh.Value.ToString("dd/MM/yyyy"),
                     ParentFullName = x.ParentFullName,
                     Phone = x.Phone,
+                    OtherPhone = x.OtherPhone,
                     QuanHe = x.QuanHe.Name,
                     QuanHeId = x.QuanHeId,
                     UpdatedBy = x.UpdatedBy,
@@ -291,6 +294,7 @@ namespace Up.Services
                     NgaySinh = x.NgaySinh == null ? "" : x.NgaySinh.Value.ToString("dd/MM/yyyy"),
                     ParentFullName = x.ParentFullName,
                     Phone = x.Phone,
+                    OtherPhone = x.OtherPhone,
                     QuanHe = x.QuanHe.Name,
                     QuanHeId = x.QuanHeId,
                     UpdatedBy = x.UpdatedBy,
@@ -347,7 +351,7 @@ namespace Up.Services
             }
         }
 
-        public async Task<HocVienViewModel> UpdateHocVienAsync(List<LopHoc_NgayHocViewModel> LopHocList, Guid HocVienId, string FullName, string Phone, string FacebookAccount,
+        public async Task<HocVienViewModel> UpdateHocVienAsync(List<LopHoc_NgayHocViewModel> LopHocList, Guid HocVienId, string FullName, string Phone, string OtherPhone, string FacebookAccount,
            string ParentFullName, Guid? QuanHeId, string EnglishName,
            DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee)
         {
@@ -366,6 +370,7 @@ namespace Up.Services
                 item.FullName = FullName;
                 item.QuanHeId = QuanHeId;
                 item.Phone = Phone;
+                item.OtherPhone = OtherPhone;
                 item.FacebookAccount = FacebookAccount;
                 item.ParentFullName = ParentFullName;
                 item.EnglishName = EnglishName;
@@ -423,6 +428,7 @@ namespace Up.Services
                     ParentFullName = item.ParentFullName,
                     FacebookAccount = item.FacebookAccount,
                     Phone = item.Phone,
+                    OtherPhone = item.OtherPhone,
                     QuanHeId = item.QuanHeId,
                     UpdatedBy = item.UpdatedBy,
                     UpdatedDate = item.UpdatedDate?.ToString("dd/MM/yyyy"),
