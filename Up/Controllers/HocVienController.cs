@@ -369,7 +369,7 @@
                     worksheet.Cells[i + 2, 4].Value = lopHoc;
                     //worksheet.Cells[i + 2, 5].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
                     i++;
-                    if (!string.IsNullOrWhiteSpace(itemHocVien.ParentFullName) && !string.IsNullOrWhiteSpace(itemHocVien.ParentPhone) && itemHocVien.QuanHeId != null)
+                    if (!string.IsNullOrWhiteSpace(itemHocVien.ParentFullName) && !string.IsNullOrWhiteSpace(itemHocVien.ParentPhone))
                     {
                         phuHuynhRows++;
 
