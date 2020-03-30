@@ -171,7 +171,7 @@
 
         async onUpdate(item) {
             let that = this;
-            if (item.fullName === '' || item.phone === '') {
+            if (item.fullName === '') {
                 this.alertEdit = true;
             }
             else if (item.lopHoc_NgayHocList.length === 0) {
@@ -382,7 +382,7 @@
         },
 
         async onSave(item) {
-            if (this.newItem.fullName === '' || this.newItem.phone === '') {
+            if (this.newItem.fullName === '') {
                 this.alert = true;
             }
             else if (this.arrayNgayHocLopHoc.length === 0) {

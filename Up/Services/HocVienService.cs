@@ -85,9 +85,12 @@ namespace Up.Services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(FullName) || string.IsNullOrWhiteSpace(Phone))
-                    throw new Exception("Tên Học Viên, Phone " +
+                if (string.IsNullOrWhiteSpace(FullName))
+                    throw new Exception("Tên Học Viên " +
                         "không được để trống !!!");
+
+                if (string.IsNullOrWhiteSpace(Phone))
+                    Phone = "";
 
                 HocVien hocVien = new HocVien();
                 hocVien.FullName = FullName;
@@ -361,8 +364,11 @@ namespace Up.Services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(FullName) || string.IsNullOrWhiteSpace(Phone))
+                if (string.IsNullOrWhiteSpace(FullName))
                     throw new Exception("Tên Học Viên, SĐT không được để trống !!!");
+
+                if (string.IsNullOrWhiteSpace(Phone))
+                    Phone = "";
 
                 var item = await _context.HocViens
                                         .Where(x => x.HocVienId == HocVienId)

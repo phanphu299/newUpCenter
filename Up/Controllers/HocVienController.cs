@@ -337,15 +337,12 @@
             {
                 var hocVien = _hocVienService.GetAllHocVienAsync().Result;
                 OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Vien");
-                int totalRows = hocVien.Count;
+                int totalRows = hocVien.Where(x => !string.IsNullOrWhiteSpace(x.Phone)).ToList().Count;
 
                 int phuHuynhRows = 0;
                 int i = 0;
                 foreach (var itemHocVien in hocVien)
                 {
-                    worksheet.Cells[i + 2, 1].Value = itemHocVien.FullName;
-                    worksheet.Cells[i + 2, 2].Value = itemHocVien.Phone;
-                    worksheet.Cells[i + 2, 3].Value = itemHocVien.OtherPhone;
                     string lopHoc = "";
                     if (itemHocVien.IsDisabled || itemHocVien.LopHocList.Any(x => x.IsDisabled || x.IsGraduated || x.IsCanceled || x.HocVienNghi))
                     {
@@ -366,9 +363,19 @@
                     }
                     else
                         lopHoc = String.Join(" ", itemHocVien.LopHocList.Select(x => x.Name).ToArray());
-                    worksheet.Cells[i + 2, 4].Value = lopHoc;
-                    //worksheet.Cells[i + 2, 5].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
-                    i++;
+
+                    if (!string.IsNullOrWhiteSpace(itemHocVien.Phone))
+                    {
+                        worksheet.Cells[i + 2, 1].Value = itemHocVien.FullName;
+                        worksheet.Cells[i + 2, 2].Value = itemHocVien.Phone;
+                        worksheet.Cells[i + 2, 3].Value = itemHocVien.OtherPhone;
+                        
+                        worksheet.Cells[i + 2, 4].Value = lopHoc;
+                        //worksheet.Cells[i + 2, 5].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
+                        i++;
+                        
+                    }
+
                     if (!string.IsNullOrWhiteSpace(itemHocVien.ParentFullName) && !string.IsNullOrWhiteSpace(itemHocVien.ParentPhone))
                     {
                         phuHuynhRows++;
@@ -535,8 +542,7 @@
 
                         for (int row = 3; row <= rowCount; row++)
                         {
-                            if(worksheet.Cells[row, 1].Value != null &&
-                                worksheet.Cells[row, 3].Value != null)
+                            if(worksheet.Cells[row, 1].Value != null)
                             {
                                 DateTime? _ngaySinh = null;
                                 if(worksheet.Cells[row, 6].Value != null)
@@ -551,7 +557,7 @@
                                 var successful = await _hocVienService.CreateHocVienAsync(
                                     new List<LopHoc_NgayHocViewModel>(),
                                     worksheet.Cells[row, 1].Value.ToString().Trim(),
-                                    worksheet.Cells[row, 3].Value.ToString().Trim(),
+                                    worksheet.Cells[row, 3].Value == null ? "" : worksheet.Cells[row, 3].Value.ToString().Trim(),
                                     worksheet.Cells[row, 4].Value == null ? "" : worksheet.Cells[row, 4].Value.ToString().Trim(),
                                     worksheet.Cells[row, 5].Value == null ? "" : worksheet.Cells[row, 5].Value.ToString().Trim(),
                                     worksheet.Cells[row, 7].Value == null ? "" : worksheet.Cells[row, 7].Value.ToString().Trim(),
