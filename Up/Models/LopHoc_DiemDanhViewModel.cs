@@ -1,6 +1,7 @@
 ﻿namespace Up.Models
 {
     using System;
+    using System.Collections.Generic;
 
     public class LopHoc_DiemDanhViewModel
     {
@@ -16,5 +17,7 @@
         public string CreatedBy { get; set; }
         public string UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
+
+        public List<Guid> HocVienIds { get; set; }
     }
 }

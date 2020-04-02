@@ -45,6 +45,9 @@
         public bool DaNo { get; set; } = false;
         public List<LopHoc_NgayHocViewModel> LopHoc_NgayHocList { get; set; }
         public string NgayKetThuc { get; set; }
+
+        public DateTime NgayBatDau_Date { get; set; }
+        public DateTime? NgayKetThuc_Date { get; set; }
     }
     public class LopHoc_NgayHocViewModel
     {

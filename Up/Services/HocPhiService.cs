@@ -307,6 +307,12 @@ namespace Up.Services
                                         //.Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && ((m.NgayBatDau.Month <= currentMonth && m.NgayBatDau.Year == currentYear) || m.NgayBatDau.Year < currentYear) && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= currentMonth && m.NgayKetThuc.Value.Year >= currentYear))))
                                         .Select(x => new HocVienViewModel
                                         {
+                                            NgayBatDau_Date = x.HocVien.HocVien_NgayHocs
+                                                            .Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId)
+                                                            .FirstOrDefault().NgayBatDau,
+                                            NgayKetThuc_Date = x.HocVien.HocVien_NgayHocs
+                                                            .Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId)
+                                                            .FirstOrDefault().NgayKetThuc.Value,
                                             FullName = x.HocVien.FullName,
                                             HocVienId = x.HocVienId,
                                             NgayBatDauHoc = x.HocVien.HocVien_NgayHocs
@@ -355,6 +361,8 @@ namespace Up.Services
                                             DaDongHocPhi = x.HocVien.ThongKe_DoanhThuHocPhis.Any(m => m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear && m.LopHocId == LopHocId && m.DaDong == true),
                                             DaNo = x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear) != null ? x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == currentMonth && m.NgayDong.Year == currentYear).DaNo : x.HocVien.HocVien_Nos.Any(m => m.NgayNo.Month == currentMonth && m.NgayNo.Year == currentYear && m.LopHocId == LopHocId && m.IsDisabled == false)
                                         })
+                                        .Where(x => x.NgayKetThuc_Date == null || (x.NgayKetThuc_Date.Value.Month >= currentMonth && x.NgayKetThuc_Date.Value.Year == currentYear) || x.NgayKetThuc_Date.Value.Year > currentYear)
+                                        .Where(x => (x.NgayBatDau_Date.Month <= currentMonth && x.NgayBatDau_Date.Year == currentYear) || x.NgayBatDau_Date.Year < currentYear)
                                         .ToListAsync();
                 int index = 1;
                 foreach (var item in model)
