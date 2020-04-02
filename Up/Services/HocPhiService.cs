@@ -241,7 +241,7 @@ namespace Up.Services
 
         public async Task<TinhHocPhiViewModel> TinhHocPhiAsync(Guid LopHocId, int month, int year, double HocPhi)
         {
-            int soNgayDuocNghi = await TinhSoNgayDuocChoNghiAsync(LopHocId, month, year);
+            //int soNgayDuocNghi = await TinhSoNgayDuocChoNghiAsync(LopHocId, month, year);
             
             int subMonth = month;
             int subYear = year;
@@ -265,7 +265,7 @@ namespace Up.Services
             return new TinhHocPhiViewModel
             {
                 HocPhiMoiNgay = hocPhiMoiNgay,
-                SoNgayDuocNghi = soNgayDuocNghi,
+                //SoNgayDuocNghi = soNgayDuocNghi,
                 HocPhi = HocPhi,
                 SoNgayHoc = soNgayHoc,
                 HocVienList = await GetHocVien_No_NgayHocAsync(LopHocId, month, year, HocPhi, soNgayHoc, hocPhiMoiNgay, hocPhiMoiNgayCu)
@@ -288,14 +288,14 @@ namespace Up.Services
                     month--;
                 }
 
-                var ngayChoNghi = await _context.LopHoc_DiemDanhs
-                                                .Where(x => x.LopHocId == LopHocId && x.IsDuocNghi == true && x.NgayDiemDanh.Month == month && x.NgayDiemDanh.Year == year)
-                                                .GroupBy(x => x.NgayDiemDanh)
-                                                .Select(m => new
-                                                {
-                                                    m.Key
-                                                })
-                                                .ToListAsync();
+                //var ngayChoNghi = await _context.LopHoc_DiemDanhs
+                //                                .Where(x => x.LopHocId == LopHocId && x.IsDuocNghi == true && x.NgayDiemDanh.Month == month && x.NgayDiemDanh.Year == year)
+                //                                .GroupBy(x => x.NgayDiemDanh)
+                //                                .Select(m => new
+                //                                {
+                //                                    m.Key
+                //                                })
+                //                                .ToListAsync();
 
                 var model = await _context.HocVien_LopHocs
                                         .Include(x => x.LopHoc)
@@ -307,6 +307,9 @@ namespace Up.Services
                                         //.Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && ((m.NgayBatDau.Month <= currentMonth && m.NgayBatDau.Year == currentYear) || m.NgayBatDau.Year < currentYear) && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= currentMonth && m.NgayKetThuc.Value.Year >= currentYear))))
                                         .Select(x => new HocVienViewModel
                                         {
+                                            SoNgayDuocNghi = x.HocVien.LopHoc_DiemDanhs
+                                                            .Where(m => m.LopHocId == LopHocId && m.IsDuocNghi == true && m.NgayDiemDanh.Month == month && m.NgayDiemDanh.Year == year)
+                                                            .Select(m => m.NgayDiemDanh),
                                             NgayBatDau_Date = x.HocVien.HocVien_NgayHocs
                                                             .Where(m => m.HocVienId == x.HocVienId && m.LopHocId == LopHocId)
                                                             .FirstOrDefault().NgayBatDau,
@@ -373,9 +376,9 @@ namespace Up.Services
                     {
                         int ngayDuocNghi = 0;
                         DateTime _ngayBatDauHoc = new DateTime(int.Parse(item.NgayBatDauHoc.Substring(6)), int.Parse(item.NgayBatDauHoc.Substring(3, 2)), int.Parse(item.NgayBatDauHoc.Substring(0, 2)));
-                        foreach (var ngayNghi in ngayChoNghi)
+                        foreach (var ngayNghi in item.SoNgayDuocNghi)
                         {
-                            if (ngayNghi.Key >= _ngayBatDauHoc)
+                            if (ngayNghi >= _ngayBatDauHoc)
                             {
                                 ngayDuocNghi++;
                             }
