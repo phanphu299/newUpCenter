@@ -8,6 +8,7 @@
         snackbar: false,
         deleteDialog: false,
         dialog: false,
+        dialogHoanTac: false,
         selectedLopHoc: '',
         ngayDiemDanh: new Date().toISOString().substr(0, 10),
         selectedHocViens: [],
@@ -222,6 +223,51 @@
                         }
 
                         that.dialog = false;
+                        that.selectedHocViens = [];
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    that.snackbar = true;
+                    that.messageText = 'Điểm danh lỗi: ' + error;
+                    that.color = 'error';
+                });
+        },
+
+        async onSaveHocVienHoanTac() {
+            let that = this;
+            await axios({
+                method: 'post',
+                url: '/DiemDanh/SaveHocVienHoanTacAsync',
+                data: {
+                    LopHocId: this.selectedLopHoc,
+                    HocVienIds: this.selectedHocViens,
+                    NgayDiemDanh: this.ngayDiemDanh
+                }
+            })
+                .then(function (response) {
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Hoàn tác thành công !!!';
+                        that.color = 'success';
+
+                        let [year, month, day] = that.ngayDiemDanh.split('-');
+                        for (let hocVien of that.diemDanhItems) {
+                            for (let diemdanh of hocVien.thongKeDiemDanh) {
+                                let [yearDD, monthDD, dayDD] = diemdanh.dates.split('-');
+                                if (diemdanh.day === parseInt(day) && year === yearDD && month === monthDD && that.selectedHocViens.includes(hocVien.hocVienId.toString())) {
+                                    diemdanh.duocNghi = false;
+                                    diemdanh.isOff = false;
+                                }
+                            }
+                        }
+
+                        that.dialogHoanTac = false;
                         that.selectedHocViens = [];
                     }
                     else {

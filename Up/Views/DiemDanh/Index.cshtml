@@ -8,7 +8,7 @@
             <v-card>
                 <v-card-title>
                     <v-layout wrap>
-                        <v-flex xs12 sm4>
+                        <v-flex xs12 sm3>
                             <v-select v-model="selectedLopHoc"
                                       :items="itemLopHoc"
                                       item-text="name"
@@ -26,7 +26,7 @@
                             </v-select>
                         </v-flex>
 
-                        <v-flex xs12 sm4>
+                        <v-flex xs12 sm3>
                             <v-select :items="itemThang"
                                       v-model="selectedThang"
                                       chips
@@ -34,7 +34,7 @@
                                       v-on:change="onTinhDiemDanh"></v-select>
                         </v-flex>
 
-                        <v-flex xs12 sm4>
+                        <v-flex xs12 sm3>
                             <v-select :items="itemNam"
                                       v-model="selectedNam"
                                       chips
@@ -82,8 +82,11 @@
                                 <v-btn v-if="diemDanhItems.length > 0"
                                        color="warning"
                                        v-on:click="UndoLopNghi()">
-                                    Hoàn Tác
+                                    Hoàn Tác Cả Lớp
                                 </v-btn>
+                            </v-flex>
+
+                            <v-flex xs12 sm2 class="text-xs-center">
                             </v-flex>
 
                             <v-flex xs12 sm2 class="text-xs-center">
@@ -120,8 +123,49 @@
                                         </v-card-text>
                                         <v-card-actions>
                                             <v-spacer></v-spacer>
-                                            <v-btn color="secondary darken-1" flat v-on:click="dialog = false">Đóng</v-btn>
+                                            <v-btn color="secondary darken-1" flat v-on:click="selectedHocViens = []; dialog = false">Đóng</v-btn>
                                             <v-btn color="blue darken-1 white--text" v-on:click="onSaveHocVienOff">Lưu</v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
+                            </v-flex>
+
+                            <v-flex xs12 sm2 class="text-xs-center">
+                                <v-dialog v-model="dialogHoanTac" persistent max-width="600px" v-if="diemDanhItems.length > 0">
+                                    <v-btn color="yellow darken-3"
+                                           slot="activator"
+                                           class="white--text">
+                                        Chọn Học Viên Hoàn Tác
+                                    </v-btn>
+                                    <v-card>
+                                        <v-card-title>
+                                            <span class="headline">Chon Học Viên Hoàn Tác ngày {{ngayDiemDanh}}</span>
+                                        </v-card-title>
+                                        <v-card-text>
+                                            <v-container grid-list-md>
+                                                <v-layout wrap>
+                                                    <v-select v-model="selectedHocViens"
+                                                              :items="diemDanhItems"
+                                                              item-text="label"
+                                                              item-value="hocVienId"
+                                                              chips
+                                                              label="Chọn Học Viên"
+                                                              multiple>
+                                                        <template v-slot:selection="data">
+                                                            <v-chip :selected="data.selected"
+                                                                    color="green"
+                                                                    text-color="white">
+                                                                <span>{{ data.item.label }}</span>
+                                                            </v-chip>
+                                                        </template>
+                                                    </v-select>
+                                                </v-layout>
+                                            </v-container>
+                                        </v-card-text>
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn color="secondary darken-1" flat v-on:click="selectedHocViens = []; dialogHoanTac = false">Đóng</v-btn>
+                                            <v-btn color="blue darken-1 white--text" v-on:click="onSaveHocVienHoanTac">Lưu</v-btn>
                                         </v-card-actions>
                                     </v-card>
                                 </v-dialog>
@@ -130,7 +174,7 @@
 
                     </v-layout>
                 </v-card-title>
-
+                <span v-if="diemDanhItems.length > 0" style="color:red; margin-left: 20px">* Chọn Ngày Trước</span>
                 <v-container fluid v-if="diemDanhItems.length > 0">
                     <v-layout wrap>
                         <v-flex>

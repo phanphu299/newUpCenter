@@ -274,6 +274,20 @@
                                 .ToListAsync();
         }
 
+        public async Task<bool> SaveHocVienHoanTac(Guid LopHocId, List<Guid> HocVienIds, DateTime NgayDiemDanh, string LoggedEmployee)
+        {
+            if (LopHocId == null || NgayDiemDanh == null)
+                throw new Exception("Lỗi khi Hoan Tác!!!");
+
+            var isExisting = await _context.LopHoc_DiemDanhs
+                                    .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh && HocVienIds.Contains(x.HocVienId))
+                                    .ToListAsync();
+            if (isExisting.Any())
+                _context.LopHoc_DiemDanhs.RemoveRange(isExisting);
+            var saveResult = await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> SaveHocVienOff(Guid LopHocId, List<Guid> HocVienIds, DateTime NgayDiemDanh, string LoggedEmployee)
         {
             if (LopHocId == null || NgayDiemDanh == null)

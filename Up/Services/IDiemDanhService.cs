@@ -16,6 +16,7 @@
         Task<List<DiemDanhViewModel>> GetDiemDanhByLopHoc(Guid LopHocId, int month, int year);
         Task<bool> UndoDuocNghi(Guid LopHocId, DateTime NgayDiemDanh, string LoggedEmployee);
         Task<bool> SaveHocVienOff(Guid LopHocId, List<Guid> HocVienIds, DateTime NgayDiemDanh, string LoggedEmployee);
+        Task<bool> SaveHocVienHoanTac(Guid LopHocId, List<Guid> HocVienIds, DateTime NgayDiemDanh, string LoggedEmployee);
 
         Task<bool> CanContributeAsync(ClaimsPrincipal User);
         Task<bool> CanContributeExportAsync(ClaimsPrincipal User);
