@@ -220,7 +220,7 @@
                 item.UpdatedDate = DateTime.Now;
 
                 var _hocVien_NgayHoc = await _context.HocVien_NgayHocs
-                                                .Where(x => x.LopHocId == item.LopHocId)
+                                                .Where(x => x.LopHocId == item.LopHocId && x.NgayKetThuc == null)
                                                 .ToListAsync();
 
                 if (item.IsCanceled == true)
@@ -228,13 +228,6 @@
                     foreach (var ngayHoc in _hocVien_NgayHoc)
                     {
                         ngayHoc.NgayKetThuc = DateTime.Now;
-                    }
-                }
-                else
-                {
-                    foreach (var ngayHoc in _hocVien_NgayHoc)
-                    {
-                        ngayHoc.NgayKetThuc = null;
                     }
                 }
 
@@ -263,7 +256,7 @@
                 item.UpdatedDate = DateTime.Now;
 
                 var _hocVien_NgayHoc = await _context.HocVien_NgayHocs
-                                                .Where(x => x.LopHocId == item.LopHocId)
+                                                .Where(x => x.LopHocId == item.LopHocId && x.NgayKetThuc == null)
                                                 .ToListAsync();
 
                 if(item.IsGraduated == true)
@@ -271,13 +264,6 @@
                     foreach (var ngayHoc in _hocVien_NgayHoc)
                     {
                         ngayHoc.NgayKetThuc = DateTime.Now;
-                    }
-                }
-                else
-                {
-                    foreach (var ngayHoc in _hocVien_NgayHoc)
-                    {
-                        ngayHoc.NgayKetThuc = null;
                     }
                 }
 
