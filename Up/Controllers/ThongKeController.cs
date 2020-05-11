@@ -187,5 +187,13 @@
 
             return Json(listNo);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetHocVienNghiHon3NgayAsync()
+        {
+            var model = await _thongKeService.GetHocVienOffHon3NgayAsync();
+
+            return Json(model);
+        }
     }
 }

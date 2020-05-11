@@ -22,5 +22,7 @@
         Task<List<ThongKe_DoanhThuHocPhiViewModel>> GetDoanhThuHocPhiAsync();
         Task<List<ThongKe_ChiPhiViewModel>> GetChiPhiAsync();
         Task<List<NoViewModel>> GetNoAsync();
+
+        Task<List<HocVienOffHon3NgayViewModel>> GetHocVienOffHon3NgayAsync();
     }
 }

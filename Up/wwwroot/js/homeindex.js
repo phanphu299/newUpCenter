@@ -125,8 +125,15 @@ var vue = new Vue({
                     backgroundColor: 'transparent'
                 }
             ]
-        }
+        },
 
+        hocVienNghiNhieu: {},
+        headers: [
+            { text: 'Họ Tên', value: 'tenHocVien', align: 'left', sortable: true },
+            { text: 'Lớp Học', value: 'tenLop', align: 'left', sortable: true },
+            { text: 'Ngày Học Cuối', value: 'ngayHocCuoi', align: 'left', sortable: true },
+        ],
+        search: ''
     },
 
     async mounted() {
@@ -179,6 +186,14 @@ var vue = new Vue({
                 .then(function (response) {
                     that.chartdataNo.datasets[0].data = response.data;
                     that.loadedNo= true;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+            await axios.get('/ThongKe/GetHocVienNghiHon3NgayAsync')
+                .then(function (response) {
+                    that.hocVienNghiNhieu = response.data;
                 })
                 .catch(function (error) {
                     console.log(error);

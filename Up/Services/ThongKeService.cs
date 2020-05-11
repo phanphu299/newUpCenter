@@ -1,6 +1,7 @@
 ﻿namespace Up.Services
 {
     using Microsoft.EntityFrameworkCore;
+    using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -26,9 +27,10 @@
                 //tinh tong hoc vien theo tháng
                 var thongke = await _context.ThongKeHocVienTheoThangs
                     .FirstOrDefaultAsync(x => x.LoaiHocVien == (byte)LoaiHocVienEnums.GiaoTiep && x.Date.Month == DateTime.Now.Month && x.Date.Year == DateTime.Now.Year);
-                if(thongke == null)
+                if (thongke == null)
                 {
-                    ThongKeHocVienTheoThang thongKeHocVien = new ThongKeHocVienTheoThang {
+                    ThongKeHocVienTheoThang thongKeHocVien = new ThongKeHocVienTheoThang
+                    {
                         Date = DateTime.Now,
                         LoaiHocVien = (byte)LoaiHocVienEnums.GiaoTiep,
                         ThongKeHocVienTheoThangId = new Guid(),
@@ -61,7 +63,7 @@
                 var giaoTiep = await _context.ThongKeHocVienTheoThangs
                 .Where(x => x.LoaiHocVien == (byte)LoaiHocVienEnums.GiaoTiep && x.Date.Year == DateTime.Now.Year)
                 .OrderBy(x => x.Date)
-                
+
                 .Select(g => new ThongKeModel
                 {
                     Data = g.SoLuong,
@@ -71,7 +73,7 @@
 
                 return giaoTiep;
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw new Exception(exception.Message);
             }
@@ -408,7 +410,7 @@
             try
             {
                 var chiPhi = await _context.ThongKe_ChiPhis
-                .Where(x => x.NgayChiPhi.Year == DateTime.Now.Year  && x.DaLuu == true)
+                .Where(x => x.NgayChiPhi.Year == DateTime.Now.Year && x.DaLuu == true)
                 .OrderBy(x => x.NgayChiPhi)
 
                 .Select(g => new ThongKe_ChiPhiViewModel
@@ -436,6 +438,44 @@
             {
                 throw new Exception(exception.Message);
             }
+        }
+
+        public async Task<List<HocVienOffHon3NgayViewModel>> GetHocVienOffHon3NgayAsync()
+        {
+            var te = DateTime.Now.Day;
+            var model = await _context.HocVien_NgayHocs
+                .Include(x => x.HocVien)
+                .ThenInclude(x => x.HocVien_LopHocs)
+                .Include(x => x.LopHoc)
+                .ThenInclude(x => x.LopHoc_DiemDanhs)
+                .Where(x => x.HocVien.IsDisabled == false)
+                .Where(x => x.NgayKetThuc == null || (x.NgayKetThuc.Value.Day >= DateTime.Now.Day & x.NgayKetThuc.Value.Month == DateTime.Now.Month && x.NgayKetThuc.Value.Year == DateTime.Now.Year) || (x.NgayKetThuc.Value.Month > DateTime.Now.Month && x.NgayKetThuc.Value.Year == DateTime.Now.Year) || x.NgayKetThuc.Value.Year > DateTime.Now.Year)
+                .Select(x => new
+                {
+                    HocVien = x.HocVien.FullName,
+                    LopHoc_DiemDanh = x.HocVien.LopHoc_DiemDanhs
+                                        .Where(p => p.LopHoc.IsCanceled == false && p.LopHoc.IsDisabled == false && p.LopHoc.IsGraduated == false)
+                                        .OrderByDescending(p => p.NgayDiemDanh)
+                                        .Where(p => p.IsOff == false && (p.IsDuocNghi == false || p.IsDuocNghi == null))
+                                        .Select(p => new
+                                        {
+                                            LopHoc = p.LopHoc.Name,
+                                            NgayDiemDanh = p.NgayDiemDanh
+                                        })
+                                        .Take(1)
+                                        .ToList()
+                })
+                .ToListAsync();
+
+            var list = model.Where(x => x.LopHoc_DiemDanh.Any(p => (DateTime.Now - p.NgayDiemDanh).TotalDays >= 6));
+
+            return list.Select(x => new HocVienOffHon3NgayViewModel
+                {
+                    TenLop = x.LopHoc_DiemDanh[0].LopHoc,
+                    NgayHocCuoi = x.LopHoc_DiemDanh[0].NgayDiemDanh.ToString("dd/MM/yyyy"),
+                    TenHocVien = x.HocVien
+            })
+                .ToList();
         }
     }
 }
