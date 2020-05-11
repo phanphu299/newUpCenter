@@ -373,9 +373,13 @@
 
             try
             {
-                DateTime _ngayDiemDanh = Convert.ToDateTime(model.NgayDiemDanh, System.Globalization.CultureInfo.InvariantCulture);
+                List<DateTime> ngayDiemDanhs = new List<DateTime>();
+                foreach(string item in model.NgayDiemDanhs)
+                {
+                    ngayDiemDanhs.Add(Convert.ToDateTime(item, System.Globalization.CultureInfo.InvariantCulture));
+                }    
 
-                var successful = await _diemDanhService.SaveHocVienOff(model.LopHocId, model.HocVienIds, _ngayDiemDanh, currentUser.Email);
+                var successful = await _diemDanhService.SaveHocVienOff(model.LopHocId, model.HocVienIds, ngayDiemDanhs, currentUser.Email);
                 if (successful == false)
                 {
                     return Json(new Models.ResultModel
@@ -418,9 +422,13 @@
 
             try
             {
-                DateTime _ngayDiemDanh = Convert.ToDateTime(model.NgayDiemDanh, System.Globalization.CultureInfo.InvariantCulture);
+                List<DateTime> ngayDiemDanhs = new List<DateTime>();
+                foreach (string item in model.NgayDiemDanhs)
+                {
+                    ngayDiemDanhs.Add(Convert.ToDateTime(item, System.Globalization.CultureInfo.InvariantCulture));
+                }
 
-                var successful = await _diemDanhService.SaveHocVienHoanTac(model.LopHocId, model.HocVienIds, _ngayDiemDanh, currentUser.Email);
+                var successful = await _diemDanhService.SaveHocVienHoanTac(model.LopHocId, model.HocVienIds, ngayDiemDanhs, currentUser.Email);
                 if (successful == false)
                 {
                     return Json(new Models.ResultModel

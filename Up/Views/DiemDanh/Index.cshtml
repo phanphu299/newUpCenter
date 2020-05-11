@@ -98,26 +98,53 @@
                                     </v-btn>
                                     <v-card>
                                         <v-card-title>
-                                            <span class="headline">Chon Học Viên OFF ngày {{ngayDiemDanh}}</span>
+                                            <span class="headline">Chọn Học Viên OFF</span>
                                         </v-card-title>
                                         <v-card-text>
                                             <v-container grid-list-md>
                                                 <v-layout wrap>
-                                                    <v-select v-model="selectedHocViens"
-                                                              :items="diemDanhItems"
-                                                              item-text="label"
-                                                              item-value="hocVienId"
-                                                              chips
-                                                              label="Chọn Học Viên"
-                                                              multiple>
-                                                        <template v-slot:selection="data">
-                                                            <v-chip :selected="data.selected"
-                                                                    color="green"
-                                                                    text-color="white">
-                                                                <span>{{ data.item.label }}</span>
-                                                            </v-chip>
-                                                        </template>
-                                                    </v-select>
+                                                    <v-flex xs12>
+                                                        <v-menu ref="isShowDatePickerOff"
+                                                                v-model="isShowDatePickerOff"
+                                                                :close-on-content-click="false"
+                                                                :return-value.sync="dates"
+                                                                transition="scale-transition"
+                                                                offset-y
+                                                                min-width="290px">
+                                                            <template v-slot:activator="{ on }">
+                                                                <v-combobox v-model="ngayDiemDanhOff"
+                                                                            multiple
+                                                                            chips
+                                                                            small-chips
+                                                                            label="Chọn 1 hoặc nhiều ngày"
+                                                                            prepend-icon="event"
+                                                                            readonly
+                                                                            v-on="on"></v-combobox>
+                                                            </template>
+                                                            <v-date-picker locale="vi-vn" v-model="ngayDiemDanhOff" multiple no-title scrollable>
+                                                            </v-date-picker>
+                                                        </v-menu>
+                                                    </v-flex>
+
+                                                    <v-flex xs12>
+                                                        <v-select v-model="selectedHocViens"
+                                                                  :items="diemDanhItems"
+                                                                  item-text="label"
+                                                                  item-value="hocVienId"
+                                                                  chips
+                                                                  label="Chọn Học Viên"
+                                                                  multiple>
+                                                            <template v-slot:selection="data">
+                                                                <v-chip :selected="data.selected"
+                                                                        color="green"
+                                                                        text-color="white">
+                                                                    <span>{{ data.item.label }}</span>
+                                                                </v-chip>
+                                                            </template>
+                                                        </v-select>
+                                                    </v-flex>
+
+                                                    
                                                 </v-layout>
                                             </v-container>
                                         </v-card-text>
@@ -139,26 +166,52 @@
                                     </v-btn>
                                     <v-card>
                                         <v-card-title>
-                                            <span class="headline">Chon Học Viên Hoàn Tác ngày {{ngayDiemDanh}}</span>
+                                            <span class="headline">Chọn Học Viên Hoàn Tác</span>
                                         </v-card-title>
                                         <v-card-text>
                                             <v-container grid-list-md>
                                                 <v-layout wrap>
-                                                    <v-select v-model="selectedHocViens"
-                                                              :items="diemDanhItems"
-                                                              item-text="label"
-                                                              item-value="hocVienId"
-                                                              chips
-                                                              label="Chọn Học Viên"
-                                                              multiple>
-                                                        <template v-slot:selection="data">
-                                                            <v-chip :selected="data.selected"
-                                                                    color="green"
-                                                                    text-color="white">
-                                                                <span>{{ data.item.label }}</span>
-                                                            </v-chip>
-                                                        </template>
-                                                    </v-select>
+                                                    <v-flex xs12>
+                                                        <v-menu ref="isShowDatePickerUndo"
+                                                                v-model="isShowDatePickerUndo"
+                                                                :close-on-content-click="false"
+                                                                :return-value.sync="dates"
+                                                                transition="scale-transition"
+                                                                offset-y
+                                                                min-width="290px">
+                                                            <template v-slot:activator="{ on }">
+                                                                <v-combobox v-model="ngayDiemDanhUndo"
+                                                                            multiple
+                                                                            chips
+                                                                            small-chips
+                                                                            label="Chọn 1 hoặc nhiều ngày"
+                                                                            prepend-icon="event"
+                                                                            readonly
+                                                                            v-on="on"></v-combobox>
+                                                            </template>
+                                                            <v-date-picker locale="vi-vn" v-model="ngayDiemDanhUndo" multiple no-title scrollable>
+                                                            </v-date-picker>
+                                                        </v-menu>
+                                                    </v-flex>
+
+                                                    <v-flex xs12>
+                                                        <v-select v-model="selectedHocViens"
+                                                                  :items="diemDanhItems"
+                                                                  item-text="label"
+                                                                  item-value="hocVienId"
+                                                                  chips
+                                                                  label="Chọn Học Viên"
+                                                                  multiple>
+                                                            <template v-slot:selection="data">
+                                                                <v-chip :selected="data.selected"
+                                                                        color="green"
+                                                                        text-color="white">
+                                                                    <span>{{ data.item.label }}</span>
+                                                                </v-chip>
+                                                            </template>
+                                                        </v-select>
+                                                    </v-flex>
+                                                    
                                                 </v-layout>
                                             </v-container>
                                         </v-card-text>

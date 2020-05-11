@@ -11,9 +11,13 @@
         dialogHoanTac: false,
         selectedLopHoc: '',
         ngayDiemDanh: new Date().toISOString().substr(0, 10),
+        ngayDiemDanhOff: [],
+        ngayDiemDanhUndo: [],
         selectedHocViens: [],
         itemLopHoc: [],
         isShowDatePicker: false,
+        isShowDatePickerOff: false,
+        isShowDatePickerUndo: false,
         search: '',
         headers: [
             { text: 'Học Viên', value: 'fullName', align: 'left', sortable: true },
@@ -203,7 +207,7 @@
                 data: {
                     LopHocId: this.selectedLopHoc,
                     HocVienIds: this.selectedHocViens,
-                    NgayDiemDanh: this.ngayDiemDanh
+                    NgayDiemDanhs: this.ngayDiemDanhOff
                 }
             })
                 .then(function (response) {
@@ -212,12 +216,14 @@
                         that.messageText = 'Điểm danh thành công !!!';
                         that.color = 'success';
 
-                        let [year, month, day] = that.ngayDiemDanh.split('-');
-                        for (let hocVien of that.diemDanhItems) {
-                            for (let diemdanh of hocVien.thongKeDiemDanh) {
-                                let [yearDD, monthDD, dayDD] = diemdanh.dates.split('-');
-                                if (diemdanh.day === parseInt(day) && year === yearDD && month === monthDD && that.selectedHocViens.includes(hocVien.hocVienId.toString())) {
-                                    diemdanh.duocNghi = true;
+                        for (let ngay of that.ngayDiemDanhOff) {
+                            let [year, month, day] = ngay.split('-');
+                            for (let hocVien of that.diemDanhItems) {
+                                for (let diemdanh of hocVien.thongKeDiemDanh) {
+                                    let [yearDD, monthDD, dayDD] = diemdanh.dates.split('-');
+                                    if (diemdanh.day === parseInt(day) && year === yearDD && month === monthDD && that.selectedHocViens.includes(hocVien.hocVienId.toString())) {
+                                        diemdanh.duocNghi = true;
+                                    }
                                 }
                             }
                         }
@@ -247,7 +253,7 @@
                 data: {
                     LopHocId: this.selectedLopHoc,
                     HocVienIds: this.selectedHocViens,
-                    NgayDiemDanh: this.ngayDiemDanh
+                    NgayDiemDanhs: this.ngayDiemDanhUndo
                 }
             })
                 .then(function (response) {
@@ -256,13 +262,15 @@
                         that.messageText = 'Hoàn tác thành công !!!';
                         that.color = 'success';
 
-                        let [year, month, day] = that.ngayDiemDanh.split('-');
-                        for (let hocVien of that.diemDanhItems) {
-                            for (let diemdanh of hocVien.thongKeDiemDanh) {
-                                let [yearDD, monthDD, dayDD] = diemdanh.dates.split('-');
-                                if (diemdanh.day === parseInt(day) && year === yearDD && month === monthDD && that.selectedHocViens.includes(hocVien.hocVienId.toString())) {
-                                    diemdanh.duocNghi = false;
-                                    diemdanh.isOff = false;
+                        for (let ngay of that.ngayDiemDanhOff) {
+                            let [year, month, day] = ngay.split('-');
+                            for (let hocVien of that.diemDanhItems) {
+                                for (let diemdanh of hocVien.thongKeDiemDanh) {
+                                    let [yearDD, monthDD, dayDD] = diemdanh.dates.split('-');
+                                    if (diemdanh.day === parseInt(day) && year === yearDD && month === monthDD && that.selectedHocViens.includes(hocVien.hocVienId.toString())) {
+                                        diemdanh.duocNghi = false;
+                                        diemdanh.isOff = false;
+                                    }
                                 }
                             }
                         }

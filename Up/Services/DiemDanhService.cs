@@ -274,56 +274,63 @@
                                 .ToListAsync();
         }
 
-        public async Task<bool> SaveHocVienHoanTac(Guid LopHocId, List<Guid> HocVienIds, DateTime NgayDiemDanh, string LoggedEmployee)
+        public async Task<bool> SaveHocVienHoanTac(Guid LopHocId, List<Guid> HocVienIds, List<DateTime> NgayDiemDanhs, string LoggedEmployee)
         {
-            if (LopHocId == null || NgayDiemDanh == null)
+            if (LopHocId == null || !NgayDiemDanhs.Any())
                 throw new Exception("Lỗi khi Hoan Tác!!!");
 
-            var isExisting = await _context.LopHoc_DiemDanhs
-                                    .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh && HocVienIds.Contains(x.HocVienId))
-                                    .ToListAsync();
-            if (isExisting.Any())
-                _context.LopHoc_DiemDanhs.RemoveRange(isExisting);
+            foreach (DateTime NgayDiemDanh in NgayDiemDanhs)
+            {
+                var isExisting = await _context.LopHoc_DiemDanhs
+                                      .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh && HocVienIds.Contains(x.HocVienId))
+                                      .ToListAsync();
+                if (isExisting.Any())
+                    _context.LopHoc_DiemDanhs.RemoveRange(isExisting);
+            }
+                
             var saveResult = await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> SaveHocVienOff(Guid LopHocId, List<Guid> HocVienIds, DateTime NgayDiemDanh, string LoggedEmployee)
+        public async Task<bool> SaveHocVienOff(Guid LopHocId, List<Guid> HocVienIds, List<DateTime> NgayDiemDanhs, string LoggedEmployee)
         {
-            if (LopHocId == null || NgayDiemDanh == null)
+            if (LopHocId == null || !NgayDiemDanhs.Any())
                 throw new Exception("Lỗi khi Cho Lớp Học Nghỉ!!!");
 
-            var isExisting = await _context.LopHoc_DiemDanhs
+            foreach(DateTime NgayDiemDanh in NgayDiemDanhs)
+            {
+                var isExisting = await _context.LopHoc_DiemDanhs
                                     .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh && HocVienIds.Contains(x.HocVienId))
                                     .ToListAsync();
-            if (isExisting.Any())
-                _context.LopHoc_DiemDanhs.RemoveRange(isExisting);
-            //throw new Exception("Lớp học đã được điểm danh ngày " + NgayDiemDanh.ToShortDateString());
+                if (isExisting.Any())
+                    _context.LopHoc_DiemDanhs.RemoveRange(isExisting);
+                //throw new Exception("Lớp học đã được điểm danh ngày " + NgayDiemDanh.ToShortDateString());
 
-            var hocViens = await _context.HocVien_LopHocs
-                                .Include(x => x.LopHoc)
-                                .Include(x => x.HocVien.HocVien_NgayHocs)
-                                .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
-                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc.Value >= NgayDiemDanh)))
-                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayBatDau <= NgayDiemDanh)))
-                                .Where(x => HocVienIds.Contains(x.HocVienId))
-                                .Select(x => new HocVienViewModel
-                                {
-                                    HocVienId = x.HocVienId,
-                                })
-                                .ToListAsync();
+                var hocViens = await _context.HocVien_LopHocs
+                                    .Include(x => x.LopHoc)
+                                    .Include(x => x.HocVien.HocVien_NgayHocs)
+                                    .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
+                                    .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc.Value >= NgayDiemDanh)))
+                                    .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayBatDau <= NgayDiemDanh)))
+                                    .Where(x => HocVienIds.Contains(x.HocVienId))
+                                    .Select(x => new HocVienViewModel
+                                    {
+                                        HocVienId = x.HocVienId,
+                                    })
+                                    .ToListAsync();
 
-            foreach (var item in hocViens)
-            {
-                LopHoc_DiemDanh lopHoc_DiemDanh = new LopHoc_DiemDanh();
-                lopHoc_DiemDanh.NgayDiemDanh = NgayDiemDanh;
-                lopHoc_DiemDanh.IsOff = true;
-                lopHoc_DiemDanh.IsDuocNghi = true;
-                lopHoc_DiemDanh.LopHocId = LopHocId;
-                lopHoc_DiemDanh.HocVienId = item.HocVienId;
-                lopHoc_DiemDanh.CreatedBy = LoggedEmployee;
-                lopHoc_DiemDanh.CreatedDate = DateTime.Now;
-                _context.LopHoc_DiemDanhs.Add(lopHoc_DiemDanh);
+                foreach (var item in hocViens)
+                {
+                    LopHoc_DiemDanh lopHoc_DiemDanh = new LopHoc_DiemDanh();
+                    lopHoc_DiemDanh.NgayDiemDanh = NgayDiemDanh;
+                    lopHoc_DiemDanh.IsOff = true;
+                    lopHoc_DiemDanh.IsDuocNghi = true;
+                    lopHoc_DiemDanh.LopHocId = LopHocId;
+                    lopHoc_DiemDanh.HocVienId = item.HocVienId;
+                    lopHoc_DiemDanh.CreatedBy = LoggedEmployee;
+                    lopHoc_DiemDanh.CreatedDate = DateTime.Now;
+                    _context.LopHoc_DiemDanhs.Add(lopHoc_DiemDanh);
+                }
             }
 
             var saveResult = await _context.SaveChangesAsync();

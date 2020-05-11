@@ -18,6 +18,8 @@
         public string UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
 
+        public List<string> NgayDiemDanhs { get; set; }
+
         public List<Guid> HocVienIds { get; set; }
     }
 }
