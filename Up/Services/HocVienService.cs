@@ -393,9 +393,14 @@ namespace Up.Services
                                                     .Where(x => x.HocVienId == item.HocVienId)
                                                     .ToListAsync();
 
-                if (_hocVien_LopHoc.Any())
-                    _context.HocVien_LopHocs.RemoveRange(_hocVien_LopHoc);
+                _context.HocVien_LopHocs.RemoveRange(_hocVien_LopHoc);
 
+                var _lopHocIds = LopHocList.Select(m => m.LopHoc.LopHocId).ToList();
+                var _hocVien_NgayHoc_Dumb = await _context.HocVien_NgayHocs
+                                                    .Where(x => x.HocVienId == HocVienId && !_lopHocIds.Contains(x.LopHocId))
+                                                    .ToListAsync();
+
+                _context.HocVien_NgayHocs.RemoveRange(_hocVien_NgayHoc_Dumb);
 
                 if (LopHocList.Any())
                 {
@@ -426,6 +431,8 @@ namespace Up.Services
 
                             _context.HocVien_NgayHocs.Add(HV_NgayHoc);
                         }
+                        else
+                            _hocVien_NgayHoc.NgayBatDau = Convert.ToDateTime(itemLop.NgayHoc, System.Globalization.CultureInfo.InvariantCulture);
                     }
                 }
 

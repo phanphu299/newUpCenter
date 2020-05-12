@@ -215,52 +215,52 @@
             if (LopHocId == null)
                 throw new Exception("Không tìm thấy Lớp Học!");
             try
-            {
-                
+            {                
                 var model = await _context.HocVien_LopHocs
-                                .Where(x => x.LopHocId == LopHocId)
-                                .SelectMany(x => x.HocVien.LopHoc_DiemDanhs)
-                                .Where(x => x.LopHocId == LopHocId)
+                    .Where(x => x.LopHocId == LopHocId)
                                 .Where(x => x.HocVien.IsDisabled == false)
                                 .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= month && m.NgayKetThuc.Value.Year == year) || m.NgayKetThuc.Value.Year > year)))
                                 .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayBatDau.Month <= month && m.NgayBatDau.Year == year) || m.NgayBatDau.Year < year))
-                                .Select(x => new DiemDanhViewModel
-                                {
-                                    IsDuocNghi = x.IsDuocNghi,
-                                    IsOff = x.IsOff,
-                                    NgayDiemDanh = x.NgayDiemDanh.ToString("dd/MM/yyyy"),
-                                    HocVien = x.HocVien.FullName,
-                                    NgayDiemDanh_Date = x.NgayDiemDanh,
-                                    HocVienId = x.HocVienId,
-                                    NgayBatDau = x.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId).NgayBatDau,
-                                    NgayKetThuc = x.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId).NgayKetThuc
-                                })
-                                //.GroupJoin(_context.LopHoc_DiemDanhs,
-                                //i => i.HocVienId,
-                                //p => p.HocVienId,
-                                //(i, g) =>
-                                //new
-                                //{
-                                //    i = i,
-                                //    g = g
-                                //})
-                                //.SelectMany(
-                                //temp0 => temp0.g.DefaultIfEmpty(),
-                                //(temp0, cat) =>
-                                //    new DiemDanhViewModel
-                                //    {
-                                //        IsDuocNghi = (cat == null) ? false : cat.IsDuocNghi,
-                                //        IsOff = (cat == null) ? true : cat.IsOff,
-                                //        NgayDiemDanh = (cat == null) ? new DateTime().ToString("dd/MM/yyyy") : cat.NgayDiemDanh.ToString("dd/MM/yyyy"),
-                                //        HocVien = temp0.i.HocVien.FullName,
-                                //        NgayDiemDanh_Date = (cat == null) ? new DateTime() : cat.NgayDiemDanh,
-                                //        HocVienId = temp0.i.HocVienId,
-                                //        NgayBatDau = temp0.i.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayBatDau,
-                                //        NgayKetThuc = temp0.i.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayKetThuc
-                                //    }
-                                //)
-                                .ToListAsync();
+                                //.SelectMany(x => x.HocVien.LopHoc_DiemDanhs)
 
+
+                                //.Select(x => new DiemDanhViewModel
+                                //{
+                                //    IsDuocNghi = (x == null) ? false : x.IsDuocNghi,
+                                //    IsOff = (x == null) ? true : x.IsOff,
+                                //    NgayDiemDanh = (x == null) ? new DateTime().ToString("dd/MM/yyyy") : x.NgayDiemDanh.ToString("dd/MM/yyyy"),
+                                //    HocVien = x.HocVien.FullName,
+                                //    NgayDiemDanh_Date = (x == null) ? new DateTime() : x.NgayDiemDanh,
+                                //    HocVienId = x.HocVienId,
+                                //    NgayBatDau = x.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId).NgayBatDau,
+                                //    NgayKetThuc = x.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId).NgayKetThuc.Value
+                                //})
+
+                                .GroupJoin(_context.LopHoc_DiemDanhs.Where(x => x.LopHocId == LopHocId),
+                                i => i.HocVienId,
+                                p => p.HocVienId,
+                                (i, g) =>
+                                new
+                                {
+                                    i = i,
+                                    g = g
+                                })
+                                .SelectMany(
+                                temp0 => temp0.g.DefaultIfEmpty(),
+                                (temp0, cat) =>
+                                    new DiemDanhViewModel
+                                    {
+                                        IsDuocNghi = (cat == null) ? false : cat.IsDuocNghi,
+                                        IsOff = (cat == null) ? true : cat.IsOff,
+                                        NgayDiemDanh = (cat == null) ? new DateTime().ToString("dd/MM/yyyy") : cat.NgayDiemDanh.ToString("dd/MM/yyyy"),
+                                        HocVien = temp0.i.HocVien.FullName,
+                                        NgayDiemDanh_Date = (cat == null) ? new DateTime() : cat.NgayDiemDanh,
+                                        HocVienId = temp0.i.HocVienId,
+                                        NgayBatDau = temp0.i.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayBatDau,
+                                        NgayKetThuc = temp0.i.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayKetThuc
+                                    }
+                                )
+                                .ToListAsync();
 
                 return model;
             }

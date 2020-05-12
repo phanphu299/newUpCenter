@@ -442,18 +442,17 @@
 
         public async Task<List<HocVienOffHon3NgayViewModel>> GetHocVienOffHon3NgayAsync()
         {
-            var te = DateTime.Now.Day;
             var model = await _context.HocVien_NgayHocs
                 .Include(x => x.HocVien)
                 .ThenInclude(x => x.HocVien_LopHocs)
                 .Include(x => x.LopHoc)
                 .ThenInclude(x => x.LopHoc_DiemDanhs)
                 .Where(x => x.HocVien.IsDisabled == false)
-                .Where(x => x.NgayKetThuc == null || (x.NgayKetThuc.Value.Day >= DateTime.Now.Day & x.NgayKetThuc.Value.Month == DateTime.Now.Month && x.NgayKetThuc.Value.Year == DateTime.Now.Year) || (x.NgayKetThuc.Value.Month > DateTime.Now.Month && x.NgayKetThuc.Value.Year == DateTime.Now.Year) || x.NgayKetThuc.Value.Year > DateTime.Now.Year)
+                .Where(x => x.NgayKetThuc == null || x.NgayKetThuc.Value >= DateTime.Now)
                 .Select(x => new
                 {
                     HocVien = x.HocVien.FullName,
-                    LopHoc_DiemDanh = x.HocVien.LopHoc_DiemDanhs
+                    LopHoc_DiemDanh = x.LopHoc.LopHoc_DiemDanhs
                                         .Where(p => p.LopHoc.IsCanceled == false && p.LopHoc.IsDisabled == false && p.LopHoc.IsGraduated == false)
                                         .OrderByDescending(p => p.NgayDiemDanh)
                                         .Where(p => p.IsOff == false && (p.IsDuocNghi == false || p.IsDuocNghi == null))
@@ -467,7 +466,7 @@
                 })
                 .ToListAsync();
 
-            var list = model.Where(x => x.LopHoc_DiemDanh.Any(p => (DateTime.Now - p.NgayDiemDanh).TotalDays >= 6));
+            var list = model.Where(x => x.LopHoc_DiemDanh.Any(p => (DateTime.Now - p.NgayDiemDanh).TotalDays >= 7));
 
             return list.Select(x => new HocVienOffHon3NgayViewModel
                 {
