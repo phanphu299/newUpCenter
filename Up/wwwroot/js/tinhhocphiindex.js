@@ -83,7 +83,7 @@
                 value = 0;
             }
             item.hocPhiMoi = item.hocPhiFixed + item.tienNo - ((item.hocPhiFixed * value) / 100);
-            item.hocPhiMoi = (Math.ceil(item.hocPhiMoi / 10000) * 10000);
+            
             if (item.lastGiaSach !== null) {
                 for (let i = 0; i < item.lastGiaSach.length; i++) {
                     item.hocPhiMoi = item.hocPhiMoi + (item.lastGiaSach[i].gia * 1.0);
@@ -97,6 +97,8 @@
             if (item.lastMinus > 0) {
                 item.hocPhiMoi = item.hocPhiMoi - (item.lastMinus * 1.0);
             }
+
+            item.hocPhiMoi = (Math.ceil(item.hocPhiMoi / 10000) * 10000);
         },
 
         async onBonusHocPhi(value, item) {
@@ -136,7 +138,7 @@
         async onTinhTien() {
             let that = this;
             that.hocVienList = [];
-            debugger;
+
             if (this.selectedThang !== this.selectedLastThang) {
                 this.selectedNam = '';
                 this.selectedLastThang = this.selectedThang;

@@ -55,7 +55,7 @@ namespace Up.Services
 
                     if(DaDong == true)
                     {
-                        var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo <= thongKe.NgayDong);
+                        var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.NgayNo <= thongKe.NgayDong);
                         foreach (var n in no)
                         {
                             n.IsDisabled = true;
@@ -92,7 +92,7 @@ namespace Up.Services
 
                     if(DaDong == true)
                     {
-                        var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayNo <= item.NgayDong).ToList();
+                        var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.NgayNo <= item.NgayDong).ToList();
                         foreach (var n in no)
                         {
                             n.IsDisabled = true;

@@ -40,7 +40,8 @@
         selectedNam: '',
         itemThang: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
         itemNam: [new Date().toISOString().substr(0, 4) - 2, new Date().toISOString().substr(0, 4) - 1, new Date().toISOString().substr(0, 4) - 0, parseInt(new Date().toISOString().substr(0, 4)) + 1],
-        soNgayHoc: []
+        soNgayHoc: [],
+        dates: ''
     },
     async beforeCreate() {
         let that = this;

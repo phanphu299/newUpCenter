@@ -32,6 +32,7 @@
         public string NgayBatDauHoc { get; set; }
         public double HocPhiBuHocVienVaoSau { get; set; }
         public int KhuyenMai { get; set; } = 0;
+        public int KhuyenMaiThangTruoc { get; set; } = 0;
         public SachViewModel[] GiaSach { get; set; }
         public double HocPhiFixed { get; set; }
         public SachViewModel[] LastGiaSach { get; set; }
