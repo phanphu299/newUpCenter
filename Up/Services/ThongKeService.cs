@@ -443,10 +443,6 @@
         public async Task<List<HocVienOffHon3NgayViewModel>> GetHocVienOffHon3NgayAsync()
         {
             var model = await _context.HocVien_NgayHocs
-                .Include(x => x.HocVien)
-                .ThenInclude(x => x.HocVien_LopHocs)
-                .Include(x => x.LopHoc)
-                .ThenInclude(x => x.LopHoc_DiemDanhs)
                 .Where(x => x.HocVien.IsDisabled == false)
                 .Where(x => x.NgayKetThuc == null || x.NgayKetThuc.Value >= DateTime.Now)
                 .Select(x => new
@@ -455,7 +451,8 @@
                     LopHoc_DiemDanh = x.LopHoc.LopHoc_DiemDanhs
                                         .Where(p => p.LopHoc.IsCanceled == false && p.LopHoc.IsDisabled == false && p.LopHoc.IsGraduated == false)
                                         .OrderByDescending(p => p.NgayDiemDanh)
-                                        .Where(p => p.IsOff == false && (p.IsDuocNghi == false || p.IsDuocNghi == null))
+                                        .Where(p => p.IsOff == false && p.IsDuocNghi != true && p.HocVienId == x.HocVienId && p.LopHocId == x.LopHocId)
+                                        .Where(p => p.LopHoc.HocVien_LopHocs.Any(m => m.LopHocId == x.LopHocId && m.HocVienId == x.HocVienId))
                                         .Select(p => new
                                         {
                                             LopHoc = p.LopHoc.Name,
