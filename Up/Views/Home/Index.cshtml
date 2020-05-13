@@ -70,7 +70,7 @@
 
     @if (User.IsInRole("Admin"))
     {
-        <v-card-title>
+        <v-card-title v-if="hocVienNghiNhieu.length > 0">
             <h4 class="header mt-0">
                 HỌC VIÊN NGHỈ TỪ 3 BUỔI LIÊN TIẾP
             </h4>
@@ -82,10 +82,16 @@
                           single-line
                           hide-details></v-text-field>
         </v-card-title>
+        <v-card-title v-else>
+            <h4 class="header mt-0">
+                KHÔNG CÓ HỌC VIÊN NGHỈ TỪ 3 BUỔI LIÊN TIẾP
+            </h4>
+        </v-card-title>
         <v-data-table :headers="headers"
                       :items="hocVienNghiNhieu"
                       :search="search"
-                      class="elevation-1">
+                      class="elevation-1"
+                      v-if="hocVienNghiNhieu.length > 0">
             <template slot="items" slot-scope="props">
                 <td>{{ props.item.tenHocVien }}</td>
                 <td>{{ props.item.tenLop }}</td>

@@ -252,11 +252,12 @@ namespace Up.Controllers
 
                 for (int i = 0; i < totalRows; i++)
                 {
+                    var hocPhiBu = (Math.Ceiling(model.HocVienList[i].HocPhiBuHocVienVaoSau));
                     worksheet.Cells[i + 4, 1].Value = i + 1;
                     worksheet.Cells[i + 4, 2].Value = model.HocVienList[i].FullName;
-                    worksheet.Cells[i + 4, 3].Value = model.HocVienList[i].HocPhiBuHocVienVaoSau;
+                    worksheet.Cells[i + 4, 3].Value = hocPhiBu;
                     worksheet.Cells[i + 4, 4].Value = model.HocVienList[i].TienNo;
-                    worksheet.Cells[i + 4, 5].Value = model.HocVienList[i].HocPhiFixed;
+                    worksheet.Cells[i + 4, 5].Value = model.HocVienList[i].HocPhiFixed - hocPhiBu;
 
                     if(model.HocVienList[i].GiaSach != null && model.HocVienList[i].GiaSach.Length > 0)
                     {

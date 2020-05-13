@@ -231,6 +231,8 @@
 
                         that.dialog = false;
                         that.selectedHocViens = [];
+                        that.ngayDiemDanhOff = [];
+                        that.dates = '';
                     }
                     else {
                         that.snackbar = true;
@@ -263,7 +265,7 @@
                         that.messageText = 'Hoàn tác thành công !!!';
                         that.color = 'success';
 
-                        for (let ngay of that.ngayDiemDanhOff) {
+                        for (let ngay of that.ngayDiemDanhUndo) {
                             let [year, month, day] = ngay.split('-');
                             for (let hocVien of that.diemDanhItems) {
                                 for (let diemdanh of hocVien.thongKeDiemDanh) {
@@ -278,6 +280,8 @@
 
                         that.dialogHoanTac = false;
                         that.selectedHocViens = [];
+                        that.ngayDiemDanhUndo = [];
+                        that.dates = '';
                     }
                     else {
                         that.snackbar = true;
