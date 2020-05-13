@@ -214,20 +214,22 @@ namespace Up.Controllers
 
                 worksheet.Cells[3, 1].Value = "No";
                 worksheet.Cells[3, 2].Value = "Tên";
-                worksheet.Cells[3, 3].Value = "Khoảng trừ\r\ntháng trước";
+                worksheet.Cells[3, 3].Value = "1.Khoảng trừ (Được nghỉ tháng trước/Vào học sau)";
                 worksheet.Cells[3, 3].Style.WrapText = true;
-                worksheet.Cells[3, 4].Value = "Nợ tháng trước";
+                worksheet.Cells[3, 4].Value = "2.Giảm học phí";
                 worksheet.Cells[3, 4].Style.WrapText = true;
-                worksheet.Cells[3, 5].Value = "Học phí tháng này";
+                worksheet.Cells[3, 5].Value = "3.Học phí tháng này 3 = (HP - 1)x(100% -2)";
                 worksheet.Cells[3, 5].Style.WrapText = true;
-                worksheet.Cells[3, 6].Value = "Mua tài liệu";
+                worksheet.Cells[3, 6].Value = "4.Nợ/Dư";
                 worksheet.Cells[3, 6].Style.WrapText = true;
-                worksheet.Cells[3, 7].Value = "Khuyến mãi";
+                worksheet.Cells[3, 7].Value = "5.Tài liệu";
                 worksheet.Cells[3, 7].Style.WrapText = true;
-                worksheet.Cells[3, 8].Value = "(+) khác";
-                worksheet.Cells[3, 9].Value = "(-) khác";
+                worksheet.Cells[3, 8].Value = "6.(+) khác";
+                worksheet.Cells[3, 8].Style.WrapText = true;
+                worksheet.Cells[3, 9].Value = "7.(-) khác";
                 worksheet.Cells[3, 9].Style.WrapText = true;
-                worksheet.Cells[3, 10].Value = "Tổng";
+                worksheet.Cells[3, 10].Value = "Phải đóng 8 = 3 + 4 + 5 + 6 - 7";
+                worksheet.Cells[3, 10].Style.WrapText = true;
                 worksheet.Cells[3, 11].Value = "Chữ ký";
                 worksheet.Cells[3, 12].Value = "Ghi Chú";
                 worksheet.Cells["A3:L3"].Style.Font.Bold = true;
@@ -256,20 +258,20 @@ namespace Up.Controllers
                     worksheet.Cells[i + 4, 1].Value = i + 1;
                     worksheet.Cells[i + 4, 2].Value = model.HocVienList[i].FullName;
                     worksheet.Cells[i + 4, 3].Value = hocPhiBu;
-                    worksheet.Cells[i + 4, 4].Value = model.HocVienList[i].TienNo;
+                    worksheet.Cells[i + 4, 4].Value = model.HocVienList[i].KhuyenMai + "%";
                     worksheet.Cells[i + 4, 5].Value = model.HocVienList[i].HocPhiFixed - hocPhiBu;
+                    worksheet.Cells[i + 4, 6].Value = model.HocVienList[i].TienNo;
 
-                    if(model.HocVienList[i].GiaSach != null && model.HocVienList[i].GiaSach.Length > 0)
+                    if (model.HocVienList[i].GiaSach != null && model.HocVienList[i].GiaSach.Length > 0)
                     {
                         double giaSach = 0;
-                        foreach(var item in model.HocVienList[i].GiaSach)
+                        foreach (var item in model.HocVienList[i].GiaSach)
                         {
                             giaSach += item.Gia;
                         }
-                        worksheet.Cells[i + 4, 6].Value = giaSach;
+                        worksheet.Cells[i + 4, 7].Value = giaSach;
                     }
-                    
-                    worksheet.Cells[i + 4, 7].Value = model.HocVienList[i].KhuyenMai + "%";
+
                     worksheet.Cells[i + 4, 8].Value = model.HocVienList[i].Bonus;
                     worksheet.Cells[i + 4, 9].Value = model.HocVienList[i].Minus;
                     worksheet.Cells[i + 4, 10].Value = model.HocVienList[i].HocPhiMoi;
