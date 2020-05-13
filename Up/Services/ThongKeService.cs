@@ -463,7 +463,7 @@
                 })
                 .ToListAsync();
 
-            var list = model.Where(x => x.LopHoc_DiemDanh.Any(p => (DateTime.Now - p.NgayDiemDanh).TotalDays >= 7));
+            var list = model.Where(x => x.LopHoc_DiemDanh.Any(p => (DateTime.Now - p.NgayDiemDanh).TotalDays >= 8));
 
             return list.Select(x => new HocVienOffHon3NgayViewModel
                 {
