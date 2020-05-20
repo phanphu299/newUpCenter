@@ -229,7 +229,8 @@
                         HocVienList: that.hocVienList,
                         LopHocId: that.selectedLopHoc.lopHocId,
                         month: that.selectedThang,
-                        year: that.selectedNam
+                        year: that.selectedNam,
+                        HocPhi: that.tongHocPhi
                     }
                 })
                 .then(function (response) {

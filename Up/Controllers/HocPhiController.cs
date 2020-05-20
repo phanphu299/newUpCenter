@@ -259,7 +259,7 @@ namespace Up.Controllers
                     worksheet.Cells[i + 4, 2].Value = model.HocVienList[i].FullName;
                     worksheet.Cells[i + 4, 3].Value = hocPhiBu;
                     worksheet.Cells[i + 4, 4].Value = model.HocVienList[i].KhuyenMai + "%";
-                    worksheet.Cells[i + 4, 5].Value = model.HocVienList[i].HocPhiFixed - hocPhiBu;
+                    worksheet.Cells[i + 4, 5].Value = (model.HocPhi - hocPhiBu) * ((100 - model.HocVienList[i].KhuyenMai) / 100);
                     worksheet.Cells[i + 4, 6].Value = model.HocVienList[i].TienNo;
 
                     if (model.HocVienList[i].GiaSach != null && model.HocVienList[i].GiaSach.Length > 0)
