@@ -67,7 +67,7 @@ namespace Up.Controllers
             try
             {
                 DateTime _ngayDong = new DateTime(model.models[0].year, model.models[0].month, 1);
-                foreach(var item in model.models)
+                foreach (var item in model.models)
                 {
                     var sachIds = item.GiaSach != null ? item.GiaSach.Select(x => x.SachId).ToArray() : new Guid[0];
                     await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(item.LopHocId, item.HocVienId,
@@ -275,15 +275,13 @@ namespace Up.Controllers
                     worksheet.Cells[i + 4, 8].Value = model.HocVienList[i].Bonus;
                     worksheet.Cells[i + 4, 9].Value = model.HocVienList[i].Minus;
                     worksheet.Cells[i + 4, 10].Value = model.HocVienList[i].HocPhiMoi;
-                    
-                    if(model.HocVienList[i].DaDongHocPhi)
+
+                    if (model.HocVienList[i].DaDongHocPhi)
                     {
-                        worksheet.Cells[i + 4, 12].Value = model.HocVienList[i].GhiChu + " - ĐÃ ĐÓNG HP";
+                        worksheet.Cells[i + 4, 11].Value = "- ĐÃ ĐÓNG HP";
                     }
-                    else
-                    {
-                        worksheet.Cells[i + 4, 12].Value = model.HocVienList[i].GhiChu;
-                    }
+
+                    worksheet.Cells[i + 4, 12].Value = model.HocVienList[i].GhiChu;
                 }
 
                 worksheet.PrinterSettings.Orientation = eOrientation.Landscape;
