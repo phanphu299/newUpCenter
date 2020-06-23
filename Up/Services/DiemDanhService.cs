@@ -29,11 +29,11 @@
 
             var roles = await _userManager.GetRolesAsync(CurUser);
 
-            var quyen_roles = _context.Quyen_Roles
+            var quyen_roles = await _context.Quyen_Roles
                 .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_DiemDanh)
-                .Select(x => x.RoleId).ToList();
+                .Select(x => x.RoleId).AsNoTracking().ToListAsync();
 
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
+            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name).AsNoTracking();
 
             bool canContribute = false;
 
@@ -207,6 +207,7 @@
                                     NgayDiemDanh_Date = x.NgayDiemDanh,
                                     Day = x.NgayDiemDanh.Day
                                 })
+                                .AsNoTracking()
                                 .ToListAsync();
         }
 
@@ -260,6 +261,7 @@
                                         NgayKetThuc = temp0.i.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayKetThuc
                                     }
                                 )
+                                .AsNoTracking()
                                 .ToListAsync();
 
                 return model;
@@ -287,6 +289,7 @@
                                     EnglishName = x.HocVien.EnglishName,
                                     HocVienId = x.HocVienId,
                                 })
+                                .AsNoTracking()
                                 .ToListAsync();
         }
 

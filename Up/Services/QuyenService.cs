@@ -56,6 +56,7 @@
                     QuyenId = x.QuyenId,
                     Name = x.Name,
                 })
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -66,11 +67,13 @@
                 {
                     QuyenId = x.QuyenId,
                     Name = x.Name,
-                }).ToListAsync();
+                })
+                .AsNoTracking()
+                .ToListAsync();
 
-            var quyenByRole = _context.Quyen_Roles.Where(x => x.RoleId == RoleId).Select(x => x.QuyenId);
+            var quyenByRole = _context.Quyen_Roles.Where(x => x.RoleId == RoleId).AsNoTracking().Select(x => x.QuyenId);
 
-            foreach(QuyenViewModel item in quyenList)
+            foreach (QuyenViewModel item in quyenList)
             {
                 if (quyenByRole.Contains(item.QuyenId))
                     item.IsTrue = true;
@@ -81,13 +84,16 @@
 
         public async Task<List<RoleViewModel>> GetRoleByQuyenIdAsync(int QuyenId)
         {
-            var quyenByRole = _context.Quyen_Roles.Where(x => x.QuyenId == QuyenId).Select(x => x.RoleId);
+            var quyenByRole = _context.Quyen_Roles.Where(x => x.QuyenId == QuyenId).AsNoTracking().Select(x => x.RoleId);
 
-            return await _context.Roles.Where(x => quyenByRole.Contains(x.Id)).Select(x => new RoleViewModel
-            {
-                Id = x.Id,
-                Role = x.Name,
-            }).ToListAsync();
+            return await _context.Roles
+                .Where(x => quyenByRole.Contains(x.Id)).Select(x => new RoleViewModel
+                {
+                    Id = x.Id,
+                    Role = x.Name,
+                })
+               .AsNoTracking()
+               .ToListAsync();
         }
     }
 }

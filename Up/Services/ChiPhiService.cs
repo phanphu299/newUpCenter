@@ -29,11 +29,11 @@ namespace Up.Services
 
             var roles = await _userManager.GetRolesAsync(CurUser);
 
-            var quyen_roles = _context.Quyen_Roles
+            var quyen_roles = await _context.Quyen_Roles
                 .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_TinhLuong)
-                .Select(x => x.RoleId).ToList();
+                .Select(x => x.RoleId).AsNoTracking().ToListAsync();
 
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
+            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name).AsNoTracking();
 
             bool canContribute = false;
 
@@ -174,6 +174,7 @@ namespace Up.Services
                 DailySalary = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).DailySalary : /*(Math.Ceiling(*/(x.BasicSalary / TongNgayLam(x.NgayLamViec.Name, month, year, null)) /*/ 10000) * 10000)*/,
                 SoNgayNghi = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.NhanVienId == x.GiaoVienId).SoNgayNghi : 0
             })
+            .AsNoTracking()
             .ToListAsync();
 
             foreach (var item in giaoVien)
@@ -199,6 +200,7 @@ namespace Up.Services
                     ChiPhiCoDinhId = x.ChiPhiCoDinhId,
                     DaLuu = x.ThongKe_ChiPhis.Any(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.ChiPhiCoDinhId == x.ChiPhiCoDinhId) ? x.ThongKe_ChiPhis.FirstOrDefault(m => m.NgayChiPhi.Month == month && m.NgayChiPhi.Year == year && m.ChiPhiCoDinhId == x.ChiPhiCoDinhId).DaLuu : false,
                 })
+                .AsNoTracking()
                 .ToListAsync();
 
             List<ChiPhiModel> model = new List<ChiPhiModel>();

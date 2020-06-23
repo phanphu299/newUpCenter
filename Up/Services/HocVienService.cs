@@ -29,11 +29,11 @@ namespace Up.Services
 
             var roles = await _userManager.GetRolesAsync(CurUser);
 
-            var quyen_roles = _context.Quyen_Roles
+            var quyen_roles = await _context.Quyen_Roles
                 .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_HocVien)
-                .Select(x => x.RoleId).ToList();
+                .Select(x => x.RoleId).AsNoTracking().ToListAsync();
 
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
+            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name).AsNoTracking();
 
             bool canContribute = false;
 
@@ -277,8 +277,10 @@ namespace Up.Services
                                             },
                                             NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId) != null ? m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId).NgayBatDau.ToString("yyyy-MM-dd") : ""
                                         })
+                                        .AsNoTracking()
                                         .ToList()
                 })
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -325,8 +327,10 @@ namespace Up.Services
                                             },
                                             NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId) != null ? m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId).NgayBatDau.ToString("yyyy-MM-dd") : ""
                                         })
+                                        .AsNoTracking()
                                         .ToList()
                 })
+                .AsNoTracking()
                 .ToListAsync();
             }
             catch(Exception ex)

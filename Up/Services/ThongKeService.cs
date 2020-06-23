@@ -322,7 +322,10 @@
         {
             try
             {
-                return await _context.GiaoViens.Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.IsDisabled == false).CountAsync();
+                return await _context.GiaoViens
+                    .Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && x.IsDisabled == false)
+                    .AsNoTracking()
+                    .CountAsync();
             }
             catch (Exception exception)
             {
@@ -336,6 +339,7 @@
             {
                 return await _context.HocVien_LopHocs
                             .Where(x => x.HocVien.IsDisabled == false)
+                            .AsNoTracking()
                             .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == x.LopHoc.LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc > DateTime.Now)))
                             .Select(x => x.HocVienId)
                     .Distinct()
@@ -354,7 +358,7 @@
                 var doanhThu = await _context.ThongKe_DoanhThuHocPhis
                 .Where(x => x.NgayDong.Year == DateTime.Now.Year && x.DaDong == true)
                 .OrderBy(x => x.NgayDong)
-
+                .AsNoTracking()
                 .Select(g => new ThongKe_DoanhThuHocPhiViewModel
                 {
                     HocPhi = g.HocPhi,
@@ -377,7 +381,7 @@
                 var no = await _context.HocVien_Nos
                 .Where(x => x.NgayNo.Year == DateTime.Now.Year && x.HocVien.IsDisabled == false)
                 .OrderBy(x => x.NgayNo)
-
+                .AsNoTracking()
                 .Select(g => new NoViewModel
                 {
                     TienNo = g.TienNo,
@@ -397,7 +401,7 @@
         {
             try
             {
-                return Math.Round(await _context.ThongKe_DoanhThuHocPhis.Where(x => x.DaDong == true).Select(x => x.HocPhi).SumAsync(), 0);
+                return Math.Round(await _context.ThongKe_DoanhThuHocPhis.Where(x => x.DaDong == true).AsNoTracking().Select(x => x.HocPhi).SumAsync(), 0);
             }
             catch (Exception exception)
             {
@@ -412,7 +416,7 @@
                 var chiPhi = await _context.ThongKe_ChiPhis
                 .Where(x => x.NgayChiPhi.Year == DateTime.Now.Year && x.DaLuu == true)
                 .OrderBy(x => x.NgayChiPhi)
-
+                .AsNoTracking()
                 .Select(g => new ThongKe_ChiPhiViewModel
                 {
                     ChiPhi = g.ChiPhi,
@@ -432,7 +436,7 @@
         {
             try
             {
-                return Math.Round(await _context.ThongKe_ChiPhis.Where(x => x.DaLuu == true).Select(x => x.ChiPhi).SumAsync(), 0);
+                return Math.Round(await _context.ThongKe_ChiPhis.Where(x => x.DaLuu == true).AsNoTracking().Select(x => x.ChiPhi).SumAsync(), 0);
             }
             catch (Exception exception)
             {
@@ -461,15 +465,16 @@
                                         .Take(1)
                                         .ToList()
                 })
+                .AsNoTracking()
                 .ToListAsync();
 
             var list = model.Where(x => x.LopHoc_DiemDanh.Any(p => (DateTime.Now - p.NgayDiemDanh).TotalDays >= 8));
 
             return list.Select(x => new HocVienOffHon3NgayViewModel
-                {
-                    TenLop = x.LopHoc_DiemDanh[0].LopHoc,
-                    NgayHocCuoi = x.LopHoc_DiemDanh[0].NgayDiemDanh.ToString("dd/MM/yyyy"),
-                    TenHocVien = x.HocVien
+            {
+                TenLop = x.LopHoc_DiemDanh[0].LopHoc,
+                NgayHocCuoi = x.LopHoc_DiemDanh[0].NgayDiemDanh.ToString("dd/MM/yyyy"),
+                TenHocVien = x.HocVien
             })
                 .ToList();
         }

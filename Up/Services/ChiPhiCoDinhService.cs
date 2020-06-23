@@ -30,11 +30,13 @@ namespace Up.Services
 
             var roles = await _userManager.GetRolesAsync(CurUser);
 
-            var quyen_roles = _context.Quyen_Roles
+            var quyen_roles = await _context.Quyen_Roles
                 .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_ChiPhiCoDinh)
-                .Select(x => x.RoleId).ToList();
+                .Select(x => x.RoleId)
+                .AsNoTracking()
+                .ToListAsync();
 
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
+            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name).AsNoTracking();
 
             bool canContribute = false;
 
@@ -105,6 +107,7 @@ namespace Up.Services
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
                 })
+                .AsNoTracking()
                 .ToListAsync();
         }
 

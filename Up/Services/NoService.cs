@@ -34,6 +34,7 @@ namespace Up.Services
                     TienNo = x.TienNo,
                     HocVien = x.HocVien.FullName
                 })
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -52,6 +53,7 @@ namespace Up.Services
                     TienNo = x.TienNo,
                     HocVien = x.HocVien.FullName
                 })
+                .AsNoTracking()
                 .ToListAsync();
         }
 

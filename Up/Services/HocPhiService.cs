@@ -83,6 +83,7 @@ namespace Up.Services
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
                 })
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -91,6 +92,7 @@ namespace Up.Services
             var item = await _context.LopHocs
                                     .Include(x => x.NgayHoc)
                                     .Where(x => x.LopHocId == LopHocId)
+                                    .AsNoTracking()
                                     .SingleOrDefaultAsync();
 
             var ngayHoc = item.NgayHoc.Name.Split('-');
@@ -194,6 +196,7 @@ namespace Up.Services
                                             {
                                                 m.Key
                                             })
+                                            .AsNoTracking()
                                             .ToListAsync();
             return ngayChoNghi.Count();
         }
@@ -203,6 +206,7 @@ namespace Up.Services
             var item = await _context.LopHocs
                                     .Include(x => x.NgayHoc)
                                     .Where(x => x.LopHocId == LopHocId)
+                                    .AsNoTracking()
                                     .SingleOrDefaultAsync();
 
             var ngayHoc = item.NgayHoc.Name.Split('-');
@@ -259,7 +263,11 @@ namespace Up.Services
 
             var hocPhiMoiNgay = HocPhi / soNgayHoc;
 
-            var hocPhiCu = await _context.LopHoc_HocPhis.Include(x => x.HocPhi).FirstOrDefaultAsync(x => x.Thang == subMonth && x.Nam == subYear && x.LopHocId == LopHocId);
+            var hocPhiCu = await _context.LopHoc_HocPhis
+                .Include(x => x.HocPhi)
+                .AsNoTracking().
+                FirstOrDefaultAsync(x => x.Thang == subMonth && x.Nam == subYear && x.LopHocId == LopHocId);
+
             var hocPhiMoiNgayCu = hocPhiCu == null ? (HocPhi / soNgayHocCu) : (hocPhiCu.HocPhi.Gia / soNgayHocCu);
 
             return new TinhHocPhiViewModel
@@ -373,6 +381,7 @@ namespace Up.Services
                                         })
                                         .Where(x => x.NgayKetThuc_Date == null || (x.NgayKetThuc_Date.Value.Month >= currentMonth && x.NgayKetThuc_Date.Value.Year == currentYear) || x.NgayKetThuc_Date.Value.Year > currentYear)
                                         .Where(x => (x.NgayBatDau_Date.Month <= currentMonth && x.NgayBatDau_Date.Year == currentYear) || x.NgayBatDau_Date.Year < currentYear)
+                                        .AsNoTracking()
                                         .ToListAsync();
                 int index = 1;
                 foreach (var item in model)
@@ -471,6 +480,7 @@ namespace Up.Services
             var item = await _context.LopHocs
                                     .Include(x => x.NgayHoc)
                                     .Where(x => x.LopHocId == LopHocId)
+                                    .AsNoTracking()
                                     .SingleOrDefaultAsync();
 
             var ngayHoc = item.NgayHoc.Name.Split('-');
@@ -513,11 +523,11 @@ namespace Up.Services
 
             var roles = await _userManager.GetRolesAsync(CurUser);
 
-            var quyen_roles = _context.Quyen_Roles
+            var quyen_roles = await _context.Quyen_Roles
                 .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_HocPhi)
-                .Select(x => x.RoleId).ToList();
+                .Select(x => x.RoleId).AsNoTracking().ToListAsync();
 
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
+            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name).AsNoTracking();
 
             bool canContribute = false;
 
@@ -538,11 +548,11 @@ namespace Up.Services
 
             var roles = await _userManager.GetRolesAsync(CurUser);
 
-            var quyen_roles = _context.Quyen_Roles
+            var quyen_roles = await _context.Quyen_Roles
                 .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_TinhHocPhi)
-                .Select(x => x.RoleId).ToList();
+                .Select(x => x.RoleId).AsNoTracking().ToListAsync();
 
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
+            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name).AsNoTracking();
 
             bool canContribute = false;
 

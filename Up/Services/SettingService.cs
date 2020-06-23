@@ -54,7 +54,7 @@ namespace Up.Services
                                     .Select(x => x.RoleId)
                                     .ToList();
 
-            if(oldRoleIds.Any())
+            if (oldRoleIds.Any())
             {
                 var oldRoles = await _context.Roles.Where(x => oldRoleIds.Contains(x.Id)).Select(x => x.Name).ToListAsync();
                 await _userManager.RemoveFromRolesAsync(user, oldRoles);
@@ -62,7 +62,8 @@ namespace Up.Services
 
             await _userManager.AddToRolesAsync(user, newRoles);
 
-            return new AccountInfo {
+            return new AccountInfo
+            {
                 Email = user.Email,
                 Id = user.Id,
                 Roles = _userManager.GetRolesAsync(user).Result,
@@ -108,7 +109,7 @@ namespace Up.Services
                     throw new Exception("Tên role đã tồn tại !!!");
                 }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw new Exception("Lỗi khi tạo role: " + exception.Message);
             }
@@ -142,7 +143,7 @@ namespace Up.Services
                     throw new Exception("Tài khoản đã tồn tại !!!");
                 }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw new Exception(exception.Message);
             }
@@ -194,7 +195,7 @@ namespace Up.Services
                 .ToArray();
 
             var adminList = new List<AccountInfo>();
-            foreach(var item in admins)
+            foreach (var item in admins)
             {
                 adminList.Add(new AccountInfo
                 {
@@ -209,11 +210,14 @@ namespace Up.Services
 
         public async Task<List<RoleViewModel>> GetAllRolesAsync()
         {
-            return await _context.Roles.Select(x => new RoleViewModel
-            {
-                Id = x.Id,
-                Role = x.Name,
-            }).ToListAsync();
+            return await _context.Roles
+                .Select(x => new RoleViewModel
+                {
+                    Id = x.Id,
+                    Role = x.Name,
+                })
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<List<AccountInfo>> GetAllUsersAsync()
@@ -267,7 +271,7 @@ namespace Up.Services
                 await _userManager.DeleteAsync(user);
                 return true;
             }
-            catch(Exception Exception)
+            catch (Exception Exception)
             {
                 throw new Exception(Exception.Message);
             }
