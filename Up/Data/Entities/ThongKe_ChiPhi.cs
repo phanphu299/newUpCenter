@@ -35,6 +35,7 @@ namespace Up.Data.Entities
         public double TeachingRate { get; set; }
         public double TutoringRate { get; set; }
         public double MucHoaHong { get; set; }
+        public string GhiChu { get; set; }
 
         [ForeignKey("ChiPhiCoDinhId")]
         public ChiPhiCoDinh ChiPhiCoDinh { get; set; }

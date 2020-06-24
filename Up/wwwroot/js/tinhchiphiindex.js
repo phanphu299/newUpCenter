@@ -26,7 +26,8 @@
             { text: 'Hoa Hồng', align: 'left', sortable: true },
             { text: 'Số HV', align: 'left', sortable: true },
             { text: '(+) Khác', align: 'left', sortable: true },
-            { text: '(-) Khác', align: 'left', sortable: true }
+            { text: '(-) Khác', align: 'left', sortable: true },
+            { text: 'Ghi Chú', align: 'left', sortable: true }
         ]
 
     },

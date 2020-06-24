@@ -36,5 +36,6 @@
 
         public double SoNgayNghi { get; set; } = 0;
         public double DailySalary { get; set; }
+        public string GhiChu { get; set; }
     }
 }

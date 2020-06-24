@@ -82,6 +82,7 @@
                                             </td>
                                             <td><v-text-field label="Bonus" v-on:keyup="onTinhChiPhi(props.item)" v-model="props.item.bonus" :value="props.item.bonus"></v-text-field></td>
                                             <td><v-text-field label="Khoảng Trừ Khác" v-on:keyup="onTinhChiPhi(props.item)" v-model="props.item.minus" :value="props.item.minus"></v-text-field></td>
+                                            <td><v-text-field v-model="props.item.ghiChu"></v-text-field></td>
                                         </template>
                                     </v-data-table>
                                     <span><b>Tổng Chi Phí: {{ formatNumber(total) }}</b></span>

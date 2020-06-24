@@ -38,6 +38,7 @@ namespace Up.Models
         public double TutoringRate { get; set; }
         public double MucHoaHong { get; set; }
         public bool DaLuu { get; set; }
+        public string GhiChu { get; set; }
     }
 
     public class Add_ThongKe_ChiPhiViewModel

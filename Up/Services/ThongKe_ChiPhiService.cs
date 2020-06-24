@@ -51,7 +51,8 @@ namespace Up.Services
                         SoNgayNghi = item.SoNgayNghi,
                         TeachingRate = item.TeachingRate,
                         TutoringRate = item.TutoringRate,
-                        MucHoaHong = item.MucHoaHong
+                        MucHoaHong = item.MucHoaHong,
+                        GhiChu = item.GhiChu
                     };
                     await _context.ThongKe_ChiPhis.AddAsync(thongKe);
                 }
