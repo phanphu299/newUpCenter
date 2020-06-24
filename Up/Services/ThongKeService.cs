@@ -401,7 +401,11 @@
         {
             try
             {
-                return Math.Round(await _context.ThongKe_DoanhThuHocPhis.Where(x => x.DaDong == true).AsNoTracking().Select(x => x.HocPhi).SumAsync(), 0);
+                return Math.Round(await _context.ThongKe_DoanhThuHocPhis
+                    .Where(x => x.DaDong == true && x.NgayDong.Month == DateTime.Now.Month)
+                    .AsNoTracking()
+                    .Select(x => x.HocPhi)
+                    .SumAsync(), 0);
             }
             catch (Exception exception)
             {
@@ -436,7 +440,11 @@
         {
             try
             {
-                return Math.Round(await _context.ThongKe_ChiPhis.Where(x => x.DaLuu == true).AsNoTracking().Select(x => x.ChiPhi).SumAsync(), 0);
+                return Math.Round(await _context.ThongKe_ChiPhis
+                    .Where(x => x.DaLuu == true && x.NgayChiPhi.Month == DateTime.Now.Month)
+                    .AsNoTracking()
+                    .Select(x => x.ChiPhi)
+                    .SumAsync(), 0);
             }
             catch (Exception exception)
             {

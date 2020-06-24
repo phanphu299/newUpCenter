@@ -23,6 +23,7 @@ namespace Up.Models
         public double SoHocVien { get; set; }
 
         public Guid? ChiPhiCoDinhId { get; set; }
+        public Guid? ChiPhiKhacId { get; set; }
         public Guid? NhanVienId { get; set; }
         public double ChiPhiMoi { get; set; }
 

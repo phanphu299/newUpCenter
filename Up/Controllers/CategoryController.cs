@@ -21,10 +21,12 @@
         private readonly ILoaiCheDoService _loaiCheDoService;
         private readonly IChiPhiCoDinhService _chiPhiCoDinhService;
         private readonly INgayLamViecService _ngayLamViecService;
+        private readonly IChiPhiKhacService _chiPhiKhacService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public CategoryController(IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, IHocPhiService hocPhiService, ISachService sachService, ILoaiGiaoVienService loaiGiaoVienService, ILoaiCheDoService loaiCheDoService, IChiPhiCoDinhService chiPhiCoDinhService, INgayLamViecService ngayLamViecService, UserManager<IdentityUser> userManager)
+        public CategoryController(IChiPhiKhacService chiPhiKhacService, IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, IHocPhiService hocPhiService, ISachService sachService, ILoaiGiaoVienService loaiGiaoVienService, ILoaiCheDoService loaiCheDoService, IChiPhiCoDinhService chiPhiCoDinhService, INgayLamViecService ngayLamViecService, UserManager<IdentityUser> userManager)
         {
+            _chiPhiKhacService = chiPhiKhacService;
             _khoaHocService = khoaHocService;
             _gioHocService = gioHocService;
             _ngayHocService = ngayHocService;
@@ -1413,6 +1415,147 @@
             try
             {
                 var successful = await _chiPhiCoDinhService.DeleteChiPhiCoDinhAsync(model.ChiPhiCoDinhId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa thành công !!!"
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        /// /////////////////////////////////////////////////////////////////////////////////////////////////////
+        [ServiceFilter(typeof(Read_ChiPhiCoDinh))]
+        public async Task<IActionResult> OtherExpenseIndex()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            ViewBag.CanContribute = await _chiPhiKhacService.CanContributeAsync(User);
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetOtherExpenseAsync()
+        {
+            var model = await _chiPhiKhacService.GetChiPhiKhacAsync();
+            return Json(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateOtherExpenseAsync([FromBody]Models.ChiPhiKhacViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("OtherExpenseIndex");
+            }
+
+            try
+            {
+                var successful = await _chiPhiKhacService.CreateChiPhiKhacAsync(model.Name, model.Gia, model.NgayChiPhi, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Thêm mới lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Thêm mới thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateOtherExpenseAsync([FromBody]Models.ChiPhiKhacViewModel model)
+        {
+            if (model.ChiPhiKhacId == Guid.Empty)
+            {
+                return RedirectToAction("OtherExpenseIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("OtherExpenseIndex");
+            }
+
+            try
+            {
+                var successful = await _chiPhiKhacService.UpdateChiPhiKhacAsync(model.ChiPhiKhacId, model.Name, model.Gia, model.NgayChiPhi, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteOtherExpenseAsync([FromBody]Models.ChiPhiKhacViewModel model)
+        {
+            if (model.ChiPhiKhacId == Guid.Empty)
+            {
+                return RedirectToAction("OtherExpenseIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("OtherExpenseIndex");
+            }
+
+            try
+            {
+                var successful = await _chiPhiKhacService.DeleteChiPhiKhacAsync(model.ChiPhiKhacId, currentUser.Email);
                 if (!successful)
                 {
                     return Json(new Models.ResultModel

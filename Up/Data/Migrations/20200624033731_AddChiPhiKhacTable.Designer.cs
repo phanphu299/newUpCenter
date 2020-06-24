@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Up.Data;
 
 namespace Up.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200624033731_AddChiPhiKhacTable")]
+    partial class AddChiPhiKhacTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +47,8 @@ namespace Up.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c688e63f-027d-4389-8610-198afc919c14",
-                            ConcurrencyStamp = "4db8ad81-fdbe-41a4-8400-0741dfb5b285",
+                            Id = "38573848-e6d7-482e-b9b9-cdd952edc076",
+                            ConcurrencyStamp = "c111b86d-d615-4278-83ce-b6f76cddef71",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -222,13 +224,9 @@ namespace Up.Data.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<double>("Gia");
-
                     b.Property<bool>("IsDisabled");
 
                     b.Property<string>("Name");
-
-                    b.Property<DateTime>("NgayChiPhi");
 
                     b.Property<string>("UpdatedBy");
 
@@ -237,6 +235,26 @@ namespace Up.Data.Migrations
                     b.HasKey("ChiPhiKhacId");
 
                     b.ToTable("ChiPhiKhacs");
+                });
+
+            modelBuilder.Entity("Up.Data.Entities.ChiPhiKhac_Gia", b =>
+                {
+                    b.Property<Guid>("ChiPhiKhac_GiaId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("ChiPhiKhacId");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<double>("Gia");
+
+                    b.HasKey("ChiPhiKhac_GiaId");
+
+                    b.HasIndex("ChiPhiKhacId");
+
+                    b.ToTable("ChiPhiKhac_Gias");
                 });
 
             modelBuilder.Entity("Up.Data.Entities.GiaoVien", b =>
@@ -819,8 +837,6 @@ namespace Up.Data.Migrations
 
                     b.Property<Guid?>("ChiPhiCoDinhId");
 
-                    b.Property<Guid?>("ChiPhiKhacId");
-
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreatedDate");
@@ -866,8 +882,6 @@ namespace Up.Data.Migrations
                     b.HasKey("ThongKe_ChiPhiId");
 
                     b.HasIndex("ChiPhiCoDinhId");
-
-                    b.HasIndex("ChiPhiKhacId");
 
                     b.HasIndex("NhanVienId");
 
@@ -980,6 +994,14 @@ namespace Up.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Up.Data.Entities.ChiPhiKhac_Gia", b =>
+                {
+                    b.HasOne("Up.Data.Entities.ChiPhiKhac", "ChiPhiKhac")
+                        .WithMany("ChiPhiKhac_Gias")
+                        .HasForeignKey("ChiPhiKhacId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -1112,10 +1134,6 @@ namespace Up.Data.Migrations
                     b.HasOne("Up.Data.Entities.ChiPhiCoDinh", "ChiPhiCoDinh")
                         .WithMany("ThongKe_ChiPhis")
                         .HasForeignKey("ChiPhiCoDinhId");
-
-                    b.HasOne("Up.Data.Entities.ChiPhiKhac", "ChiPhiKhac")
-                        .WithMany("ThongKe_ChiPhis")
-                        .HasForeignKey("ChiPhiKhacId");
 
                     b.HasOne("Up.Data.Entities.GiaoVien", "NhanVien")
                         .WithMany("ThongKe_ChiPhis")

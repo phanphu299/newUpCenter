@@ -27,6 +27,7 @@ namespace Up.Data.Entities
         public int SoNgayLamVoSau { get; set; }
 
         public Guid? ChiPhiCoDinhId { get; set; }
+        public Guid? ChiPhiKhacId { get; set; }
         public Guid? NhanVienId { get; set; }
         public bool DaLuu { get; set; }
 
@@ -39,5 +40,7 @@ namespace Up.Data.Entities
         public ChiPhiCoDinh ChiPhiCoDinh { get; set; }
         [ForeignKey("NhanVienId")]
         public GiaoVien NhanVien { get; set; }
+        [ForeignKey("ChiPhiKhacId")]
+        public ChiPhiKhac ChiPhiKhac { get; set; }
     }
 }

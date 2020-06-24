@@ -118,7 +118,7 @@ namespace Up.Services
                                     .SingleOrDefaultAsync();
 
             if (item == null)
-                throw new Exception("Không tìm thấy Học Phí !!!");
+                throw new Exception("Không tìm thấy Chi Phí !!!");
 
             item.Gia = Gia;
             item.Name = Name;

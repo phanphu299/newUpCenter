@@ -9,6 +9,7 @@ namespace Up
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using System;
     using Up.Data;
     using Up.Extensions;
     using Up.Services;
@@ -42,6 +43,14 @@ namespace Up
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.Configure<SecurityStampValidatorOptions>(options => options.ValidationInterval = TimeSpan.FromSeconds(10));
+            services.AddAuthentication()
+                .Services.ConfigureApplicationCookie(options =>
+                {
+                    options.SlidingExpiration = true;
+                    options.ExpireTimeSpan = TimeSpan.FromHours(24);
+                });
+
             //services.AddDefaultIdentity<IdentityUser>()
             //    .AddDefaultUI(UIFramework.Bootstrap4)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -67,6 +76,7 @@ namespace Up
             services.AddScoped<IThongKe_ChiPhiService, ThongKe_ChiPhiService>();
             services.AddScoped<INgayLamViecService, NgayLamViecService>();
             services.AddScoped<IQuyenService, QuyenService>();
+            services.AddScoped<IChiPhiKhacService, ChiPhiKhacService>();
 
             services.AddScoped<Read_HocPhi>();
             services.AddScoped<Read_NgayHoc>();
