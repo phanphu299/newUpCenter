@@ -118,10 +118,24 @@
                                     Data = g.Sum(x => x.HocPhi)
                                 });
 
+            var doanhThuTronGoi = _thongKeService.GetDoanhThuHocPhiTronGoiAsync()
+                .Result
+                .GroupBy(p => p.NgayDong.Month)
+                                .Select(g => new ThongKeModel
+                                {
+                                    Label = g.Key.ToString(),
+                                    Data = g.Sum(x => x.HocPhi)
+                                }).ToArray();
+
             var listDoanhThu = Enumerable.Repeat(0.0, 12).ToList();
             foreach (var item in doanhThu)
             {
                 listDoanhThu[int.Parse(item.Label) - 1] = item.Data;
+                foreach(var tronGoi in doanhThuTronGoi)
+                {
+                    if (item.Label == tronGoi.Label)
+                        listDoanhThu[int.Parse(item.Label) - 1] += tronGoi.Data;
+                }    
             }
 
             var chiPhi = _thongKeService.GetChiPhiAsync()

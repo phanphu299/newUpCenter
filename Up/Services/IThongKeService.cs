@@ -20,6 +20,7 @@
         Task<double> GetTongChiPhiAsync();
 
         Task<List<ThongKe_DoanhThuHocPhiViewModel>> GetDoanhThuHocPhiAsync();
+        Task<List<ThongKe_DoanhThuHocPhiViewModel>> GetDoanhThuHocPhiTronGoiAsync();
         Task<List<ThongKe_ChiPhiViewModel>> GetChiPhiAsync();
         Task<List<NoViewModel>> GetNoAsync();
 

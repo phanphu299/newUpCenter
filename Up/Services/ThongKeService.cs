@@ -492,5 +492,28 @@
             })
                 .ToList();
         }
+
+        public async Task<List<ThongKe_DoanhThuHocPhiViewModel>> GetDoanhThuHocPhiTronGoiAsync()
+        {
+            try
+            {
+                var doanhThu = await _context.HocPhiTronGois
+                .Where(x => x.FromDate.Year == DateTime.Now.Year && x.IsDisabled == false && (DateTime.Now.Year < x.ToDate.Year || (DateTime.Now.Year == x.ToDate.Year && DateTime.Now.Month <= x.ToDate.Month)))
+                .OrderBy(x => x.FromDate)
+                .AsNoTracking()
+                .Select(g => new ThongKe_DoanhThuHocPhiViewModel
+                {
+                    HocPhi = g.HocPhi,
+                    NgayDong = g.FromDate
+                })
+                .ToListAsync();
+
+                return doanhThu;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+        }
     }
 }
