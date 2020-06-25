@@ -386,69 +386,91 @@ namespace Up.Services
                 int index = 1;
                 foreach (var item in model)
                 {
-                    item.Stt = index;
-                    var giaSach = item.GiaSach != null ? item.GiaSach.Select(x => x.Gia).Sum() : 0;
-                    if (!string.IsNullOrWhiteSpace(item.NgayBatDauHoc))
+                    if(IsTronGoi(item, currentMonth, currentYear) && !item.DaDongHocPhi)
                     {
-                        int ngayDuocNghi = 0;
-                        DateTime _ngayBatDauHoc = new DateTime(int.Parse(item.NgayBatDauHoc.Substring(6)), int.Parse(item.NgayBatDauHoc.Substring(3, 2)), int.Parse(item.NgayBatDauHoc.Substring(0, 2)));
-                        foreach (var ngayNghi in item.SoNgayDuocNghi)
+                        item.HocPhiMoi = 0;
+                        item.SoNgayHoc = 0;
+                        item.Bonus = 0;
+                        item.LastBonus = 0;
+                        item.TienNo = 0;
+                        item.HocPhiFixed = 0;
+                        item.KhuyenMai = 0;
+                        item.KhuyenMaiThangTruoc = 0;
+                        item.LastGiaSach = null;
+                        item.GiaSach = null;
+                        item.Minus = 0;
+                        item.LastMinus = 0;
+                        item.GhiChu = "Trọn gói";
+                        item.TronGoi = true;
+                    }   
+                    else
+                    {
+                        var giaSach = item.GiaSach != null ? item.GiaSach.Select(x => x.Gia).Sum() : 0;
+                        if (!string.IsNullOrWhiteSpace(item.NgayBatDauHoc))
                         {
-                            if (ngayNghi >= _ngayBatDauHoc)
+                            int ngayDuocNghi = 0;
+                            DateTime _ngayBatDauHoc = new DateTime(int.Parse(item.NgayBatDauHoc.Substring(6)), int.Parse(item.NgayBatDauHoc.Substring(3, 2)), int.Parse(item.NgayBatDauHoc.Substring(0, 2)));
+                            foreach (var ngayNghi in item.SoNgayDuocNghi)
                             {
-                                ngayDuocNghi++;
+                                if (ngayNghi >= _ngayBatDauHoc)
+                                {
+                                    ngayDuocNghi++;
+                                }
                             }
-                        }
 
-                        var soNgayTruSauNghi = 0;
-                        if(!string.IsNullOrWhiteSpace(item.NgayKetThuc))
-                        {
-                            DateTime _ngayKetThuc = new DateTime(int.Parse(item.NgayKetThuc.Substring(6)), int.Parse(item.NgayKetThuc.Substring(3, 2)), int.Parse(item.NgayKetThuc.Substring(0, 2)));
-                            if (_ngayKetThuc.Month == currentMonth && _ngayKetThuc.Year == currentYear)
-                                soNgayTruSauNghi = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayKetThuc, LopHocId);
-                        }
+                            var soNgayTruSauNghi = 0;
+                            if (!string.IsNullOrWhiteSpace(item.NgayKetThuc))
+                            {
+                                DateTime _ngayKetThuc = new DateTime(int.Parse(item.NgayKetThuc.Substring(6)), int.Parse(item.NgayKetThuc.Substring(3, 2)), int.Parse(item.NgayKetThuc.Substring(0, 2)));
+                                if (_ngayKetThuc.Month == currentMonth && _ngayKetThuc.Year == currentYear)
+                                    soNgayTruSauNghi = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayKetThuc, LopHocId);
+                            }
 
 
-                        if (_ngayBatDauHoc.Month == currentMonth && _ngayBatDauHoc.Year == currentYear)
-                        {
-                            var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayBatDauHoc, LopHocId);
-                            
-                            //if (soNgayHocVienVaoSau < SoNgayHoc)
-                            //{
-                                item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau )) + (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi * (100 - item.KhuyenMaiThangTruoc) / 100);
-                                
+                            if (_ngayBatDauHoc.Month == currentMonth && _ngayBatDauHoc.Year == currentYear)
+                            {
+                                var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayBatDauHoc, LopHocId);
+
+                                //if (soNgayHocVienVaoSau < SoNgayHoc)
+                                //{
+                                item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau)) + (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi * (100 - item.KhuyenMaiThangTruoc) / 100);
+
                                 //item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
                                 //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai/100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
 
                                 item.HocPhiFixed = item.HocPhiFixed - item.HocPhiBuHocVienVaoSau;
                                 item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau;
-                            //}
-                            //else
-                            //{
-                            //    item.HocPhiFixed = item.HocPhiFixed;
-                            //    item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo;
-                            //}
+                                //}
+                                //else
+                                //{
+                                //    item.HocPhiFixed = item.HocPhiFixed;
+                                //    item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo;
+                                //}
+                            }
+                            else
+                            {
+                                item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi * (100 - item.KhuyenMaiThangTruoc) / 100);
+
+                                //item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+                                //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
+
+                                item.HocPhiFixed = item.HocPhiFixed - item.HocPhiBuHocVienVaoSau;
+                                item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau;
+                            }
                         }
                         else
                         {
-                            item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi * (100 - item.KhuyenMaiThangTruoc) / 100);
-
-                            //item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                            //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-
-                            item.HocPhiFixed = item.HocPhiFixed - item.HocPhiBuHocVienVaoSau;
-                            item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau;
+                            //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo) / 10000) * 10000);
+                            item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo;
                         }
-                    }
-                    else
-                    {
-                        //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo) / 10000) * 10000);
-                        item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo;
-                    }
-                    //item.HocPhiFixed = item.HocPhiMoi;
-                    item.LastBonus = item.Bonus;
-                    item.LastMinus = item.Minus;
-                    item.LastGiaSach = item.GiaSach;
+                        //item.HocPhiFixed = item.HocPhiMoi;
+                        item.LastBonus = item.Bonus;
+                        item.LastMinus = item.Minus;
+                        item.LastGiaSach = item.GiaSach;
+                    }    
+
+                    item.Stt = index;
+                    
                     index++;
                 }
                 return model.OrderBy(x => x.Stt).ToList();
@@ -457,6 +479,15 @@ namespace Up.Services
             {
                 throw new Exception(exception.Message);
             }
+        }
+
+        private bool IsTronGoi(HocVienViewModel hocVien, int month, int year)
+        {
+            var item = _context.HocPhiTronGois
+                .Where(x => x.HocVienId == hocVien.HocVienId && x.IsDisabled == false && (year < x.ToDate.Year || (year == x.ToDate.Year && month <= x.ToDate.Month)))
+                .FirstOrDefault();
+
+            return item != null;
         }
 
         private double TinhNo(IEnumerable<HocVien_No> noList, Guid lopHocId)

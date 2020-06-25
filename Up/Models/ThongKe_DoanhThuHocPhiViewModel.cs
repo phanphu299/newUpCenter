@@ -24,6 +24,7 @@ namespace Up.Models
         public Guid[] SachIds { get; set; }
         public bool DaDong { get; set; }
         public bool DaNo { get; set; }
+        public bool TronGoi { get; set; }
 
         public double HocPhiMoi { get; set; }
         public SachViewModel[] GiaSach { get; set; }

@@ -242,7 +242,7 @@ namespace Up.Controllers
             try
             {
                 DateTime _ngayDong = new DateTime(model.models[0].year, model.models[0].month, 1);
-                foreach (var item in model.models)
+                foreach (var item in model.models.Where(x => !x.TronGoi))
                 {
                     var sachIds = item.GiaSach != null ? item.GiaSach.Select(x => x.SachId).ToArray() : new Guid[0];
                     await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(item.LopHocId, item.HocVienId,

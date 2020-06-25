@@ -402,7 +402,13 @@
             try
             {
                 return Math.Round(await _context.ThongKe_DoanhThuHocPhis
-                    .Where(x => x.DaDong == true && x.NgayDong.Month == DateTime.Now.Month)
+                    .Where(x => x.DaDong == true && x.NgayDong.Month == DateTime.Now.Month && x.NgayDong.Year == DateTime.Now.Year)
+                    .AsNoTracking()
+                    .Select(x => x.HocPhi)
+                    .SumAsync(), 0) +
+
+                    Math.Round(await _context.HocPhiTronGois
+                    .Where(x => x.IsDisabled == false && x.FromDate.Month == DateTime.Now.Month && x.FromDate.Year == DateTime.Now.Year && (DateTime.Now.Year < x.ToDate.Year || (DateTime.Now.Year == x.ToDate.Year && DateTime.Now.Month <= x.ToDate.Month)))
                     .AsNoTracking()
                     .Select(x => x.HocPhi)
                     .SumAsync(), 0);

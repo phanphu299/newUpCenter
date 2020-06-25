@@ -111,6 +111,12 @@
                                                     </template>
                                                     Dời qua tháng sau
                                                 </v-tooltip>
+                                                <v-tooltip top v-if="props.item.tronGoi">
+                                                    <template v-slot:activator="{ on }">
+                                                        <v-icon color="success lighten-1" dark v-on="on">star_rate</v-icon>
+                                                    </template>
+                                                    Đã đóng trọn gói
+                                                </v-tooltip>
                                             </td>
                                             <td><span style="color: red">{{ formatNumber(props.item.hocPhiMoi) }}</span></td>
                                             <td>{{ formatNumber(props.item.tienNo) }}</td>
@@ -119,6 +125,7 @@
                                                           item-text="name"
                                                           multiple
                                                           chips
+                                                          :disabled="props.item.tronGoi"
                                                           return-object
                                                           label="Chọn Tài Liệu"
                                                           item-disabled="isDisabled"
@@ -139,17 +146,18 @@
                                                           v-model="props.item.khuyenMai"
                                                           chips
                                                           clearable
+                                                          :disabled="props.item.tronGoi"
                                                           label="Khuyến Mãi (%)"
                                                           v-on:change="onchangeKhuyenMai(props.item.khuyenMai, props.item)">
                                                 </v-select>
                                             </td>
-                                            <td><v-text-field v-model="props.item.bonus" v-on:keyup="onBonusHocPhi(props.item.bonus, props.item)"></v-text-field></td>
-                                            <td><v-text-field v-model="props.item.minus" v-on:keyup="onMinusHocPhi(props.item.minus, props.item)"></v-text-field></td>
-                                            <td><v-text-field v-model="props.item.ghiChu"></v-text-field></td>
+                                            <td><v-text-field :disabled="props.item.tronGoi" v-model="props.item.bonus" v-on:keyup="onBonusHocPhi(props.item.bonus, props.item)"></v-text-field></td>
+                                            <td><v-text-field :disabled="props.item.tronGoi" v-model="props.item.minus" v-on:keyup="onMinusHocPhi(props.item.minus, props.item)"></v-text-field></td>
+                                            <td><v-text-field :disabled="props.item.tronGoi" v-model="props.item.ghiChu"></v-text-field></td>
                                             <td>
                                                 @if (ViewBag.CanContribute)
                                                 {
-                                                    <v-tooltip top>
+                                                    <v-tooltip top v-if="!props.item.tronGoi">
                                                         <template v-slot:activator="{ on }">
                                                             <v-btn flat icon
                                                                    small
@@ -162,7 +170,7 @@
                                                         <strong>Đóng tiền và Lưu</strong>
                                                     </v-tooltip>
 
-                                                    <v-tooltip top>
+                                                    <v-tooltip top v-if="!props.item.tronGoi">
                                                         <template v-slot:activator="{ on }">
                                                             <v-btn flat icon
                                                                    small
@@ -175,7 +183,7 @@
                                                         <strong>Nợ và Lưu</strong>
                                                     </v-tooltip>
 
-                                                    <v-tooltip top>
+                                                    <v-tooltip top v-if="!props.item.tronGoi">
                                                         <template v-slot:activator="{ on }">
                                                             <v-btn flat icon
                                                                    small
