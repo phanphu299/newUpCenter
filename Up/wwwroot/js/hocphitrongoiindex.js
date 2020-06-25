@@ -1,7 +1,7 @@
 ﻿var vue = new Vue({
-    el: '#ChiPhiKhacIndex',
+    el: '#HocPhiTronGoiIndex',
     data: {
-        title: 'Quản Lý Chi Phí Khác',
+        title: 'Quản Lý Học Phí Trọn Gói',
         messageText: '',
         color: '',
         timeout: 3000,
@@ -9,9 +9,14 @@
         deleteDialog: false,
         isShowDatePicker: false,
         isShowDatePicker2: false,
+        isShowDatePicker3: false,
+        isShowDatePicker4: false,
         dialog: false,
         alert: false,
         alertEdit: false,
+        loadingHocVien: false,
+        itemsHocVien: [],
+        searchHocVien: null,
         rules: [
             v => /^[0-9]*$/.test(v) || "Chỉ được nhập số"
         ],
@@ -19,9 +24,10 @@
         alertMessage: '',
         search: '',
         newItem: {
-            name: "",
-            gia: "",
-            ngayChiPhi: new Date().toISOString().substr(0, 10)
+            hocVien: [],
+            hocPhi: 0,
+            fromDate: new Date().toISOString().substr(0, 10),
+            toDate: new Date().toISOString().substr(0, 10)
         },
         itemToDelete: {},
         dialogEdit: false,
@@ -33,9 +39,11 @@
                 sortable: false,
                 value: ''
             },
-            { text: 'Tên', value: 'name', align: 'left', sortable: false },
-            { text: 'Giá', value: 'gia', align: 'left', sortable: false },
-            { text: 'Ngày Chi Phí', value: '_NgayChiPhi', align: 'left', sortable: false },
+            { text: 'Tên', value: 'fullName', align: 'left', sortable: false },
+            { text: 'Học Phí', value: 'hocPhi', align: 'left', sortable: false },
+            { text: 'Hết Hiệu Lực?', value: 'isDisabled', align: 'left', sortable: false },
+            { text: 'Từ Ngày', value: 'fromDate', align: 'left', sortable: false },
+            { text: 'Đến Ngày', value: 'toDate', align: 'left', sortable: false },
             { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: false },
             { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: false },
             { text: 'Ngày Sửa', value: 'updatedDate', align: 'left', sortable: false },
@@ -46,7 +54,7 @@
     },
     async beforeCreate() {
         let that = this;
-        await axios.get('/category/GetOtherExpenseAsync')
+        await axios.get('/hocphi/GetHocPhiTronGoiAsync')
             .then(function (response) {
                 that.khoaHocItems = response.data;
             })
@@ -54,7 +62,34 @@
                 console.log(error);
             });
     },
+
+    watch: {
+        searchHocVien(val) {
+            val && val !== this.newItem.hocVien && this.querySelections(val)
+        }
+    },
+
     methods: {
+        remove(item) {
+
+            const index = this.newItem.hocVien.indexOf(item)
+            if (index >= 0) this.newItem.hocVien.splice(index, 1)
+        },
+
+        async querySelections(v) {
+            this.loadingHocVien = true;
+
+            let that = this;
+            await axios.get('/hocvien/GetHocVienByNameAsync?name=' + v)
+                .then(function (response) {
+                    that.itemsHocVien = response.data;
+                    that.loadingHocVien = false;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
         formatNumber(val) {
             return val.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
         },
@@ -63,23 +98,28 @@
             this.itemToEdit = Object.assign({}, item);
             this.editedIndex = this.khoaHocItems.indexOf(item);
 
-            if (this.itemToEdit._NgayChiPhi !== "") {
-                let [dayKG, monthKG, yearKG] = this.itemToEdit._NgayChiPhi.split('/');
-                this.itemToEdit.ngayChiPhi = yearKG + '-' + monthKG + '-' + dayKG;
+            if (this.itemToEdit.fromDate !== "") {
+                let [dayKG, monthKG, yearKG] = this.itemToEdit.fromDate.split('/');
+                this.itemToEdit.fromDate = yearKG + '-' + monthKG + '-' + dayKG;
+            }
+
+            if (this.itemToEdit.toDate !== "") {
+                let [dayKG, monthKG, yearKG] = this.itemToEdit.toDate.split('/');
+                this.itemToEdit.toDate = yearKG + '-' + monthKG + '-' + dayKG;
             }
         },
 
         async onUpdate(item) {
             let that = this;
-            
+
             await axios({
                 method: 'put',
-                url: '/category/UpdateOtherExpenseAsync',
+                url: '/hocphi/UpdateHocPhiTronGoiAsync',
                 data: {
-                    Name: item.name,
-                    Gia: item.gia,
-                    NgayChiPhi: item.ngayChiPhi,
-                    ChiPhiKhacId: item.chiPhiKhacId
+                    HocPhi: item.hocPhi,
+                    FromDate: item.fromDate,
+                    ToDate: item.toDate,
+                    HocPhiTronGoiId: item.hocPhiTronGoiId
                 }
             })
                 .then(function (response) {
@@ -105,11 +145,11 @@
         },
 
         async onSave(item) {
-            if (this.newItem.name === '') {
-                this.alertMessage = "Không được bỏ trống";
+            if (this.newItem.hocVien.length === 0) {
+                this.alertMessage = "Phải chọn ít nhất 1 học viên";
                 this.alert = true;
             }
-            else if (isNaN(this.newItem.gia) || this.newItem.gia === '') {
+            else if (isNaN(this.newItem.hocPhi) || this.newItem.hocPhi === '') {
                 this.alertMessage = "Chỉ được nhập số";
                 this.alert = true;
             }
@@ -118,23 +158,32 @@
                 let that = this;
                 await axios({
                     method: 'post',
-                    url: '/category/CreateOtherExpenseAsync',
+                    url: '/hocphi/CreateHocPhiTronGoiAsync',
                     data: {
-                        Name: that.newItem.name,
-                        Gia: that.newItem.gia,
-                        NgayChiPhi: that.newItem.ngayChiPhi
+                        HocVienIds: that.newItem.hocVien.map(item => item.hocVienId),
+                        HocPhi: that.newItem.hocPhi,
+                        FromDate: that.newItem.fromDate,
+                        ToDate: that.newItem.toDate
                     }
                 })
                     .then(function (response) {
-                        this.alert = false;
+                        that.alert = false;
                         if (response.data.status === "OK") {
-                            that.khoaHocItems.splice(0, 0, response.data.result);
+                            axios.get('/hocphi/GetHocPhiTronGoiAsync')
+                                .then(function (response) {
+                                    that.khoaHocItems = response.data;
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+
                             that.snackbar = true;
                             that.messageText = 'Thêm mới thành công !!!';
                             that.color = 'success';
-                            that.newItem.name = '';
-                            that.newItem.gia = "";
-                            that.newItem.ngayChiPhi = new Date().toISOString().substr(0, 10);
+                            that.newItem.hocVien = [];
+                            that.newItem.hocPhi = 0;
+                            that.newItem.fromDate = new Date().toISOString().substr(0, 10);
+                            that.newItem.toDate = new Date().toISOString().substr(0, 10);
                         }
                         else {
                             that.snackbar = true;
@@ -151,22 +200,20 @@
             }
         },
 
-        async onDelete(item) {
+        async onToggle(item) {
             let that = this;
             await axios({
-                method: 'delete',
-                url: '/category/DeleteOtherExpenseAsync',
+                method: 'put',
+                url: '/hocphi/ToggleHocPhiTronGoiAsync',
                 data: {
-                    ChiPhiKhacId: item.chiPhiKhacId
+                    HocPhiTronGoiId: item
                 }
             })
                 .then(function (response) {
                     if (response.data.status === "OK") {
-                        that.khoaHocItems.splice(that.khoaHocItems.indexOf(item), 1);
                         that.snackbar = true;
-                        that.messageText = 'Xóa thành công !!!';
+                        that.messageText = 'Cập nhật thành công !!!';
                         that.color = 'success';
-                        that.deleteDialog = false;
                     }
                     else {
                         that.snackbar = true;
@@ -177,7 +224,7 @@
                 .catch(function (error) {
                     console.log(error);
                     that.snackbar = true;
-                    that.messageText = 'Xóa lỗi: ' + error;
+                    that.messageText = 'Cập nhật lỗi: ' + error;
                     that.color = 'error';
                 });
         }

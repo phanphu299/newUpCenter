@@ -57,6 +57,13 @@
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetHocVienByNameAsync(string name)
+        {
+            var model = await _hocVienService.GetHocVienByNameAsync(name);
+            return Json(model);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetHocVien_LopHocByHocVienAsync(Guid HocVienId, Guid LopHocId)
         {
             var model = await _ngayHocService.GetHocVien_NgayHocByHocVienAsync(HocVienId, LopHocId);

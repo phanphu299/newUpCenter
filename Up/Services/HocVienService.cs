@@ -487,5 +487,28 @@ namespace Up.Services
                 throw new Exception("Cập nhật lỗi: " + exception.Message);
             }
         }
+
+        public async Task<List<HocVienViewModel>> GetHocVienByNameAsync(string name)
+        {
+            try
+            {
+                return await _context.HocViens
+                .Where(x => x.IsDisabled == false && x.FullName.ToLower().Contains(name.ToLower()))
+                .Select(x => new HocVienViewModel
+                {
+                    FullName = x.FullName,
+                    HocVienId = x.HocVienId,
+                    IsDisabled = x.IsDisabled,
+                    NgaySinh = x.NgaySinh == null ? "" : x.NgaySinh.Value.ToString("dd/MM/yyyy"),
+                    Phone = x.Phone,
+                })
+                .AsNoTracking()
+                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

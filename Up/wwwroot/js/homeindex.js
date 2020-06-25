@@ -198,6 +198,13 @@ var vue = new Vue({
                 .catch(function (error) {
                     console.log(error);
                 });
+
+            await axios.get('/HocPhi/CheckHocPhiTronGoiAsync')
+                .then(function (response) {
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         } catch (e) {
             console.error(e);
         }

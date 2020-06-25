@@ -25,5 +25,7 @@
         Task<bool> AddToUnavailableClassAsync(List<Guid> LopHocId, Guid HocVienId, string LoggedEmployee);
 
         Task<bool> CanContributeAsync(ClaimsPrincipal User);
+
+        Task<List<HocVienViewModel>> GetHocVienByNameAsync(string name);
     }
 }

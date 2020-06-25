@@ -77,6 +77,7 @@ namespace Up
             services.AddScoped<INgayLamViecService, NgayLamViecService>();
             services.AddScoped<IQuyenService, QuyenService>();
             services.AddScoped<IChiPhiKhacService, ChiPhiKhacService>();
+            services.AddScoped<IHocPhiTronGoiService, HocPhiTronGoiService>();
 
             services.AddScoped<Read_HocPhi>();
             services.AddScoped<Read_NgayHoc>();

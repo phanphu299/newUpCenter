@@ -41,6 +41,7 @@
         public DbSet<ThongKeGiaoVienTheoThang> ThongKeGiaoVienTheoThangs { get; set; }
         public DbSet<ThongKeHocVienTheoThang> ThongKeHocVienTheoThangs { get; set; }
         public DbSet<ChiPhiKhac> ChiPhiKhacs { get; set; }
+        public DbSet<HocPhiTronGoi> HocPhiTronGois { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

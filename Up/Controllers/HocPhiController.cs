@@ -21,14 +21,16 @@ namespace Up.Controllers
         private readonly ILopHocService _lopHocService;
         private readonly IThongKe_DoanhThuHocPhiService _thongKe_DoanhThuHocPhiService;
         private readonly INoService _noService;
+        private readonly IHocPhiTronGoiService _hocPhiTronGoiService;
 
-        public HocPhiController(UserManager<IdentityUser> userManager, IHocPhiService hocPhiService, ILopHocService lopHocService, IThongKe_DoanhThuHocPhiService thongKe_DoanhThuHocPhiService, INoService noService)
+        public HocPhiController(UserManager<IdentityUser> userManager, IHocPhiTronGoiService hocPhiTronGoiService, IHocPhiService hocPhiService, ILopHocService lopHocService, IThongKe_DoanhThuHocPhiService thongKe_DoanhThuHocPhiService, INoService noService)
         {
             _userManager = userManager;
             _hocPhiService = hocPhiService;
             _lopHocService = lopHocService;
             _thongKe_DoanhThuHocPhiService = thongKe_DoanhThuHocPhiService;
             _noService = noService;
+            _hocPhiTronGoiService = hocPhiTronGoiService;
         }
 
         [ServiceFilter(typeof(Read_TinhHocPhi))]
@@ -39,6 +41,179 @@ namespace Up.Controllers
 
             ViewBag.CanContribute = await _hocPhiService.CanContributeTinhHocPhiAsync(User);
             return View();
+        }
+
+        [ServiceFilter(typeof(Read_TinhHocPhi))]
+        public async Task<IActionResult> HocPhiTronGoiIndex()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            ViewBag.CanContribute = await _hocPhiTronGoiService.CanContributeAsync(User);
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetHocPhiTronGoiAsync()
+        {
+            var model = await _hocPhiTronGoiService.GetHocPhiTronGoiAsync();
+            return Json(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateHocPhiTronGoiAsync([FromBody] Models.HocPhiTronGoiViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                DateTime _fromDate = Convert.ToDateTime(model.FromDate);
+                DateTime _toDate = Convert.ToDateTime(model.ToDate);
+                await _hocPhiTronGoiService.CreateHocPhiTronGoiAsync(model.HocVienIds, model.HocPhi, _fromDate, _toDate, currentUser.Email);
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Lưu Nháp Doanh Thu thành công !!!",
+                    Result = true
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> ToggleHocPhiTronGoiAsync([FromBody] Models.HocPhiTronGoiViewModel model)
+        {
+            if (model.HocPhiTronGoiId == Guid.Empty)
+            {
+                return RedirectToAction("HocPhiTronGoiIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("HocPhiTronGoiIndex");
+            }
+
+            try
+            {
+                var successful = await _hocPhiTronGoiService.ToggleHocPhiTronGoiAsync(model.HocPhiTronGoiId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckHocPhiTronGoiAsync()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("HocPhiTronGoiIndex");
+            }
+
+            try
+            {
+                var successful = await _hocPhiTronGoiService.CheckIsDisable();
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
+        public async Task<IActionResult> UpdateHocPhiTronGoiAsync([FromBody] Models.HocPhiTronGoiViewModel model)
+        {
+            if (model.HocPhiTronGoiId == Guid.Empty)
+            {
+                return RedirectToAction("HocPhiTronGoiIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("HocPhiTronGoiIndex");
+            }
+
+            try
+            {
+                DateTime _fromDate = Convert.ToDateTime(model.FromDate);
+                DateTime _toDate = Convert.ToDateTime(model.ToDate);
+                var successful = await _hocPhiTronGoiService.UpdateHocPhiTronGoiAsync(model.HocPhiTronGoiId, model.HocPhi, _fromDate, _toDate, currentUser.Email);
+                if (successful == null)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Cập nhật lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Cập nhật thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
         }
 
         [HttpGet]
