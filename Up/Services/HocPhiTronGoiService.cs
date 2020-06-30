@@ -50,29 +50,26 @@ namespace Up.Services
             return canContribute;
         }
 
-        public async Task<bool> CreateHocPhiTronGoiAsync(List<Guid> HocVienIds, double HocPhi, DateTime FromDate, DateTime ToDate, string LoggedEmployee)
+        public async Task<bool> CreateHocPhiTronGoiAsync(Guid HocVienId, double HocPhi, DateTime FromDate, DateTime ToDate, string LoggedEmployee)
         {
             try
             {
-                foreach (var HocVienId in HocVienIds)
-                {
-                    HocPhiTronGoi hocPhi = new HocPhiTronGoi();
-                    hocPhi.HocPhiTronGoiId = new Guid();
-                    hocPhi.HocVienId = HocVienId;
-                    hocPhi.CreatedBy = LoggedEmployee;
-                    hocPhi.CreatedDate = DateTime.Now;
-                    hocPhi.HocPhi = HocPhi;
-                    hocPhi.FromDate = FromDate;
-                    hocPhi.ToDate = ToDate;
+                HocPhiTronGoi hocPhi = new HocPhiTronGoi();
+                hocPhi.HocPhiTronGoiId = new Guid();
+                hocPhi.HocVienId = HocVienId;
+                hocPhi.CreatedBy = LoggedEmployee;
+                hocPhi.CreatedDate = DateTime.Now;
+                hocPhi.HocPhi = HocPhi;
+                hocPhi.FromDate = FromDate;
+                hocPhi.ToDate = ToDate;
 
-                    _context.HocPhiTronGois.Add(hocPhi);
-                }
+                _context.HocPhiTronGois.Add(hocPhi);
 
                 var saveResult = await _context.SaveChangesAsync();
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -156,7 +153,7 @@ namespace Up.Services
                 var item = await _context.HocPhiTronGois
                                     .Where(x => x.IsDisabled == false && (DateTime.Now.Year > x.ToDate.Year || (DateTime.Now.Year == x.ToDate.Year && DateTime.Now.Month > x.ToDate.Month)))
                                     .ToListAsync();
-                foreach(var hocPhi in item)
+                foreach (var hocPhi in item)
                 {
                     hocPhi.IsDisabled = true;
                 }
@@ -164,7 +161,7 @@ namespace Up.Services
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

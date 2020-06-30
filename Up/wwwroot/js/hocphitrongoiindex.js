@@ -26,7 +26,7 @@
         alertMessage: '',
         search: '',
         newItem: {
-            hocVien: [],
+            hocVien: {},
             hocPhi: 0,
             fromDate: new Date().toISOString().substr(0, 10),
             toDate: new Date().toISOString().substr(0, 10),
@@ -167,7 +167,7 @@
                     method: 'post',
                     url: '/hocphi/CreateHocPhiTronGoiAsync',
                     data: {
-                        HocVienIds: that.newItem.hocVien.map(item => item.hocVienId),
+                        HocVienId: that.newItem.hocVien.hocVienId,
                         HocPhi: that.newItem.hocPhi,
                         FromDate: that.newItem.fromDate,
                         ToDate: that.newItem.toDate

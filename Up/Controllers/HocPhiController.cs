@@ -73,7 +73,7 @@ namespace Up.Controllers
             {
                 DateTime _fromDate = Convert.ToDateTime(model.FromDate);
                 DateTime _toDate = Convert.ToDateTime(model.ToDate);
-                await _hocPhiTronGoiService.CreateHocPhiTronGoiAsync(model.HocVienIds, model.HocPhi, _fromDate, _toDate, currentUser.Email);
+                await _hocPhiTronGoiService.CreateHocPhiTronGoiAsync(model.HocVienId, model.HocPhi, _fromDate, _toDate, currentUser.Email);
                 return Json(new Models.ResultModel
                 {
                     Status = "OK",
