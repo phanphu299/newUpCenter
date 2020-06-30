@@ -70,6 +70,16 @@ namespace Up.Services
             {
                 if (item == null)
                 {
+                    var hocVienNos = await _context.HocVien_Nos
+                                    .Where(x => x.HocVienId == HocVienId)
+                                    .ToListAsync();
+
+                    foreach (var hv in hocVienNos)
+                    {
+                        hv.IsDisabled = true;
+                    }
+
+
                     HocVien_No hocVien_No = new HocVien_No
                     {
                         HocVienId = HocVienId,
