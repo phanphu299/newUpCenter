@@ -98,6 +98,7 @@ namespace Up.Services
         public async Task<List<HocPhiTronGoiViewModel>> GetHocPhiTronGoiAsync()
         {
             return await _context.HocPhiTronGois
+                .Where(x => x.IsRemoved == false)
                 .Include(x => x.HocVien)
                 .Select(x => new HocPhiTronGoiViewModel
                 {
@@ -167,6 +168,23 @@ namespace Up.Services
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<bool> DeleteHocPhiTronGoiAsync(Guid HocPhiTronGoiId, string LoggedEmployee)
+        {
+            var item = await _context.HocPhiTronGois
+                                    .Where(x => x.HocPhiTronGoiId == HocPhiTronGoiId)
+                                    .SingleOrDefaultAsync();
+
+            if (item == null)
+                throw new Exception("Không tìm thấy Học Phí !!!");
+
+            item.IsRemoved = true;
+            item.UpdatedBy = LoggedEmployee;
+            item.UpdatedDate = DateTime.Now;
+
+            var saveResult = await _context.SaveChangesAsync();
+            return saveResult == 1;
         }
     }
 }

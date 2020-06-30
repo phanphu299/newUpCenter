@@ -34,5 +34,6 @@
         public ICollection<HocVien_No> HocVien_Nos { get; set; }
         public ICollection<ThongKe_DoanhThuHocPhi> ThongKe_DoanhThuHocPhis { get; set; }
         public ICollection<LopHoc_HocPhi> LopHoc_HocPhis { get; set; }
+        public ICollection<HocPhiTronGoi_LopHoc> HocPhiTronGoi_LopHocs { get; set; }
     }
 }

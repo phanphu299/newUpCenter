@@ -134,6 +134,49 @@ namespace Up.Controllers
             }
         }
 
+        [HttpDelete]
+        public async Task<IActionResult> DeleteHocPhiTronGoiAsync([FromBody] Models.HocPhiTronGoiViewModel model)
+        {
+            if (model.HocPhiTronGoiId == Guid.Empty)
+            {
+                return RedirectToAction("HocPhiTronGoiIndex");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("HocPhiTronGoiIndex");
+            }
+
+            try
+            {
+                var successful = await _hocPhiTronGoiService.DeleteHocPhiTronGoiAsync(model.HocPhiTronGoiId, currentUser.Email);
+                if (!successful)
+                {
+                    return Json(new Models.ResultModel
+                    {
+                        Status = "Failed",
+                        Message = "Xóa lỗi !!!"
+                    });
+                }
+
+                return Json(new Models.ResultModel
+                {
+                    Status = "OK",
+                    Message = "Xóa thành công !!!",
+                    Result = successful
+                });
+            }
+            catch (Exception exception)
+            {
+                return Json(new Models.ResultModel
+                {
+                    Status = "Failed",
+                    Message = exception.Message
+                });
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> CheckHocPhiTronGoiAsync()
         {
