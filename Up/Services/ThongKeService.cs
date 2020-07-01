@@ -462,7 +462,7 @@
         {
             var model = await _context.HocVien_NgayHocs
                 .Where(x => x.HocVien.IsDisabled == false)
-                .Where(x => x.NgayKetThuc == null || x.NgayKetThuc.Value >= DateTime.Now)
+                .Where(x => x.NgayKetThuc == null)
                 .Select(x => new
                 {
                     HocVien = x.HocVien.FullName,

@@ -18,6 +18,7 @@
         alertEdit: false,
         loadingHocVien: false,
         itemsHocVien: [],
+        itemLopHoc: [],
         searchHocVien: null,
         rules: [
             v => /^[0-9]*$/.test(v) || "Chỉ được nhập số"
@@ -81,6 +82,17 @@
 
             const index = this.newItem.hocVien.indexOf(item)
             if (index >= 0) this.newItem.hocVien.splice(index, 1)
+        },
+
+        async onChangeHocVien() {
+            let that = this;
+            await axios.get('/LopHoc/GetLopHocByHocVienIdAsync?HocVienId=' + newItem.hocVien.hocVienId)
+                .then(function (response) {
+                    that.itemLopHoc = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
 
         async querySelections(v) {

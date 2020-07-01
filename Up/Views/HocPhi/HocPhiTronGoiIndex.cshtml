@@ -37,7 +37,8 @@
                                                                 label="Chọn học viên"
                                                                 item-text="fullName"
                                                                 item-value="hocVienId"
-                                                                solo>
+                                                                solo
+                                                                v-on:change="onChangeHocVien">
                                                     <template v-slot:selection="data">
                                                         <v-chip :selected="data.selected"
                                                                 close
