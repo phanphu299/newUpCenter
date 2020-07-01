@@ -111,8 +111,12 @@ namespace Up.Services
             item.UpdatedBy = LoggedEmployee;
             item.UpdatedDate = DateTime.Now;
 
+            var thongKe_ChiPhi = await _context.ThongKe_ChiPhis.FirstOrDefaultAsync(x => x.ChiPhiKhacId == item.ChiPhiKhacId);
+
+            _context.ThongKe_ChiPhis.Remove(thongKe_ChiPhi);
+
             var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+            return saveResult == 2;
         }
 
         public async Task<List<ChiPhiKhacViewModel>> GetChiPhiKhacAsync()

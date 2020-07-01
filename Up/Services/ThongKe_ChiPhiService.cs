@@ -20,7 +20,7 @@ namespace Up.Services
         public async Task<bool> ThemThongKe_ChiPhiAsync(ThongKe_ChiPhiViewModel[] Model, DateTime NgayChiPhi, string LoggedEmployee)
         {
             var items = _context.ThongKe_ChiPhis
-                .Where(x => x.NgayChiPhi.Month == NgayChiPhi.Month && x.NgayChiPhi.Year == NgayChiPhi.Year);
+                .Where(x => x.NgayChiPhi.Month == NgayChiPhi.Month && x.NgayChiPhi.Year == NgayChiPhi.Year && x.ChiPhiKhacId == null);
 
             try
             {
