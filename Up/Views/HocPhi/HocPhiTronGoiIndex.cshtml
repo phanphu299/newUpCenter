@@ -38,16 +38,16 @@
                                                                 item-text="fullName"
                                                                 item-value="hocVienId"
                                                                 solo
+                                                                chips
                                                                 v-on:change="onChangeHocVien">
                                                     <template v-slot:selection="data">
                                                         <v-chip :selected="data.selected"
-                                                                close
-                                                                class="chip--select-multi"
-                                                                v-on:input="remove(data.item)">
-                                                            {{ data.item.fullName }}
+                                                                color="green"
+                                                                text-color="white">
+                                                            <span>{{ data.item.fullName }}</span>
+
                                                         </v-chip>
                                                     </template>
-
                                                     <template v-slot:item="data">
                                                         <template>
                                                             <v-list-tile-content v-text="data.item.fullName"></v-list-tile-content>
@@ -145,7 +145,7 @@
                                             <v-flex xs12 sm3>
                                                 <v-tooltip top>
                                                     <template v-slot:activator="{ on }">
-                                                        <v-btn slot="activator" v-on="on" color="primary darken-1" small v-on:click="onAddNgayHocLopHoc">Thêm</v-btn>
+                                                        <v-btn slot="activator" v-on="on" color="primary darken-1" small v-on:click="onAddLopHoc" >Thêm</v-btn>
                                                     </template>
                                                     <strong>Thêm Lớp Học</strong>
                                                 </v-tooltip>
@@ -164,8 +164,8 @@
                                                     <tbody>
                                                         <tr style="border: 1px solid #ddd;" v-for="(item,i) in arrayLopHoc" :key="i">
                                                             <td style="border: 1px solid #ddd; vertical-align: middle; padding-right:5px; padding-top: 0px; padding-bottom: 0px; text-align:center">{{ item.lopHoc.name }}</td>
-                                                            <td style="border: 1px solid #ddd; vertical-align: middle; padding-right:5px; padding-top: 0px; padding-bottom: 0px; text-align:center">{{ item.tuNgay }}</td>
-                                                            <td style="border: 1px solid #ddd; vertical-align: middle; padding-right:5px; padding-top: 0px; padding-bottom: 0px; text-align:center">{{ item.denNgay }}</td>
+                                                            <td style="border: 1px solid #ddd; vertical-align: middle; padding-right:5px; padding-top: 0px; padding-bottom: 0px; text-align:center">{{ item.fromDate }}</td>
+                                                            <td style="border: 1px solid #ddd; vertical-align: middle; padding-right:5px; padding-top: 0px; padding-bottom: 0px; text-align:center">{{ item.toDate }}</td>
                                                             <td style="border: 1px solid #ddd; vertical-align: middle; padding-right:5px; padding-top: 0px; padding-bottom: 0px; text-align:center">
                                                                 <v-tooltip top>
                                                                     <template v-slot:activator="{ on }">

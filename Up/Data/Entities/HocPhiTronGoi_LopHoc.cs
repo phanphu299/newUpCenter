@@ -9,6 +9,8 @@ namespace Up.Data.Entities
         public Guid HocPhiTronGoi_LopHocId { get; set; }
         public Guid HocPhiTronGoiId { get; set; }
         public Guid LopHocId { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
 

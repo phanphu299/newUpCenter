@@ -18,5 +18,13 @@ namespace Up.Models
         public string UpdatedDate { get; set; }
         public string UpdatedBy { get; set; }
         public List<Guid> HocVienIds { get; set; }
+        public List<HocPhiTronGoi_LopHocViewModel> LopHocList{ get; set; }
+    }
+
+    public class HocPhiTronGoi_LopHocViewModel
+    {
+        public LopHocViewModel LopHoc { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
     }
 }

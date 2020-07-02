@@ -10,7 +10,7 @@ namespace Up.Services
     public interface IHocPhiTronGoiService
     {
         Task<List<HocPhiTronGoiViewModel>> GetHocPhiTronGoiAsync();
-        Task<bool> CreateHocPhiTronGoiAsync(Guid HocVienId, double HocPhi, DateTime FromDate, DateTime ToDate, string LoggedEmployee);
+        Task<bool> CreateHocPhiTronGoiAsync(Guid HocVienId, double HocPhi, DateTime FromDate, DateTime ToDate, List<HocPhiTronGoi_LopHocViewModel> LopHocList, string LoggedEmployee);
         Task<HocPhiTronGoiViewModel> UpdateHocPhiTronGoiAsync(Guid HocPhiTronGoiId, double HocPhi, DateTime FromDate, DateTime ToDate, string LoggedEmployee);
         Task<bool> ToggleHocPhiTronGoiAsync(Guid HocPhiTronGoiId, string LoggedEmployee);
         Task<bool> DeleteHocPhiTronGoiAsync(Guid HocPhiTronGoiId, string LoggedEmployee);

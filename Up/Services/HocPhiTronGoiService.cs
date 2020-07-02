@@ -3,7 +3,6 @@ namespace Up.Services
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
-    using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -50,7 +49,7 @@ namespace Up.Services
             return canContribute;
         }
 
-        public async Task<bool> CreateHocPhiTronGoiAsync(Guid HocVienId, double HocPhi, DateTime FromDate, DateTime ToDate, string LoggedEmployee)
+        public async Task<bool> CreateHocPhiTronGoiAsync(Guid HocVienId, double HocPhi, DateTime FromDate, DateTime ToDate, List<HocPhiTronGoi_LopHocViewModel> LopHocList, string LoggedEmployee)
         {
             try
             {
@@ -64,6 +63,22 @@ namespace Up.Services
                 hocPhi.ToDate = ToDate;
 
                 _context.HocPhiTronGois.Add(hocPhi);
+
+                foreach(var item in LopHocList)
+                {
+                    var hocPhi_LopHoc = new HocPhiTronGoi_LopHoc
+                    {
+                        HocPhiTronGoi_LopHocId = new Guid(),
+                        CreatedDate = DateTime.Now,
+                        CreatedBy = LoggedEmployee,
+                        LopHocId = item.LopHoc.LopHocId,
+                        FromDate = Convert.ToDateTime(item.FromDate),
+                        ToDate = Convert.ToDateTime(item.ToDate),
+                        HocPhiTronGoiId = hocPhi.HocPhiTronGoiId
+                    };
+
+                    await _context.HocPhiTronGoi_LopHocs.AddAsync(hocPhi_LopHoc);
+                }    
 
                 var saveResult = await _context.SaveChangesAsync();
 
@@ -169,19 +184,32 @@ namespace Up.Services
 
         public async Task<bool> DeleteHocPhiTronGoiAsync(Guid HocPhiTronGoiId, string LoggedEmployee)
         {
-            var item = await _context.HocPhiTronGois
+            try
+            {
+                var item = await _context.HocPhiTronGois
                                     .Where(x => x.HocPhiTronGoiId == HocPhiTronGoiId)
                                     .SingleOrDefaultAsync();
 
-            if (item == null)
-                throw new Exception("Không tìm thấy Học Phí !!!");
+                if (item == null)
+                    throw new Exception("Không tìm thấy Học Phí !!!");
 
-            item.IsRemoved = true;
-            item.UpdatedBy = LoggedEmployee;
-            item.UpdatedDate = DateTime.Now;
+                item.IsRemoved = true;
+                item.UpdatedBy = LoggedEmployee;
+                item.UpdatedDate = DateTime.Now;
 
-            var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+                var hocPhi_LopHocs = await _context.HocPhiTronGoi_LopHocs
+                    .Where(x => x.HocPhiTronGoiId == item.HocPhiTronGoiId)
+                    .ToListAsync();
+
+                _context.HocPhiTronGoi_LopHocs.RemoveRange(hocPhi_LopHocs);
+
+                var saveResult = await _context.SaveChangesAsync();
+                return true;
+            }
+            catch(Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
         }
     }
 }

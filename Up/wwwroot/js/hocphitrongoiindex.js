@@ -84,9 +84,40 @@
             if (index >= 0) this.newItem.hocVien.splice(index, 1)
         },
 
+        async onAddLopHoc() {
+            if (this.newItem.lopHoc !== '') {
+                let isExisting = false;
+                this.arrayLopHoc.map(item => {
+                    if (item.lopHoc.lopHocId === this.newItem.lopHoc.lopHocId) {
+                        isExisting = true;
+                    }
+                });
+
+                if (isExisting === false) {
+                    this.arrayLopHoc.push({
+                        lopHoc: this.newItem.lopHoc,
+                        fromDate: this.newItem.fromDateLopHoc,
+                        toDate: this.newItem.toDateLopHoc
+                    });
+                }
+            }
+            else {
+                this.snackbar = true;
+                this.messageText = 'Phải chọn lớp học trước khi thêm !!!';
+                this.color = 'error';
+            }
+        },
+
+        async onXoaLopHoc(item) {
+            this.arrayLopHoc = this.arrayLopHoc
+                .filter(x => x.lopHoc.lopHocId !== item.lopHoc.lopHocId);
+        },
+
         async onChangeHocVien() {
             let that = this;
-            await axios.get('/LopHoc/GetLopHocByHocVienIdAsync?HocVienId=' + newItem.hocVien.hocVienId)
+            that.itemLopHoc = [];
+            that.arrayLopHoc = [];
+            await axios.get('/LopHoc/GetLopHocByHocVienIdAsync?HocVienId=' + this.newItem.hocVien.hocVienId)
                 .then(function (response) {
                     that.itemLopHoc = response.data;
                 })
@@ -182,7 +213,8 @@
                         HocVienId: that.newItem.hocVien.hocVienId,
                         HocPhi: that.newItem.hocPhi,
                         FromDate: that.newItem.fromDate,
-                        ToDate: that.newItem.toDate
+                        ToDate: that.newItem.toDate,
+                        LopHocList: that.arrayLopHoc
                     }
                 })
                     .then(function (response) {
@@ -251,10 +283,10 @@
         async onDelete(item) {
             let that = this;
             await axios({
-                method: 'put',
-                url: '/hocphi/DeleyeHocPhiTronGoiAsync',
+                method: 'delete',
+                url: '/hocphi/DeleteHocPhiTronGoiAsync',
                 data: {
-                    HocPhiTronGoiId: item.HocPhiTronGoiId
+                    HocPhiTronGoiId: item.hocPhiTronGoiId
                 }
             })
                 .then(function (response) {
