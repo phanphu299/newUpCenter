@@ -113,7 +113,8 @@ namespace Up.Services
 
             var thongKe_ChiPhi = await _context.ThongKe_ChiPhis.FirstOrDefaultAsync(x => x.ChiPhiKhacId == item.ChiPhiKhacId);
 
-            _context.ThongKe_ChiPhis.Remove(thongKe_ChiPhi);
+            if(thongKe_ChiPhi != null)
+                _context.ThongKe_ChiPhis.Remove(thongKe_ChiPhi);
 
             var saveResult = await _context.SaveChangesAsync();
             return saveResult == 2;
