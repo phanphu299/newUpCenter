@@ -285,11 +285,11 @@ namespace Up.Controllers
             try
             {
                 DateTime _ngayDong = new DateTime(model.models[0].year, model.models[0].month, 1);
-                foreach (var item in model.models.Where(x => !x.TronGoi))
+                foreach (var item in model.models)
                 {
                     var sachIds = item.GiaSach != null ? item.GiaSach.Select(x => x.SachId).ToArray() : new Guid[0];
                     await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(item.LopHocId, item.HocVienId,
-                    item.HocPhiMoi, _ngayDong, item.Bonus, item.Minus, item.KhuyenMai, item.GhiChu, sachIds, false, false, currentUser.Email);
+                    item.HocPhiMoi, _ngayDong, item.Bonus, item.Minus, item.KhuyenMai, item.GhiChu, sachIds, false, false, item.TronGoi, currentUser.Email);
                 }
 
                 return Json(new Models.ResultModel
@@ -327,7 +327,7 @@ namespace Up.Controllers
             {
                 DateTime _ngayDong = new DateTime(model.year, model.month, 1);
                 var successful = await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(model.LopHocId, model.HocVienId,
-                    model.HocPhi, _ngayDong, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, true, false, currentUser.Email);
+                    model.HocPhi, _ngayDong, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, true, false, model.TronGoi, currentUser.Email);
                 if (successful == false)
                 {
                     return Json(new Models.ResultModel
@@ -372,7 +372,7 @@ namespace Up.Controllers
             {
                 DateTime _ngayNo = new DateTime(model.year, model.month, 1);
                 await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(model.LopHocId, model.HocVienId,
-                    model.HocPhi, _ngayNo, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, false, true, currentUser.Email);
+                    model.HocPhi, _ngayNo, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, false, true, model.TronGoi, currentUser.Email);
 
                 var successful = await _noService.ThemHocVien_NoAsync(model.LopHocId, model.HocVienId,
                     model.HocPhi, _ngayNo, currentUser.Email);

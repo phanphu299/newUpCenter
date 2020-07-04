@@ -24,6 +24,7 @@ namespace Up.Data.Entities
 
         public bool DaDong { get; set; }
         public bool DaNo { get; set; }
+        public bool TronGoi { get; set; }
 
         [ForeignKey("LopHocId")]
         public LopHoc LopHoc { get; set; }

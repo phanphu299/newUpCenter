@@ -82,8 +82,11 @@
             if (value === undefined) {
                 value = 0;
             }
-            item.hocPhiMoi = item.hocPhiFixed + item.tienNo - ((item.hocPhiFixed * value) / 100);
-            
+            if (item.tronGoi)
+                item.hocPhiMoi = item.hocPhiFixed - item.hocPhiBuHocVienVaoSau - item.hocPhiTruTronGoi + item.tienNo - ((item.hocPhiFixed * value) / 100);
+            else
+                item.hocPhiMoi = item.hocPhiFixed - item.hocPhiBuHocVienVaoSau + item.tienNo - ((item.hocPhiFixed * value) / 100);
+
             if (item.lastGiaSach !== null) {
                 for (let i = 0; i < item.lastGiaSach.length; i++) {
                     item.hocPhiMoi = item.hocPhiMoi + (item.lastGiaSach[i].gia * 1.0);
@@ -177,8 +180,8 @@
                     this.selectedLastHocPhi = this.selectedLopHoc.hocPhi;
                 }
             }
-            
-            
+
+
             if (this.selectedLopHoc !== '' && this.selectedNam !== '' && this.selectedThang !== '' && this.selectedHocPhi !== '') {
                 if (this.khuyenMai === "") {
                     this.khuyenMai = 0;
@@ -273,7 +276,8 @@
                         Minus: item.minus,
                         KhuyenMai: item.khuyenMai,
                         GhiChu: item.ghiChu,
-                        SachIds: Sachs
+                        SachIds: Sachs,
+                        TronGoi: item.tronGoi
                     }
                 })
                     .then(function (response) {
@@ -322,7 +326,8 @@
                         Minus: item.minus,
                         KhuyenMai: item.khuyenMai,
                         GhiChu: item.ghiChu,
-                        SachIds: Sachs
+                        SachIds: Sachs,
+                        TronGoi: item.tronGoi
                     }
                 })
                     .then(function (response) {

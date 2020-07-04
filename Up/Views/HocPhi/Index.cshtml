@@ -125,7 +125,7 @@
                                                           item-text="name"
                                                           multiple
                                                           chips
-                                                          :disabled="props.item.tronGoi"
+                                                          :disabled="props.item.tronGoi && props.item.hocPhiMoi == 0"
                                                           return-object
                                                           label="Chọn Tài Liệu"
                                                           item-disabled="isDisabled"
@@ -146,18 +146,18 @@
                                                           v-model="props.item.khuyenMai"
                                                           chips
                                                           clearable
-                                                          :disabled="props.item.tronGoi"
+                                                          :disabled="props.item.tronGoi && props.item.hocPhiMoi == 0"
                                                           label="Khuyến Mãi (%)"
                                                           v-on:change="onchangeKhuyenMai(props.item.khuyenMai, props.item)">
                                                 </v-select>
                                             </td>
-                                            <td><v-text-field :disabled="props.item.tronGoi" v-model="props.item.bonus" v-on:keyup="onBonusHocPhi(props.item.bonus, props.item)"></v-text-field></td>
-                                            <td><v-text-field :disabled="props.item.tronGoi" v-model="props.item.minus" v-on:keyup="onMinusHocPhi(props.item.minus, props.item)"></v-text-field></td>
-                                            <td><v-text-field :disabled="props.item.tronGoi" v-model="props.item.ghiChu"></v-text-field></td>
+                                            <td><v-text-field :disabled="props.item.tronGoi && props.item.hocPhiMoi == 0" v-model="props.item.bonus" v-on:keyup="onBonusHocPhi(props.item.bonus, props.item)"></v-text-field></td>
+                                            <td><v-text-field :disabled="props.item.tronGoi && props.item.hocPhiMoi == 0" v-model="props.item.minus" v-on:keyup="onMinusHocPhi(props.item.minus, props.item)"></v-text-field></td>
+                                            <td><v-text-field :disabled="props.item.tronGoi && props.item.hocPhiMoi == 0" v-model="props.item.ghiChu"></v-text-field></td>
                                             <td>
                                                 @if (ViewBag.CanContribute)
                                                 {
-                                                    <v-tooltip top v-if="!props.item.tronGoi">
+                                                    <v-tooltip top>
                                                         <template v-slot:activator="{ on }">
                                                             <v-btn flat icon
                                                                    small
@@ -170,7 +170,7 @@
                                                         <strong>Đóng tiền và Lưu</strong>
                                                     </v-tooltip>
 
-                                                    <v-tooltip top v-if="!props.item.tronGoi">
+                                                    <v-tooltip top>
                                                         <template v-slot:activator="{ on }">
                                                             <v-btn flat icon
                                                                    small
@@ -183,7 +183,7 @@
                                                         <strong>Nợ và Lưu</strong>
                                                     </v-tooltip>
 
-                                                    <v-tooltip top v-if="!props.item.tronGoi">
+                                                    <v-tooltip top>
                                                         <template v-slot:activator="{ on }">
                                                             <v-btn flat icon
                                                                    small

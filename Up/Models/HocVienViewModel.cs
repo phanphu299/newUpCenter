@@ -51,6 +51,8 @@
         public DateTime NgayBatDau_Date { get; set; }
         public DateTime? NgayKetThuc_Date { get; set; }
         public IEnumerable<DateTime> SoNgayDuocNghi { get; set; }
+
+        public double HocPhiTruTronGoi { get; set; }
     }
     public class LopHoc_NgayHocViewModel
     {
