@@ -112,27 +112,42 @@ namespace Up.Services
             return await _context.HocPhiTronGois
                 .Where(x => x.IsRemoved == false)
                 .Include(x => x.HocVien)
+                .Include(x => x.HocPhiTronGoi_LopHocs)
                 .Select(x => new HocPhiTronGoiViewModel
                 {
                     CreatedBy = x.CreatedBy,
                     CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
                     HocPhiTronGoiId = x.HocPhiTronGoiId,
-                    Name = x.HocVien.FullName,
+                    Name = x.HocVien.FullName, 
+                    HocVienId = x.HocVienId,
                     HocPhi = x.HocPhi,
                     IsDisabled = x.IsDisabled,
                     FromDate = x.FromDate.ToString("dd/MM/yyyy"),
                     ToDate = x.ToDate.ToString("dd/MM/yyyy"),
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
+                    LopHocList = x.HocPhiTronGoi_LopHocs
+                    .Select(m => new HocPhiTronGoi_LopHocViewModel { 
+                        FromDate = m.FromDate.ToString("dd/MM/yyyy"),
+                        ToDate = m.ToDate.ToString("dd/MM/yyyy"),
+                        LopHoc = new LopHocViewModel
+                        {
+                            LopHocId = m.LopHocId,
+                            Name = m.LopHoc.Name
+                        }
+                    })
+                    .ToList()
                 })
                 .AsNoTracking()
                 .ToListAsync();
         }
 
-        public async Task<HocPhiTronGoiViewModel> UpdateHocPhiTronGoiAsync(Guid HocPhiTronGoiId, double HocPhi, DateTime FromDate, DateTime ToDate, string LoggedEmployee)
+        public async Task<HocPhiTronGoiViewModel> UpdateHocPhiTronGoiAsync(Guid HocPhiTronGoiId, double HocPhi, DateTime FromDate, DateTime ToDate, List<HocPhiTronGoi_LopHocViewModel> LopHocList, string LoggedEmployee)
         {
             var item = await _context.HocPhiTronGois
                                     .Include(x => x.HocVien)
+                                    .Include(x => x.HocPhiTronGoi_LopHocs)
+                                    .ThenInclude(x => x.LopHoc)
                                     .Where(x => x.HocPhiTronGoiId == HocPhiTronGoiId)
                                     .SingleOrDefaultAsync();
 
@@ -144,6 +159,28 @@ namespace Up.Services
             item.ToDate = ToDate;
             item.UpdatedBy = LoggedEmployee;
             item.UpdatedDate = DateTime.Now;
+
+            var oldLopHoc = await _context.HocPhiTronGoi_LopHocs
+                                    .Where(x => x.HocPhiTronGoiId == HocPhiTronGoiId)
+                                    .ToListAsync();
+
+            _context.HocPhiTronGoi_LopHocs.RemoveRange(oldLopHoc);
+
+            foreach (var itemHocPhi in LopHocList)
+            {
+                var hocPhi_LopHoc = new HocPhiTronGoi_LopHoc
+                {
+                    HocPhiTronGoi_LopHocId = new Guid(),
+                    CreatedDate = DateTime.Now,
+                    CreatedBy = LoggedEmployee,
+                    LopHocId = itemHocPhi.LopHoc.LopHocId,
+                    FromDate = Convert.ToDateTime(itemHocPhi.FromDate),
+                    ToDate = Convert.ToDateTime(itemHocPhi.ToDate),
+                    HocPhiTronGoiId = HocPhiTronGoiId
+                };
+
+                await _context.HocPhiTronGoi_LopHocs.AddAsync(hocPhi_LopHoc);
+            }
 
             var saveResult = await _context.SaveChangesAsync();
             return new HocPhiTronGoiViewModel
@@ -157,7 +194,19 @@ namespace Up.Services
                 ToDate = item.ToDate.ToString("dd/MM/yyyy"),
                 CreatedDate = item.CreatedDate != null ? ((DateTime)item.CreatedDate).ToString("dd/MM/yyyy") : "",
                 UpdatedDate = item.UpdatedDate != null ? ((DateTime)item.UpdatedDate).ToString("dd/MM/yyyy") : "",
-                IsDisabled = item.IsDisabled
+                IsDisabled = item.IsDisabled,
+                LopHocList = item.HocPhiTronGoi_LopHocs
+                    .Select(m => new HocPhiTronGoi_LopHocViewModel
+                    {
+                        FromDate = m.FromDate.ToString("dd/MM/yyyy"),
+                        ToDate = m.ToDate.ToString("dd/MM/yyyy"),
+                        LopHoc = new LopHocViewModel
+                        {
+                            LopHocId = m.LopHocId,
+                            Name = m.LopHoc.Name
+                        }
+                    })
+                    .ToList()
             };
         }
 

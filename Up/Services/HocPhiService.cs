@@ -436,44 +436,23 @@ namespace Up.Services
                                         soNgayTruSauNghi = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayKetThuc, LopHocId);
                                 }
 
-
                                 if (_ngayBatDauHoc.Month == currentMonth && _ngayBatDauHoc.Year == currentYear)
                                 {
                                     var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayBatDauHoc, LopHocId);
 
-                                    //if (soNgayHocVienVaoSau < SoNgayHoc)
-                                    //{
                                     item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau)) + (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi * (100 - item.KhuyenMaiThangTruoc) / 100);
-
-                                    //item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                                    //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai/100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-
-                                    //item.HocPhiFixed = item.HocPhiFixed - item.HocPhiBuHocVienVaoSau;
                                     item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau;
-                                    //}
-                                    //else
-                                    //{
-                                    //    item.HocPhiFixed = item.HocPhiFixed;
-                                    //    item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo;
-                                    //}
                                 }
                                 else
                                 {
                                     item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi * (100 - item.KhuyenMaiThangTruoc) / 100);
-
-                                    //item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                                    //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-
-                                    //item.HocPhiFixed = item.HocPhiFixed - item.HocPhiBuHocVienVaoSau;
                                     item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau;
                                 }
                             }
                             else
                             {
-                                //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo) / 10000) * 10000);
                                 item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo;
                             }
-                            //item.HocPhiFixed = item.HocPhiMoi;
                             item.LastBonus = item.Bonus;
                             item.LastMinus = item.Minus;
                             item.LastGiaSach = item.GiaSach;
@@ -510,39 +489,19 @@ namespace Up.Services
                             {
                                 var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayBatDauHoc, LopHocId);
 
-                                //if (soNgayHocVienVaoSau < SoNgayHoc)
-                                //{
                                 item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau)) + (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi * (100 - item.KhuyenMaiThangTruoc) / 100);
-
-                                //item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                                //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai/100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-
-                                //item.HocPhiFixed = item.HocPhiFixed - item.HocPhiBuHocVienVaoSau;
                                 item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau - item.HocPhiTruTronGoi;
-                                //}
-                                //else
-                                //{
-                                //    item.HocPhiFixed = item.HocPhiFixed;
-                                //    item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo;
-                                //}
                             }
                             else
                             {
                                 item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi * (100 - item.KhuyenMaiThangTruoc) / 100);
-
-                                //item.HocPhiFixed = (Math.Ceiling((item.HocPhiFixed - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-                                //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau) / 10000) * 10000);
-
-                                //item.HocPhiFixed = item.HocPhiFixed - item.HocPhiBuHocVienVaoSau;
                                 item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau - item.HocPhiTruTronGoi;
                             }
                         }
                         else
                         {
-                            //item.HocPhiMoi = (Math.Ceiling((item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo) / 10000) * 10000);
                             item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiTruTronGoi;
                         }
-                        //item.HocPhiFixed = item.HocPhiMoi;
                         item.LastBonus = item.Bonus;
                         item.LastMinus = item.Minus;
                         item.LastGiaSach = item.GiaSach;

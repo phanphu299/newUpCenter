@@ -232,7 +232,7 @@ namespace Up.Controllers
             {
                 DateTime _fromDate = Convert.ToDateTime(model.FromDate);
                 DateTime _toDate = Convert.ToDateTime(model.ToDate);
-                var successful = await _hocPhiTronGoiService.UpdateHocPhiTronGoiAsync(model.HocPhiTronGoiId, model.HocPhi, _fromDate, _toDate, currentUser.Email);
+                var successful = await _hocPhiTronGoiService.UpdateHocPhiTronGoiAsync(model.HocPhiTronGoiId, model.HocPhi, _fromDate, _toDate, model.LopHocList, currentUser.Email);
                 if (successful == null)
                 {
                     return Json(new Models.ResultModel

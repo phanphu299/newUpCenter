@@ -13,6 +13,8 @@
         isShowDatePicker4: false,
         isShowDatePickerLopHoc: false,
         isShowDatePickerLopHoc2: false,
+        isShowDatePickerLopHoc3: false,
+        isShowDatePickerLopHoc4: false,
         dialog: false,
         alert: false,
         alertEdit: false,
@@ -79,7 +81,6 @@
 
     methods: {
         remove(item) {
-
             const index = this.newItem.hocVien.indexOf(item)
             if (index >= 0) this.newItem.hocVien.splice(index, 1)
         },
@@ -108,8 +109,37 @@
             }
         },
 
+        async onAddLopHocEdit() {
+            if (this.itemToEdit.lopHoc !== undefined) {
+                let isExisting = false;
+                this.itemToEdit.lopHocList.map(item => {
+                    if (item.lopHoc.lopHocId === this.itemToEdit.lopHoc.lopHocId) {
+                        isExisting = true;
+                    }
+                });
+
+                if (isExisting === false) {
+                    this.itemToEdit.lopHocList.push({
+                        lopHoc: this.itemToEdit.lopHoc,
+                        fromDate: this.itemToEdit.fromDateLopHoc,
+                        toDate: this.itemToEdit.toDateLopHoc
+                    });
+                }
+            }
+            else {
+                this.snackbar = true;
+                this.messageText = 'Phải chọn lớp học trước khi thêm !!!';
+                this.color = 'error';
+            }
+        },
+
         async onXoaLopHoc(item) {
             this.arrayLopHoc = this.arrayLopHoc
+                .filter(x => x.lopHoc.lopHocId !== item.lopHoc.lopHocId);
+        },
+
+        async onXoaLopHocEdit(item) {
+            this.itemToEdit.lopHocList = this.itemToEdit.lopHocList
                 .filter(x => x.lopHoc.lopHocId !== item.lopHoc.lopHocId);
         },
 
@@ -144,7 +174,8 @@
             return val.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
         },
 
-        mappingEditItem(item) {
+        async mappingEditItem(item) {
+            let that = this;
             this.itemToEdit = Object.assign({}, item);
             this.editedIndex = this.khoaHocItems.indexOf(item);
 
@@ -157,6 +188,18 @@
                 let [dayKG, monthKG, yearKG] = this.itemToEdit.toDate.split('/');
                 this.itemToEdit.toDate = yearKG + '-' + monthKG + '-' + dayKG;
             }
+
+            this.itemToEdit.fromDateLopHoc = new Date().toISOString().substr(0, 10);
+
+            this.itemToEdit.toDateLopHoc = new Date().toISOString().substr(0, 10);
+
+            await axios.get('/LopHoc/GetLopHocByHocVienIdAsync?HocVienId=' + this.itemToEdit.hocVienId)
+                .then(function (response) {
+                    that.itemLopHoc = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
 
         async onUpdate(item) {
@@ -169,7 +212,8 @@
                     HocPhi: item.hocPhi,
                     FromDate: item.fromDate,
                     ToDate: item.toDate,
-                    HocPhiTronGoiId: item.hocPhiTronGoiId
+                    HocPhiTronGoiId: item.hocPhiTronGoiId,
+                    LopHocList: item.lopHocList
                 }
             })
                 .then(function (response) {
