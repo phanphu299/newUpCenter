@@ -408,7 +408,7 @@
                     .SumAsync(), 0) +
 
                     Math.Round(await _context.HocPhiTronGois
-                    .Where(x => x.IsDisabled == false && x.FromDate.Month == DateTime.Now.Month && x.FromDate.Year == DateTime.Now.Year && (DateTime.Now.Year < x.ToDate.Year || (DateTime.Now.Year == x.ToDate.Year && DateTime.Now.Month <= x.ToDate.Month)))
+                    .Where(x => x.IsRemoved == false && x.IsDisabled == false && x.FromDate.Month == DateTime.Now.Month && x.FromDate.Year == DateTime.Now.Year && (DateTime.Now.Year < x.ToDate.Year || (DateTime.Now.Year == x.ToDate.Year && DateTime.Now.Month <= x.ToDate.Month)))
                     .AsNoTracking()
                     .Select(x => x.HocPhi)
                     .SumAsync(), 0);
@@ -498,7 +498,7 @@
             try
             {
                 var doanhThu = await _context.HocPhiTronGois
-                .Where(x => x.FromDate.Year == DateTime.Now.Year && x.IsDisabled == false && (DateTime.Now.Year < x.ToDate.Year || (DateTime.Now.Year == x.ToDate.Year && DateTime.Now.Month <= x.ToDate.Month)))
+                .Where(x => x.IsRemoved == false && x.FromDate.Year == DateTime.Now.Year && x.IsDisabled == false && (DateTime.Now.Year < x.ToDate.Year || (DateTime.Now.Year == x.ToDate.Year && DateTime.Now.Month <= x.ToDate.Month)))
                 .OrderBy(x => x.FromDate)
                 .AsNoTracking()
                 .Select(g => new ThongKe_DoanhThuHocPhiViewModel

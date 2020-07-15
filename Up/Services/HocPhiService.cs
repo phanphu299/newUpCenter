@@ -441,12 +441,14 @@ namespace Up.Services
                                     var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayBatDauHoc, LopHocId);
 
                                     item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau)) + (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi * (100 - item.KhuyenMaiThangTruoc) / 100);
-                                    item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau;
+                                    item.HocPhiMoiFixed = item.HocPhiMoi - item.HocPhiBuHocVienVaoSau;
+                                    item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiMoiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau;
                                 }
                                 else
                                 {
                                     item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi * (100 - item.KhuyenMaiThangTruoc) / 100);
-                                    item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau;
+                                    item.HocPhiMoiFixed = item.HocPhiMoi - item.HocPhiBuHocVienVaoSau;
+                                    item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiMoiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau;
                                 }
                             }
                             else
@@ -490,12 +492,14 @@ namespace Up.Services
                                 var soNgayHocVienVaoSau = await TinhSoNgayHocVienVoSauAsync(currentYear, currentMonth, _ngayBatDauHoc, LopHocId);
 
                                 item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * (SoNgayHoc - soNgayHocVienVaoSau)) + (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi * (100 - item.KhuyenMaiThangTruoc) / 100);
-                                item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau - item.HocPhiTruTronGoi;
+                                item.HocPhiMoiFixed = item.HocPhiMoi - item.HocPhiBuHocVienVaoSau;
+                                item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiMoiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau - item.HocPhiTruTronGoi;
                             }
                             else
                             {
                                 item.HocPhiBuHocVienVaoSau = (HocPhiMoiNgay * soNgayTruSauNghi) + (HocPhiMoiNgayCu * ngayDuocNghi * (100 - item.KhuyenMaiThangTruoc) / 100);
-                                item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau - item.HocPhiTruTronGoi;
+                                item.HocPhiMoiFixed = item.HocPhiMoi - item.HocPhiBuHocVienVaoSau;
+                                item.HocPhiMoi = item.HocPhiMoi - (item.HocPhiMoiFixed * item.KhuyenMai / 100) + giaSach + item.Bonus - item.Minus + item.TienNo - item.HocPhiBuHocVienVaoSau - item.HocPhiTruTronGoi;
                             }
                         }
                         else

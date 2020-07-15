@@ -82,10 +82,14 @@
             if (value === undefined) {
                 value = 0;
             }
+
+            console.log(item.hocPhiMoiFixed)
+            console.log(item.hocPhiFixed)
+
             if (item.tronGoi)
-                item.hocPhiMoi = item.hocPhiFixed - item.hocPhiBuHocVienVaoSau - item.hocPhiTruTronGoi + item.tienNo - ((item.hocPhiFixed * value) / 100);
+                item.hocPhiMoi = item.hocPhiFixed - item.hocPhiBuHocVienVaoSau - item.hocPhiTruTronGoi + item.tienNo - ((item.hocPhiMoiFixed * value) / 100);
             else
-                item.hocPhiMoi = item.hocPhiFixed - item.hocPhiBuHocVienVaoSau + item.tienNo - ((item.hocPhiFixed * value) / 100);
+                item.hocPhiMoi = item.hocPhiFixed - item.hocPhiBuHocVienVaoSau + item.tienNo - ((item.hocPhiMoiFixed * value) / 100);
 
             if (item.lastGiaSach !== null) {
                 for (let i = 0; i < item.lastGiaSach.length; i++) {

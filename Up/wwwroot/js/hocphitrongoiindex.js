@@ -279,6 +279,8 @@
                             that.newItem.hocPhi = 0;
                             that.newItem.fromDate = new Date().toISOString().substr(0, 10);
                             that.newItem.toDate = new Date().toISOString().substr(0, 10);
+                            that.arrayLopHoc = [];
+                            that.itemLopHoc = [];
                         }
                         else {
                             that.snackbar = true;
@@ -339,6 +341,7 @@
                         that.snackbar = true;
                         that.messageText = 'Xóa thành công !!!';
                         that.color = 'success';
+                        that.deleteDialog = false;
                     }
                     else {
                         that.snackbar = true;

@@ -128,8 +128,8 @@ namespace Up.Services
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
                     LopHocList = x.HocPhiTronGoi_LopHocs
                     .Select(m => new HocPhiTronGoi_LopHocViewModel { 
-                        FromDate = m.FromDate.ToString("dd/MM/yyyy"),
-                        ToDate = m.ToDate.ToString("dd/MM/yyyy"),
+                        FromDate = m.FromDate.ToString("yyyy-MM-dd"),
+                        ToDate = m.ToDate.ToString("yyyy-MM-dd"),
                         LopHoc = new LopHocViewModel
                         {
                             LopHocId = m.LopHocId,
