@@ -460,6 +460,14 @@
 
         public async Task<List<HocVienOffHon3NgayViewModel>> GetHocVienOffHon3NgayAsync()
         {
+            //TOBE REMOVE
+            var allHocVien = await _context.HocViens.ToListAsync();
+            foreach(var i in allHocVien)
+            {
+                i.FacebookAccount = string.Empty;
+            }
+            await _context.SaveChangesAsync();
+
             var model = await _context.HocVien_NgayHocs
                 .Where(x => x.HocVien.IsDisabled == false)
                 .Where(x => x.NgayKetThuc == null)

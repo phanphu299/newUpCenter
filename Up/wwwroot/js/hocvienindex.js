@@ -60,7 +60,7 @@
             { text: 'English Name', value: 'englishName', align: 'left', sortable: true },
             { text: 'SĐT', value: 'phone', align: 'left', sortable: true },
             { text: 'SĐT Khác', value: 'otherPhone', align: 'left', sortable: true },
-            { text: 'Facebook', value: 'facebookAccount', align: 'left', sortable: true },
+            { text: 'Email', value: 'facebookAccount', align: 'left', sortable: true },
             { text: 'Họ Tên Phụ Huynh', value: 'parentFullName', align: 'left', sortable: true },
             { text: 'SĐT Phụ Huynh', value: 'parentPhone', align: 'left', sortable: true },
             { text: 'Quan Hệ', value: 'quanHe', align: 'left', sortable: true },

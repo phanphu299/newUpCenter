@@ -379,6 +379,8 @@
                         
                         worksheet.Cells[i + 2, 4].Value = lopHoc;
                         //worksheet.Cells[i + 2, 5].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
+                        worksheet.Cells[i + 2, 6].Value = itemHocVien.FacebookAccount;
+
                         i++;
                         
                     }
@@ -392,6 +394,7 @@
                         worksheet.Cells[i + 2, 3].Value = "";
                         worksheet.Cells[i + 2, 4].Value = lopHoc;
                         worksheet.Cells[i + 2, 5].Value = itemHocVien.QuanHe + " " + itemHocVien.ParentFullName;
+                        worksheet.Cells[i + 2, 6].Value = itemHocVien.FacebookAccount;
 
                         i++;
                     }
@@ -402,13 +405,14 @@
                 worksheet.Cells[1, 3].Value = "Other Phone";
                 worksheet.Cells[1, 4].Value = "Middle Name";
                 worksheet.Cells[1, 5].Value = "Last Name";
+                worksheet.Cells[1, 6].Value = "E-mail Address";
 
-                worksheet.Cells["A1:E1"].Style.Font.Bold = true;
-                worksheet.Cells["A1:E1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A1:E1"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells["A1:F1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:F1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A1:F1"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 var modelCells = worksheet.Cells["A1"];
-                string modelRange = "A1:E" + (totalRows + 1 + phuHuynhRows);
+                string modelRange = "A1:F" + (totalRows + 1 + phuHuynhRows);
                 var modelTable = worksheet.Cells[modelRange];
 
 
@@ -466,7 +470,7 @@
                 worksheet.Cells[2, 2].Value = "English Name";
                 worksheet.Cells[2, 3].Value = "Số Điện Thoại";
                 worksheet.Cells[2, 4].Value = "Số Điện Thoại Khác";
-                worksheet.Cells[2, 5].Value = "Facebook";
+                worksheet.Cells[2, 5].Value = "Email";
                 worksheet.Cells[2, 6].Value = "Ngày Sinh (yyyy-mm-dd)";
                 worksheet.Cells[2, 7].Value = "Người Thân";
                 worksheet.Cells[2, 8].Value = "SĐT Người Thân";

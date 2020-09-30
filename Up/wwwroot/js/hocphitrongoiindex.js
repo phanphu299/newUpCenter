@@ -48,7 +48,7 @@
                 sortable: false,
                 value: ''
             },
-            { text: 'Tên', value: 'fullName', align: 'left', sortable: false },
+            { text: 'Tên', value: 'name', align: 'left', sortable: false },
             { text: 'Học Phí', value: 'hocPhi', align: 'left', sortable: false },
             { text: 'Hết Hiệu Lực?', value: 'isDisabled', align: 'left', sortable: false },
             { text: 'Từ Ngày', value: 'fromDate', align: 'left', sortable: false },
