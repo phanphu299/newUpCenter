@@ -239,6 +239,8 @@ namespace Up.Services
         public async Task<List<HocVienViewModel>> GetAllHocVienAsync()
         {
             return await _context.HocViens
+                .Include(x => x.HocVien_LopHocs)
+                .ThenInclude(x => x.LopHoc)
                 .Select(x => new HocVienViewModel
                 {
                     CreatedBy = x.CreatedBy,
@@ -266,8 +268,7 @@ namespace Up.Services
                         IsCanceled = p.LopHoc.IsCanceled,
                         HocVienNghi = p.HocVien.HocVien_NgayHocs.FirstOrDefault(n => n.LopHocId == p.LopHocId).NgayKetThuc == null ? false : p.HocVien.HocVien_NgayHocs.FirstOrDefault(n => n.LopHocId == p.LopHocId).NgayKetThuc < DateTime.Now ? true : false
                     }).ToList(),
-                    LopHoc_NgayHocList = _context.HocVien_LopHocs
-                                        .Where(m => m.HocVienId == x.HocVienId)
+                    LopHoc_NgayHocList = x.HocVien_LopHocs
                                         .Select(m => new LopHoc_NgayHocViewModel
                                         {
                                             LopHoc = new LopHocViewModel
@@ -277,7 +278,6 @@ namespace Up.Services
                                             },
                                             NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId) != null ? m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId).NgayBatDau.ToString("yyyy-MM-dd") : ""
                                         })
-                                        .AsNoTracking()
                                         .ToList()
                 })
                 .AsNoTracking()
@@ -290,6 +290,8 @@ namespace Up.Services
             {
                 return await _context.HocViens
                 .Where(x => x.IsDisabled == false)
+                .Include(x => x.HocVien_LopHocs)
+                .ThenInclude(x => x.LopHoc)
                 .Select(x => new HocVienViewModel
                 {
                     CreatedBy = x.CreatedBy,
@@ -316,8 +318,7 @@ namespace Up.Services
                         IsGraduated = p.LopHoc.IsGraduated,
                         IsCanceled = p.LopHoc.IsCanceled
                     }).ToList(),
-                    LopHoc_NgayHocList = _context.HocVien_LopHocs
-                                        .Where(m => m.HocVienId == x.HocVienId)
+                    LopHoc_NgayHocList = x.HocVien_LopHocs
                                         .Select(m => new LopHoc_NgayHocViewModel
                                         {
                                             LopHoc = new LopHocViewModel
@@ -327,7 +328,6 @@ namespace Up.Services
                                             },
                                             NgayHoc = m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId) != null ? m.LopHoc.HocVien_NgayHocs.FirstOrDefault(t => t.HocVienId == x.HocVienId).NgayBatDau.ToString("yyyy-MM-dd") : ""
                                         })
-                                        .AsNoTracking()
                                         .ToList()
                 })
                 .AsNoTracking()
