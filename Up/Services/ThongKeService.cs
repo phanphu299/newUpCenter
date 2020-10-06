@@ -447,7 +447,7 @@
             try
             {
                 return Math.Round(await _context.ThongKe_ChiPhis
-                    .Where(x => x.DaLuu == true && x.NgayChiPhi.Month == DateTime.Now.Month)
+                    .Where(x => x.DaLuu == true && x.NgayChiPhi.Month == DateTime.Now.Month && x.NgayChiPhi.Year == DateTime.Now.Year)
                     .AsNoTracking()
                     .Select(x => x.ChiPhi)
                     .SumAsync(), 0);
