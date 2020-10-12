@@ -531,7 +531,7 @@ namespace Up.Services
         private bool IsDaDong(IOrderedEnumerable<ThongKe_DoanhThuHocPhi> hocPhis, Guid lopHocId, int month, int year)
         {
             var daNo = hocPhis.FirstOrDefault(m => m.LopHocId != lopHocId && m.NgayDong.Month <= month && m.NgayDong.Year <= year && m.DaNo);
-            var daDong = hocPhis.FirstOrDefault(m => m.NgayDong.Month <= month && m.NgayDong.Year <= year && m.DaDong);
+            var daDong = hocPhis.FirstOrDefault(m => m.NgayDong.Month <= month && m.NgayDong.Year <= year && !(!m.DaDong && !m.DaNo));
 
             if (daNo == null)
                 return true;
