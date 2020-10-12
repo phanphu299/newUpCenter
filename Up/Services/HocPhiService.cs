@@ -340,12 +340,17 @@ namespace Up.Services
                                                             .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year)
                                                             .Any() ?
                                                             TinhNo(x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year), LopHocId) :
+                                                            /////
                                                             x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == month && m.NgayDong.Year == year && m.DaNo) != null ?
                                                             x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == month && m.NgayDong.Year == year && m.DaNo).HocPhi 
-                                                            + (x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong).FirstOrDefault(m => m.LopHocId != LopHocId && m.NgayDong.Month <= month && m.NgayDong.Year <= year).DaNo == true ? x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong).FirstOrDefault(m => m.LopHocId != LopHocId && m.NgayDong.Month <= month && m.NgayDong.Year <= year).HocPhi : 0)
+                                                            + 
+                                                            (!IsDaDong(x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong), LopHocId, month, year) ? 
+                                                            x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong).FirstOrDefault(m => m.LopHocId != LopHocId && m.NgayDong.Month <= month && m.NgayDong.Year <= year).HocPhi : 0)
+                                                            //////
                                                             :
                                                             0
-                                                                                                                        + (x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong).FirstOrDefault(m => m.LopHocId != LopHocId && m.NgayDong.Month <= month && m.NgayDong.Year <= year).DaNo == true ? x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong).FirstOrDefault(m => m.LopHocId != LopHocId && m.NgayDong.Month <= month && m.NgayDong.Year <= year).HocPhi : 0)
+                                                            + (!IsDaDong(x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong), LopHocId, month, year) ? 
+                                                            x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong).FirstOrDefault(m => m.LopHocId != LopHocId && m.NgayDong.Month <= month && m.NgayDong.Year <= year).HocPhi : 0)
 ,
                                             //HocPhiMoi = (Math.Ceiling(HocPhi / 10000) * 10000),
                                             HocPhiMoi = HocPhi,
@@ -521,6 +526,20 @@ namespace Up.Services
             {
                 throw new Exception(exception.Message);
             }
+        }
+
+        private bool IsDaDong(IOrderedEnumerable<ThongKe_DoanhThuHocPhi> hocPhis, Guid lopHocId, int month, int year)
+        {
+            var daNo = hocPhis.FirstOrDefault(m => m.LopHocId != lopHocId && m.NgayDong.Month <= month && m.NgayDong.Year <= year && m.DaNo);
+            var daDong = hocPhis.FirstOrDefault(m => m.NgayDong.Month <= month && m.NgayDong.Year <= year && m.DaDong);
+
+            if (daNo == null)
+                return true;
+
+            if (daNo != null && daDong == null)
+                return false;
+
+            return daDong.NgayDong > daNo.NgayDong;
         }
 
         private bool IsTronGoi(HocVienViewModel hocVien, Guid LopHocId, int month, int year)
