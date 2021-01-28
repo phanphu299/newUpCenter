@@ -22,13 +22,20 @@
         private readonly INgayHocService _ngayHocService;
         private readonly IQuanHeService _quanHeService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly Converters.Converter _converter;
 
-        public HocVienController(IHocVienService hocVienService, INgayHocService ngayHocService, IQuanHeService quanHeService, UserManager<IdentityUser> userManager)
+        public HocVienController(
+            IHocVienService hocVienService, 
+            INgayHocService ngayHocService, 
+            IQuanHeService quanHeService,
+            UserManager<IdentityUser> userManager, 
+            Converters.Converter converter)
         {
             _hocVienService = hocVienService;
             _ngayHocService = ngayHocService;
             _quanHeService = quanHeService;
             _userManager = userManager;
+            _converter = converter;
         }
 
         [ServiceFilter(typeof(Read_HocVien))]
@@ -64,14 +71,14 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetHocVien_LopHocByHocVienAsync(Guid HocVienId, Guid LopHocId)
+        public async Task<IActionResult> GetHocVien_LopHocByHocVienAsync(Guid hocVienId, Guid lopHocId)
         {
-            var model = await _ngayHocService.GetHocVien_NgayHocByHocVienAsync(HocVienId, LopHocId);
+            var model = await _ngayHocService.GetHocVien_NgayHocByHocVienAsync(hocVienId, lopHocId);
             return Json(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateHocVienAsync([FromBody]Models.HocVienViewModel model)
+        public async Task<IActionResult> CreateHocVienAsync([FromBody] CreateHocVienInputModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -79,43 +86,19 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime? _ngaySinh = null;
+            if (!string.IsNullOrWhiteSpace(model.NgaySinh) || model.NgaySinh != "")
+                model.NgaySinhDate = _converter.ToDateTime(model.NgaySinh);
 
-                if(!string.IsNullOrWhiteSpace(model.NgaySinh) || model.NgaySinh != "")
-                    _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
+            var successful = await _hocVienService.CreateHocVienAsync(model, currentUser.Email);
 
-                var successful = await _hocVienService.CreateHocVienAsync(model.LopHoc_NgayHocList, model.FullName, model.Phone, model.OtherPhone, model.FacebookAccount, model.ParentFullName, model.ParentPhone,
-                    model.QuanHeId, model.EnglishName, _ngaySinh, model.LopHocIds, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            return successful == null ? 
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false)) 
+                : 
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUpdateHocVien_ngayHocAsync([FromBody]Models.HocVien_NgayHocViewModel model)
+        public async Task<IActionResult> CreateUpdateHocVien_ngayHocAsync([FromBody] HocVien_NgayHocViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -123,42 +106,21 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime _ngayBatDau = Convert.ToDateTime(model.NgayBatDau, System.Globalization.CultureInfo.InvariantCulture);
-                DateTime? _ngayKetThuc = null;
-                if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
-                    _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
+            DateTime _ngayBatDau = _converter.ToDateTime(model.NgayBatDau);
+            DateTime? _ngayKetThuc = null;
+            if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
+                _ngayKetThuc = _converter.ToDateTime(model.NgayKetThuc);
 
-                var successful = await _ngayHocService.CreateUpdateHocVien_NgayHocAsync(model.HocVienId, model.LopHocId, _ngayBatDau, _ngayKetThuc, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
+            var successful = await _ngayHocService.CreateUpdateHocVien_NgayHocAsync(model.HocVienId, model.LopHocId, _ngayBatDau, _ngayKetThuc, currentUser.Email);
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            return successful ?
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false));
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddHocVienToLopCuAsync([FromBody]Models.HocVien_LopViewModel model)
+        public async Task<IActionResult> AddHocVienToLopCuAsync([FromBody] HocVien_LopViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -166,36 +128,15 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                var successful = await _hocVienService.AddToUnavailableClassAsync(model.LopHocId, model.HocVienId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
+            var successful = await _hocVienService.AddToUnavailableClassAsync(model.LopHocId, model.HocVienId, currentUser.Email);
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            return successful ?
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false));
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteHocVienAsync([FromBody]Models.HocVienViewModel model)
+        public async Task<IActionResult> DeleteHocVienAsync([FromBody] UpdateHocVienInputModel model)
         {
             if (model.HocVienId == Guid.Empty)
             {
@@ -208,36 +149,16 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                var successful = await _hocVienService.DeleteHocVienAsync(model.HocVienId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Xóa lỗi !!!"
-                    });
-                }
+            var successful = await _hocVienService.DeleteHocVienAsync(model.HocVienId, currentUser.Email);
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Xóa thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            return successful ? 
+                Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateChenAsync([FromBody]Models.HocVienViewModel model)
+        public async Task<IActionResult> UpdateHocVienAsync([FromBody] UpdateHocVienInputModel model)
         {
             if (model.HocVienId == Guid.Empty)
             {
@@ -250,83 +171,15 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                var successful = await _hocVienService.ToggleChenAsync(model.HocVienId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
+            if (!string.IsNullOrWhiteSpace(model.NgaySinh) || model.NgaySinh != "")
+                model.NgaySinhDate = _converter.ToDateTime(model.NgaySinh);
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
-        }
+            var successful = await _hocVienService.UpdateHocVienAsync(model, currentUser.Email);
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateHocVienAsync([FromBody]Models.HocVienViewModel model)
-        {
-            if (model.HocVienId == Guid.Empty)
-            {
-                return RedirectToAction("Index");
-            }
-
-            var currentUser = await _userManager.GetUserAsync(User);
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index");
-            }
-
-            try
-            {
-                DateTime? _ngaySinh = null;
-
-                if (!string.IsNullOrWhiteSpace(model.NgaySinh) || model.NgaySinh != "")
-                    _ngaySinh = Convert.ToDateTime(model.NgaySinh, System.Globalization.CultureInfo.InvariantCulture);
-
-                var successful = await _hocVienService.UpdateHocVienAsync(model.LopHoc_NgayHocList, model.HocVienId, model.FullName, model.Phone, model.OtherPhone,
-                   model.FacebookAccount, model.ParentFullName, model.ParentPhone, model.QuanHeId,
-                   model.EnglishName, _ngaySinh, model.LopHocIds, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            return successful == null ?
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful));
         }
 
         [HttpGet]
@@ -334,16 +187,16 @@
         {
             var stream = GenerateExcelFile();
             string excelName = $"UserList.xlsx";
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+            return File(stream, Constants.ContentType, excelName);
         }
 
-        private System.IO.MemoryStream GenerateExcelFile()
+        private MemoryStream GenerateExcelFile()
         {
-            var stream = new System.IO.MemoryStream();
-            using (OfficeOpenXml.ExcelPackage package = new OfficeOpenXml.ExcelPackage(stream))
+            var stream = new MemoryStream();
+            using (ExcelPackage package = new ExcelPackage(stream))
             {
                 var hocVien = _hocVienService.GetAllHocVienAsync().Result;
-                OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Vien");
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Vien");
                 int totalRows = hocVien.Where(x => !string.IsNullOrWhiteSpace(x.Phone)).ToList().Count;
 
                 int phuHuynhRows = 0;
@@ -360,12 +213,12 @@
 
                         foreach (var item in itemHocVien.LopHocList.Where(x => !x.IsDisabled && !x.IsGraduated && !x.IsCanceled && !x.HocVienNghi))
                         {
-                            lopHoc += item.Name + " ";
+                            lopHoc += $"{item.Name} ";
                         }
 
                         foreach (var item in itemHocVien.LopHocList.Where(x => x.IsDisabled || x.IsGraduated || x.IsCanceled || x.HocVienNghi))
                         {
-                            lopHoc += "BL-" + item.Name.Substring(2) + "-" + item.Name.Substring(0, 2) + " ";
+                            lopHoc += $"BL-{item.Name.Substring(2)}-{item.Name.Substring(0, 2)} ";
                         }
                     }
                     else
@@ -376,13 +229,13 @@
                         worksheet.Cells[i + 2, 1].Value = itemHocVien.FullName;
                         worksheet.Cells[i + 2, 2].Value = itemHocVien.Phone;
                         worksheet.Cells[i + 2, 3].Value = itemHocVien.OtherPhone;
-                        
+
                         worksheet.Cells[i + 2, 4].Value = lopHoc;
                         //worksheet.Cells[i + 2, 5].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
                         worksheet.Cells[i + 2, 6].Value = itemHocVien.FacebookAccount;
 
                         i++;
-                        
+
                     }
 
                     if (!string.IsNullOrWhiteSpace(itemHocVien.ParentFullName) && !string.IsNullOrWhiteSpace(itemHocVien.ParentPhone))
@@ -422,7 +275,7 @@
                 modelTable.Style.Border.Left.Style = ExcelBorderStyle.Thin;
                 modelTable.Style.Border.Right.Style = ExcelBorderStyle.Thin;
                 modelTable.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                
+
                 worksheet.PrinterSettings.Orientation = eOrientation.Landscape;
                 worksheet.Cells.AutoFitColumns();
 
@@ -438,7 +291,7 @@
         {
             var stream = GenerateTemplateExcelFile(LopHocId);
             string excelName = $"UserList.xlsx";
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+            return File(stream, Constants.ContentType, excelName);
         }
 
         private MemoryStream GenerateTemplateExcelFile(Guid LopHocId)
@@ -522,85 +375,47 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Import([FromBody]FileUploadModel model)
+        public async Task<IActionResult> Import([FromBody] FileUploadModel model)
         {
-            try
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
             {
-                var currentUser = await _userManager.GetUserAsync(User);
-                if (currentUser == null)
-                {
-                    return RedirectToAction("Index");
-                }
-
-                string extension = model.Name.Substring(model.Name.IndexOf('.'));
-                if (extension != ".xlsx")
-                    return Json(new ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "File import phải là excel .xlsx !!!"
-                    });
-
-                using (var stream = new MemoryStream(Convert.FromBase64String(model.File.Substring(model.File.IndexOf(',') + 1))))
-                {
-                    using (var package = new ExcelPackage(stream))
-                    {
-                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                        var rowCount = worksheet.Dimension.Rows;
-                        Guid lopHocId = new Guid(worksheet.Cells[1, 13].Value.ToString().Trim());
-                        List<Guid> lopHocIds = new List<Guid>();
-                        lopHocIds.Add(lopHocId);
-                        List<HocVienViewModel> hocViens = new List<HocVienViewModel>();
-
-                        for (int row = 3; row <= rowCount; row++)
-                        {
-                            if(worksheet.Cells[row, 1].Value != null)
-                            {
-                                DateTime? _ngaySinh = null;
-                                if(worksheet.Cells[row, 6].Value != null)
-                                    _ngaySinh = Convert.ToDateTime(worksheet.Cells[row, 6].Value.ToString().Trim() + " 00:00:00", System.Globalization.CultureInfo.InvariantCulture);
-
-                                DateTime? _ngayBatDau = null;
-                                if (worksheet.Cells[row, 10].Value != null)
-                                    _ngayBatDau = Convert.ToDateTime(worksheet.Cells[row, 10].Value.ToString().Trim() + " 00:00:00", System.Globalization.CultureInfo.InvariantCulture);
-
-                                Guid? quanHe = null;
-
-                                var successful = await _hocVienService.CreateHocVienAsync(
-                                    new List<LopHoc_NgayHocViewModel>(),
-                                    worksheet.Cells[row, 1].Value.ToString().Trim(),
-                                    worksheet.Cells[row, 3].Value == null ? "" : worksheet.Cells[row, 3].Value.ToString().Trim(),
-                                    worksheet.Cells[row, 4].Value == null ? "" : worksheet.Cells[row, 4].Value.ToString().Trim(),
-                                    worksheet.Cells[row, 5].Value == null ? "" : worksheet.Cells[row, 5].Value.ToString().Trim(),
-                                    worksheet.Cells[row, 7].Value == null ? "" : worksheet.Cells[row, 7].Value.ToString().Trim(),
-                                    worksheet.Cells[row, 8].Value == null ? "" : worksheet.Cells[row, 8].Value.ToString().Trim(),
-                                    worksheet.Cells[row, 9].Value == null ? quanHe : new Guid(worksheet.Cells[row, 9].Value.ToString().Trim()),
-                                    worksheet.Cells[row, 2].Value == null ? "" : worksheet.Cells[row, 2].Value.ToString().Trim(),
-                                    _ngaySinh,
-                                    lopHocIds.ToArray(),
-                                    currentUser.Email,
-                                    _ngayBatDau
-                                    );
-
-                                if (successful != null)
-                                    hocViens.Add(successful);
-                            }
-                        }
-                        return Json(new ResultModel
-                        {
-                            Status = "OK",
-                            Message = "Import thành công các học viên " + String.Join(", ", hocViens.Select(x => x.FullName).ToArray()),
-                            Result = hocViens
-                        });
-                    }
-                }
+                return RedirectToAction("Index");
             }
-            catch (Exception exception)
+
+            string extension = model.Name.Substring(model.Name.IndexOf('.'));
+            if (extension != ".xlsx")
+                return Json(_converter.ToResultModel("File import phải là excel .xlsx !!!", false));
+
+            using (var stream = new MemoryStream(Convert.FromBase64String(model.File.Substring(model.File.IndexOf(',') + 1))))
             {
-                return Json(new ResultModel
+                using (var package = new ExcelPackage(stream))
                 {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                    var rowCount = worksheet.Dimension.Rows;
+                    Guid lopHocId = new Guid(worksheet.Cells[1, 13].Value.ToString().Trim());
+                    List<HocVienViewModel> hocViens = new List<HocVienViewModel>();
+
+                    for (int row = 3; row <= rowCount; row++)
+                    {
+                        if (worksheet.Cells[row, 1].Value != null)
+                        {
+                            var input = _converter.ToImportHocVien(worksheet, row);
+                            if (worksheet.Cells[row, 6].Value != null)
+                                input.NgaySinhDate = _converter.ToDateTime(worksheet.Cells[row, 6].Value.ToString().Trim() + " 00:00:00");
+
+                            if (worksheet.Cells[row, 10].Value != null)
+                                input.NgayBatDau = _converter.ToDateTime(worksheet.Cells[row, 10].Value.ToString().Trim() + " 00:00:00");
+                            input.LopHocId = lopHocId;
+
+                            var successful = await _hocVienService.ImportHocVienAsync(input, currentUser.Email);
+
+                            if (successful != null)
+                                hocViens.Add(successful);
+                        }
+                    }
+                    return Json(_converter.ToResultModel("Import thành công các học viên " + String.Join(", ", hocViens.Select(x => x.FullName).ToArray()), true, hocViens));
+                }
             }
         }
     }

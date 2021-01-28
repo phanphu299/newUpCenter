@@ -9,23 +9,23 @@
     public interface IHocVienService
     {
         Task<List<HocVienViewModel>> GetHocVienAsync();
+
         Task<List<HocVienViewModel>> GetAllHocVienAsync();
-        Task<HocVienViewModel> CreateHocVienAsync(List<LopHoc_NgayHocViewModel> LopHocList, string FullName, string Phone, string OtherPhone, string FacebookAccount,
-           string ParentFullName, string ParentPhone, Guid? QuanHeId, string EnglishName,
-           DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee, DateTime? NgayBatDau = null);
 
-        Task<HocVienViewModel> UpdateHocVienAsync(List<LopHoc_NgayHocViewModel> LopHocList, Guid HocVienId, string FullName, string Phone, string OtherPhone, string FacebookAccount,
-           string ParentFullName, string ParentPhone, Guid? QuanHeId, string EnglishName,
-           DateTime? NgaySinh, Guid[] LopHocIds, string LoggedEmployee);
+        Task<HocVienViewModel> CreateHocVienAsync(CreateHocVienInputModel input, string loggedEmployee);
 
-        Task<bool> DeleteHocVienAsync(Guid HocVienId, string LoggedEmployee);
+        Task<HocVienViewModel> ImportHocVienAsync(ImportHocVienInputModel input, string loggedEmployee);
 
-        Task<bool> ToggleChenAsync(Guid HocVienId, string LoggedEmployee);
+        Task<HocVienViewModel> UpdateHocVienAsync(UpdateHocVienInputModel input, string loggedEmployee);
 
-        Task<bool> AddToUnavailableClassAsync(List<Guid> LopHocId, Guid HocVienId, string LoggedEmployee);
+        Task<bool> DeleteHocVienAsync(Guid hocVienId, string loggedEmployee);
 
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<bool> AddToUnavailableClassAsync(List<Guid> lopHocIds, Guid hocVienId, string loggedEmployee);
 
-        Task<List<HocVienViewModel>> GetHocVienByNameAsync(string name);
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
+
+        Task<List<HocVienLightViewModel>> GetHocVienByNameAsync(string name);
+
+        Task<HocVienViewModel> GetHocVienDetailAsync(Guid id);
     }
 }

@@ -202,7 +202,7 @@
                         if (response.data.status === "OK") {
                             Object.assign(that.khoaHocItems[that.editedIndex], response.data.result);
                             that.snackbar = true;
-                            that.messageText = 'Cập nhật thành công !!!';
+                            that.messageText = response.data.message;
                             that.color = 'success';
                             that.dialogEdit = false;
                         }
@@ -235,7 +235,7 @@
                 .then(function (response) {
                     if (response.data.status === "OK") {
                         that.snackbar = true;
-                        that.messageText = 'Cập nhật thành công !!!';
+                        that.messageText = response.data.message;
                         that.color = 'success';
                     }
                     else {
@@ -320,10 +320,9 @@
                 }
             })
                 .then(function (response) {
-                    console.log(response);
                     if (response.data.status === "OK") {
                         that.snackbar = true;
-                        that.messageText = 'Thêm mới thành công !!!';
+                        that.messageText = response.data.message;
                         that.color = 'success';
                         that.selectedArrayLopHoc = [];
                     }
@@ -356,10 +355,9 @@
                     }
                 })
                     .then(function (response) {
-                        console.log(response);
                         if (response.data.status === "OK") {
                             that.snackbar = true;
-                            that.messageText = 'Thêm mới thành công !!!';
+                            that.messageText = response.data.message;
                             that.color = 'success';
                             that.selectedLopHoc = "";
                         }
@@ -410,11 +408,10 @@
                     }
                 })
                     .then(function (response) {
-                        console.log(response);
                         if (response.data.status === "OK") {
                             that.khoaHocItems.splice(0, 0, response.data.result);
                             that.snackbar = true;
-                            that.messageText = 'Thêm mới thành công !!!';
+                            that.messageText = response.data.message;
                             that.color = 'success';
                             that.newItem.fullName = '';
                             that.newItem.englishName = '';
@@ -455,7 +452,7 @@
                     if (response.data.status === "OK") {
                         that.khoaHocItems.splice(that.khoaHocItems.indexOf(item), 1);
                         that.snackbar = true;
-                        that.messageText = 'Xóa thành công !!!';
+                        that.messageText = response.data.message;
                         that.color = 'success';
                         that.deleteDialog = false;
                     }

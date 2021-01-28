@@ -3,15 +3,11 @@
     using System;
     using System.Collections.Generic;
     //GIAO VIEN LA NHAN VIEN
-    public class LoaiGiaoVien
+    public class LoaiGiaoVien : BaseEntity, IRemovable
     {
         public Guid LoaiGiaoVienId { get; set; }
         public string Name { get; set; }
         public bool IsDisabled { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; }
-        public string UpdatedBy { get; set; }
         public byte? Order { get; set; }
 
         public ICollection<NhanVien_ViTri> NhanVien_ViTris { get; set; }

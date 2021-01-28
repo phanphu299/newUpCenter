@@ -18,7 +18,7 @@
         public string NgaySinh { get; set; }
         public string EnglishName { get; set; }
         public bool IsDisabled { get; set; }
-        public List<LopHocViewModel> LopHocList { get; set; }
+        public IList<LopHocViewModel> LopHocList { get; set; }
         public Guid[] LopHocIds { get; set; }
         public string CreatedDate { get; set; }
         public string CreatedBy { get; set; }

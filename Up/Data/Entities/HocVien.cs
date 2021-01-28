@@ -5,7 +5,7 @@ namespace Up.Data.Entities
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public class HocVien
+    public class HocVien : BaseEntity, IRemovable
     {
         public Guid HocVienId { get; set; }
         public string FullName { get; set; }
@@ -18,10 +18,6 @@ namespace Up.Data.Entities
         public DateTime? NgaySinh { get; set; }
         public string EnglishName { get; set; }
         public bool IsDisabled { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime? UpdatedDate { get; set; }
-        public string UpdatedBy { get; set; }
 
         [ForeignKey("QuanHeId")]
         public QuanHe QuanHe { get; set; }

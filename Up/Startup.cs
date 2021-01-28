@@ -12,6 +12,8 @@ namespace Up
     using System;
     using Up.Data;
     using Up.Extensions;
+    using Up.IoT;
+    using Up.Middlewares;
     using Up.Services;
 
     public class Startup
@@ -51,52 +53,9 @@ namespace Up
                     options.ExpireTimeSpan = TimeSpan.FromHours(24);
                 });
 
-            //services.AddDefaultIdentity<IdentityUser>()
-            //    .AddDefaultUI(UIFramework.Bootstrap4)
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.AddScoped<IKhoaHocService, KhoaHocService>();
-            services.AddScoped<IQuanHeService, QuanHeService>();
-            services.AddScoped<INgayHocService, NgayHocService>();
-            services.AddScoped<IGioHocService, GioHocService>();
-            services.AddScoped<IHocPhiService, HocPhiService>();
-            services.AddScoped<ISachService, SachService>();
-            services.AddScoped<ILopHocService,LopHocService>();
-            services.AddScoped<IHocVienService, HocVienService>();
-            services.AddScoped<IGiaoVienService, GiaoVienService>();
-            services.AddScoped<IDiemDanhService, DiemDanhService>();
-            services.AddScoped<ILoaiGiaoVienService, LoaiGiaoVienService>();
-            services.AddScoped<ILoaiCheDoService, LoaiCheDoService>();
-            services.AddScoped<IThongKeService, ThongKeService>();
-            services.AddScoped<ISettingService, SettingService>();
-            services.AddScoped<IChiPhiCoDinhService, ChiPhiCoDinhService>();
-            services.AddScoped<INoService, NoService>();
-            services.AddScoped<IThongKe_DoanhThuHocPhiService, ThongKe_DoanhThuHocPhiService>();
-            services.AddScoped<IChiPhiService, ChiPhiService>();
-            services.AddScoped<IThongKe_ChiPhiService, ThongKe_ChiPhiService>();
-            services.AddScoped<INgayLamViecService, NgayLamViecService>();
-            services.AddScoped<IQuyenService, QuyenService>();
-            services.AddScoped<IChiPhiKhacService, ChiPhiKhacService>();
-            services.AddScoped<IHocPhiTronGoiService, HocPhiTronGoiService>();
-
-            services.AddScoped<Read_HocPhi>();
-            services.AddScoped<Read_NgayHoc>();
-            services.AddScoped<Read_KhoaHoc>();
-            services.AddScoped<Read_GioHoc>();
-            services.AddScoped<Read_TaiLieu>();
-            services.AddScoped<Read_LopHoc>();
-            services.AddScoped<Read_HocVien>();
-            services.AddScoped<Read_QuanHe>();
-            services.AddScoped<Read_ViTriCongViec>();
-            services.AddScoped<Read_CheDoHopTac>();
-            services.AddScoped<Read_NgayLamViec>();
-            services.AddScoped<Read_NhanVien>();
-            services.AddScoped<Read_ChiPhiCoDinh>();
-            services.AddScoped<Read_No>();
-            services.AddScoped<Read_TinhHocPhi>();
-            services.AddScoped<Read_TinhLuong>();
-            services.AddScoped<Read_DiemDanh>();
-            services.AddScoped<Read_DiemDanh_Export>();
+            services.AddLogics(Configuration);
+            services.AddDataAccess(Configuration);
+            services.AddCustomAttributes(Configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -120,6 +79,8 @@ namespace Up
             app.UseStaticFiles();
             app.UseCookiePolicy();
             ApplicationDbInitializer.SeedUsers(userManager);
+
+            app.UseExceptionHandlerMiddleware();
 
             app.UseAuthentication();
 
