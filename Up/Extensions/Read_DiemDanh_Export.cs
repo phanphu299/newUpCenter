@@ -3,22 +3,14 @@ namespace Up.Extensions
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc.Filters;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Up.Data;
     using Up.Enums;
 
-    public class Read_DiemDanh_Export : IActionFilter
+    public class Read_DiemDanh_Export : BasePolicy, IActionFilter
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly ApplicationDbContext _context;
-
         public Read_DiemDanh_Export(UserManager<IdentityUser> userManager, ApplicationDbContext context)
+            : base(context, userManager)
         {
-            _userManager = userManager;
-            _context = context;
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
@@ -28,26 +20,7 @@ namespace Up.Extensions
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            var CurUser = _userManager.GetUserAsync(context.HttpContext.User).Result;
-
-            var roles = _userManager.GetRolesAsync(CurUser).Result;
-
-            var quyen_roles = _context.Quyen_Roles
-                .Where(x => x.QuyenId == (int)QuyenEnums.Read_DiemDanh_Export || x.QuyenId == (int)QuyenEnums.Contribute_DiemDanh_Export)
-                .Select(x => x.RoleId).ToList();
-
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
-
-            bool canAccess = false;
-
-            foreach (string role in roles)
-            {
-                if (allRoles.Contains(role))
-                {
-                    canAccess = true;
-                    break;
-                }
-            }
+            bool canAccess = CanAccessAsync(context.HttpContext.User, (int)QuyenEnums.Read_DiemDanh_Export, (int)QuyenEnums.Contribute_DiemDanh_Export).Result;
 
             if (!canAccess)
                 context.Result = new Microsoft.AspNetCore.Mvc.RedirectResult("~/Identity/Account/AccessDenied");

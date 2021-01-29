@@ -14,11 +14,13 @@ namespace Up.Controllers
     {
         private readonly ILopHocService _lopHocService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly Converters.Converter _converter;
 
-        public LopHocController(ILopHocService lopHocService, UserManager<IdentityUser> userManager)
+        public LopHocController(ILopHocService lopHocService, UserManager<IdentityUser> userManager, Converters.Converter converter)
         {
             _lopHocService = lopHocService;
             _userManager = userManager;
+            _converter = converter;
         }
 
         [ServiceFilter(typeof(Read_LopHoc))]
@@ -74,36 +76,14 @@ namespace Up.Controllers
             {
                 return RedirectToAction("Index");
             }
-            
-            try
-            {
-                DateTime _ngayKhaiGiang = Convert.ToDateTime(model.NgayKhaiGiang, System.Globalization.CultureInfo.InvariantCulture);
 
-                var successful = await _lopHocService.CreateLopHocAsync(model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, _ngayKhaiGiang, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
+            DateTime _ngayKhaiGiang = _converter.ToDateTime(model.NgayKhaiGiang);
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _lopHocService.CreateLopHocAsync(model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, _ngayKhaiGiang, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
         }
 
         [HttpDelete]
@@ -120,32 +100,11 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                var successful = await _lopHocService.DeleteLopHocAsync(model.LopHocId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Xóa lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Xóa thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _lopHocService.DeleteLopHocAsync(model.LopHocId, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
 
         [HttpPut]
@@ -162,40 +121,18 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime _ngayKhaiGiang = Convert.ToDateTime(model.NgayKhaiGiang, System.Globalization.CultureInfo.InvariantCulture);
-                DateTime? _ngayKetThuc = null;
-                if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
-                    _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
+            DateTime _ngayKhaiGiang = _converter.ToDateTime(model.NgayKhaiGiang);
+            DateTime? _ngayKetThuc = null;
+            if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
+                _ngayKetThuc = _converter.ToDateTime(model.NgayKetThuc);
 
-                var successful = await _lopHocService.UpdateLopHocAsync(model.LopHocId, model.Name,
-                    model.KhoaHocId, model.NgayHocId, model.GioHocId, _ngayKhaiGiang,
-                    _ngayKetThuc, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _lopHocService.UpdateLopHocAsync(model.LopHocId, model.Name,
+                model.KhoaHocId, model.NgayHocId, model.GioHocId, _ngayKhaiGiang,
+                _ngayKetThuc, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful));
         }
 
         [HttpPut]
@@ -212,33 +149,11 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                var successful = await _lopHocService.ToggleTotNghiepAsync(model.LopHocId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _lopHocService.ToggleTotNghiepAsync(model.LopHocId, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false));
         }
 
         [HttpPut]
@@ -255,33 +170,11 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                var successful = await _lopHocService.ToggleHuyLopAsync(model.LopHocId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _lopHocService.ToggleHuyLopAsync(model.LopHocId, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false));
         }
     }
 }

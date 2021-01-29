@@ -10,13 +10,16 @@ namespace Up.Services
     public interface INgayHocService
     {
         Task<List<NgayHocViewModel>> GetNgayHocAsync();
-        Task<NgayHocViewModel> CreateNgayHocAsync(string Name, string LoggedEmployee);
-        Task<bool> UpdateNgayHocAsync(Guid NgayHocId, string Name, string LoggedEmployee);
-        Task<bool> DeleteNgayHocAsync(Guid NgayHocId, string LoggedEmployee);
+        Task<NgayHocViewModel> CreateNgayHocAsync(string name, string loggedEmployee);
 
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<bool> UpdateNgayHocAsync(NgayHocViewModel input, string loggedEmployee);
 
-        Task<HocVien_NgayHocViewModel> GetHocVien_NgayHocByHocVienAsync(Guid HocVienId, Guid LopHocId);
-        Task<bool> CreateUpdateHocVien_NgayHocAsync(Guid HocVienId, Guid LopHocId, DateTime NgayBatDau, DateTime? NgayKetThuc, string LoggedEmployee);
+        Task<bool> DeleteNgayHocAsync(Guid ngayHocId, string loggedEmployee);
+
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
+
+        Task<HocVien_NgayHocViewModel> GetHocVien_NgayHocByHocVienAsync(Guid hocVienId, Guid lopHocId);
+
+        Task<bool> CreateUpdateHocVien_NgayHocAsync(HocVien_NgayHocInputModel input, string loggedEmployee);
     }
 }

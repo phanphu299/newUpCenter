@@ -78,6 +78,30 @@ namespace Up.Converters
             };
         }
 
+        public HocVien_NgayHocViewModel ToHocVien_NgayHocViewModel(HocVien_NgayHoc hocVien_NgayHoc)
+        {
+            return new HocVien_NgayHocViewModel
+            {
+                NgayBatDau = hocVien_NgayHoc.NgayBatDau.ToClearDate(),
+                NgayKetThuc = hocVien_NgayHoc.NgayKetThuc?.ToClearDate() ?? string.Empty,
+                HocVienId = hocVien_NgayHoc.HocVienId,
+                LopHocId = hocVien_NgayHoc.LopHocId
+            };
+        }
+
+        public NgayHocViewModel ToNgayHocViewModel(NgayHoc ngayHoc)
+        {
+            return new NgayHocViewModel
+            {
+                CreatedBy = ngayHoc.CreatedBy,
+                CreatedDate = ngayHoc.CreatedDate.ToClearDate(),
+                NgayHocId = ngayHoc.NgayHocId,
+                Name = ngayHoc.Name,
+                UpdatedBy = ngayHoc.UpdatedBy,
+                UpdatedDate = ngayHoc.UpdatedDate?.ToClearDate() ?? string.Empty
+            };
+        }
+
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)
         {
             item.FullName = input.FullName;

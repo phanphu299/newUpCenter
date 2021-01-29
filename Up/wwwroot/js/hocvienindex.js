@@ -92,7 +92,7 @@
                 that.khoaHocItems = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
 
         await axios.get('/category/GetQuanHeAsync')
@@ -100,7 +100,7 @@
                 that.itemQuanHe = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
 
         await axios.get('/LopHoc/GetAvailableLopHocAsync')
@@ -108,7 +108,7 @@
                 that.itemLopHoc = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
     },
 
@@ -214,9 +214,9 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                         that.snackbar = true;
-                        that.messageText = 'Cập nhật lỗi: ' + error;
+                        that.messageText = 'Cập nhật lỗi: ' + error.response.data.Message;
                         that.color = 'error';
                         that.dialogEdit = false;
                     });
@@ -247,7 +247,7 @@
                 .catch(function (error) {
                     console.log(error);
                     that.snackbar = true;
-                    that.messageText = 'Cập nhật lỗi: ' + error;
+                    that.messageText = 'Cập nhật lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -273,7 +273,7 @@
                     that.itemDiemDanh = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         },
 
@@ -287,7 +287,7 @@
                     that.itemThemLop = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         },
 
@@ -304,7 +304,7 @@
                     that.itemNgayHoc = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         },
 
@@ -333,9 +333,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Thêm mới lỗi: ' + error;
+                    that.messageText = 'Thêm mới lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -368,9 +368,9 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                         that.snackbar = true;
-                        that.messageText = 'Thêm mới lỗi: ' + error;
+                        that.messageText = 'Thêm mới lỗi: ' + error.response.data.Message;
                         that.color = 'error';
                     });
             }
@@ -431,9 +431,9 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                         that.snackbar = true;
-                        that.messageText = 'Thêm mới lỗi: ' + error;
+                        that.messageText = 'Thêm mới lỗi: ' + error.response.data.Message;
                         that.color = 'error';
                     });
             }
@@ -463,9 +463,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Xóa lỗi: ' + error;
+                    that.messageText = 'Xóa lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -478,7 +478,7 @@
                         that.diemDanhItems = response.data;
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                     });
 
                 await axios.get('/DiemDanh/GetSoNgayHoc?LopHocId=' + that.selectedLopHoc + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
@@ -486,7 +486,7 @@
                         that.soNgayHoc = response.data;
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                     });
             }
         },
@@ -512,7 +512,7 @@
                     that.forceFileDownload(response, 'MauImportHocVien');
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         },
 
@@ -556,9 +556,9 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                         that.snackbar = true;
-                        that.messageText = 'Import lỗi: ' + error;
+                        that.messageText = 'Import lỗi: ' + error.response.data.Message;
                         that.color = 'error';
                     });
             });
@@ -586,7 +586,7 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         }
     }

@@ -23,8 +23,22 @@
         private readonly INgayLamViecService _ngayLamViecService;
         private readonly IChiPhiKhacService _chiPhiKhacService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly Converters.Converter _converter;
 
-        public CategoryController(IChiPhiKhacService chiPhiKhacService, IKhoaHocService khoaHocService, IGioHocService gioHocService, INgayHocService ngayHocService, IQuanHeService quanHeService, IHocPhiService hocPhiService, ISachService sachService, ILoaiGiaoVienService loaiGiaoVienService, ILoaiCheDoService loaiCheDoService, IChiPhiCoDinhService chiPhiCoDinhService, INgayLamViecService ngayLamViecService, UserManager<IdentityUser> userManager)
+        public CategoryController(
+            IChiPhiKhacService chiPhiKhacService,
+            IKhoaHocService khoaHocService, 
+            IGioHocService gioHocService, 
+            INgayHocService ngayHocService,
+            IQuanHeService quanHeService,
+            IHocPhiService hocPhiService, 
+            ISachService sachService,
+            ILoaiGiaoVienService loaiGiaoVienService,
+            ILoaiCheDoService loaiCheDoService, 
+            IChiPhiCoDinhService chiPhiCoDinhService,
+            INgayLamViecService ngayLamViecService, 
+            UserManager<IdentityUser> userManager,
+            Converters.Converter converter)
         {
             _chiPhiKhacService = chiPhiKhacService;
             _khoaHocService = khoaHocService;
@@ -38,6 +52,7 @@
             _chiPhiCoDinhService = chiPhiCoDinhService;
             _ngayLamViecService = ngayLamViecService;
             _userManager = userManager;
+            _converter = converter;
         }
 
         [ServiceFilter(typeof(Read_KhoaHoc))]
@@ -342,34 +357,12 @@
             {
                 return RedirectToAction("NgayHocIndex");
             }
-            
-            try
-            {
-                var successful = await _ngayHocService.CreateNgayHocAsync(model.Name, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _ngayHocService.CreateNgayHocAsync(model.Name, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
         }
 
         [HttpPut]
@@ -385,33 +378,12 @@
             {
                 return RedirectToAction("NgayHocIndex");
             }
-            
-            try
-            {
-                var successful = await _ngayHocService.UpdateNgayHocAsync(model.NgayHocId, model.Name, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _ngayHocService.UpdateNgayHocAsync(model, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false));
         }
 
         [HttpDelete]
@@ -428,32 +400,11 @@
                 return RedirectToAction("NgayHocIndex");
             }
 
-            try
-            {
-                var successful = await _ngayHocService.DeleteNgayHocAsync(model.NgayHocId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Xóa lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Xóa thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _ngayHocService.DeleteNgayHocAsync(model.NgayHocId, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         [ServiceFilter(typeof(Read_GioHoc))]

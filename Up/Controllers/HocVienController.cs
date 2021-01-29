@@ -98,7 +98,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUpdateHocVien_ngayHocAsync([FromBody] HocVien_NgayHocViewModel model)
+        public async Task<IActionResult> CreateUpdateHocVien_ngayHocAsync([FromBody] HocVien_NgayHocInputModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -106,12 +106,12 @@
                 return RedirectToAction("Index");
             }
 
-            DateTime _ngayBatDau = _converter.ToDateTime(model.NgayBatDau);
-            DateTime? _ngayKetThuc = null;
-            if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
-                _ngayKetThuc = _converter.ToDateTime(model.NgayKetThuc);
+            model.NgayBatDauDate = _converter.ToDateTime(model.NgayBatDau);
 
-            var successful = await _ngayHocService.CreateUpdateHocVien_NgayHocAsync(model.HocVienId, model.LopHocId, _ngayBatDau, _ngayKetThuc, currentUser.Email);
+            if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
+                model.NgayKetThucDate = _converter.ToDateTime(model.NgayKetThuc);
+
+            var successful = await _ngayHocService.CreateUpdateHocVien_NgayHocAsync(model, currentUser.Email);
 
             return successful ?
                 Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful))
