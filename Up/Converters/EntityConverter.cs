@@ -102,6 +102,54 @@ namespace Up.Converters
             };
         }
 
+        public LopHocViewModel ToLopHocViewModel(LopHoc lopHoc)
+        {
+            return new LopHocViewModel
+            {
+                CreatedBy = lopHoc.CreatedBy,
+                CreatedDate = lopHoc.CreatedDate.ToClearDate(),
+                GioHocId = lopHoc.GioHocId,
+                Name = lopHoc.Name,
+                KhoaHocId = lopHoc.KhoaHocId,
+                KhoaHoc = lopHoc.KhoaHoc.Name,
+                IsGraduated = lopHoc.IsGraduated,
+                GioHocFrom = lopHoc.GioHoc.From,
+                GioHocTo = lopHoc.GioHoc.To,
+                IsCanceled = lopHoc.IsCanceled,
+                LopHocId = lopHoc.LopHocId,
+                NgayHocId = lopHoc.NgayHocId,
+                NgayHoc = lopHoc.NgayHoc.Name,
+                NgayKhaiGiang = lopHoc.NgayKhaiGiang.ToClearDate(),
+                NgayKetThuc = lopHoc.NgayKetThuc?.ToClearDate() ?? string.Empty,
+                UpdatedBy = lopHoc.UpdatedBy,
+                UpdatedDate = lopHoc.UpdatedDate?.ToClearDate() ?? string.Empty
+            };
+        }
+
+        public LopHoc ToEntityLopHoc(CreateLopHocInputModel input, string loggedEmployee)
+        {
+            return new LopHoc
+            {
+                Name = input.Name,
+                KhoaHocId = input.KhoaHocId,
+                NgayKhaiGiang = input.NgayKhaiGiangDate,
+                NgayHocId = input.NgayHocId,
+                GioHocId = input.GioHocId,
+                CreatedBy = loggedEmployee
+            };
+        }
+
+        public LopHoc_HocPhi ToEntityHocPhi(Guid lopHocId, Guid hocPhiId, int thang, int nam)
+        {
+            return new LopHoc_HocPhi
+            {
+                LopHocId = lopHocId,
+                Nam = nam,
+                Thang = thang,
+                HocPhiId = hocPhiId
+            };
+        }
+
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)
         {
             item.FullName = input.FullName;
@@ -113,6 +161,18 @@ namespace Up.Converters
             item.ParentPhone = input.ParentPhone;
             item.EnglishName = input.EnglishName;
             item.NgaySinh = input.NgaySinhDate;
+            item.UpdatedBy = loggedEmployee;
+            item.UpdatedDate = DateTime.Now;
+        }
+
+        public void MappingEntityLopHoc(UpdateLopHocInputModel input, LopHoc item, string loggedEmployee)
+        {
+            item.Name = input.Name;
+            item.KhoaHocId = input.KhoaHocId;
+            item.NgayHocId = input.NgayHocId;
+            item.GioHocId = input.GioHocId;
+            item.NgayKhaiGiang = input.NgayKhaiGiangDate;
+            item.NgayKetThuc = input.NgayKetThucDate;
             item.UpdatedBy = loggedEmployee;
             item.UpdatedDate = DateTime.Now;
         }

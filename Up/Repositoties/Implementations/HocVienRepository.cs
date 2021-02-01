@@ -62,7 +62,7 @@ namespace Up.Repositoties
         public async Task<List<HocVienViewModel>> GetHocVienAsync()
         {
             var hocViens = await _context.HocViens
-                                        .Where(x => x.IsDisabled == false)
+                                        .Where(x => !x.IsDisabled)
                                         .Include(x => x.QuanHe)
                                         .Include(x => x.HocVien_LopHocs)
                                         .ThenInclude(x => x.LopHoc)

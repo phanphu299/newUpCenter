@@ -527,7 +527,7 @@
             var stream = new System.IO.MemoryStream();
             using (OfficeOpenXml.ExcelPackage package = new OfficeOpenXml.ExcelPackage(stream))
             {
-                string lopHocName = _lopHocService.GetLopHocByIdAsync(LopHocId).Result.Name;
+                string lopHocName = _lopHocService.GetLopHocDetailAsync(LopHocId).Result.Name;
                 OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Diem Danh " + lopHocName);
                 var groupedModel = model.GroupBy(x => x.HocVien).Select(x => new ThongKeModel
                 {

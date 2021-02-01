@@ -7,6 +7,7 @@ namespace Up.Controllers
     using System;
     using System.Threading.Tasks;
     using Up.Extensions;
+    using Up.Models;
     using Up.Services;
 
     [Authorize]
@@ -48,9 +49,9 @@ namespace Up.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAvailableLopHocWithTimeAsync(int Thang, int Nam)
+        public async Task<IActionResult> GetAvailableLopHocWithTimeAsync(int thang, int nam)
         {
-            var model = await _lopHocService.GetAvailableLopHocAsync(Thang, Nam);
+            var model = await _lopHocService.GetAvailableLopHocAsync(thang, nam);
             return Json(model);
         }
 
@@ -62,14 +63,14 @@ namespace Up.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetLopHocByHocVienIdAsync(Guid HocVienId)
+        public async Task<IActionResult> GetLopHocByHocVienIdAsync(Guid hocVienId)
         {
-            var model = await _lopHocService.GetLopHocByHocVienIdAsync(HocVienId);
+            var model = await _lopHocService.GetLopHocByHocVienIdAsync(hocVienId);
             return Json(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateLopHocAsync([FromBody]Models.LopHocViewModel model)
+        public async Task<IActionResult> CreateLopHocAsync([FromBody] CreateLopHocInputModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -77,9 +78,9 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            DateTime _ngayKhaiGiang = _converter.ToDateTime(model.NgayKhaiGiang);
+            model.NgayKhaiGiangDate = _converter.ToDateTime(model.NgayKhaiGiang);
 
-            var successful = await _lopHocService.CreateLopHocAsync(model.Name, model.KhoaHocId, model.NgayHocId, model.GioHocId, _ngayKhaiGiang, currentUser.Email);
+            var successful = await _lopHocService.CreateLopHocAsync(model, currentUser.Email);
             return successful == null ?
                 Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
                 :
@@ -108,7 +109,7 @@ namespace Up.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateLopHocAsync([FromBody]Models.LopHocViewModel model)
+        public async Task<IActionResult> UpdateLopHocAsync([FromBody] UpdateLopHocInputModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -121,14 +122,11 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            DateTime _ngayKhaiGiang = _converter.ToDateTime(model.NgayKhaiGiang);
-            DateTime? _ngayKetThuc = null;
+            model.NgayKhaiGiangDate = _converter.ToDateTime(model.NgayKhaiGiang);
             if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
-                _ngayKetThuc = _converter.ToDateTime(model.NgayKetThuc);
+                model.NgayKetThucDate = _converter.ToDateTime(model.NgayKetThuc);
 
-            var successful = await _lopHocService.UpdateLopHocAsync(model.LopHocId, model.Name,
-                model.KhoaHocId, model.NgayHocId, model.GioHocId, _ngayKhaiGiang,
-                _ngayKetThuc, currentUser.Email);
+            var successful = await _lopHocService.UpdateLopHocAsync(model, currentUser.Email);
             return successful == null ?
                 Json(_converter.ToResultModel("Cập nhật lỗi !!!", false))
                 :

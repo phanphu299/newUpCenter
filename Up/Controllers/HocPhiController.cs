@@ -415,7 +415,7 @@ namespace Up.Controllers
             var stream = new System.IO.MemoryStream();
             using (ExcelPackage package = new ExcelPackage(stream))
             {
-                string lopHocName = _lopHocService.GetLopHocByIdAsync(model.LopHocId).Result.Name;
+                string lopHocName = _lopHocService.GetLopHocDetailAsync(model.LopHocId).Result.Name;
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Phi " + lopHocName);
                 int totalRows = model.HocVienList.Count;
 
