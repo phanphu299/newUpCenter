@@ -1,5 +1,4 @@
-﻿
-namespace Up.Services
+﻿namespace Up.Services
 {
     using System;
     using System.Collections.Generic;
@@ -9,11 +8,14 @@ namespace Up.Services
 
     public interface ISachService
     {
-        Task<List<SachViewModel>> GetSachAsync();
-        Task<SachViewModel> CreateSachAsync(string Name, double Gia, string LoggedEmployee);
-        Task<bool> UpdateSachAsync(Guid SachId, string Name, double Gia, string LoggedEmployee);
-        Task<bool> DeleteSachAsync(Guid SachId, string LoggedEmployee);
+        Task<IList<SachViewModel>> GetSachAsync();
 
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<SachViewModel> CreateSachAsync(CreateSachInputModel input, string loggedEmployee);
+
+        Task<bool> UpdateSachAsync(UpdateSachInputModel input, string loggedEmployee);
+
+        Task<bool> DeleteSachAsync(Guid id, string loggedEmployee);
+
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
     }
 }

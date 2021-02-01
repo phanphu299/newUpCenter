@@ -126,6 +126,21 @@ namespace Up.Converters
             };
         }
 
+        public SachViewModel ToSachViewModel(Sach sach)
+        {
+            return new SachViewModel
+            {
+                CreatedBy = sach.CreatedBy,
+                CreatedDate = sach.CreatedDate.ToClearDate(),
+                SachId = sach.SachId,
+                Name = sach.Name,
+                Gia = sach.Gia,
+                UpdatedBy = sach.UpdatedBy,
+                UpdatedDate = sach.UpdatedDate?.ToClearDate() ?? string.Empty,
+                IsDisabled = sach.IsDisabled
+            };
+        }
+
         public LopHoc ToEntityLopHoc(CreateLopHocInputModel input, string loggedEmployee)
         {
             return new LopHoc
@@ -135,6 +150,16 @@ namespace Up.Converters
                 NgayKhaiGiang = input.NgayKhaiGiangDate,
                 NgayHocId = input.NgayHocId,
                 GioHocId = input.GioHocId,
+                CreatedBy = loggedEmployee
+            };
+        }
+
+        public Sach ToEntitySach(CreateSachInputModel input, string loggedEmployee)
+        {
+            return new Sach
+            {
+                Name = input.Name,
+                Gia = input.Gia,
                 CreatedBy = loggedEmployee
             };
         }
@@ -149,6 +174,8 @@ namespace Up.Converters
                 HocPhiId = hocPhiId
             };
         }
+
+        ///MAPPING
 
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)
         {
@@ -173,6 +200,14 @@ namespace Up.Converters
             item.GioHocId = input.GioHocId;
             item.NgayKhaiGiang = input.NgayKhaiGiangDate;
             item.NgayKetThuc = input.NgayKetThucDate;
+            item.UpdatedBy = loggedEmployee;
+            item.UpdatedDate = DateTime.Now;
+        }
+
+        public void MappingEntitySach(UpdateSachInputModel input, Sach item, string loggedEmployee)
+        {
+            item.Name = input.Name;
+            item.Gia = input.Gia;
             item.UpdatedBy = loggedEmployee;
             item.UpdatedDate = DateTime.Now;
         }

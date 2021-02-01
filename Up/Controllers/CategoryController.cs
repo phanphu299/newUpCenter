@@ -6,6 +6,7 @@
     using System;
     using System.Threading.Tasks;
     using Up.Extensions;
+    using Up.Models;
     using Up.Services;
 
     [Authorize]
@@ -708,7 +709,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSachAsync([FromBody]Models.SachViewModel model)
+        public async Task<IActionResult> CreateSachAsync([FromBody] CreateSachInputModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -716,37 +717,15 @@
                 return RedirectToAction("SachIndex");
             }
 
-            try
-            {
-                var successful = await _sachService.CreateSachAsync(model.Name, model.Gia, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel 
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _sachService.CreateSachAsync(model, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateSachAsync([FromBody]Models.SachViewModel model)
+        public async Task<IActionResult> UpdateSachAsync([FromBody] UpdateSachInputModel model)
         {
             if (model.SachId == Guid.Empty)
             {
@@ -759,32 +738,11 @@
                 return RedirectToAction("SachIndex");
             }
 
-            try
-            {
-                var successful = await _sachService.UpdateSachAsync(model.SachId, model.Name, model.Gia, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _sachService.UpdateSachAsync(model, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false));
         }
 
         [HttpDelete]
@@ -800,33 +758,12 @@
             {
                 return RedirectToAction("SachIndex");
             }
-            
-            try
-            {
-                var successful = await _sachService.DeleteSachAsync(model.SachId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Xóa lỗi !!!"
-                    });
-                }
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Xóa thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _sachService.DeleteSachAsync(model.SachId, currentUser.Email);
+            return successful ?
+               Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+               :
+               Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
 
 

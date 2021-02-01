@@ -1,25 +1,20 @@
 ﻿namespace Up.Services
 {
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using Up.Data;
-    using Up.Data.Entities;
     using Up.Enums;
     using Up.Models;
     using Up.Repositoties;
 
     public class LopHocService : ILopHocService
     {
-        private readonly ApplicationDbContext _context;
         private readonly ILopHocRepository _lopHocRepository;
 
-        public LopHocService(ApplicationDbContext context, ILopHocRepository lopHocRepository)
+        public LopHocService(ILopHocRepository lopHocRepository)
         {
-            _context = context;
             _lopHocRepository = lopHocRepository;
         }
 
