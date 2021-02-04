@@ -30,6 +30,6 @@
 
         Task<bool> CanContributeAsync(ClaimsPrincipal user);
 
-        Task<bool> UpdateHocPhiLopHocAsync(Guid lopHocId, Guid hocPhiId, int thang, int nam, string loggedEmployee);
+        Task<bool> UpdateHocPhiLopHocAsync(TinhHocPhiInputModel input, string loggedEmployee);
     }
 }

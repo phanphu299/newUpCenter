@@ -9,10 +9,13 @@ namespace Up.Services
     public interface IKhoaHocService
     {
         Task<List<KhoaHocViewModel>> GetKhoaHocAsync();
-        Task<KhoaHocViewModel> CreateKhoaHocAsync(string Name, string LoggedEmployee);
-        Task<bool> UpdateKhoaHocAsync(Guid KhoaHocId, string Name, string LoggedEmployee);
-        Task<bool> DeleteKhoaHocAsync(Guid KhoaHocId, string LoggedEmployee);
 
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<KhoaHocViewModel> CreateKhoaHocAsync(string name, string loggedEmployee);
+
+        Task<bool> UpdateKhoaHocAsync(Guid id, string name, string loggedEmployee);
+
+        Task<bool> DeleteKhoaHocAsync(Guid id, string loggedEmployee);
+
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
     }
 }

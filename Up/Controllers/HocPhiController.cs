@@ -11,6 +11,7 @@ namespace Up.Controllers
     using System.Linq;
     using System.Threading.Tasks;
     using Up.Extensions;
+    using Up.Models;
     using Up.Services;
 
     [Authorize]
@@ -22,8 +23,16 @@ namespace Up.Controllers
         private readonly IThongKe_DoanhThuHocPhiService _thongKe_DoanhThuHocPhiService;
         private readonly INoService _noService;
         private readonly IHocPhiTronGoiService _hocPhiTronGoiService;
+        private readonly Converters.Converter _converter;
 
-        public HocPhiController(UserManager<IdentityUser> userManager, IHocPhiTronGoiService hocPhiTronGoiService, IHocPhiService hocPhiService, ILopHocService lopHocService, IThongKe_DoanhThuHocPhiService thongKe_DoanhThuHocPhiService, INoService noService)
+        public HocPhiController(
+            UserManager<IdentityUser> userManager,
+            IHocPhiTronGoiService hocPhiTronGoiService,
+            IHocPhiService hocPhiService,
+            ILopHocService lopHocService,
+            IThongKe_DoanhThuHocPhiService thongKe_DoanhThuHocPhiService, 
+            INoService noService,
+            Converters.Converter converter)
         {
             _userManager = userManager;
             _hocPhiService = hocPhiService;
@@ -31,6 +40,7 @@ namespace Up.Controllers
             _thongKe_DoanhThuHocPhiService = thongKe_DoanhThuHocPhiService;
             _noService = noService;
             _hocPhiTronGoiService = hocPhiTronGoiService;
+            _converter = converter;
         }
 
         [ServiceFilter(typeof(Read_TinhHocPhi))]
@@ -260,7 +270,7 @@ namespace Up.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTinhHocPhiAsync(Guid LopHocId, int Month, int Year, double HocPhi, Guid HocPhiId)
+        public async Task<IActionResult> GetTinhHocPhiAsync(TinhHocPhiInputModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -268,9 +278,9 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            var updateHocPhi = await _lopHocService.UpdateHocPhiLopHocAsync(LopHocId, HocPhiId, Month, Year, currentUser.Email);
-            var model = await _hocPhiService.TinhHocPhiAsync(LopHocId, Month, Year, HocPhi);
-            return Json(model);
+            var updateHocPhi = await _lopHocService.UpdateHocPhiLopHocAsync(model, currentUser.Email);
+            var modeal = await _hocPhiService.TinhHocPhiAsync(model);
+            return Json(modeal);
         }
 
         [HttpPost]
@@ -282,31 +292,15 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
+            DateTime _ngayDong = new DateTime(model.models[0].year, model.models[0].month, 1);
+            foreach (var item in model.models)
             {
-                DateTime _ngayDong = new DateTime(model.models[0].year, model.models[0].month, 1);
-                foreach (var item in model.models)
-                {
-                    var sachIds = item.GiaSach != null ? item.GiaSach.Select(x => x.SachId).ToArray() : new Guid[0];
-                    await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(item.LopHocId, item.HocVienId,
-                    item.HocPhiMoi, _ngayDong, item.Bonus, item.Minus, item.KhuyenMai, item.GhiChu, sachIds, false, false, item.TronGoi, currentUser.Email);
-                }
+                var sachIds = item.GiaSach != null ? item.GiaSach.Select(x => x.SachId).ToArray() : new Guid[0];
+                await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(item.LopHocId, item.HocVienId,
+                item.HocPhiMoi, _ngayDong, item.Bonus, item.Minus, item.KhuyenMai, item.GhiChu, sachIds, false, false, item.TronGoi, currentUser.Email);
+            }
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Lưu Nháp Doanh Thu thành công !!!",
-                    Result = true
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            return Json(_converter.ToResultModel("Lưu Nháp Doanh Thu thành công !!!", true));
         }
 
         [HttpPost]
@@ -323,35 +317,14 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime _ngayDong = new DateTime(model.year, model.month, 1);
-                var successful = await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(model.LopHocId, model.HocVienId,
-                    model.HocPhi, _ngayDong, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, true, false, model.TronGoi, currentUser.Email);
-                if (successful == false)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Lưu Doanh Thu lỗi !!!"
-                    });
-                }
+            DateTime _ngayDong = new DateTime(model.year, model.month, 1);
+            var successful = await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(model.LopHocId, model.HocVienId,
+                model.HocPhi, _ngayDong, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, true, false, model.TronGoi, currentUser.Email);
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Lưu Doanh Thu thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            return successful ?
+               Json(_converter.ToResultModel("Lưu Doanh Thu thành công !!!", true, successful))
+               :
+               Json(_converter.ToResultModel("Lưu Doanh Thu lỗi !!!", false));
         }
 
         [HttpPost]

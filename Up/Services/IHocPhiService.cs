@@ -10,18 +10,23 @@ namespace Up.Services
     public interface IHocPhiService
     {
         Task<List<HocPhiViewModel>> GetHocPhiAsync();
-        Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee);
-        Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee);
-        Task<bool> DeleteHocPhiAsync(Guid HocPhiId, string LoggedEmployee);
 
-        Task<int> TinhSoNgayHocAsync(Guid LopHocId, int month, int year);
+        Task<HocPhiViewModel> CreateHocPhiAsync(CreateHocPhiInputModel input, string loggedEmployee);
+
+        Task<HocPhiViewModel> UpdateHocPhiAsync(UpdateHocPhiInputModel input, string loggedEmployee);
+
+        Task<bool> DeleteHocPhiAsync(Guid id, string loggedEmployee);
+
         Task<List<int>> SoNgayHocAsync(Guid LopHocId, int month, int year);
+
         Task<int> TinhSoNgayDuocChoNghiAsync(Guid LopHocId, int month, int year);
+
         Task<List<HocVienViewModel>> GetHocVien_No_NgayHocAsync(Guid LopHocId, int month, int year, double HocPhi, int SoNgayHoc, double HocPhiMoiNgay, double HocPhiMoiNgayCu);
-        Task<TinhHocPhiViewModel> TinhHocPhiAsync(Guid LopHocId, int month, int year, double HocPhi);
 
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<TinhHocPhiViewModel> TinhHocPhiAsync(TinhHocPhiInputModel input);
 
-        Task<bool> CanContributeTinhHocPhiAsync(ClaimsPrincipal User);
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
+
+        Task<bool> CanContributeTinhHocPhiAsync(ClaimsPrincipal user);
     }
 }

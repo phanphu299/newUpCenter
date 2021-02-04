@@ -1,7 +1,6 @@
 ﻿
 namespace Up.Services
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -12,121 +11,38 @@ namespace Up.Services
     using Up.Data.Entities;
     using Up.Enums;
     using Up.Models;
+    using Up.Repositoties;
 
     public class HocPhiService : IHocPhiService
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IHocPhiRepository _hocPhiRepository;
+        private readonly ILopHocRepository _lopHocRepository;
 
-        public HocPhiService(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public HocPhiService(
+            ApplicationDbContext context,
+            IHocPhiRepository hocPhiRepository,
+            ILopHocRepository lopHocRepository)
         {
             _context = context;
-            _userManager = userManager;
+            _hocPhiRepository = hocPhiRepository;
+            _lopHocRepository = lopHocRepository;
         }
 
-        public async Task<HocPhiViewModel> CreateHocPhiAsync(double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee)
+        public async Task<HocPhiViewModel> CreateHocPhiAsync(CreateHocPhiInputModel input, string loggedEmployee)
         {
-            HocPhi hocPhi = new HocPhi();
-            hocPhi.HocPhiId = new Guid();
-            hocPhi.Gia = Gia;
-            hocPhi.GhiChu = GhiChu;
-            hocPhi.NgayApDung = NgayApDung;
-            hocPhi.CreatedBy = LoggedEmployee;
-            hocPhi.CreatedDate = DateTime.Now;
-
-            _context.HocPhis.Add(hocPhi);
-
-            var saveResult = await _context.SaveChangesAsync();
-            if (saveResult != 1)
-                throw new Exception("Lỗi khi lưu Học Phí !!!");
-
-            return new HocPhiViewModel
-            {
-                HocPhiId = hocPhi.HocPhiId,
-                Gia = hocPhi.Gia,
-                GhiChu = hocPhi.GhiChu,
-                NgayApDung = hocPhi.NgayApDung?.ToString("dd/MM/yyyy"),
-                CreatedBy = hocPhi.CreatedBy,
-                CreatedDate = hocPhi.CreatedDate.ToString("dd/MM/yyyy"),
-            };
+            var result = await _hocPhiRepository.CreateHocPhiAsync(input, loggedEmployee);
+            return await _hocPhiRepository.GetHocPhiDetailAsync(result);
         }
 
-        public async Task<bool> DeleteHocPhiAsync(Guid HocPhiId, string LoggedEmployee)
+        public async Task<bool> DeleteHocPhiAsync(Guid id, string loggedEmployee)
         {
-            var item = await _context.HocPhis
-                                    .Where(x => x.HocPhiId == HocPhiId)
-                                    .SingleOrDefaultAsync();
-
-            if (item == null)
-                throw new Exception("Không tìm thấy Học Phí !!!");
-
-            item.IsDisabled = true;
-            item.UpdatedBy = LoggedEmployee;
-            item.UpdatedDate = DateTime.Now;
-
-            var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+            return await _hocPhiRepository.DeleteHocPhiAsync(id, loggedEmployee);
         }
 
         public async Task<List<HocPhiViewModel>> GetHocPhiAsync()
         {
-            return await _context.HocPhis
-                .Where(x => x.IsDisabled == false)
-                .Select(x => new HocPhiViewModel
-                {
-                    CreatedBy = x.CreatedBy,
-                    CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
-                    HocPhiId = x.HocPhiId,
-                    Gia = x.Gia,
-                    NgayApDung = x.NgayApDung == null ? "" : ((DateTime)x.NgayApDung).ToString("dd/MM/yyyy"),
-                    GhiChu = x.GhiChu,
-                    UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
-                })
-                .AsNoTracking()
-                .ToListAsync();
-        }
-
-        public async Task<int> TinhSoNgayHocAsync(Guid LopHocId, int month, int year)
-        {
-            var item = await _context.LopHocs
-                                    .Include(x => x.NgayHoc)
-                                    .Where(x => x.LopHocId == LopHocId)
-                                    .AsNoTracking()
-                                    .SingleOrDefaultAsync();
-
-            var ngayHoc = item.NgayHoc.Name.Split('-');
-            List<int> tongNgayHoc = new List<int>();
-
-            foreach (string el in ngayHoc)
-            {
-                switch (el.Trim())
-                {
-                    case "2":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Monday));
-                        break;
-                    case "3":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Tuesday));
-                        break;
-                    case "4":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Wednesday));
-                        break;
-                    case "5":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Thursday));
-                        break;
-                    case "6":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Friday));
-                        break;
-                    case "7":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Saturday));
-                        break;
-                    default:
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Sunday));
-                        break;
-                }
-            }
-
-            return tongNgayHoc.Count;
+            return await _hocPhiRepository.GetHocPhiAsync();
         }
 
         private static IEnumerable<int> DaysInMonth(int year, int month, DayOfWeek dow)
@@ -147,34 +63,11 @@ namespace Up.Services
                 .Select(date => date.Day);
         }
 
-        public async Task<HocPhiViewModel> UpdateHocPhiAsync(Guid HocPhiId, double Gia, string GhiChu, DateTime NgayApDung, string LoggedEmployee)
+        public async Task<HocPhiViewModel> UpdateHocPhiAsync(UpdateHocPhiInputModel input, string loggedEmployee)
         {
-            var item = await _context.HocPhis
-                                    .Where(x => x.HocPhiId == HocPhiId)
-                                    .SingleOrDefaultAsync();
+            var result = await _hocPhiRepository.UpdateHocPhiAsync(input, loggedEmployee);
 
-            if (item == null)
-                throw new Exception("Không tìm thấy Học Phí !!!");
-
-            item.Gia = Gia;
-            item.GhiChu = GhiChu;
-            item.NgayApDung = NgayApDung;
-            item.UpdatedBy = LoggedEmployee;
-            item.UpdatedDate = DateTime.Now;
-
-            var saveResult = await _context.SaveChangesAsync();
-
-            return new HocPhiViewModel
-            {
-                GhiChu = item.GhiChu,
-                CreatedBy = item.CreatedBy,
-                Gia = item.Gia,
-                HocPhiId = item.HocPhiId,
-                UpdatedBy = item.UpdatedBy,
-                CreatedDate = item.CreatedDate != null ? ((DateTime)item.CreatedDate).ToString("dd/MM/yyyy") : "",
-                UpdatedDate = item.UpdatedDate != null ? ((DateTime)item.UpdatedDate).ToString("dd/MM/yyyy") : "",
-                NgayApDung = item.NgayApDung != null ? ((DateTime)item.NgayApDung).ToString("dd/MM/yyyy") : "",
-            };
+            return await _hocPhiRepository.GetHocPhiDetailAsync(result);
         }
 
         public async Task<int> TinhSoNgayDuocChoNghiAsync(Guid LopHocId, int month, int year)
@@ -243,10 +136,8 @@ namespace Up.Services
             return tongNgayHoc;
         }
 
-        public async Task<TinhHocPhiViewModel> TinhHocPhiAsync(Guid LopHocId, int month, int year, double HocPhi)
+        private (int, int) TinhSubMonthSubYear(int month, int year)
         {
-            //int soNgayDuocNghi = await TinhSoNgayDuocChoNghiAsync(LopHocId, month, year);
-            
             int subMonth = month;
             int subYear = year;
             if (subMonth == 1)
@@ -258,25 +149,34 @@ namespace Up.Services
             {
                 subMonth--;
             }
-            int soNgayHoc = await TinhSoNgayHocAsync(LopHocId, month, year);
-            int soNgayHocCu = await TinhSoNgayHocAsync(LopHocId, subMonth, subYear);
+            return (subMonth, subYear);
+        }
 
-            var hocPhiMoiNgay = HocPhi / soNgayHoc;
+        public async Task<TinhHocPhiViewModel> TinhHocPhiAsync(TinhHocPhiInputModel input)
+        {
+            //int soNgayDuocNghi = await TinhSoNgayDuocChoNghiAsync(LopHocId, month, year);
+            
+            var (subMonth, subYear) = TinhSubMonthSubYear(input.Month, input.Year);
+
+            int soNgayHoc = await _lopHocRepository.DemSoNgayHocAsync(input.LopHocId, input.Month, input.Year);
+            int soNgayHocCu = await _lopHocRepository.DemSoNgayHocAsync(input.LopHocId, subMonth, subYear);
+
+            var hocPhiMoiNgay = input.HocPhi/soNgayHoc;
 
             var hocPhiCu = await _context.LopHoc_HocPhis
                 .Include(x => x.HocPhi)
                 .AsNoTracking().
-                FirstOrDefaultAsync(x => x.Thang == subMonth && x.Nam == subYear && x.LopHocId == LopHocId);
+                FirstOrDefaultAsync(x => x.Thang == subMonth && x.Nam == subYear && x.LopHocId == input.LopHocId);
 
-            var hocPhiMoiNgayCu = hocPhiCu == null ? (HocPhi / soNgayHocCu) : (hocPhiCu.HocPhi.Gia / soNgayHocCu);
+            var hocPhiMoiNgayCu = hocPhiCu == null ? (input.HocPhi / soNgayHocCu) : (hocPhiCu.HocPhi.Gia / soNgayHocCu);
 
             return new TinhHocPhiViewModel
             {
                 HocPhiMoiNgay = hocPhiMoiNgay,
                 //SoNgayDuocNghi = soNgayDuocNghi,
-                HocPhi = HocPhi,
+                HocPhi = input.HocPhi,
                 SoNgayHoc = soNgayHoc,
-                HocVienList = await GetHocVien_No_NgayHocAsync(LopHocId, month, year, HocPhi, soNgayHoc, hocPhiMoiNgay, hocPhiMoiNgayCu)
+                HocVienList = await GetHocVien_No_NgayHocAsync(input.LopHocId, input.Month, input.Year, input.HocPhi, soNgayHoc, hocPhiMoiNgay, hocPhiMoiNgayCu)
             };
         }
 
@@ -681,53 +581,15 @@ namespace Up.Services
             return tongNgayHoc.OrderBy(x => x).ToList();
         }
 
-        public async Task<bool> CanContributeAsync(ClaimsPrincipal User)
+        public async Task<bool> CanContributeAsync(ClaimsPrincipal user)
         {
-            var CurUser = await _userManager.GetUserAsync(User);
-
-            var roles = await _userManager.GetRolesAsync(CurUser);
-
-            var quyen_roles = await _context.Quyen_Roles
-                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_HocPhi)
-                .Select(x => x.RoleId).AsNoTracking().ToListAsync();
-
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name).AsNoTracking();
-
-            bool canContribute = false;
-
-            foreach (string role in roles)
-            {
-                if (allRoles.Contains(role))
-                {
-                    canContribute = true;
-                    break;
-                }
-            }
+            bool canContribute = await _hocPhiRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_HocPhi);
             return canContribute;
         }
 
-        public async Task<bool> CanContributeTinhHocPhiAsync(ClaimsPrincipal User)
+        public async Task<bool> CanContributeTinhHocPhiAsync(ClaimsPrincipal user)
         {
-            var CurUser = await _userManager.GetUserAsync(User);
-
-            var roles = await _userManager.GetRolesAsync(CurUser);
-
-            var quyen_roles = await _context.Quyen_Roles
-                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_TinhHocPhi)
-                .Select(x => x.RoleId).AsNoTracking().ToListAsync();
-
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name).AsNoTracking();
-
-            bool canContribute = false;
-
-            foreach (string role in roles)
-            {
-                if (allRoles.Contains(role))
-                {
-                    canContribute = true;
-                    break;
-                }
-            }
+            bool canContribute = await _hocPhiRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_TinhHocPhi);
             return canContribute;
         }
     }

@@ -1,133 +1,58 @@
 ﻿namespace Up.Services
 {
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using Up.Data;
-    using Up.Data.Entities;
     using Up.Enums;
     using Up.Models;
+    using Up.Repositoties;
 
     public class KhoaHocService : IKhoaHocService
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IKhoaHocRepository _khoaHocRepository;
 
-        public KhoaHocService(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public KhoaHocService(IKhoaHocRepository khoaHocRepository)
         {
-            _context = context;
-            _userManager = userManager;
+            _khoaHocRepository = khoaHocRepository;
         }
 
-        public async Task<bool> CanContributeAsync(ClaimsPrincipal User)
+        public async Task<bool> CanContributeAsync(ClaimsPrincipal user)
         {
-            var CurUser = await _userManager.GetUserAsync(User);
-
-            var roles = await _userManager.GetRolesAsync(CurUser);
-
-            var quyen_roles = await _context.Quyen_Roles
-                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_KhoaHoc)
-                .Select(x => x.RoleId).AsNoTracking().ToListAsync();
-
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name).AsNoTracking();
-
-            bool canContribute = false;
-
-            foreach (string role in roles)
-            {
-                if (allRoles.Contains(role))
-                {
-                    canContribute = true;
-                    break;
-                }
-            }
+            bool canContribute = await _khoaHocRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_KhoaHoc);
             return canContribute;
         }
 
-        public async Task<KhoaHocViewModel> CreateKhoaHocAsync(string Name, string LoggedEmployee)
+        public async Task<KhoaHocViewModel> CreateKhoaHocAsync(string name, string loggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name))
+            if (string.IsNullOrWhiteSpace(name))
                 throw new Exception("Tên Khóa Học không được để trống !!!");
 
-            KhoaHoc khoaHoc = new KhoaHoc();
-            khoaHoc.KhoaHocId = new Guid();
-            khoaHoc.Name = Name;
-            khoaHoc.CreatedBy = LoggedEmployee;
-            khoaHoc.CreatedDate = DateTime.Now;
-
-            _context.KhoaHocs.Add(khoaHoc);
-
-            var saveResult = await _context.SaveChangesAsync();
-            if (saveResult != 1)
-                throw new Exception("Lỗi khi lưu Khóa Học !!!");
-
-            return new KhoaHocViewModel {
-                KhoaHocId = khoaHoc.KhoaHocId,
-                Name = khoaHoc.Name,
-                CreatedBy = khoaHoc.CreatedBy,
-                CreatedDate = khoaHoc.CreatedDate.ToString("dd/MM/yyyy"),
-            };
+            var result = await _khoaHocRepository.CreateKhoaHocAsync(name, loggedEmployee);
+            return await _khoaHocRepository.GetKhoaHocDetailAsync(result);
         }
 
-        public async Task<bool> DeleteKhoaHocAsync(Guid KhoaHocId, string LoggedEmployee)
+        public async Task<bool> DeleteKhoaHocAsync(Guid id, string loggedEmployee)
         {
-            var lopHoc = await _context.LopHocs.Where(x => x.KhoaHocId == KhoaHocId).ToListAsync();
+            var lopHoc = await _khoaHocRepository.GetLopHocByKhoaHocIdAsync(id);
             if (lopHoc.Any())
                 throw new Exception("Hãy xóa những lớp học thuộc khóa học này trước !!!");
 
-            var item = await _context.KhoaHocs
-                                    .FindAsync(KhoaHocId);
-
-            if (item == null)
-                throw new Exception("Không tìm thấy Khóa Học !!!");
-
-            item.IsDisabled = true;
-            item.UpdatedBy = LoggedEmployee;
-            item.UpdatedDate = DateTime.Now;
-
-            var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+            return await _khoaHocRepository.DeleteKhoaHocAsync(id, loggedEmployee);
         }
 
         public async Task<List<KhoaHocViewModel>> GetKhoaHocAsync()
         {
-            return await _context.KhoaHocs
-                .Where(x => x.IsDisabled == false)
-                .Select(x => new KhoaHocViewModel
-                {
-                    CreatedBy = x.CreatedBy,
-                    CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
-                    KhoaHocId = x.KhoaHocId,
-                    Name = x.Name,
-                    UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
-                })
-                .AsNoTracking()
-                .ToListAsync();
+            return await _khoaHocRepository.GetKhoaHocAsync();
         }
 
-        public async Task<bool> UpdateKhoaHocAsync(Guid KhoaHocId, string Name, string LoggedEmployee)
+        public async Task<bool> UpdateKhoaHocAsync(Guid id, string name, string loggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name))
+            if (string.IsNullOrWhiteSpace(name))
                 throw new Exception("Tên Khóa Học không được để trống !!!");
 
-            var item = await _context.KhoaHocs
-                                    .Where(x => x.KhoaHocId == KhoaHocId)
-                                    .SingleOrDefaultAsync();
-
-            if (item == null)
-                throw new Exception("Không tìm thấy Khóa Học !!!");
-
-            item.Name = Name;
-            item.UpdatedBy = LoggedEmployee;
-            item.UpdatedDate = DateTime.Now;
-
-            var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+            return await _khoaHocRepository.UpdateKhoaHocAsync(id, name, loggedEmployee);
         }
     }
 }

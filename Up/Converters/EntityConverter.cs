@@ -126,6 +126,19 @@ namespace Up.Converters
             };
         }
 
+        public KhoaHocViewModel ToKhoaHocViewModel(KhoaHoc khoaHoc)
+        {
+            return new KhoaHocViewModel
+            {
+                CreatedBy = khoaHoc.CreatedBy,
+                CreatedDate = khoaHoc.CreatedDate.ToClearDate(),
+                KhoaHocId = khoaHoc.KhoaHocId,
+                Name = khoaHoc.Name,
+                UpdatedBy = khoaHoc.UpdatedBy,
+                UpdatedDate = khoaHoc.UpdatedDate?.ToClearDate() ?? string.Empty
+            };
+        }
+
         public SachViewModel ToSachViewModel(Sach sach)
         {
             return new SachViewModel
@@ -140,6 +153,23 @@ namespace Up.Converters
                 IsDisabled = sach.IsDisabled
             };
         }
+
+        public HocPhiViewModel ToHocPhiViewModel(HocPhi hocPhi)
+        {
+            return new HocPhiViewModel
+            {
+                CreatedBy = hocPhi.CreatedBy,
+                CreatedDate = hocPhi.CreatedDate.ToClearDate(),
+                HocPhiId = hocPhi.HocPhiId,
+                Gia = hocPhi.Gia,
+                NgayApDung = hocPhi.NgayApDung?.ToClearDate() ?? string.Empty,
+                GhiChu = hocPhi.GhiChu,
+                UpdatedBy = hocPhi.UpdatedBy,
+                UpdatedDate = hocPhi.UpdatedDate?.ToClearDate() ?? string.Empty
+            };
+        }
+
+        ///ENTITY
 
         public LopHoc ToEntityLopHoc(CreateLopHocInputModel input, string loggedEmployee)
         {
@@ -175,6 +205,17 @@ namespace Up.Converters
             };
         }
 
+        public HocPhi ToEntityHocPhi(CreateHocPhiInputModel input, string loggedEmployee)
+        {
+            return new HocPhi
+            {
+                Gia = input.Gia,
+                GhiChu = input.GhiChu,
+                NgayApDung = input.NgayApDungDate,
+                CreatedBy = loggedEmployee
+            };
+        }
+
         ///MAPPING
 
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)
@@ -207,6 +248,15 @@ namespace Up.Converters
         public void MappingEntitySach(UpdateSachInputModel input, Sach item, string loggedEmployee)
         {
             item.Name = input.Name;
+            item.Gia = input.Gia;
+            item.UpdatedBy = loggedEmployee;
+            item.UpdatedDate = DateTime.Now;
+        }
+
+        public void MappingEntityHocPhi(UpdateHocPhiInputModel input, HocPhi item, string loggedEmployee)
+        {
+            item.GhiChu = input.GhiChu;
+            item.NgayApDung = input.NgayApDungDate;
             item.Gia = input.Gia;
             item.UpdatedBy = loggedEmployee;
             item.UpdatedDate = DateTime.Now;

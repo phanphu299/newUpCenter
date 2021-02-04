@@ -79,9 +79,9 @@
             return await _lopHocRepository.ToggleTotNghiepAsync(id, loggedEmployee);
         }
 
-        public async Task<bool> UpdateHocPhiLopHocAsync(Guid lopHocId, Guid hocPhiId, int thang, int nam, string loggedEmployee)
+        public async Task<bool> UpdateHocPhiLopHocAsync(TinhHocPhiInputModel input, string loggedEmployee)
         {
-            return await _lopHocRepository.UpdateHocPhiLopHocAsync(lopHocId, hocPhiId, thang, nam, loggedEmployee);
+            return await _lopHocRepository.UpdateHocPhiLopHocAsync(input, loggedEmployee);
         }
 
         public async Task<LopHocViewModel> UpdateLopHocAsync(UpdateLopHocInputModel input, string loggedEmployee)

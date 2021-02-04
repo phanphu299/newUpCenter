@@ -49,6 +49,56 @@ namespace Up.Repositoties
             return result == 1;
         }
 
+        public async Task<int> DemSoNgayHocAsync(Guid id, int month, int year)
+        {
+            var item = await _context.LopHocs
+                                    .Include(x => x.NgayHoc)
+                                    .AsNoTracking()
+                                    .FirstOrDefaultAsync(x => x.LopHocId == id);
+
+            var ngayHoc = item.NgayHoc.Name.Split('-');
+            List<int> tongNgayHoc = new List<int>();
+
+            foreach (string el in ngayHoc)
+            {
+                switch (el.Trim())
+                {
+                    case "2":
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Monday));
+                        break;
+                    case "3":
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Tuesday));
+                        break;
+                    case "4":
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Wednesday));
+                        break;
+                    case "5":
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Thursday));
+                        break;
+                    case "6":
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Friday));
+                        break;
+                    case "7":
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Saturday));
+                        break;
+                    default:
+                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Sunday));
+                        break;
+                }
+            }
+
+            return tongNgayHoc.Count;
+        }
+
+        private static IEnumerable<int> DaysInMonth(int year, int month, DayOfWeek dow)
+        {
+            DateTime monthStart = new DateTime(year, month, 1);
+            return Enumerable.Range(0, DateTime.DaysInMonth(year, month))
+                .Select(day => monthStart.AddDays(day))
+                .Where(date => date.DayOfWeek == dow)
+                .Select(date => date.Day);
+        }
+
         public async Task<List<LopHocViewModel>> GetAvailableLopHocAsync(int? thang = null, int? nam = null)
         {
             return await _context.LopHocs
@@ -185,20 +235,20 @@ namespace Up.Repositoties
             return true;
         }
 
-        public async Task<bool> UpdateHocPhiLopHocAsync(Guid lopHocId, Guid hocPhiId, int thang, int nam, string loggedEmployee)
+        public async Task<bool> UpdateHocPhiLopHocAsync(TinhHocPhiInputModel input, string loggedEmployee)
         {
             var item = await _context.LopHoc_HocPhis
-                                        .Where(x => x.LopHocId == lopHocId && x.Thang == thang && x.Nam == nam)
+                                        .Where(x => x.LopHocId == input.LopHocId && x.Thang == input.Month && x.Nam == input.Year)
                                         .SingleOrDefaultAsync();
 
             if (item == null)
             {
-                var thongKe = _entityConverter.ToEntityHocPhi(lopHocId, hocPhiId, thang, nam);
-                await _context.LopHoc_HocPhis.AddAsync(thongKe);
+                var lopHoc_HocPhi = _entityConverter.ToEntityHocPhi(input.LopHocId, input.HocPhiId, input.Month, input.Year);
+                await _context.LopHoc_HocPhis.AddAsync(lopHoc_HocPhi);
             }
             else
             {
-                item.HocPhiId = hocPhiId;
+                item.HocPhiId = input.HocPhiId;
             }
 
             await _context.SaveChangesAsync();

@@ -32,6 +32,8 @@ namespace Up.Repositoties
 
         Task<bool> ToggleTotNghiepAsync(Guid id, string loggedEmployee);
 
-        Task<bool> UpdateHocPhiLopHocAsync(Guid lopHocId, Guid hocPhiId, int thang, int nam, string loggedEmployee);
+        Task<bool> UpdateHocPhiLopHocAsync(TinhHocPhiInputModel input, string loggedEmployee);
+
+        Task<int> DemSoNgayHocAsync(Guid id, int month, int year);
     }
 }

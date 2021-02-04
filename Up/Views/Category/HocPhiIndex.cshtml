@@ -173,7 +173,7 @@
                         <v-layout wrap>
 
                             <v-flex xs12 sm4>
-                                <v-text-field label="Giá *" required v-model="itemToEdit.gia"></v-text-field>
+                                <v-text-field :rules='rules' label="Giá *" required v-model="itemToEdit.gia"></v-text-field>
                             </v-flex>
                             <v-flex xs12 sm4>
                                 <v-text-field label="Ghi Chú *" required v-model="itemToEdit.ghiChu"></v-text-field>
@@ -204,7 +204,7 @@
                              color="warning"
                              icon="priority_high"
                              outline>
-                        Không được bỏ trống
+                        {{ alertMessage }}
                     </v-alert>
                 </v-card-text>
                 <v-card-actions>
@@ -231,7 +231,7 @@
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/hocphiindex.min.js" type="text/javascript"></script>
+<script src="~/js/hocphiindex.js" type="text/javascript"></script>
 
 <style>
     .v-input__slot:before, .v-input__slot:after {

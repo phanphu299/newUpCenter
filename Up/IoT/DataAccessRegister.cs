@@ -12,6 +12,8 @@ namespace Up.IoT
             services.AddScoped<INgayHocRepository, NgayHocRepository>();
             services.AddScoped<ILopHocRepository, LopHocRepository>();
             services.AddScoped<ISachRepository, SachRepository>();
+            services.AddScoped<IKhoaHocRepository, KhoaHocRepository>();
+            services.AddScoped<IHocPhiRepository, HocPhiRepository>();
         }
     }
 }
