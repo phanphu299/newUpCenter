@@ -28,6 +28,8 @@ namespace Up.Repositoties
 
         Task<IList<Guid>> GetHocVienIdAsync(Guid id);
 
+        Task<IList<Guid>> GetLopHocIdByGioHocAsync(Guid gioHocId);
+
         Task<bool> ToggleHuyLopAsync(Guid id, string loggedEmployee);
 
         Task<bool> ToggleTotNghiepAsync(Guid id, string loggedEmployee);

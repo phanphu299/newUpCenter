@@ -384,7 +384,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateGioHocAsync([FromBody]Models.GioHocViewModel model)
+        public async Task<IActionResult> CreateGioHocAsync([FromBody] CreateGioHocInputModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -392,37 +392,15 @@
                 return RedirectToAction("GioHocIndex");
             }
 
-            try
-            {
-                var successful = await _gioHocService.CreateGioHocAsync(model.From, model.To, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _gioHocService.CreateGioHocAsync(model, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateGioHocAsync([FromBody]Models.GioHocViewModel model)
+        public async Task<IActionResult> UpdateGioHocAsync([FromBody] UpdateGioHocInputModel model)
         {
             if (model.GioHocId == Guid.Empty)
             {
@@ -435,37 +413,15 @@
                 return RedirectToAction("GioHocIndex");
             }
 
-            try
-            {
-                var successful = await _gioHocService.UpdateGioHocAsync(model.GioHocId, model.From, model.To, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _gioHocService.UpdateGioHocAsync(model, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful));
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteGioHocAsync([FromBody]Models.GioHocViewModel model)
+        public async Task<IActionResult> DeleteGioHocAsync([FromBody] GioHocViewModel model)
         {
             if (model.GioHocId == Guid.Empty)
             {
@@ -478,32 +434,11 @@
                 return RedirectToAction("GioHocIndex");
             }
 
-            try
-            {
-                var successful = await _gioHocService.DeleteGioHocAsync(model.GioHocId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Xóa lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Xóa thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _gioHocService.DeleteGioHocAsync(model.GioHocId, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         [ServiceFilter(typeof(Read_HocPhi))]

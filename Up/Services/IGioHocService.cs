@@ -10,10 +10,10 @@ namespace Up.Services
     public interface IGioHocService
     {
         Task<List<GioHocViewModel>> GetGioHocAsync();
-        Task<GioHocViewModel> CreateGioHocAsync(string From, string To, string LoggedEmployee);
-        Task<GioHocViewModel> UpdateGioHocAsync(Guid GioHocId, string From, string To, string LoggedEmployee);
-        Task<bool> DeleteGioHocAsync(Guid GioHocId, string LoggedEmployee);
+        Task<GioHocViewModel> CreateGioHocAsync(CreateGioHocInputModel input, string loggedEmployee);
+        Task<GioHocViewModel> UpdateGioHocAsync(UpdateGioHocInputModel input, string loggedEmployee);
+        Task<bool> DeleteGioHocAsync(Guid id, string loggedEmployee);
 
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
     }
 }

@@ -169,6 +169,20 @@ namespace Up.Converters
             };
         }
 
+        public GioHocViewModel ToGioHocViewModel(GioHoc gioHoc)
+        {
+            return new GioHocViewModel
+            {
+                CreatedBy = gioHoc.CreatedBy,
+                CreatedDate = gioHoc.CreatedDate.ToClearDate(),
+                GioHocId = gioHoc.GioHocId,
+                From = gioHoc.From,
+                To = gioHoc.To,
+                UpdatedBy = gioHoc.UpdatedBy,
+                UpdatedDate = gioHoc.UpdatedDate?.ToClearDate() ?? string.Empty,
+            };
+        }
+
         ///ENTITY
 
         public LopHoc ToEntityLopHoc(CreateLopHocInputModel input, string loggedEmployee)
@@ -216,6 +230,16 @@ namespace Up.Converters
             };
         }
 
+        public GioHoc ToEntityGioHoc(CreateGioHocInputModel input, string loggedEmployee)
+        {
+            return new GioHoc
+            {
+                From = input.From,
+                To = input.To,
+                CreatedBy = loggedEmployee
+            };
+        }
+
         ///MAPPING
 
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)
@@ -258,6 +282,14 @@ namespace Up.Converters
             item.GhiChu = input.GhiChu;
             item.NgayApDung = input.NgayApDungDate;
             item.Gia = input.Gia;
+            item.UpdatedBy = loggedEmployee;
+            item.UpdatedDate = DateTime.Now;
+        }
+
+        public void MappingEntityGioHoc(UpdateGioHocInputModel input, GioHoc item, string loggedEmployee)
+        {
+            item.From = input.From;
+            item.To = input.To;
             item.UpdatedBy = loggedEmployee;
             item.UpdatedDate = DateTime.Now;
         }

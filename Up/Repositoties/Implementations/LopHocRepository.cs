@@ -267,5 +267,13 @@ namespace Up.Repositoties
             await _context.SaveChangesAsync();
             return item.LopHocId;
         }
+
+        public async Task<IList<Guid>> GetLopHocIdByGioHocAsync(Guid gioHocId)
+        {
+            return await _context.LopHocs
+                .Where(x => x.GioHocId == gioHocId)
+                .Select(x => x.LopHocId)
+                .ToListAsync();
+        }
     }
 }
