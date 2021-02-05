@@ -1,18 +1,18 @@
 ﻿namespace Up.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Up.Services;
-    using System.Threading.Tasks;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using OfficeOpenXml.Style;
-    using System.Drawing;
-    using Up.Models;
     using OfficeOpenXml;
-    using Microsoft.AspNetCore.Authorization;
+    using OfficeOpenXml.Style;
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Up.Extensions;
+    using Up.Models;
+    using Up.Services;
 
     [Authorize]
     public class DiemDanhController : Controller
@@ -72,61 +72,61 @@
             var soNgayHoc = await _hocPhiService.SoNgayHocAsync(LopHocId, month, year);
             //if (list.Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year).Any())
             //{
-                model = list
-                        .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
-                        {
-                            Label = x.Key,
-                            HocVienId = x.Select(m => m.HocVienId).First(),
-                            NgayBatDau_Day = x.Select(m => m.NgayBatDau).First().Day,
-                            NgayBatDau_Month = x.Select(m => m.NgayBatDau).First().Month,
-                            NgayBatDau_Year = x.Select(m => m.NgayBatDau).First().Year,
-                            NgayKetThuc_Day = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Day : 0,
-                            NgayKetThuc_Month = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Month : 0,
-                            NgayKetThuc_Year = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Year : 0,
-                            ThongKeDiemDanh = x.Where(m => m.NgayDiemDanh_Date.Month == month && m.NgayDiemDanh_Date.Year == year)
-                            .Select(m => new ThongKeDiemDanhModel
-                            {
-                                Dates = m.NgayDiemDanh_Date,
-                                DuocNghi = m.IsDuocNghi,
-                                IsOff = m.IsOff,
-                                Day = m.NgayDiemDanh_Date.Day
-                            }).ToList()
-                        })
-                        .OrderBy(x => x.Label)
-                        .ToList();
-
-                foreach (var hocVien in model)
-                {
-                    List<ThongKeDiemDanhModel> diemDanhModel = new List<ThongKeDiemDanhModel>();
-                    foreach (int ngayHoc in soNgayHoc)
+            model = list
+                    .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
                     {
-                        diemDanhModel.Add(new ThongKeDiemDanhModel
+                        Label = x.Key,
+                        HocVienId = x.Select(m => m.HocVienId).First(),
+                        NgayBatDau_Day = x.Select(m => m.NgayBatDau).First().Day,
+                        NgayBatDau_Month = x.Select(m => m.NgayBatDau).First().Month,
+                        NgayBatDau_Year = x.Select(m => m.NgayBatDau).First().Year,
+                        NgayKetThuc_Day = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Day : 0,
+                        NgayKetThuc_Month = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Month : 0,
+                        NgayKetThuc_Year = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Year : 0,
+                        ThongKeDiemDanh = x.Where(m => m.NgayDiemDanh_Date.Month == month && m.NgayDiemDanh_Date.Year == year)
+                        .Select(m => new ThongKeDiemDanhModel
+                        {
+                            Dates = m.NgayDiemDanh_Date,
+                            DuocNghi = m.IsDuocNghi,
+                            IsOff = m.IsOff,
+                            Day = m.NgayDiemDanh_Date.Day
+                        }).ToList()
+                    })
+                    .OrderBy(x => x.Label)
+                    .ToList();
+
+            foreach (var hocVien in model)
+            {
+                List<ThongKeDiemDanhModel> diemDanhModel = new List<ThongKeDiemDanhModel>();
+                foreach (int ngayHoc in soNgayHoc)
+                {
+                    diemDanhModel.Add(new ThongKeDiemDanhModel
+                    {
+                        //phai~ dao~ isOff de ko sinh loi v-switch
+                        DuocNghi = false,
+                        IsOff = false,
+                        Day = ngayHoc,
+                        Dates = new DateTime(year, month, ngayHoc)
+                    });
+                }
+
+                foreach (var diemDanh in hocVien.ThongKeDiemDanh)
+                {
+                    foreach (var item in diemDanhModel)
+                    {
+                        if (diemDanh.Day == item.Day)
                         {
                             //phai~ dao~ isOff de ko sinh loi v-switch
-                            DuocNghi = false,
-                            IsOff = false,
-                            Day = ngayHoc,
-                            Dates = new DateTime(year, month, ngayHoc)
-                        });
-                    }
-
-                    foreach (var diemDanh in hocVien.ThongKeDiemDanh)
-                    {
-                        foreach (var item in diemDanhModel)
-                        {
-                            if (diemDanh.Day == item.Day)
-                            {
-                                //phai~ dao~ isOff de ko sinh loi v-switch
-                                item.Day = diemDanh.Day;
-                                item.Dates = diemDanh.Dates;
-                                item.IsOff = !diemDanh.IsOff;
-                                item.DuocNghi = diemDanh.DuocNghi;
-                            }
+                            item.Day = diemDanh.Day;
+                            item.Dates = diemDanh.Dates;
+                            item.IsOff = !diemDanh.IsOff;
+                            item.DuocNghi = diemDanh.DuocNghi;
                         }
                     }
-
-                    hocVien.ThongKeDiemDanh = diemDanhModel;
                 }
+
+                hocVien.ThongKeDiemDanh = diemDanhModel;
+            }
             //}
             //else if (list.Where(x => (x.NgayDiemDanh_Date.Month < month && x.NgayDiemDanh_Date.Year == year) || x.NgayDiemDanh_Date.Year < year).Any())
             //{
@@ -168,7 +168,7 @@
             //        hocVien.ThongKeDiemDanh = diemDanhModel;
             //    }
             //}
-                        
+
             return Json(
                 model
                 );
@@ -221,7 +221,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> DiemDanhTungHocVienAsync([FromBody]Models.LopHoc_DiemDanhViewModel model)
+        public async Task<IActionResult> DiemDanhTungHocVienAsync([FromBody] Models.LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty || model.HocVienId == Guid.Empty)
             {
@@ -267,7 +267,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> DiemDanhTatCaAsync([FromBody]Models.LopHoc_DiemDanhViewModel model)
+        public async Task<IActionResult> DiemDanhTatCaAsync([FromBody] Models.LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -313,7 +313,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> LopNghiAsync([FromBody]Models.LopHoc_DiemDanhViewModel model)
+        public async Task<IActionResult> LopNghiAsync([FromBody] Models.LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -358,7 +358,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveHocVienOffAsync([FromBody]Models.LopHoc_DiemDanhViewModel model)
+        public async Task<IActionResult> SaveHocVienOffAsync([FromBody] Models.LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -374,10 +374,10 @@
             try
             {
                 List<DateTime> ngayDiemDanhs = new List<DateTime>();
-                foreach(string item in model.NgayDiemDanhs)
+                foreach (string item in model.NgayDiemDanhs)
                 {
                     ngayDiemDanhs.Add(Convert.ToDateTime(item, System.Globalization.CultureInfo.InvariantCulture));
-                }    
+                }
 
                 var successful = await _diemDanhService.SaveHocVienOff(model.LopHocId, model.HocVienIds, ngayDiemDanhs, currentUser.Email);
                 if (successful == false)
@@ -407,7 +407,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveHocVienHoanTacAsync([FromBody]Models.LopHoc_DiemDanhViewModel model)
+        public async Task<IActionResult> SaveHocVienHoanTacAsync([FromBody] Models.LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -456,7 +456,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> UndoLopNghiAsync([FromBody]Models.LopHoc_DiemDanhViewModel model)
+        public async Task<IActionResult> UndoLopNghiAsync([FromBody] Models.LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -557,7 +557,7 @@
 
                 worksheet.Cells[3, 1].Value = "No";
                 worksheet.Cells[3, 2].Value = "Tên";
-                
+
 
                 worksheet.Cells[3, soNgayHoc.Count + 3].Value = "Ghi Chú";
 

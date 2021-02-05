@@ -179,7 +179,7 @@ namespace Up.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateRoleAsync([FromBody]AccountInfo model)
+        public async Task<IActionResult> UpdateRoleAsync([FromBody] AccountInfo model)
         {
             if (string.IsNullOrWhiteSpace(model.Id))
             {
@@ -316,9 +316,9 @@ namespace Up.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateNewRoleAsync(string Name)
         {
-            foreach(char item in Name)
+            foreach (char item in Name)
             {
-                if(item == ' ')
+                if (item == ' ')
                 {
                     return Json(new ResultModel
                     {
@@ -397,7 +397,7 @@ namespace Up.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> AddQuyenToRoleAsync([FromBody]AddQuyenToRoleViewModel model)
+        public async Task<IActionResult> AddQuyenToRoleAsync([FromBody] AddQuyenToRoleViewModel model)
         {
             if (string.IsNullOrWhiteSpace(model.RoleId))
             {

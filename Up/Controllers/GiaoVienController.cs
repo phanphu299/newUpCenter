@@ -45,7 +45,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateGiaoVienAsync([FromBody]Models.GiaoVienViewModel model)
+        public async Task<IActionResult> CreateGiaoVienAsync([FromBody] Models.GiaoVienViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -90,7 +90,7 @@
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteGiaoVienAsync([FromBody]Models.GiaoVienViewModel model)
+        public async Task<IActionResult> DeleteGiaoVienAsync([FromBody] Models.GiaoVienViewModel model)
         {
             if (model.GiaoVienId == Guid.Empty)
             {
@@ -132,7 +132,7 @@
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateGiaoVienAsync([FromBody]Models.GiaoVienViewModel model)
+        public async Task<IActionResult> UpdateGiaoVienAsync([FromBody] Models.GiaoVienViewModel model)
         {
             if (model.GiaoVienId == Guid.Empty)
             {
@@ -149,7 +149,7 @@
             {
                 DateTime _ngayBatDau = Convert.ToDateTime(model.NgayBatDau, System.Globalization.CultureInfo.InvariantCulture);
                 DateTime? _ngayKetThuc = null;
-                if(!string.IsNullOrWhiteSpace(model.NgayKetThuc))
+                if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
                     _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
                 var successful = await _giaoVienService.UpdateGiaoVienAsync(model.LoaiNhanVien_CheDo, model.GiaoVienId, model.Name, model.Phone, model.TeachingRate, model.TutoringRate,
                     model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName,

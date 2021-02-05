@@ -33,7 +33,7 @@
             var giaoTiep = await _thongKeService.GetHocVienGiaoTiepAsync();
 
             var listGiaoTiep = Enumerable.Repeat(0.0, 12).ToList();
-            for(int i = 0; i < listGiaoTiep.Count; i++)
+            for (int i = 0; i < listGiaoTiep.Count; i++)
             {
                 var item = giaoTiep.FirstOrDefault(x => x.Date.Month == (i + 1));
                 listGiaoTiep[i] = item == null ? 0.0 : item.Data;
@@ -131,11 +131,11 @@
             foreach (var item in doanhThu)
             {
                 listDoanhThu[int.Parse(item.Label) - 1] = item.Data;
-                foreach(var tronGoi in doanhThuTronGoi)
+                foreach (var tronGoi in doanhThuTronGoi)
                 {
                     if (item.Label == tronGoi.Label)
                         listDoanhThu[int.Parse(item.Label) - 1] += tronGoi.Data;
-                }    
+                }
             }
 
             var chiPhi = _thongKeService.GetChiPhiAsync()
@@ -153,7 +153,7 @@
                 listChiPhi[int.Parse(item.Label) - 1] = item.Data;
             }
 
-            return Json(new 
+            return Json(new
             {
                 DoanhThu = listDoanhThu,
                 ChiPhi = listChiPhi,

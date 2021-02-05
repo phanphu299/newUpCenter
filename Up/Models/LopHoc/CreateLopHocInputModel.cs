@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Up.Models
+﻿namespace Up.Models
 {
     public class CreateLopHocInputModel : CreateLopHocInput
     {

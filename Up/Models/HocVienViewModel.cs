@@ -36,7 +36,7 @@
         public SachViewModel[] GiaSach { get; set; }
         public double HocPhiFixed { get; set; }
         public SachViewModel[] LastGiaSach { get; set; }
-        public bool DaDongHocPhi { get; set; } 
+        public bool DaDongHocPhi { get; set; }
         public double Bonus { get; set; } = 0;
         public double Minus { get; set; } = 0;
         public string GhiChu { get; set; }

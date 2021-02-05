@@ -11,7 +11,7 @@
     using Up.Models;
     using Up.Repositoties;
 
-    public class NgayHocService: INgayHocService
+    public class NgayHocService : INgayHocService
     {
         private readonly ApplicationDbContext _context;
         private readonly INgayHocRepository _ngayHocRepository;

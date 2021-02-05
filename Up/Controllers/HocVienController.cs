@@ -25,10 +25,10 @@
         private readonly Converters.Converter _converter;
 
         public HocVienController(
-            IHocVienService hocVienService, 
-            INgayHocService ngayHocService, 
+            IHocVienService hocVienService,
+            INgayHocService ngayHocService,
             IQuanHeService quanHeService,
-            UserManager<IdentityUser> userManager, 
+            UserManager<IdentityUser> userManager,
             Converters.Converter converter)
         {
             _hocVienService = hocVienService;
@@ -91,9 +91,9 @@
 
             var successful = await _hocVienService.CreateHocVienAsync(model, currentUser.Email);
 
-            return successful == null ? 
-                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false)) 
-                : 
+            return successful == null ?
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
+                :
                 Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
         }
 
@@ -151,7 +151,7 @@
 
             var successful = await _hocVienService.DeleteHocVienAsync(model.HocVienId, currentUser.Email);
 
-            return successful ? 
+            return successful ?
                 Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
                 :
                 Json(_converter.ToResultModel("Xóa lỗi !!!", false));

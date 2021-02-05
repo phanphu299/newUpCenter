@@ -5,7 +5,6 @@ namespace Up.Controllers
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Up.Extensions;
     using Up.Services;
@@ -42,7 +41,7 @@ namespace Up.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LuuChiPhiAsync([FromBody]Models.Add_ThongKe_ChiPhiViewModel model)
+        public async Task<IActionResult> LuuChiPhiAsync([FromBody] Models.Add_ThongKe_ChiPhiViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -53,7 +52,7 @@ namespace Up.Controllers
             try
             {
                 DateTime _ngayChiPhi = new DateTime(model.models[0].year, model.models[0].month, 1);
-                foreach(var item in model.models)
+                foreach (var item in model.models)
                 {
                     item.DaLuu = true;
                 }
@@ -85,7 +84,7 @@ namespace Up.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LuuNhapChiPhiAsync([FromBody]Models.Add_ThongKe_ChiPhiViewModel model)
+        public async Task<IActionResult> LuuNhapChiPhiAsync([FromBody] Models.Add_ThongKe_ChiPhiViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)

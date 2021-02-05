@@ -27,7 +27,7 @@ namespace Up.Repositoties
 
         public async Task<Guid> CreateQuanHeAsync(string name, string loggedEmployee)
         {
-            var quanHe = new QuanHe 
+            var quanHe = new QuanHe
             {
                 Name = name,
                 CreatedBy = loggedEmployee

@@ -28,7 +28,7 @@ namespace Up.ViewComponents
 
             var roles = await _userManager.GetRolesAsync(CurUser);
 
-            if(roles.Any(x => x == Constants.Admin))
+            if (roles.Any(x => x == Constants.Admin))
             {
                 return View("Menu", new ListQuyenViewModel
                 {

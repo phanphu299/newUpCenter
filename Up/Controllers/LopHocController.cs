@@ -88,7 +88,7 @@ namespace Up.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteLopHocAsync([FromBody]Models.LopHocViewModel model)
+        public async Task<IActionResult> DeleteLopHocAsync([FromBody] Models.LopHocViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -134,7 +134,7 @@ namespace Up.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateTotNghiepAsync([FromBody]Models.LopHocViewModel model)
+        public async Task<IActionResult> UpdateTotNghiepAsync([FromBody] Models.LopHocViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -155,7 +155,7 @@ namespace Up.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateHuyLopAsync([FromBody]Models.LopHocViewModel model)
+        public async Task<IActionResult> UpdateHuyLopAsync([FromBody] Models.LopHocViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {

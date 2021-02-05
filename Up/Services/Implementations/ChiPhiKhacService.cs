@@ -92,7 +92,7 @@ namespace Up.Services
                     NgayChiPhi = chiPhi.NgayChiPhi,
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -113,7 +113,7 @@ namespace Up.Services
 
             var thongKe_ChiPhi = await _context.ThongKe_ChiPhis.FirstOrDefaultAsync(x => x.ChiPhiKhacId == item.ChiPhiKhacId);
 
-            if(thongKe_ChiPhi != null)
+            if (thongKe_ChiPhi != null)
                 _context.ThongKe_ChiPhis.Remove(thongKe_ChiPhi);
 
             var saveResult = await _context.SaveChangesAsync();

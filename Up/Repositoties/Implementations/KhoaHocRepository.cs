@@ -27,7 +27,7 @@ namespace Up.Repositoties
 
         public async Task<Guid> CreateKhoaHocAsync(string name, string loggedEmployee)
         {
-            var khoaHoc = new KhoaHoc 
+            var khoaHoc = new KhoaHoc
             {
                 Name = name,
                 CreatedBy = loggedEmployee

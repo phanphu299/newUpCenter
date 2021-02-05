@@ -157,7 +157,7 @@ namespace Up.Repositoties
 
             foreach (var itemLop in input.LopHoc_NgayHocList)
             {
-                var hocVien_LopHoc = new HocVien_LopHoc 
+                var hocVien_LopHoc = new HocVien_LopHoc
                 {
                     HocVienId = item.HocVienId,
                     LopHocId = itemLop.LopHoc.LopHocId,
@@ -171,7 +171,7 @@ namespace Up.Repositoties
 
                 if (_hocVien_NgayHoc == null)
                 {
-                    var HV_NgayHoc = new HocVien_NgayHoc 
+                    var HV_NgayHoc = new HocVien_NgayHoc
                     {
                         HocVienId = item.HocVienId,
                         LopHocId = itemLop.LopHoc.LopHocId,

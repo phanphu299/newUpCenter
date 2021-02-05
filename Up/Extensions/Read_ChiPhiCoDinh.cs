@@ -7,7 +7,7 @@ namespace Up.Extensions
     using Up.Data;
     using Up.Enums;
 
-    public class Read_ChiPhiCoDinh : BasePolicy ,IActionFilter
+    public class Read_ChiPhiCoDinh : BasePolicy, IActionFilter
     {
         public Read_ChiPhiCoDinh(UserManager<IdentityUser> userManager, ApplicationDbContext context)
             : base(context, userManager)

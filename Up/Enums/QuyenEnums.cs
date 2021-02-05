@@ -3,7 +3,7 @@ namespace Up.Enums
 {
     public enum QuyenEnums
     {
-        Read_HocPhi =1,
+        Read_HocPhi = 1,
         Contribute_HocPhi,
         Read_NgayHoc,
         Contribute_NgayHoc,

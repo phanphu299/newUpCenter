@@ -54,7 +54,7 @@ namespace Up.Services
                     };
                     await _context.ThongKe_DoanhThuHocPhis.AddAsync(thongKe);
 
-                    if(DaDong == true)
+                    if (DaDong == true)
                     {
                         var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.NgayNo <= thongKe.NgayDong);
                         foreach (var n in no)
@@ -86,13 +86,13 @@ namespace Up.Services
                     item.UpdatedBy = LoggedEmployee;
                     item.UpdatedDate = DateTime.Now;
                     item.TronGoi = TronGoi;
-                    if(DaDong != false || DaNo != false)
+                    if (DaDong != false || DaNo != false)
                     {
                         item.DaDong = DaDong;
                         item.DaNo = DaNo;
                     }
 
-                    if(DaDong == true)
+                    if (DaDong == true)
                     {
                         var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.NgayNo <= item.NgayDong).ToList();
                         foreach (var n in no)

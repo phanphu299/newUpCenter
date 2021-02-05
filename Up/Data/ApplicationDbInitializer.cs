@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Linq;
 
 namespace Up.Data
 {
@@ -29,7 +28,7 @@ namespace Up.Data
                 {
                     userManager.AddToRoleAsync(userManager.FindByEmailAsync("huynhquan.nguyen@gmail.com").Result, Constants.Admin).Wait();
                 }
-                   
+
             }
         }
     }

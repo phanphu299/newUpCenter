@@ -123,7 +123,7 @@ namespace Up.Services
                                     .Where(x => x.NgayNo.Month == Month && x.NgayNo.Year == Year)
                                     .SingleOrDefaultAsync();
 
-                if(item != null)
+                if (item != null)
                 {
                     _context.HocVien_Nos.Remove(item);
 

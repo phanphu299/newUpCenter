@@ -8,9 +8,9 @@ namespace Up.Services
     public interface IQuyenService
     {
         Task<List<QuyenViewModel>> GetAllAsync();
-        Task<List<QuyenViewModel>> GetAllByRoleIdAsync(string RoleId);
+        Task<List<QuyenViewModel>> GetAllByRoleIdAsync(string roleId);
         Task<bool> AddQuyenToRoleAsync(AddQuyenToRoleViewModel model);
 
-        Task<List<RoleViewModel>> GetRoleByQuyenIdAsync(int QuyenId);
+        Task<List<RoleViewModel>> GetRoleByQuyenIdAsync(int quyenId);
     }
 }

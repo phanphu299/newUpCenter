@@ -132,7 +132,7 @@
                                         .ToListAsync()
                 };
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw new Exception("Lỗi khi lưu Nhân Viên : " + exception.Message);
             }
@@ -179,7 +179,7 @@
                     NgayKetThuc = x.NgayKetThuc != null ? ((DateTime)x.NgayKetThuc).ToString("dd/MM/yyyy") : "",
                     NgayLamViecId = x.NgayLamViecId,
                     NgayLamViec = x.NgayLamViec.Name,
-                    NganHang = x.NganHang, 
+                    NganHang = x.NganHang,
                     LoaiNhanVien_CheDo = _context.NhanVien_ViTris
                                         .Where(m => m.NhanVienId == x.GiaoVienId)
                                         .Select(m => new LoaiNhanVien_CheDoViewModel

@@ -28,16 +28,16 @@
 
         public CategoryController(
             IChiPhiKhacService chiPhiKhacService,
-            IKhoaHocService khoaHocService, 
-            IGioHocService gioHocService, 
+            IKhoaHocService khoaHocService,
+            IGioHocService gioHocService,
             INgayHocService ngayHocService,
             IQuanHeService quanHeService,
-            IHocPhiService hocPhiService, 
+            IHocPhiService hocPhiService,
             ISachService sachService,
             ILoaiGiaoVienService loaiGiaoVienService,
-            ILoaiCheDoService loaiCheDoService, 
+            ILoaiCheDoService loaiCheDoService,
             IChiPhiCoDinhService chiPhiCoDinhService,
-            INgayLamViecService ngayLamViecService, 
+            INgayLamViecService ngayLamViecService,
             UserManager<IdentityUser> userManager,
             Converters.Converter converter)
         {
@@ -74,7 +74,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateKhoaHocAsync([FromBody]Models.KhoaHocViewModel model)
+        public async Task<IActionResult> CreateKhoaHocAsync([FromBody] Models.KhoaHocViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -90,7 +90,7 @@
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateKhoaHocAsync([FromBody]Models.KhoaHocViewModel model)
+        public async Task<IActionResult> UpdateKhoaHocAsync([FromBody] Models.KhoaHocViewModel model)
         {
             if (model.KhoaHocId == Guid.Empty)
             {
@@ -111,7 +111,7 @@
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteKhoaHocAsync([FromBody]Models.KhoaHocViewModel model)
+        public async Task<IActionResult> DeleteKhoaHocAsync([FromBody] Models.KhoaHocViewModel model)
         {
             if (model.KhoaHocId == Guid.Empty)
             {
@@ -149,7 +149,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateQuanHeAsync([FromBody]Models.QuanHeViewModel model)
+        public async Task<IActionResult> CreateQuanHeAsync([FromBody] Models.QuanHeViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -165,7 +165,7 @@
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateQuanHeAsync([FromBody]Models.QuanHeViewModel model)
+        public async Task<IActionResult> UpdateQuanHeAsync([FromBody] Models.QuanHeViewModel model)
         {
             if (model.QuanHeId == Guid.Empty)
             {
@@ -186,7 +186,7 @@
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteQuanHeAsync([FromBody]Models.QuanHeViewModel model)
+        public async Task<IActionResult> DeleteQuanHeAsync([FromBody] Models.QuanHeViewModel model)
         {
             if (model.QuanHeId == Guid.Empty)
             {
@@ -224,7 +224,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateNgayHocAsync([FromBody]Models.NgayHocViewModel model)
+        public async Task<IActionResult> CreateNgayHocAsync([FromBody] Models.NgayHocViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -240,7 +240,7 @@
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateNgayHocAsync([FromBody]Models.NgayHocViewModel model)
+        public async Task<IActionResult> UpdateNgayHocAsync([FromBody] Models.NgayHocViewModel model)
         {
             if (model.NgayHocId == Guid.Empty)
             {
@@ -261,7 +261,7 @@
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteNgayHocAsync([FromBody]Models.NgayHocViewModel model)
+        public async Task<IActionResult> DeleteNgayHocAsync([FromBody] Models.NgayHocViewModel model)
         {
             if (model.NgayHocId == Guid.Empty)
             {
@@ -414,13 +414,13 @@
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteHocPhiAsync([FromBody]Models.HocPhiViewModel model)
+        public async Task<IActionResult> DeleteHocPhiAsync([FromBody] Models.HocPhiViewModel model)
         {
             if (model.HocPhiId == Guid.Empty)
             {
                 return RedirectToAction("HocPhiIndex");
             }
-            
+
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
             {
@@ -489,7 +489,7 @@
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteSachAsync([FromBody]Models.SachViewModel model)
+        public async Task<IActionResult> DeleteSachAsync([FromBody] Models.SachViewModel model)
         {
             if (model.SachId == Guid.Empty)
             {
@@ -529,7 +529,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateLoaiGiaoVienAsync([FromBody]Models.LoaiGiaoVienViewModel model)
+        public async Task<IActionResult> CreateLoaiGiaoVienAsync([FromBody] Models.LoaiGiaoVienViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -567,7 +567,7 @@
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateLoaiGiaoVienAsync([FromBody]Models.LoaiGiaoVienViewModel model)
+        public async Task<IActionResult> UpdateLoaiGiaoVienAsync([FromBody] Models.LoaiGiaoVienViewModel model)
         {
             if (model.LoaiGiaoVienId == Guid.Empty)
             {
@@ -609,7 +609,7 @@
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteLoaiGiaoVienAsync([FromBody]Models.LoaiGiaoVienViewModel model)
+        public async Task<IActionResult> DeleteLoaiGiaoVienAsync([FromBody] Models.LoaiGiaoVienViewModel model)
         {
             if (model.LoaiGiaoVienId == Guid.Empty)
             {
@@ -669,7 +669,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateNgayLamViecAsync([FromBody]Models.NgayLamViecViewModel model)
+        public async Task<IActionResult> CreateNgayLamViecAsync([FromBody] Models.NgayLamViecViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -707,7 +707,7 @@
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateNgayLamViecAsync([FromBody]Models.NgayLamViecViewModel model)
+        public async Task<IActionResult> UpdateNgayLamViecAsync([FromBody] Models.NgayLamViecViewModel model)
         {
             if (model.NgayLamViecId == Guid.Empty)
             {
@@ -749,7 +749,7 @@
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteNgayLamViecAsync([FromBody]Models.NgayLamViecViewModel model)
+        public async Task<IActionResult> DeleteNgayLamViecAsync([FromBody] Models.NgayLamViecViewModel model)
         {
             if (model.NgayLamViecId == Guid.Empty)
             {
@@ -809,7 +809,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateLoaiCheDoAsync([FromBody]Models.LoaiCheDoViewModel model)
+        public async Task<IActionResult> CreateLoaiCheDoAsync([FromBody] Models.LoaiCheDoViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -847,7 +847,7 @@
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateLoaiCheDoAsync([FromBody]Models.LoaiCheDoViewModel model)
+        public async Task<IActionResult> UpdateLoaiCheDoAsync([FromBody] Models.LoaiCheDoViewModel model)
         {
             if (model.LoaiCheDoId == Guid.Empty)
             {
@@ -889,7 +889,7 @@
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteLoaiCheDoAsync([FromBody]Models.LoaiCheDoViewModel model)
+        public async Task<IActionResult> DeleteLoaiCheDoAsync([FromBody] Models.LoaiCheDoViewModel model)
         {
             if (model.LoaiCheDoId == Guid.Empty)
             {
@@ -949,7 +949,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateStaticExpenseAsync([FromBody]Models.ChiPhiCoDinhViewModel model)
+        public async Task<IActionResult> CreateStaticExpenseAsync([FromBody] Models.ChiPhiCoDinhViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -987,7 +987,7 @@
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateStaticExpenseAsync([FromBody]Models.ChiPhiCoDinhViewModel model)
+        public async Task<IActionResult> UpdateStaticExpenseAsync([FromBody] Models.ChiPhiCoDinhViewModel model)
         {
             if (model.ChiPhiCoDinhId == Guid.Empty)
             {
@@ -1030,7 +1030,7 @@
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteStaticExpenseAsync([FromBody]Models.ChiPhiCoDinhViewModel model)
+        public async Task<IActionResult> DeleteStaticExpenseAsync([FromBody] Models.ChiPhiCoDinhViewModel model)
         {
             if (model.ChiPhiCoDinhId == Guid.Empty)
             {
@@ -1090,7 +1090,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOtherExpenseAsync([FromBody]Models.ChiPhiKhacViewModel model)
+        public async Task<IActionResult> CreateOtherExpenseAsync([FromBody] Models.ChiPhiKhacViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -1128,7 +1128,7 @@
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateOtherExpenseAsync([FromBody]Models.ChiPhiKhacViewModel model)
+        public async Task<IActionResult> UpdateOtherExpenseAsync([FromBody] Models.ChiPhiKhacViewModel model)
         {
             if (model.ChiPhiKhacId == Guid.Empty)
             {
@@ -1171,7 +1171,7 @@
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteOtherExpenseAsync([FromBody]Models.ChiPhiKhacViewModel model)
+        public async Task<IActionResult> DeleteOtherExpenseAsync([FromBody] Models.ChiPhiKhacViewModel model)
         {
             if (model.ChiPhiKhacId == Guid.Empty)
             {

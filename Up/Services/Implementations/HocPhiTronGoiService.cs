@@ -64,7 +64,7 @@ namespace Up.Services
 
                 _context.HocPhiTronGois.Add(hocPhi);
 
-                foreach(var item in LopHocList)
+                foreach (var item in LopHocList)
                 {
                     var hocPhi_LopHoc = new HocPhiTronGoi_LopHoc
                     {
@@ -78,7 +78,7 @@ namespace Up.Services
                     };
 
                     await _context.HocPhiTronGoi_LopHocs.AddAsync(hocPhi_LopHoc);
-                }    
+                }
 
                 var saveResult = await _context.SaveChangesAsync();
 
@@ -118,7 +118,7 @@ namespace Up.Services
                     CreatedBy = x.CreatedBy,
                     CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
                     HocPhiTronGoiId = x.HocPhiTronGoiId,
-                    Name = x.HocVien.FullName, 
+                    Name = x.HocVien.FullName,
                     HocVienId = x.HocVienId,
                     HocPhi = x.HocPhi,
                     IsDisabled = x.IsDisabled,
@@ -127,7 +127,8 @@ namespace Up.Services
                     UpdatedBy = x.UpdatedBy,
                     UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
                     LopHocList = x.HocPhiTronGoi_LopHocs
-                    .Select(m => new HocPhiTronGoi_LopHocViewModel { 
+                    .Select(m => new HocPhiTronGoi_LopHocViewModel
+                    {
                         FromDate = m.FromDate.ToString("yyyy-MM-dd"),
                         ToDate = m.ToDate.ToString("yyyy-MM-dd"),
                         LopHoc = new LopHocViewModel
@@ -255,7 +256,7 @@ namespace Up.Services
                 var saveResult = await _context.SaveChangesAsync();
                 return true;
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw new Exception(exception.Message);
             }

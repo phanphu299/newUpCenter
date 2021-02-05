@@ -20,32 +20,25 @@
 
         public async Task<bool> AddQuyenToRoleAsync(AddQuyenToRoleViewModel model)
         {
-            try
-            {
-                var oldQuyen = await _context.Quyen_Roles.Where(x => x.RoleId == model.RoleId).ToListAsync();
-                _context.Quyen_Roles.RemoveRange(oldQuyen);
+            var oldQuyen = await _context.Quyen_Roles.Where(x => x.RoleId == model.RoleId).ToListAsync();
+            _context.Quyen_Roles.RemoveRange(oldQuyen);
 
-                foreach (var item in model.QuyenList)
+            foreach (var item in model.QuyenList)
+            {
+                if (item.IsTrue)
                 {
-                    if (item.IsTrue)
+                    Quyen_Role quyen_Role = new Quyen_Role
                     {
-                        Quyen_Role quyen_Role = new Quyen_Role
-                        {
-                            QuyenId = item.QuyenId,
-                            RoleId = model.RoleId
-                        };
+                        QuyenId = item.QuyenId,
+                        RoleId = model.RoleId
+                    };
 
-                        await _context.Quyen_Roles.AddAsync(quyen_Role);
-                    }
+                    await _context.Quyen_Roles.AddAsync(quyen_Role);
                 }
+            }
 
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception exception)
-            {
-                throw new Exception("Lỗi khi gán quyền cho Role: " + exception.Message);
-            }
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<List<QuyenViewModel>> GetAllAsync()
@@ -60,7 +53,7 @@
                 .ToListAsync();
         }
 
-        public async Task<List<QuyenViewModel>> GetAllByRoleIdAsync(string RoleId)
+        public async Task<List<QuyenViewModel>> GetAllByRoleIdAsync(string roleId)
         {
             var quyenList = await _context.Quyens
                 .Select(x => new QuyenViewModel
@@ -71,7 +64,7 @@
                 .AsNoTracking()
                 .ToListAsync();
 
-            var quyenByRole = _context.Quyen_Roles.Where(x => x.RoleId == RoleId).AsNoTracking().Select(x => x.QuyenId);
+            var quyenByRole = _context.Quyen_Roles.Where(x => x.RoleId == roleId).AsNoTracking().Select(x => x.QuyenId);
 
             foreach (QuyenViewModel item in quyenList)
             {
@@ -82,9 +75,9 @@
             return quyenList;
         }
 
-        public async Task<List<RoleViewModel>> GetRoleByQuyenIdAsync(int QuyenId)
+        public async Task<List<RoleViewModel>> GetRoleByQuyenIdAsync(int quyenId)
         {
-            var quyenByRole = _context.Quyen_Roles.Where(x => x.QuyenId == QuyenId).AsNoTracking().Select(x => x.RoleId);
+            var quyenByRole = _context.Quyen_Roles.Where(x => x.QuyenId == quyenId).AsNoTracking().Select(x => x.RoleId);
 
             return await _context.Roles
                 .Where(x => quyenByRole.Contains(x.Id)).Select(x => new RoleViewModel

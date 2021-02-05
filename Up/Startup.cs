@@ -11,10 +11,8 @@ namespace Up
     using Microsoft.Extensions.DependencyInjection;
     using System;
     using Up.Data;
-    using Up.Extensions;
     using Up.IoT;
     using Up.Middlewares;
-    using Up.Services;
 
     public class Startup
     {

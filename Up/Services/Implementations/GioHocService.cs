@@ -9,7 +9,7 @@
     using Up.Models;
     using Up.Repositoties;
 
-    public class GioHocService: IGioHocService
+    public class GioHocService : IGioHocService
     {
         private readonly IGioHocRepository _gioHocRepository;
         private readonly ILopHocRepository _lopHocRepository;

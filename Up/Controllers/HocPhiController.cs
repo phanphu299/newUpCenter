@@ -30,7 +30,7 @@ namespace Up.Controllers
             IHocPhiTronGoiService hocPhiTronGoiService,
             IHocPhiService hocPhiService,
             ILopHocService lopHocService,
-            IThongKe_DoanhThuHocPhiService thongKe_DoanhThuHocPhiService, 
+            IThongKe_DoanhThuHocPhiService thongKe_DoanhThuHocPhiService,
             INoService noService,
             Converters.Converter converter)
         {
@@ -284,7 +284,7 @@ namespace Up.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LuuNhap_HocPhiAsync([FromBody]Models.LuuNhap_ThongKe_HocPhiViewModel model)
+        public async Task<IActionResult> LuuNhap_HocPhiAsync([FromBody] Models.LuuNhap_ThongKe_HocPhiViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -304,7 +304,7 @@ namespace Up.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LuuDoanhThu_HocPhiAsync([FromBody]Models.ThongKe_DoanhThuHocPhiViewModel model)
+        public async Task<IActionResult> LuuDoanhThu_HocPhiAsync([FromBody] Models.ThongKe_DoanhThuHocPhiViewModel model)
         {
             if (model.LopHocId == Guid.Empty || model.HocVienId == Guid.Empty)
             {
@@ -328,7 +328,7 @@ namespace Up.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LuuNo_HocPhiAsync([FromBody]Models.ThongKe_DoanhThuHocPhiViewModel model)
+        public async Task<IActionResult> LuuNo_HocPhiAsync([FromBody] Models.ThongKe_DoanhThuHocPhiViewModel model)
         {
             if (model.LopHocId == Guid.Empty || model.HocVienId == Guid.Empty)
             {
@@ -376,7 +376,7 @@ namespace Up.Controllers
         }
 
         [HttpPut]
-        public IActionResult Export([FromBody]Models.TinhHocPhiViewModel model)
+        public IActionResult Export([FromBody] Models.TinhHocPhiViewModel model)
         {
             var stream = GenerateExcelFile(model);
             string excelName = $"UserList.xlsx";

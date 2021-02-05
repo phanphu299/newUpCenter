@@ -103,7 +103,7 @@
                 var saveResult = await _context.SaveChangesAsync();
                 return true;
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw exception;
             }
@@ -142,7 +142,7 @@
                     throw new Exception("Lỗi khi Điểm Danh!!!");
                 return true;
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw exception;
             }
@@ -197,7 +197,7 @@
             if (LopHocId == null)
                 throw new Exception("Không tìm thấy Lớp Học!");
 
-            return await _context.LopHoc_DiemDanhs.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId )
+            return await _context.LopHoc_DiemDanhs.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId)
                                 .OrderByDescending(x => x.NgayDiemDanh)
                                 .Select(x => new DiemDanhViewModel
                                 {
@@ -216,7 +216,7 @@
             if (LopHocId == null)
                 throw new Exception("Không tìm thấy Lớp Học!");
             try
-            {                
+            {
                 var model = await _context.HocVien_LopHocs
                     .Where(x => x.LopHocId == LopHocId)
                                 .Where(x => x.HocVien.IsDisabled == false)
@@ -266,7 +266,7 @@
 
                 return model;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -312,7 +312,7 @@
                 var saveResult = await _context.SaveChangesAsync();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -364,7 +364,7 @@
                 var saveResult = await _context.SaveChangesAsync();
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

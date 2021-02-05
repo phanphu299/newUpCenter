@@ -54,7 +54,7 @@ namespace Up.Repositoties
             }
             else
             {
-                var HV_NgayHoc = new HocVien_NgayHoc 
+                var HV_NgayHoc = new HocVien_NgayHoc
                 {
                     HocVienId = input.HocVienId,
                     LopHocId = input.LopHocId,

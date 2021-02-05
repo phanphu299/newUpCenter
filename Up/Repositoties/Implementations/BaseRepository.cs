@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Up.Data;
-using Up.Enums;
 
 namespace Up.Repositoties
 {

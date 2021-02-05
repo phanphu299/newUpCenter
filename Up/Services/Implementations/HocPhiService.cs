@@ -155,13 +155,13 @@ namespace Up.Services
         public async Task<TinhHocPhiViewModel> TinhHocPhiAsync(TinhHocPhiInputModel input)
         {
             //int soNgayDuocNghi = await TinhSoNgayDuocChoNghiAsync(LopHocId, month, year);
-            
+
             var (subMonth, subYear) = TinhSubMonthSubYear(input.Month, input.Year);
 
             int soNgayHoc = await _lopHocRepository.DemSoNgayHocAsync(input.LopHocId, input.Month, input.Year);
             int soNgayHocCu = await _lopHocRepository.DemSoNgayHocAsync(input.LopHocId, subMonth, subYear);
 
-            var hocPhiMoiNgay = input.HocPhi/soNgayHoc;
+            var hocPhiMoiNgay = input.HocPhi / soNgayHoc;
 
             var hocPhiCu = await _context.LopHoc_HocPhis
                 .Include(x => x.HocPhi)
@@ -242,14 +242,14 @@ namespace Up.Services
                                                             TinhNo(x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year), LopHocId) :
                                                             /////
                                                             x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == month && m.NgayDong.Year == year && m.DaNo) != null ?
-                                                            x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == month && m.NgayDong.Year == year && m.DaNo).HocPhi 
-                                                            + 
-                                                            (!IsDaDong(x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong), LopHocId, month, year) ? 
+                                                            x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == month && m.NgayDong.Year == year && m.DaNo).HocPhi
+                                                            +
+                                                            (!IsDaDong(x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong), LopHocId, month, year) ?
                                                             x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong).FirstOrDefault(m => m.LopHocId != LopHocId && m.NgayDong.Month <= month && m.NgayDong.Year <= year).HocPhi : 0)
                                                             //////
                                                             :
                                                             0
-                                                            + (!IsDaDong(x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong), LopHocId, month, year) ? 
+                                                            + (!IsDaDong(x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong), LopHocId, month, year) ?
                                                             x.HocVien.ThongKe_DoanhThuHocPhis.OrderByDescending(m => m.NgayDong).FirstOrDefault(m => m.LopHocId != LopHocId && m.NgayDong.Month <= month && m.NgayDong.Year <= year).HocPhi : 0)
 ,
                                             //HocPhiMoi = (Math.Ceiling(HocPhi / 10000) * 10000),
@@ -292,7 +292,7 @@ namespace Up.Services
                 int index = 1;
                 foreach (var item in model)
                 {
-                    if(IsTronGoi(item, LopHocId, currentMonth, currentYear) && !item.TronGoi)
+                    if (IsTronGoi(item, LopHocId, currentMonth, currentYear) && !item.TronGoi)
                     {
                         var tinhSoNgayHoc = TinhSoNgayHocTronGoi(item, LopHocId, currentMonth, currentYear);
                         if (tinhSoNgayHoc == 0)
@@ -363,11 +363,11 @@ namespace Up.Services
                             item.LastBonus = item.Bonus;
                             item.LastMinus = item.Minus;
                             item.LastGiaSach = item.GiaSach;
-                        }    
-                    }   
+                        }
+                    }
                     else
                     {
-                        if(item.TronGoi)
+                        if (item.TronGoi)
                             item.HocPhiTruTronGoi = (item.HocPhiFixed - (TinhSoNgayHocTronGoi(item, LopHocId, currentMonth, currentYear) * HocPhiMoiNgay));
 
                         var giaSach = item.GiaSach != null ? item.GiaSach.Select(x => x.Gia).Sum() : 0;
@@ -414,15 +414,15 @@ namespace Up.Services
                         item.LastBonus = item.Bonus;
                         item.LastMinus = item.Minus;
                         item.LastGiaSach = item.GiaSach;
-                    }    
+                    }
 
                     item.Stt = index;
-                    
+
                     index++;
                 }
                 return model.OrderBy(x => x.Stt).ToList();
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw new Exception(exception.Message);
             }
@@ -502,13 +502,13 @@ namespace Up.Services
             if (ngayHocPhi.FromDate.Year == year && ngayHocPhi.FromDate.Month < month && (ngayHocPhi.ToDate.Year > year || ngayHocPhi.ToDate.Year == year && ngayHocPhi.ToDate.Month > month))
                 return 0;
 
-            if(ngayHocPhi.FromDate.Year == year && ngayHocPhi.FromDate.Month == month)
+            if (ngayHocPhi.FromDate.Year == year && ngayHocPhi.FromDate.Month == month)
             {
-                foreach(var ngay in tongNgayHoc)
+                foreach (var ngay in tongNgayHoc)
                 {
                     if (ngay < ngayHocPhi.FromDate.Day)
                         soNgayTinhHocPhi++;
-                }    
+                }
             }
 
             if (ngayHocPhi.ToDate.Year == year && ngayHocPhi.ToDate.Month == month)
@@ -528,7 +528,7 @@ namespace Up.Services
             double tongNoKhacLop = 0;
             var lopList = noList.Where(x => x.LopHocId != lopHocId).Select(x => x.LopHocId).Distinct();
 
-            foreach(Guid item in lopList)
+            foreach (Guid item in lopList)
             {
                 var no = noList.Where(x => x.LopHocId == item).OrderByDescending(m => m.NgayNo).FirstOrDefault();
                 tongNoKhacLop += no != null ? no.TienNo : 0;
