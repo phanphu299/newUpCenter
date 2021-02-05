@@ -246,5 +246,13 @@ namespace Up.Repositoties
                 .Select(hocvien => _entityConverter.ToHocVienViewModel(hocvien))
                 .ToList();
         }
+
+        public async Task<IList<Guid>> GetHocVienIdByQuanHeAsync(Guid quanHeId)
+        {
+            return await _context.HocViens
+                .Where(x => x.QuanHeId == quanHeId)
+                .Select(x => x.HocVienId)
+                .ToListAsync();
+        }
     }
 }

@@ -27,5 +27,7 @@ namespace Up.Repositoties
         Task<bool> CanContributeAsync(ClaimsPrincipal user, int right);
 
         Task<bool> AddToUnavailableClassAsync(List<Guid> lopHocIds, Guid hocVienId, string loggedEmployee);
+
+        Task<IList<Guid>> GetHocVienIdByQuanHeAsync(Guid quanHeId);
     }
 }

@@ -8,23 +8,6 @@ namespace Up.Converters
 {
     public class EntityConverter
     {
-        public HocVien ToEntityHocVien<T>(T input, string loggedEmployee) where T : CreateHocVienInput
-        {
-            return new HocVien
-            {
-                FullName = input.FullName,
-                Phone = input.Phone,
-                OtherPhone = input.OtherPhone,
-                FacebookAccount = input.FacebookAccount,
-                ParentPhone = input.ParentPhone,
-                ParentFullName = input.ParentFullName,
-                QuanHeId = input.QuanHeId,
-                EnglishName = input.EnglishName,
-                NgaySinh = input.NgaySinhDate,
-                CreatedBy = loggedEmployee
-            };
-        }
-
         public HocVienViewModel ToHocVienViewModel(HocVien hocVien)
         {
             return new HocVienViewModel
@@ -183,7 +166,37 @@ namespace Up.Converters
             };
         }
 
+        public QuanHeViewModel ToQuanHeViewModel(QuanHe quanHe)
+        {
+            return new QuanHeViewModel
+            {
+                CreatedBy = quanHe.CreatedBy,
+                CreatedDate = quanHe.CreatedDate.ToClearDate(),
+                QuanHeId = quanHe.QuanHeId,
+                Name = quanHe.Name,
+                UpdatedBy = quanHe.UpdatedBy,
+                UpdatedDate = quanHe.UpdatedDate?.ToClearDate() ?? string.Empty
+            };
+        }
+
         ///ENTITY
+
+        public HocVien ToEntityHocVien<T>(T input, string loggedEmployee) where T : CreateHocVienInput
+        {
+            return new HocVien
+            {
+                FullName = input.FullName,
+                Phone = input.Phone,
+                OtherPhone = input.OtherPhone,
+                FacebookAccount = input.FacebookAccount,
+                ParentPhone = input.ParentPhone,
+                ParentFullName = input.ParentFullName,
+                QuanHeId = input.QuanHeId,
+                EnglishName = input.EnglishName,
+                NgaySinh = input.NgaySinhDate,
+                CreatedBy = loggedEmployee
+            };
+        }
 
         public LopHoc ToEntityLopHoc(CreateLopHocInputModel input, string loggedEmployee)
         {

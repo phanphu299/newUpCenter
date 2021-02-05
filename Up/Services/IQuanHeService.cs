@@ -9,9 +9,9 @@
     public interface IQuanHeService
     {
         Task<List<QuanHeViewModel>> GetQuanHeAsync();
-        Task<QuanHeViewModel> CreateQuanHeAsync(string Name, string LoggedEmployee);
-        Task<bool> UpdateQuanHeAsync(Guid QuanHeId, string Name, string LoggedEmployee);
-        Task<bool> DeleteQuanHeAsync(Guid QuanHeId, string LoggedEmployee);
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<QuanHeViewModel> CreateQuanHeAsync(string name, string loggedEmployee);
+        Task<bool> UpdateQuanHeAsync(Guid id, string name, string loggedEmployee);
+        Task<bool> DeleteQuanHeAsync(Guid id, string loggedEmployee);
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
     }
 }
