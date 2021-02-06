@@ -10,9 +10,9 @@ namespace Up.Services
     public interface ILoaiGiaoVienService
     {
         Task<List<LoaiGiaoVienViewModel>> GetLoaiGiaoVienAsync();
-        Task<LoaiGiaoVienViewModel> CreateLoaiGiaoVienAsync(string Name, byte Order, string LoggedEmployee);
-        Task<bool> UpdateLoaiGiaoVienAsync(Guid LoaiGiaoVienId, string Name, byte Order, string LoggedEmployee);
-        Task<bool> DeleteLoaiGiaoVienAsync(Guid LoaiGiaoVienId, string LoggedEmployee);
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<LoaiGiaoVienViewModel> CreateLoaiGiaoVienAsync(CreateLoaiGiaoVienInputModel input, string loggedEmployee);
+        Task<bool> UpdateLoaiGiaoVienAsync(UpdateLoaiGiaoVienInputModel input, string loggedEmployee);
+        Task<bool> DeleteLoaiGiaoVienAsync(Guid id, string loggedEmployee);
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
     }
 }

@@ -179,6 +179,20 @@ namespace Up.Converters
             };
         }
 
+        public LoaiGiaoVienViewModel ToLoaiGiaoVienViewModel(LoaiGiaoVien loaiGiaoVien)
+        {
+            return new LoaiGiaoVienViewModel
+            {
+                CreatedBy = loaiGiaoVien.CreatedBy,
+                CreatedDate = loaiGiaoVien.CreatedDate.ToClearDate(),
+                LoaiGiaoVienId = loaiGiaoVien.LoaiGiaoVienId,
+                Name = loaiGiaoVien.Name,
+                UpdatedBy = loaiGiaoVien.UpdatedBy,
+                UpdatedDate = loaiGiaoVien.UpdatedDate?.ToClearDate() ?? string.Empty,
+                Order = loaiGiaoVien.Order
+            };
+        }
+
         ///ENTITY
 
         public HocVien ToEntityHocVien<T>(T input, string loggedEmployee) where T : CreateHocVienInput
@@ -253,6 +267,16 @@ namespace Up.Converters
             };
         }
 
+        public LoaiGiaoVien ToEntityLoaiGiaoVien(CreateLoaiGiaoVienInputModel input, string loggedEmployee)
+        {
+            return new LoaiGiaoVien
+            {
+                Name = input.Name,
+                Order = input.Order,
+                CreatedBy = loggedEmployee
+            };
+        }
+
         ///MAPPING
 
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)
@@ -303,6 +327,14 @@ namespace Up.Converters
         {
             item.From = input.From;
             item.To = input.To;
+            item.UpdatedBy = loggedEmployee;
+            item.UpdatedDate = DateTime.Now;
+        }
+
+        public void MappingEntityLoaiGiaoVien(UpdateLoaiGiaoVienInputModel input, LoaiGiaoVien item, string loggedEmployee)
+        {
+            item.Name = input.Name;
+            item.Order = input.Order;
             item.UpdatedBy = loggedEmployee;
             item.UpdatedDate = DateTime.Now;
         }

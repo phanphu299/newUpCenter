@@ -529,7 +529,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateLoaiGiaoVienAsync([FromBody] Models.LoaiGiaoVienViewModel model)
+        public async Task<IActionResult> CreateLoaiGiaoVienAsync([FromBody] CreateLoaiGiaoVienInputModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -537,37 +537,15 @@
                 return RedirectToAction("LoaiGiaoVienIndex");
             }
 
-            try
-            {
-                var successful = await _loaiGiaoVienService.CreateLoaiGiaoVienAsync(model.Name, (byte)model.Order, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _loaiGiaoVienService.CreateLoaiGiaoVienAsync(model, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateLoaiGiaoVienAsync([FromBody] Models.LoaiGiaoVienViewModel model)
+        public async Task<IActionResult> UpdateLoaiGiaoVienAsync([FromBody] UpdateLoaiGiaoVienInputModel model)
         {
             if (model.LoaiGiaoVienId == Guid.Empty)
             {
@@ -580,32 +558,11 @@
                 return RedirectToAction("LoaiGiaoVienIndex");
             }
 
-            try
-            {
-                var successful = await _loaiGiaoVienService.UpdateLoaiGiaoVienAsync(model.LoaiGiaoVienId, model.Name, (byte)model.Order, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _loaiGiaoVienService.UpdateLoaiGiaoVienAsync(model, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false));
         }
 
         [HttpDelete]
@@ -622,32 +579,11 @@
                 return RedirectToAction("LoaiGiaoVienIndex");
             }
 
-            try
-            {
-                var successful = await _loaiGiaoVienService.DeleteLoaiGiaoVienAsync(model.LoaiGiaoVienId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Xóa lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Xóa thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _loaiGiaoVienService.DeleteLoaiGiaoVienAsync(model.LoaiGiaoVienId, currentUser.Email);
+            return successful ?
+               Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+               :
+               Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////

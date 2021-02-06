@@ -1,132 +1,61 @@
 ﻿namespace Up.Services
 {
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Data;
-    using Up.Data.Entities;
     using Up.Enums;
     using Up.Models;
+    using Up.Repositoties;
 
     public class LoaiGiaoVienService : ILoaiGiaoVienService
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ILoaiGiaoVienRepository _loaiGiaoVienRepository;
 
-        public LoaiGiaoVienService(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public LoaiGiaoVienService(ApplicationDbContext context, ILoaiGiaoVienRepository loaiGiaoVienRepository)
         {
             _context = context;
-            _userManager = userManager;
+            _loaiGiaoVienRepository = loaiGiaoVienRepository;
         }
 
-        public async Task<bool> CanContributeAsync(ClaimsPrincipal User)
+        public async Task<bool> CanContributeAsync(ClaimsPrincipal user)
         {
-            var CurUser = await _userManager.GetUserAsync(User);
-
-            var roles = await _userManager.GetRolesAsync(CurUser);
-
-            var quyen_roles = await _context.Quyen_Roles
-                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_ViTriCongViec)
-                .Select(x => x.RoleId).AsNoTracking().ToListAsync();
-
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name).AsNoTracking();
-
-            bool canContribute = false;
-
-            foreach (string role in roles)
-            {
-                if (allRoles.Contains(role))
-                {
-                    canContribute = true;
-                    break;
-                }
-            }
-
+            bool canContribute = await _loaiGiaoVienRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_ViTriCongViec);
             return canContribute;
         }
 
-        public async Task<LoaiGiaoVienViewModel> CreateLoaiGiaoVienAsync(string Name, byte Order, string LoggedEmployee)
+        public async Task<LoaiGiaoVienViewModel> CreateLoaiGiaoVienAsync(CreateLoaiGiaoVienInputModel input, string loggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name))
+            if (string.IsNullOrWhiteSpace(input.Name))
                 throw new Exception("Tên Loại Nhân Viên không được để trống !!!");
 
-            LoaiGiaoVien loaiGiaoVien = new LoaiGiaoVien();
-            loaiGiaoVien.LoaiGiaoVienId = new Guid();
-            loaiGiaoVien.Name = Name;
-            loaiGiaoVien.CreatedBy = LoggedEmployee;
-            loaiGiaoVien.CreatedDate = DateTime.Now;
-            loaiGiaoVien.Order = Order;
-
-            _context.LoaiGiaoViens.Add(loaiGiaoVien);
-
-            var saveResult = await _context.SaveChangesAsync();
-            if (saveResult != 1)
-                throw new Exception("Lỗi khi lưu Loại Nhân Viên !!!");
-            return new LoaiGiaoVienViewModel { LoaiGiaoVienId = loaiGiaoVien.LoaiGiaoVienId, Order = loaiGiaoVien.Order, Name = loaiGiaoVien.Name, CreatedBy = loaiGiaoVien.CreatedBy, CreatedDate = loaiGiaoVien.CreatedDate.ToString("dd/MM/yyyy") };
+            var result = await _loaiGiaoVienRepository.CreateLoaiGiaoVienAsync(input, loggedEmployee);
+            return await _loaiGiaoVienRepository.GetLoaiGiaoVienDetailAsync(result);
         }
 
-        public async Task<bool> DeleteLoaiGiaoVienAsync(Guid LoaiGiaoVienId, string LoggedEmployee)
+        public async Task<bool> DeleteLoaiGiaoVienAsync(Guid id, string loggedEmployee)
         {
-            var giaoVien = await _context.GiaoViens.Where(x => x.NhanVien_ViTris.Any(m => m.ViTriId == LoaiGiaoVienId)).ToListAsync();
-            if (giaoVien.Any())
+            var giaoVienIds = await _loaiGiaoVienRepository.GetNhanVienIdsAsync(id);
+            if (giaoVienIds.Any())
                 throw new Exception("Hãy xóa những nhân viên thuộc loại này trước !!!");
 
-            var item = await _context.LoaiGiaoViens
-                                    .Where(x => x.LoaiGiaoVienId == LoaiGiaoVienId)
-                                    .SingleOrDefaultAsync();
-
-            if (item == null)
-                throw new Exception("Không tìm thấy Loại nhân viên !!!");
-
-            item.IsDisabled = true;
-            item.UpdatedBy = LoggedEmployee;
-            item.UpdatedDate = DateTime.Now;
-
-            var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+            return await _loaiGiaoVienRepository.DeleteLoaiGiaoVienAsync(id, loggedEmployee);
         }
 
         public async Task<List<LoaiGiaoVienViewModel>> GetLoaiGiaoVienAsync()
         {
-            return await _context.LoaiGiaoViens
-                .Where(x => x.IsDisabled == false)
-                .Select(x => new LoaiGiaoVienViewModel
-                {
-                    CreatedBy = x.CreatedBy,
-                    CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
-                    LoaiGiaoVienId = x.LoaiGiaoVienId,
-                    Name = x.Name,
-                    UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : "",
-                    Order = x.Order
-                })
-                .AsNoTracking()
-                .ToListAsync();
+            return await _loaiGiaoVienRepository.GetLoaiGiaoVienAsync();
         }
 
-        public async Task<bool> UpdateLoaiGiaoVienAsync(Guid LoaiGiaoVienId, string Name, byte Order, string LoggedEmployee)
+        public async Task<bool> UpdateLoaiGiaoVienAsync(UpdateLoaiGiaoVienInputModel input, string loggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name))
+            if (string.IsNullOrWhiteSpace(input.Name))
                 throw new Exception("Tên Loại Nhân Viên không được để trống !!!");
 
-            var item = await _context.LoaiGiaoViens
-                                    .Where(x => x.LoaiGiaoVienId == LoaiGiaoVienId)
-                                    .SingleOrDefaultAsync();
-
-            if (item == null)
-                throw new Exception("Không tìm thấy Loại Nhân Viên !!!");
-
-            item.Name = Name;
-            item.Order = Order;
-            item.UpdatedBy = LoggedEmployee;
-            item.UpdatedDate = DateTime.Now;
-
-            var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+            return await _loaiGiaoVienRepository.UpdateLoaiGiaoVienAsync(input, loggedEmployee);
         }
     }
 }

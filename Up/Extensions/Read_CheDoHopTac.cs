@@ -3,8 +3,6 @@ namespace Up.Extensions
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc.Filters;
-    using System;
-    using System.Linq;
     using Up.Data;
     using Up.Enums;
 
