@@ -605,7 +605,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateNgayLamViecAsync([FromBody] Models.NgayLamViecViewModel model)
+        public async Task<IActionResult> CreateNgayLamViecAsync([FromBody] NgayLamViecViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -613,37 +613,15 @@
                 return RedirectToAction("NgayLamViecIndex");
             }
 
-            try
-            {
-                var successful = await _ngayLamViecService.CreateNgayLamViecAsync(model.Name, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _ngayLamViecService.CreateNgayLamViecAsync(model.Name, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateNgayLamViecAsync([FromBody] Models.NgayLamViecViewModel model)
+        public async Task<IActionResult> UpdateNgayLamViecAsync([FromBody] NgayLamViecViewModel model)
         {
             if (model.NgayLamViecId == Guid.Empty)
             {
@@ -656,36 +634,15 @@
                 return RedirectToAction("NgayLamViecIndex");
             }
 
-            try
-            {
-                var successful = await _ngayLamViecService.UpdateNgayLamViecAsync(model.NgayLamViecId, model.Name, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _ngayLamViecService.UpdateNgayLamViecAsync(model.NgayLamViecId, model.Name, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false));
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteNgayLamViecAsync([FromBody] Models.NgayLamViecViewModel model)
+        public async Task<IActionResult> DeleteNgayLamViecAsync([FromBody] NgayLamViecViewModel model)
         {
             if (model.NgayLamViecId == Guid.Empty)
             {
@@ -698,32 +655,11 @@
                 return RedirectToAction("NgayLamViecIndex");
             }
 
-            try
-            {
-                var successful = await _ngayLamViecService.DeleteNgayLamViecAsync(model.NgayLamViecId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Xóa lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Xóa thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _ngayLamViecService.DeleteNgayLamViecAsync(model.NgayLamViecId, currentUser.Email);
+            return successful ?
+               Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+               :
+               Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////

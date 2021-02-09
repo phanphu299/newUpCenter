@@ -193,6 +193,61 @@ namespace Up.Converters
             };
         }
 
+        public NgayLamViecViewModel ToNgayLamViecViewModel(NgayLamViec ngayLamViec)
+        {
+            return new NgayLamViecViewModel
+            {
+                CreatedBy = ngayLamViec.CreatedBy,
+                CreatedDate = ngayLamViec.CreatedDate.ToClearDate(),
+                NgayLamViecId = ngayLamViec.NgayLamViecId,
+                Name = ngayLamViec.Name,
+                UpdatedBy = ngayLamViec.UpdatedBy,
+                UpdatedDate = ngayLamViec.UpdatedDate?.ToClearDate() ?? string.Empty
+            };
+        }
+
+        public GiaoVienViewModel ToGiaoVienViewModel(GiaoVien giaoVien)
+        {
+            return new GiaoVienViewModel
+            {
+                CreatedBy = giaoVien.CreatedBy,
+                CreatedDate = giaoVien.CreatedDate.ToClearDate(),
+                GiaoVienId = giaoVien.GiaoVienId,
+                Phone = giaoVien.Phone,
+                FacebookAccount = giaoVien.FacebookAccount,
+                DiaChi = giaoVien.DiaChi,
+                CMND = giaoVien.CMND,
+                TeachingRate = giaoVien.TeachingRate,
+                TutoringRate = giaoVien.TutoringRate,
+                BasicSalary = giaoVien.BasicSalary,
+                InitialName = giaoVien.InitialName,
+                Name = giaoVien.Name,
+                MucHoaHong = giaoVien.MucHoaHong,
+                UpdatedBy = giaoVien.UpdatedBy,
+                UpdatedDate = giaoVien.UpdatedDate?.ToClearDate() ?? string.Empty,
+                NgayBatDau = giaoVien.NgayBatDau.ToClearDate(),
+                NgayKetThuc = giaoVien.NgayKetThuc?.ToClearDate() ?? string.Empty,
+                NgayLamViecId = giaoVien.NgayLamViecId,
+                NgayLamViec = giaoVien.NgayLamViec.Name,
+                NganHang = giaoVien.NganHang,
+                LoaiNhanVien_CheDo = giaoVien.NhanVien_ViTris
+                                        .Select(m => new LoaiNhanVien_CheDoViewModel
+                                        {
+                                            LoaiCheDo = new LoaiCheDoViewModel
+                                            {
+                                                LoaiCheDoId = m.CheDoId,
+                                                Name = m.CheDo.Name
+                                            },
+                                            LoaiGiaoVien = new LoaiGiaoVienViewModel
+                                            {
+                                                LoaiGiaoVienId = m.ViTriId,
+                                                Name = m.ViTri.Name
+                                            }
+                                        })
+                                        .ToList()
+            };
+        }
+
         ///ENTITY
 
         public HocVien ToEntityHocVien<T>(T input, string loggedEmployee) where T : CreateHocVienInput
@@ -277,6 +332,28 @@ namespace Up.Converters
             };
         }
 
+        public GiaoVien ToEntityGiaoVien(CreateGiaoVienInputModel input, string loggedEmployee)
+        {
+            return new GiaoVien
+            {
+                Name = input.Name,
+                Phone = input.Phone,
+                FacebookAccount = input.FacebookAccount,
+                DiaChi = input.DiaChi,
+                InitialName = input.InitialName,
+                CMND = input.CMND,
+                TeachingRate = input.TeachingRate,
+                TutoringRate = input.TutoringRate,
+                BasicSalary = input.BasicSalary,
+                MucHoaHong = input.MucHoaHong,
+                NgayKetThuc = input.NgayKetThucDate,
+                NgayLamViecId = input.NgayLamViecId,
+                NgayBatDau = input.NgayBatDauDate,
+                NganHang = input.NganHang,
+                CreatedBy = loggedEmployee
+            };
+        }
+
         ///MAPPING
 
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)
@@ -337,6 +414,27 @@ namespace Up.Converters
             item.Order = input.Order;
             item.UpdatedBy = loggedEmployee;
             item.UpdatedDate = DateTime.Now;
+        }
+
+        public void MappingEntityGiaoVien(UpdateGiaoVienInputModel input, GiaoVien item, string loggedEmployee)
+        {
+            item.Name = input.Name;
+            item.Phone = input.Phone;
+            item.FacebookAccount = input.FacebookAccount;
+            item.DiaChi = input.DiaChi;
+            item.InitialName = input.InitialName;
+            item.CMND = input.CMND;
+            item.GiaoVienId = input.GiaoVienId;
+            item.TeachingRate = input.TeachingRate;
+            item.TutoringRate = input.TutoringRate;
+            item.BasicSalary = input.BasicSalary;
+            item.UpdatedBy = loggedEmployee;
+            item.UpdatedDate = DateTime.Now;
+            item.MucHoaHong = input.MucHoaHong;
+            item.NgayBatDau = input.NgayBatDauDate;
+            item.NgayKetThuc = input.NgayKetThucDate;
+            item.NgayLamViecId = input.NgayLamViecId;
+            item.NganHang = input.NganHang;
         }
     }
 }

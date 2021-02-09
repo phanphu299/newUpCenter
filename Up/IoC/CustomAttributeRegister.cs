@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Up.Extensions;
 
-namespace Up.IoT
+namespace Up.IoC
 {
     public static class CustomAttributeRegister
     {

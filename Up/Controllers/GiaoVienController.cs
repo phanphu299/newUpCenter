@@ -6,6 +6,7 @@
     using System;
     using System.Threading.Tasks;
     using Up.Extensions;
+    using Up.Models;
     using Up.Services;
 
     [Authorize]
@@ -13,11 +14,16 @@
     {
         private readonly IGiaoVienService _giaoVienService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly Converters.Converter _converter;
 
-        public GiaoVienController(IGiaoVienService giaoVienService, UserManager<IdentityUser> userManager)
+        public GiaoVienController(
+            IGiaoVienService giaoVienService, 
+            UserManager<IdentityUser> userManager,
+            Converters.Converter converter)
         {
             _giaoVienService = giaoVienService;
             _userManager = userManager;
+            _converter = converter;
         }
 
         [ServiceFilter(typeof(Read_NhanVien))]
@@ -33,7 +39,7 @@
         [HttpGet]
         public async Task<IActionResult> GetGiaoVienAsync()
         {
-            var model = await _giaoVienService.GetGiaoVienAsync();
+            var model = await _giaoVienService.GetAllNhanVienAsync();
             return Json(model);
         }
 
@@ -45,7 +51,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateGiaoVienAsync([FromBody] Models.GiaoVienViewModel model)
+        public async Task<IActionResult> CreateGiaoVienAsync([FromBody] CreateGiaoVienInputModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -53,44 +59,20 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime _ngayBatDau = Convert.ToDateTime(model.NgayBatDau, System.Globalization.CultureInfo.InvariantCulture);
-                DateTime? _ngayKetThuc = null;
-                if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
-                    _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
+            model.NgayBatDauDate = _converter.ToDateTime(model.NgayBatDau);
 
-                var successful = await _giaoVienService.CreateGiaoVienAsync(model.LoaiNhanVien_CheDo, model.Name, model.Phone, model.TeachingRate, model.TutoringRate,
-                    model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName, model.CMND, model.MucHoaHong, model.NgayLamViecId, _ngayBatDau, _ngayKetThuc,
-                    model.NganHang, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
+            if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
+                model.NgayBatDauDate = _converter.ToDateTime(model.NgayKetThuc);
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _giaoVienService.CreateGiaoVienAsync(model, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteGiaoVienAsync([FromBody] Models.GiaoVienViewModel model)
+        public async Task<IActionResult> DeleteGiaoVienAsync([FromBody] GiaoVienViewModel model)
         {
             if (model.GiaoVienId == Guid.Empty)
             {
@@ -103,36 +85,15 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                var successful = await _giaoVienService.DeleteGiaoVienAsync(model.GiaoVienId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Xóa lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Xóa thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _giaoVienService.DeleteGiaoVienAsync(model.GiaoVienId, currentUser.Email);
+            return successful ?
+               Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+               :
+               Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateGiaoVienAsync([FromBody] Models.GiaoVienViewModel model)
+        public async Task<IActionResult> UpdateGiaoVienAsync([FromBody] UpdateGiaoVienInputModel model)
         {
             if (model.GiaoVienId == Guid.Empty)
             {
@@ -145,39 +106,15 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime _ngayBatDau = Convert.ToDateTime(model.NgayBatDau, System.Globalization.CultureInfo.InvariantCulture);
-                DateTime? _ngayKetThuc = null;
-                if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
-                    _ngayKetThuc = Convert.ToDateTime(model.NgayKetThuc, System.Globalization.CultureInfo.InvariantCulture);
-                var successful = await _giaoVienService.UpdateGiaoVienAsync(model.LoaiNhanVien_CheDo, model.GiaoVienId, model.Name, model.Phone, model.TeachingRate, model.TutoringRate,
-                    model.BasicSalary, model.FacebookAccount, model.DiaChi, model.InitialName,
-                    model.CMND, model.MucHoaHong, model.NgayLamViecId, _ngayBatDau, _ngayKetThuc, model.NganHang, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
+            model.NgayBatDauDate = _converter.ToDateTime(model.NgayBatDau);
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
+                model.NgayKetThucDate = _converter.ToDateTime(model.NgayKetThuc);
+            var successful = await _giaoVienService.UpdateGiaoVienAsync(model, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful));
         }
     }
 }

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Up.Repositoties;
 
-namespace Up.IoT
+namespace Up.IoC
 {
     public static class DataAccessRegister
     {
@@ -17,6 +17,8 @@ namespace Up.IoT
             services.AddScoped<IGioHocRepository, GioHocRepository>();
             services.AddScoped<IQuanHeRepository, QuanHeRepository>();
             services.AddScoped<ILoaiGiaoVienRepository, LoaiGiaoVienRepository>();
+            services.AddScoped<INgayLamViecRepository, NgayLamViecRepository>();
+            services.AddScoped<IGiaoVienRepository, GiaoVienRepository>();
         }
     }
 }

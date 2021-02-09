@@ -10,9 +10,9 @@ namespace Up.Services
     public interface INgayLamViecService
     {
         Task<List<NgayLamViecViewModel>> GetNgayLamViecAsync();
-        Task<NgayLamViecViewModel> CreateNgayLamViecAsync(string Name, string LoggedEmployee);
-        Task<bool> UpdateNgayLamViecAsync(Guid NgayLamViecId, string Name, string LoggedEmployee);
-        Task<bool> DeleteNgayLamViecAsync(Guid NgayLamViecId, string LoggedEmployee);
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<NgayLamViecViewModel> CreateNgayLamViecAsync(string name, string loggedEmployee);
+        Task<bool> UpdateNgayLamViecAsync(Guid id, string name, string loggedEmployee);
+        Task<bool> DeleteNgayLamViecAsync(Guid id, string loggedEmployee);
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
     }
 }

@@ -78,7 +78,7 @@
                 that.khoaHocItems = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
 
         await axios.get('/Category/GetNgayLamViecAsync')
@@ -86,7 +86,7 @@
                 that.itemNgayLamViec = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
 
         await axios.get('/Category/GetLoaiGiaoVienAsync')
@@ -94,7 +94,7 @@
                 that.itemLoaiGiaoVien = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
 
         await axios.get('/Category/GetLoaiCheDoAsync')
@@ -102,7 +102,7 @@
                 that.itemLoaiCheDo = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
     },
     filters: {
@@ -237,9 +237,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Cập nhật lỗi: ' + error;
+                    that.messageText = 'Cập nhật lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                     that.dialogEdit = false;
                 });
@@ -316,9 +316,9 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                         that.snackbar = true;
-                        that.messageText = 'Thêm mới lỗi: ' + error;
+                        that.messageText = 'Thêm mới lỗi: ' + error.response.data.Message;
                         that.color = 'error';
                     });
             }
@@ -349,9 +349,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Xóa lỗi: ' + error;
+                    that.messageText = 'Xóa lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         }
