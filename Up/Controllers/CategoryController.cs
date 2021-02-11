@@ -689,33 +689,11 @@
                 return RedirectToAction("LoaiCheDoIndex");
             }
 
-            try
-            {
-                var successful = await _loaiCheDoService.CreateLoaiCheDoAsync(model.Name, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _loaiCheDoService.CreateLoaiCheDoAsync(model.Name, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
         }
 
         [HttpPut]
@@ -732,32 +710,11 @@
                 return RedirectToAction("LoaiCheDoIndex");
             }
 
-            try
-            {
-                var successful = await _loaiCheDoService.UpdateLoaiCheDoAsync(model.LoaiCheDoId, model.Name, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _loaiCheDoService.UpdateLoaiCheDoAsync(model.LoaiCheDoId, model.Name, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false));
         }
 
         [HttpDelete]
@@ -774,32 +731,11 @@
                 return RedirectToAction("LoaiCheDoIndex");
             }
 
-            try
-            {
-                var successful = await _loaiCheDoService.DeleteLoaiCheDoAsync(model.LoaiCheDoId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Xóa lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Xóa thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _loaiCheDoService.DeleteLoaiCheDoAsync(model.LoaiCheDoId, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
 
         /// /////////////////////////////////////////////////////////////////////////////////////////////////////

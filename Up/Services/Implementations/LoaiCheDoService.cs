@@ -1,7 +1,6 @@
 ﻿
 namespace Up.Services
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -12,119 +11,55 @@ namespace Up.Services
     using Up.Data.Entities;
     using Up.Enums;
     using Up.Models;
+    using Up.Repositoties;
 
     public class LoaiCheDoService : ILoaiCheDoService
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ILoaiGiaoVienRepository _loaiGiaoVienRepository;
+        private readonly ILoaiCheDoRepository _loaiCheDoRepository;
 
-        public LoaiCheDoService(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public LoaiCheDoService(ILoaiGiaoVienRepository loaiGiaoVienRepository, ILoaiCheDoRepository loaiCheDoRepository)
         {
-            _context = context;
-            _userManager = userManager;
+            _loaiGiaoVienRepository = loaiGiaoVienRepository;
+            _loaiCheDoRepository = loaiCheDoRepository;
         }
 
-        public async Task<bool> CanContributeAsync(ClaimsPrincipal User)
+        public async Task<bool> CanContributeAsync(ClaimsPrincipal user)
         {
-            var CurUser = await _userManager.GetUserAsync(User);
-
-            var roles = await _userManager.GetRolesAsync(CurUser);
-
-            var quyen_roles = await _context.Quyen_Roles
-                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_CheDoHopTac)
-                .Select(x => x.RoleId).AsNoTracking().ToListAsync();
-
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name).AsNoTracking();
-
-            bool canContribute = false;
-
-            foreach (string role in roles)
-            {
-                if (allRoles.Contains(role))
-                {
-                    canContribute = true;
-                    break;
-                }
-            }
+            bool canContribute = await _loaiCheDoRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_CheDoHopTac);
 
             return canContribute;
         }
 
-        public async Task<LoaiCheDoViewModel> CreateLoaiCheDoAsync(string Name, string LoggedEmployee)
+        public async Task<LoaiCheDoViewModel> CreateLoaiCheDoAsync(string name, string loggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name))
+            if (string.IsNullOrWhiteSpace(name))
                 throw new Exception("Tên Loại Chế Độ không được để trống !!!");
 
-            LoaiCheDo loaiCheDo = new LoaiCheDo();
-            loaiCheDo.LoaiCheDoId = new Guid();
-            loaiCheDo.Name = Name;
-            loaiCheDo.CreatedBy = LoggedEmployee;
-            loaiCheDo.CreatedDate = DateTime.Now;
-
-            _context.LoaiCheDos.Add(loaiCheDo);
-
-            var saveResult = await _context.SaveChangesAsync();
-            if (saveResult != 1)
-                throw new Exception("Lỗi khi lưu Loại Chế Độ !!!");
-            return new LoaiCheDoViewModel { LoaiCheDoId = loaiCheDo.LoaiCheDoId, Name = loaiCheDo.Name, CreatedBy = loaiCheDo.CreatedBy, CreatedDate = loaiCheDo.CreatedDate.ToString("dd/MM/yyyy") };
+            var result = await _loaiCheDoRepository.CreateLoaiCheDoAsync(name, loggedEmployee);
+            return await _loaiCheDoRepository.GetLoaiCheDoDetailAsync(result);
         }
 
-        public async Task<bool> DeleteLoaiCheDoAsync(Guid LoaiCheDoId, string LoggedEmployee)
+        public async Task<bool> DeleteLoaiCheDoAsync(Guid id, string loggedEmployee)
         {
-            var giaoVien = await _context.GiaoViens.Where(x => x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiCheDoId)).ToListAsync();
-            if (giaoVien.Any())
+            var giaoVienIds = await _loaiGiaoVienRepository.GetNhanVienIdsByLoaiCheDoAsync(id);
+            if (giaoVienIds.Any())
                 throw new Exception("Hãy xóa những nhân viên thuộc loại này trước !!!");
 
-            var item = await _context.LoaiCheDos
-                                    .Where(x => x.LoaiCheDoId == LoaiCheDoId)
-                                    .SingleOrDefaultAsync();
-
-            if (item == null)
-                throw new Exception("Không tìm thấy Loại Chế Độ !!!");
-
-            item.IsDisabled = true;
-            item.UpdatedBy = LoggedEmployee;
-            item.UpdatedDate = DateTime.Now;
-
-            var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+            return await _loaiCheDoRepository.DeleteLoaiCheDoAsync(id, loggedEmployee);
         }
 
         public async Task<List<LoaiCheDoViewModel>> GetLoaiCheDoAsync()
         {
-            return await _context.LoaiCheDos
-                .Where(x => x.IsDisabled == false)
-                .Select(x => new LoaiCheDoViewModel
-                {
-                    CreatedBy = x.CreatedBy,
-                    CreatedDate = x.CreatedDate.ToString("dd/MM/yyyy"),
-                    LoaiCheDoId = x.LoaiCheDoId,
-                    Name = x.Name,
-                    UpdatedBy = x.UpdatedBy,
-                    UpdatedDate = x.UpdatedDate != null ? ((DateTime)x.UpdatedDate).ToString("dd/MM/yyyy") : ""
-                })
-                .AsNoTracking()
-                .ToListAsync();
+            return await _loaiCheDoRepository.GetLoaiCheDoAsync();
         }
 
-        public async Task<bool> UpdateLoaiCheDoAsync(Guid LoaiCheDoId, string Name, string LoggedEmployee)
+        public async Task<bool> UpdateLoaiCheDoAsync(Guid id, string name, string loggedEmployee)
         {
-            if (string.IsNullOrWhiteSpace(Name))
+            if (string.IsNullOrWhiteSpace(name))
                 throw new Exception("Tên Loại Chế Độ không được để trống !!!");
 
-            var item = await _context.LoaiCheDos
-                                    .Where(x => x.LoaiCheDoId == LoaiCheDoId)
-                                    .SingleOrDefaultAsync();
-
-            if (item == null)
-                throw new Exception("Không tìm thấy Loại Chế Độ !!!");
-
-            item.Name = Name;
-            item.UpdatedBy = LoggedEmployee;
-            item.UpdatedDate = DateTime.Now;
-
-            var saveResult = await _context.SaveChangesAsync();
-            return saveResult == 1;
+            return await _loaiCheDoRepository.UpdateLoaiCheDoAsync(id, name, loggedEmployee);
         }
     }
 }

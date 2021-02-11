@@ -1,6 +1,4 @@
-﻿
-
-namespace Up.Services
+﻿namespace Up.Services
 {
     using System;
     using System.Collections.Generic;
@@ -11,9 +9,9 @@ namespace Up.Services
     public interface ILoaiCheDoService
     {
         Task<List<LoaiCheDoViewModel>> GetLoaiCheDoAsync();
-        Task<LoaiCheDoViewModel> CreateLoaiCheDoAsync(string Name, string LoggedEmployee);
-        Task<bool> UpdateLoaiCheDoAsync(Guid LoaiCheDoId, string Name, string LoggedEmployee);
-        Task<bool> DeleteLoaiCheDoAsync(Guid LoaiCheDoId, string LoggedEmployee);
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<LoaiCheDoViewModel> CreateLoaiCheDoAsync(string name, string loggedEmployee);
+        Task<bool> UpdateLoaiCheDoAsync(Guid id, string name, string loggedEmployee);
+        Task<bool> DeleteLoaiCheDoAsync(Guid id, string loggedEmployee);
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
     }
 }

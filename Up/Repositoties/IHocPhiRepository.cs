@@ -19,5 +19,9 @@ namespace Up.Repositoties
         Task<HocPhiViewModel> GetHocPhiDetailAsync(Guid id);
 
         Task<bool> DeleteHocPhiAsync(Guid id, string loggedEmployee);
+
+        Task<int> TinhSoNgayHocVienVoSauAsync(int year, int month, DateTime ngayBatDau, Guid lopHocId);
+
+        Task<int> TinhSoNgayDuocChoNghiAsync(Guid lopHocId, int month, int year);
     }
 }

@@ -20,6 +20,8 @@ namespace Up.Repositoties
 
         Task<IList<Guid>> GetNhanVienIdsAsync(Guid id);
 
+        Task<IList<Guid>> GetNhanVienIdsByLoaiCheDoAsync(Guid id);
+
         Task<bool> DeleteLoaiGiaoVienAsync(Guid id, string loggedEmployee);
     }
 }

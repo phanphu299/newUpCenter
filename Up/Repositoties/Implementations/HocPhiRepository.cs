@@ -64,6 +64,57 @@ namespace Up.Repositoties
             return _entityConverter.ToHocPhiViewModel(hocPhi);
         }
 
+        public async Task<int> TinhSoNgayHocVienVoSauAsync(int year, int month, DateTime ngayBatDau, Guid lopHocId)
+        {
+            var item = await _context.LopHocs
+                                    .Include(x => x.NgayHoc)
+                                    .Where(x => x.LopHocId == lopHocId)
+                                    .AsNoTracking()
+                                    .SingleOrDefaultAsync();
+
+            var ngayHoc = item.NgayHoc.Name.Split('-');
+            int tongNgayHoc = 0;
+
+            foreach (string el in ngayHoc)
+            {
+                switch (el.Trim())
+                {
+                    case "2":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Monday, ngayBatDau).Count();
+                        break;
+                    case "3":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Tuesday, ngayBatDau).Count();
+                        break;
+                    case "4":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Wednesday, ngayBatDau).Count();
+                        break;
+                    case "5":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Thursday, ngayBatDau).Count();
+                        break;
+                    case "6":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Friday, ngayBatDau).Count();
+                        break;
+                    case "7":
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Saturday, ngayBatDau).Count();
+                        break;
+                    default:
+                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Sunday, ngayBatDau).Count();
+                        break;
+                }
+            }
+
+            return tongNgayHoc;
+        }
+
+        private static IEnumerable<int> DaysInMonthWithStartDate(int year, int month, DayOfWeek dow, DateTime StartDate)
+        {
+            DateTime monthStart = new DateTime(year, month, 1);
+            return Enumerable.Range(0, DateTime.DaysInMonth(year, month))
+                .Select(day => monthStart.AddDays(day))
+                .Where(date => date.DayOfWeek == dow && date.Day >= StartDate.Day)
+                .Select(date => date.Day);
+        }
+
         public async Task<Guid> UpdateHocPhiAsync(UpdateHocPhiInputModel input, string loggedEmployee)
         {
             var item = await _context.HocPhis
@@ -74,6 +125,30 @@ namespace Up.Repositoties
             await _context.SaveChangesAsync();
 
             return item.HocPhiId;
+        }
+
+        public async Task<int> TinhSoNgayDuocChoNghiAsync(Guid lopHocId, int month, int year)
+        {
+            if (month == 1)
+            {
+                month = 12;
+                year--;
+            }
+            else
+            {
+                month--;
+            }
+
+            var ngayChoNghi = await _context.LopHoc_DiemDanhs
+                                            .Where(x => x.LopHocId == lopHocId && x.IsDuocNghi == true && x.NgayDiemDanh.Month == month && x.NgayDiemDanh.Year == year)
+                                            .GroupBy(x => x.NgayDiemDanh)
+                                            .Select(m => new
+                                            {
+                                                m.Key
+                                            })
+                                            .AsNoTracking()
+                                            .ToListAsync();
+            return ngayChoNghi.Count();
         }
     }
 }

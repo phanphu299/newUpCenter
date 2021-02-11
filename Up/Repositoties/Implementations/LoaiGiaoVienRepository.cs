@@ -73,6 +73,14 @@ namespace Up.Repositoties
                 .ToListAsync();
         }
 
+        public async Task<IList<Guid>> GetNhanVienIdsByLoaiCheDoAsync(Guid id)
+        {
+            return await _context.NhanVien_ViTris
+                .Where(m => m.CheDoId == id)
+                .Select(x => x.NhanVienId)
+                .ToListAsync();
+        }
+
         public async Task<bool> UpdateLoaiGiaoVienAsync(UpdateLoaiGiaoVienInputModel input, string loggedEmployee)
         {
             var item = await _context.LoaiGiaoViens

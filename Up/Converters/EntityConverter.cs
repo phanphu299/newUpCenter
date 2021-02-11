@@ -248,6 +248,19 @@ namespace Up.Converters
             };
         }
 
+        public LoaiCheDoViewModel ToLoaiCheDoViewModel(LoaiCheDo loaiCheDo)
+        {
+            return new LoaiCheDoViewModel
+            {
+                CreatedBy = loaiCheDo.CreatedBy,
+                CreatedDate = loaiCheDo.CreatedDate.ToClearDate(),
+                LoaiCheDoId = loaiCheDo.LoaiCheDoId,
+                Name = loaiCheDo.Name,
+                UpdatedBy = loaiCheDo.UpdatedBy,
+                UpdatedDate = loaiCheDo.UpdatedDate?.ToClearDate() ?? string.Empty
+            };
+        }
+
         ///ENTITY
 
         public HocVien ToEntityHocVien<T>(T input, string loggedEmployee) where T : CreateHocVienInput
