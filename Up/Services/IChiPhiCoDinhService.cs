@@ -9,10 +9,13 @@
     public interface IChiPhiCoDinhService
     {
         Task<List<ChiPhiCoDinhViewModel>> GetChiPhiCoDinhAsync();
-        Task<ChiPhiCoDinhViewModel> CreateChiPhiCoDinhAsync(double Gia, string Name, string LoggedEmployee);
-        Task<ChiPhiCoDinhViewModel> UpdateChiPhiCoDinhAsync(Guid ChiPhiCoDinhId, double Gia, string Name, string LoggedEmployee);
-        Task<bool> DeleteChiPhiCoDinhAsync(Guid ChiPhiCoDinhId, string LoggedEmployee);
 
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<ChiPhiCoDinhViewModel> CreateChiPhiCoDinhAsync(double gia, string name, string loggedEmployee);
+
+        Task<ChiPhiCoDinhViewModel> UpdateChiPhiCoDinhAsync(Guid id, double gia, string name, string loggedEmployee);
+
+        Task<bool> DeleteChiPhiCoDinhAsync(Guid id, string loggedEmployee);
+
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
     }
 }

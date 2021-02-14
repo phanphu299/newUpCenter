@@ -261,6 +261,36 @@ namespace Up.Converters
             };
         }
 
+        public ChiPhiCoDinhViewModel ToChiPhiCoDinhViewModel(ChiPhiCoDinh chiPhiCoDinh)
+        {
+            return new ChiPhiCoDinhViewModel
+            {
+                CreatedBy = chiPhiCoDinh.CreatedBy,
+                CreatedDate = chiPhiCoDinh.CreatedDate.ToClearDate(),
+                ChiPhiCoDinhId = chiPhiCoDinh.ChiPhiCoDinhId,
+                Gia = chiPhiCoDinh.Gia,
+                Name = chiPhiCoDinh.Name,
+                UpdatedBy = chiPhiCoDinh.UpdatedBy,
+                UpdatedDate = chiPhiCoDinh.UpdatedDate?.ToClearDate() ?? string.Empty
+            };
+        }
+        
+        public ChiPhiKhacViewModel ToChiPhiKhacViewModel(ChiPhiKhac chiPhiKhac)
+        {
+            return new ChiPhiKhacViewModel
+            {
+                CreatedBy = chiPhiKhac.CreatedBy,
+                CreatedDate = chiPhiKhac.CreatedDate.ToClearDate(),
+                ChiPhiKhacId = chiPhiKhac.ChiPhiKhacId,
+                NgayChiPhi = chiPhiKhac.NgayChiPhi,
+                _NgayChiPhi = chiPhiKhac.NgayChiPhi.ToClearDate(),
+                Gia = chiPhiKhac.Gia,
+                Name = chiPhiKhac.Name,
+                UpdatedBy = chiPhiKhac.UpdatedBy,
+                UpdatedDate = chiPhiKhac.UpdatedDate?.ToClearDate() ?? string.Empty
+            };
+        }
+
         ///ENTITY
 
         public HocVien ToEntityHocVien<T>(T input, string loggedEmployee) where T : CreateHocVienInput
@@ -367,6 +397,17 @@ namespace Up.Converters
             };
         }
 
+        public ChiPhiKhac ToEntityChiPhiKhac(CreateChiPhiKhacInputModel input, string loggedEmployee)
+        {
+            return new ChiPhiKhac
+            {
+                Name = input.Name,
+                Gia = input.Gia,
+                NgayChiPhi = input.NgayChiPhi,
+                CreatedBy = loggedEmployee
+            };
+        }
+
         ///MAPPING
 
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)
@@ -448,6 +489,15 @@ namespace Up.Converters
             item.NgayKetThuc = input.NgayKetThucDate;
             item.NgayLamViecId = input.NgayLamViecId;
             item.NganHang = input.NganHang;
+        }
+
+        public void MappingEntityChiPhiKhac(UpdateChiPhiKhacInputModel input, ChiPhiKhac item, string loggedEmployee)
+        {
+            item.Name = input.Name;
+            item.Gia = input.Gia;
+            item.NgayChiPhi = input.NgayChiPhi;
+            item.UpdatedBy = loggedEmployee;
+            item.UpdatedDate = DateTime.Now;
         }
     }
 }

@@ -20,6 +20,8 @@ namespace Up.IoC
             services.AddScoped<INgayLamViecRepository, NgayLamViecRepository>();
             services.AddScoped<IGiaoVienRepository, GiaoVienRepository>();
             services.AddScoped<ILoaiCheDoRepository, LoaiCheDoRepository>();
+            services.AddScoped<IChiPhiCoDinhRepository, ChiPhiCoDinhRepository>();
+            services.AddScoped<IChiPhiKhacRepository, ChiPhiKhacRepository>();
         }
     }
 }

@@ -765,33 +765,11 @@
                 return RedirectToAction("StaticExpenseIndex");
             }
 
-            try
-            {
-                var successful = await _chiPhiCoDinhService.CreateChiPhiCoDinhAsync(model.Gia, model.Name, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _chiPhiCoDinhService.CreateChiPhiCoDinhAsync(model.Gia, model.Name, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
         }
 
         [HttpPut]
@@ -808,33 +786,11 @@
                 return RedirectToAction("StaticExpenseIndex");
             }
 
-            try
-            {
-                var successful = await _chiPhiCoDinhService.UpdateChiPhiCoDinhAsync(model.ChiPhiCoDinhId, model.Gia, model.Name, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _chiPhiCoDinhService.UpdateChiPhiCoDinhAsync(model.ChiPhiCoDinhId, model.Gia, model.Name, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful));
         }
 
         [HttpDelete]
@@ -851,32 +807,11 @@
                 return RedirectToAction("StaticExpenseIndex");
             }
 
-            try
-            {
-                var successful = await _chiPhiCoDinhService.DeleteChiPhiCoDinhAsync(model.ChiPhiCoDinhId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Xóa lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Xóa thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _chiPhiCoDinhService.DeleteChiPhiCoDinhAsync(model.ChiPhiCoDinhId, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
 
         /// /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -898,7 +833,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOtherExpenseAsync([FromBody] Models.ChiPhiKhacViewModel model)
+        public async Task<IActionResult> CreateOtherExpenseAsync([FromBody] CreateChiPhiKhacInputModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -906,37 +841,15 @@
                 return RedirectToAction("OtherExpenseIndex");
             }
 
-            try
-            {
-                var successful = await _chiPhiKhacService.CreateChiPhiKhacAsync(model.Name, model.Gia, model.NgayChiPhi, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Thêm mới lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Thêm mới thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _chiPhiKhacService.CreateChiPhiKhacAsync(model, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateOtherExpenseAsync([FromBody] Models.ChiPhiKhacViewModel model)
+        public async Task<IActionResult> UpdateOtherExpenseAsync([FromBody] UpdateChiPhiKhacInputModel model)
         {
             if (model.ChiPhiKhacId == Guid.Empty)
             {
@@ -949,37 +862,15 @@
                 return RedirectToAction("OtherExpenseIndex");
             }
 
-            try
-            {
-                var successful = await _chiPhiKhacService.UpdateChiPhiKhacAsync(model.ChiPhiKhacId, model.Name, model.Gia, model.NgayChiPhi, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _chiPhiKhacService.UpdateChiPhiKhacAsync(model, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful));
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteOtherExpenseAsync([FromBody] Models.ChiPhiKhacViewModel model)
+        public async Task<IActionResult> DeleteOtherExpenseAsync([FromBody] ChiPhiKhacViewModel model)
         {
             if (model.ChiPhiKhacId == Guid.Empty)
             {
@@ -992,32 +883,11 @@
                 return RedirectToAction("OtherExpenseIndex");
             }
 
-            try
-            {
-                var successful = await _chiPhiKhacService.DeleteChiPhiKhacAsync(model.ChiPhiKhacId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Xóa lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Xóa thành công !!!"
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _chiPhiKhacService.DeleteChiPhiKhacAsync(model.ChiPhiKhacId, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
     }
 }

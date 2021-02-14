@@ -10,10 +10,10 @@ namespace Up.Services
     public interface IChiPhiKhacService
     {
         Task<List<ChiPhiKhacViewModel>> GetChiPhiKhacAsync();
-        Task<ChiPhiKhacViewModel> CreateChiPhiKhacAsync(string Name, double Gia, DateTime NgayChiPhi, string LoggedEmployee);
-        Task<ChiPhiKhacViewModel> UpdateChiPhiKhacAsync(Guid ChiPhiKhacId, string Name, double Gia, DateTime NgayChiPhi, string LoggedEmployee);
-        Task<bool> DeleteChiPhiKhacAsync(Guid ChiPhiKhacId, string LoggedEmployee);
+        Task<ChiPhiKhacViewModel> CreateChiPhiKhacAsync(CreateChiPhiKhacInputModel input, string loggedEmployee);
+        Task<ChiPhiKhacViewModel> UpdateChiPhiKhacAsync(UpdateChiPhiKhacInputModel input, string loggedEmployee);
+        Task<bool> DeleteChiPhiKhacAsync(Guid id, string loggedEmployee);
 
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
     }
 }

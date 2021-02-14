@@ -159,7 +159,7 @@
                              color="warning"
                              icon="priority_high"
                              outline>
-                        Không được bỏ trống
+                        {{ alertMessage }}
                     </v-alert>
                 </v-card-text>
                 <v-card-actions>
@@ -218,7 +218,7 @@
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/chiphikhacindex.min.js" type="text/javascript"></script>
+<script src="~/js/chiphikhacindex.js" type="text/javascript"></script>
 
 <style>
     .v-input__slot:before, .v-input__slot:after {

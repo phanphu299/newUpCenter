@@ -51,7 +51,7 @@
                 that.khoaHocItems = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
     },
     methods: {
@@ -71,37 +71,46 @@
 
         async onUpdate(item) {
             let that = this;
-            
-            await axios({
-                method: 'put',
-                url: '/category/UpdateOtherExpenseAsync',
-                data: {
-                    Name: item.name,
-                    Gia: item.gia,
-                    NgayChiPhi: item.ngayChiPhi,
-                    ChiPhiKhacId: item.chiPhiKhacId
-                }
-            })
-                .then(function (response) {
-                    if (response.data.status === "OK") {
-                        that.snackbar = true;
-                        that.messageText = 'Cập nhật thành công !!!';
-                        that.color = 'success';
-                        Object.assign(that.khoaHocItems[that.editedIndex], response.data.result);
-                    }
-                    else {
-                        that.snackbar = true;
-                        that.messageText = response.data.message;
-                        that.color = 'error';
+            if (item.name === '') {
+                this.alertMessage = "Không được bỏ trống";
+                this.alertEdit = true;
+            }
+            else if (isNaN(item.gia) || item.gia === '') {
+                this.alertMessage = "Chỉ được nhập số";
+                this.alertEdit = true;
+            }
+            else {
+                await axios({
+                    method: 'put',
+                    url: '/category/UpdateOtherExpenseAsync',
+                    data: {
+                        Name: item.name,
+                        Gia: item.gia,
+                        NgayChiPhi: item.ngayChiPhi,
+                        ChiPhiKhacId: item.chiPhiKhacId
                     }
                 })
-                .catch(function (error) {
-                    console.log(error);
-                    that.snackbar = true;
-                    that.messageText = 'Cập nhật lỗi: ' + error;
-                    that.color = 'error';
-                });
-            that.dialogEdit = false;
+                    .then(function (response) {
+                        if (response.data.status === "OK") {
+                            that.snackbar = true;
+                            that.messageText = 'Cập nhật thành công !!!';
+                            that.color = 'success';
+                            Object.assign(that.khoaHocItems[that.editedIndex], response.data.result);
+                        }
+                        else {
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'error';
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error.response.data.Message);
+                        that.snackbar = true;
+                        that.messageText = 'Cập nhật lỗi: ' + error.response.data.Message;
+                        that.color = 'error';
+                    });
+                that.dialogEdit = false;
+            }
         },
 
         async onSave(item) {
@@ -143,9 +152,9 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                         that.snackbar = true;
-                        that.messageText = 'Thêm mới lỗi: ' + error;
+                        that.messageText = 'Thêm mới lỗi: ' + error.response.data.Message;
                         that.color = 'error';
                     });
             }
@@ -175,9 +184,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Xóa lỗi: ' + error;
+                    that.messageText = 'Xóa lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         }

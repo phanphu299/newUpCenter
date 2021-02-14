@@ -43,7 +43,7 @@
                 that.khoaHocItems = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
     },
     methods: {
@@ -53,15 +53,20 @@
 
         async onUpdate(item) {
             let that = this;
-            await axios({
-                method: 'put',
-                url: '/category/UpdateStaticExpenseAsync',
-                data: {
-                    Name: item.name,
-                    Gia: item.gia,
-                    ChiPhiCoDinhId: item.chiPhiCoDinhId
-                }
-            })
+            if (isNaN(item.gia) || item.gia === '') {
+                this.alertMessage = "Chỉ được nhập số";
+                this.alert = true;
+            }
+            else {
+                await axios({
+                    method: 'put',
+                    url: '/category/UpdateStaticExpenseAsync',
+                    data: {
+                        Name: item.name,
+                        Gia: item.gia,
+                        ChiPhiCoDinhId: item.chiPhiCoDinhId
+                    }
+                })
                 .then(function (response) {
                     console.log(response);
                     if (response.data.status === "OK") {
@@ -76,11 +81,12 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Cập nhật lỗi: ' + error;
+                    that.messageText = 'Cập nhật lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
+            }
         },
 
         async onSave(item) {
@@ -120,9 +126,9 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                         that.snackbar = true;
-                        that.messageText = 'Thêm mới lỗi: ' + error;
+                        that.messageText = 'Thêm mới lỗi: ' + error.response.data.Message;
                         that.color = 'error';
                     });
             }
@@ -152,9 +158,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Xóa lỗi: ' + error;
+                    that.messageText = 'Xóa lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         }
