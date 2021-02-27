@@ -499,5 +499,71 @@ namespace Up.Converters
             item.UpdatedBy = loggedEmployee;
             item.UpdatedDate = DateTime.Now;
         }
+
+        //TINH CHI PHI
+
+        public ChiPhiModel ToChiPhiModel(
+            GiaoVien nhanVien,
+            double salary,
+            double teachingRate,
+            double tutoringRate,
+            double hoaHong,
+            double bonus,
+            double minus,
+            int loaiChiPhi,
+            double chiPhiMoi,
+            double soGioDay,
+            double soGioKem,
+            double soHocVien,
+            bool daLuu,
+            string ngayLamViec,
+            int soNgayLam,
+            int soNgayLamVoSau,
+            double dailySalary,
+            double soNgayNghi,
+            string ghiChu)
+        {
+            return new ChiPhiModel
+            {
+                NhanVienId = nhanVien.GiaoVienId,
+                Name = nhanVien.Name,
+                Salary_Expense = salary,
+                TeachingRate = teachingRate,
+                TutoringRate = tutoringRate,
+                MucHoaHong = hoaHong,
+                Bonus = bonus,
+                Minus = minus,
+                LoaiChiPhi = loaiChiPhi,
+                ChiPhiMoi = chiPhiMoi,
+                SoGioDay = soGioDay,
+                SoGioKem = soGioKem,
+                SoHocVien = soHocVien,
+                DaLuu = daLuu,
+                NgayLamViec = ngayLamViec,
+                SoNgayLam = soNgayLam,
+                SoNgayLamVoSau = soNgayLamVoSau,
+                DailySalary = dailySalary,
+                SoNgayNghi = soNgayNghi,
+                GhiChu = ghiChu
+            };
+        }
+
+        public ChiPhiModel ToChiPhiModel(
+            ChiPhiCoDinh chiPhi,
+            double chiPhiMoi,
+            bool daLuu)
+        {
+            return new ChiPhiModel
+            {
+                Name = chiPhi.Name,
+                Salary_Expense = chiPhi.Gia,
+                Bonus = 0,
+                Minus = 0,
+                LoaiChiPhi = 3,
+                ChiPhiCoDinhId = chiPhi.ChiPhiCoDinhId,
+                ChiPhiMoi = chiPhiMoi,
+                DaLuu = daLuu
+            };
+        }
     }
 }

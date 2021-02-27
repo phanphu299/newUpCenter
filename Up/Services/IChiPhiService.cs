@@ -8,6 +8,6 @@ namespace Up.Services
     public interface IChiPhiService
     {
         Task<TinhChiPhiViewModel> TinhChiPhiAsync(int month, int year);
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
     }
 }

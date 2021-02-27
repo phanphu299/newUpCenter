@@ -62,7 +62,7 @@
                         that.chiPhiList = response.data.chiPhiList;
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                     });
             }
         },
@@ -110,9 +110,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Lưu Chi Phí lỗi: ' + error;
+                    that.messageText = 'Lưu Chi Phí lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -154,9 +154,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Lưu Bảng Tính lỗi: ' + error;
+                    that.messageText = 'Lưu Bảng Tính lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         }

@@ -45,15 +45,6 @@ namespace Up.Services
             return await _hocPhiRepository.GetHocPhiAsync();
         }
 
-        private static IEnumerable<int> DaysInMonth(int year, int month, DayOfWeek dow)
-        {
-            DateTime monthStart = new DateTime(year, month, 1);
-            return Enumerable.Range(0, DateTime.DaysInMonth(year, month))
-                .Select(day => monthStart.AddDays(day))
-                .Where(date => date.DayOfWeek == dow)
-                .Select(date => date.Day);
-        }
-
         public async Task<HocPhiViewModel> UpdateHocPhiAsync(UpdateHocPhiInputModel input, string loggedEmployee)
         {
             var result = await _hocPhiRepository.UpdateHocPhiAsync(input, loggedEmployee);
@@ -394,25 +385,25 @@ namespace Up.Services
                 switch (el.Trim())
                 {
                     case "2":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Monday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Monday));
                         break;
                     case "3":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Tuesday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Tuesday));
                         break;
                     case "4":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Wednesday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Wednesday));
                         break;
                     case "5":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Thursday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Thursday));
                         break;
                     case "6":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Friday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Friday));
                         break;
                     case "7":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Saturday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Saturday));
                         break;
                     default:
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Sunday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Sunday));
                         break;
                 }
             }
@@ -480,25 +471,25 @@ namespace Up.Services
                 switch (el.Trim())
                 {
                     case "2":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Monday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Monday));
                         break;
                     case "3":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Tuesday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Tuesday));
                         break;
                     case "4":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Wednesday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Wednesday));
                         break;
                     case "5":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Thursday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Thursday));
                         break;
                     case "6":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Friday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Friday));
                         break;
                     case "7":
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Saturday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Saturday));
                         break;
                     default:
-                        tongNgayHoc.AddRange(DaysInMonth(year, month, DayOfWeek.Sunday));
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Sunday));
                         break;
                 }
             }

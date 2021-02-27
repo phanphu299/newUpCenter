@@ -80,39 +80,30 @@ namespace Up.Repositoties
                 switch (el.Trim())
                 {
                     case "2":
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Monday, ngayBatDau).Count();
+                        tongNgayHoc += Helpers.DaysInMonthWithStartDate(year, month, DayOfWeek.Monday, ngayBatDau).Count();
                         break;
                     case "3":
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Tuesday, ngayBatDau).Count();
+                        tongNgayHoc += Helpers.DaysInMonthWithStartDate(year, month, DayOfWeek.Tuesday, ngayBatDau).Count();
                         break;
                     case "4":
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Wednesday, ngayBatDau).Count();
+                        tongNgayHoc += Helpers.DaysInMonthWithStartDate(year, month, DayOfWeek.Wednesday, ngayBatDau).Count();
                         break;
                     case "5":
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Thursday, ngayBatDau).Count();
+                        tongNgayHoc += Helpers.DaysInMonthWithStartDate(year, month, DayOfWeek.Thursday, ngayBatDau).Count();
                         break;
                     case "6":
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Friday, ngayBatDau).Count();
+                        tongNgayHoc += Helpers.DaysInMonthWithStartDate(year, month, DayOfWeek.Friday, ngayBatDau).Count();
                         break;
                     case "7":
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Saturday, ngayBatDau).Count();
+                        tongNgayHoc += Helpers.DaysInMonthWithStartDate(year, month, DayOfWeek.Saturday, ngayBatDau).Count();
                         break;
                     default:
-                        tongNgayHoc += DaysInMonthWithStartDate(year, month, DayOfWeek.Sunday, ngayBatDau).Count();
+                        tongNgayHoc += Helpers.DaysInMonthWithStartDate(year, month, DayOfWeek.Sunday, ngayBatDau).Count();
                         break;
                 }
             }
 
             return tongNgayHoc;
-        }
-
-        private static IEnumerable<int> DaysInMonthWithStartDate(int year, int month, DayOfWeek dow, DateTime StartDate)
-        {
-            DateTime monthStart = new DateTime(year, month, 1);
-            return Enumerable.Range(0, DateTime.DaysInMonth(year, month))
-                .Select(day => monthStart.AddDays(day))
-                .Where(date => date.DayOfWeek == dow && date.Day >= StartDate.Day)
-                .Select(date => date.Day);
         }
 
         public async Task<Guid> UpdateHocPhiAsync(UpdateHocPhiInputModel input, string loggedEmployee)

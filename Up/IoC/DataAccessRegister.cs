@@ -22,6 +22,7 @@ namespace Up.IoC
             services.AddScoped<ILoaiCheDoRepository, LoaiCheDoRepository>();
             services.AddScoped<IChiPhiCoDinhRepository, ChiPhiCoDinhRepository>();
             services.AddScoped<IChiPhiKhacRepository, ChiPhiKhacRepository>();
+            services.AddScoped<IChiPhiRepository, ChiPhiRepository>();
         }
     }
 }
