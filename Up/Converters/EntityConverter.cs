@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Up.Data.Entities;
 using Up.Extensions;
@@ -274,7 +275,7 @@ namespace Up.Converters
                 UpdatedDate = chiPhiCoDinh.UpdatedDate?.ToClearDate() ?? string.Empty
             };
         }
-        
+
         public ChiPhiKhacViewModel ToChiPhiKhacViewModel(ChiPhiKhac chiPhiKhac)
         {
             return new ChiPhiKhacViewModel
@@ -406,6 +407,65 @@ namespace Up.Converters
                 NgayChiPhi = input.NgayChiPhi,
                 CreatedBy = loggedEmployee
             };
+        }
+
+        public IList<ThongKe_ChiPhi> ToThongKe_ChiPhiList(ThongKe_ChiPhiViewModel[] input, DateTime ngayChiPhi, string loggedEmployee)
+            => input.Select(item =>
+            {
+                return new ThongKe_ChiPhi
+                {
+                    NgayChiPhi = ngayChiPhi,
+                    CreatedBy = loggedEmployee,
+                    CreatedDate = DateTime.Now,
+                    ChiPhi = item.ChiPhiMoi,
+                    Bonus = item.Bonus,
+                    Minus = item.Minus,
+                    SoGioDay = item.SoGioDay,
+                    SoGioKem = item.SoGioKem,
+                    ChiPhiCoDinhId = item.ChiPhiCoDinhId,
+                    NhanVienId = item.NhanVienId,
+                    DaLuu = item.DaLuu,
+                    SoHocVien = item.SoHocVien,
+                    DailySalary = item.DailySalary,
+                    NgayLamViec = item.NgayLamViec,
+                    Salary_Expense = item.Salary_Expense,
+                    SoNgayLam = item.SoNgayLam,
+                    SoNgayLamVoSau = item.SoNgayLamVoSau,
+                    SoNgayNghi = item.SoNgayNghi,
+                    TeachingRate = item.TeachingRate,
+                    TutoringRate = item.TutoringRate,
+                    MucHoaHong = item.MucHoaHong,
+                    GhiChu = item.GhiChu
+                };
+            })
+            .ToList();
+
+        public LopHoc_DiemDanh ToEntityLopHoc_DiemDanh(DiemDanhHocVienInput input, string loggedEmployee)
+        {
+            return new LopHoc_DiemDanh
+            {
+                NgayDiemDanh = input.NgayDiemDanh,
+                IsOff = input.IsOff,
+                LopHocId = input.LopHocId,
+                HocVienId = input.HocVienId,
+                CreatedBy = loggedEmployee
+            };
+        }
+
+        public IList<LopHoc_DiemDanh> ToLopHoc_DiemDanhList(DiemDanhHocVienInput input, IList<HocVienViewModel> hocViens, string loggedEmployee)
+        {
+            return hocViens.Select(hocVien =>
+            {
+                return new LopHoc_DiemDanh
+                {
+                    NgayDiemDanh = input.NgayDiemDanh,
+                    IsOff = input.IsOff,
+                    LopHocId = input.LopHocId,
+                    HocVienId = hocVien.HocVienId,
+                    CreatedBy = loggedEmployee
+                };
+            })
+            .ToList();
         }
 
         ///MAPPING

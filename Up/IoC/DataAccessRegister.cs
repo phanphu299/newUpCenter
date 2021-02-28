@@ -23,6 +23,7 @@ namespace Up.IoC
             services.AddScoped<IChiPhiCoDinhRepository, ChiPhiCoDinhRepository>();
             services.AddScoped<IChiPhiKhacRepository, ChiPhiKhacRepository>();
             services.AddScoped<IChiPhiRepository, ChiPhiRepository>();
+            services.AddScoped<IDiemDanhRepository, DiemDanhRepository>();
         }
     }
 }

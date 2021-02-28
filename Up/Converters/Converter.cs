@@ -36,5 +36,16 @@ namespace Up.Converters
                 QuanHeId = worksheet.Cells[row, 9].Value == null ? quanHe : new Guid(worksheet.Cells[row, 9].Value.ToString().Trim())
             };
         }
+
+        public DiemDanhHocVienInput ToDiemDanhHocVienInput(Guid lopHocId, Guid hocVienId, bool isOff, DateTime ngayDiemDanh)
+        {
+            return new DiemDanhHocVienInput
+            {
+                LopHocId = lopHocId,
+                HocVienId = hocVienId,
+                IsOff = isOff,
+                NgayDiemDanh = ngayDiemDanh
+            };
+        }
     }
 }

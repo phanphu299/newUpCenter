@@ -25,6 +25,22 @@ namespace Up.Repositoties
             _entityConverter = entityConverter;
         }
 
+        public async Task<bool> ThemThongKe_ChiPhiAsync(ThongKe_ChiPhiViewModel[] model, DateTime ngayChiPhi, string loggedEmployee)
+        {
+            var items = _context.ThongKe_ChiPhis
+                .Where(x => x.NgayChiPhi.Month == ngayChiPhi.Month && 
+                            x.NgayChiPhi.Year == ngayChiPhi.Year && 
+                            x.ChiPhiKhacId == null);
+
+            _context.RemoveRange(items);
+
+            var thongKeList = _entityConverter.ToThongKe_ChiPhiList(model, ngayChiPhi, loggedEmployee);
+            await _context.ThongKe_ChiPhis.AddRangeAsync(thongKeList);
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<TinhChiPhiViewModel> TinhChiPhiAsync(int month, int year)
         {
             var giaoVienList = await _context.GiaoViens

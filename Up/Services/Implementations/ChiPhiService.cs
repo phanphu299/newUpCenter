@@ -1,5 +1,6 @@
 ﻿namespace Up.Services
 {
+    using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Enums;
@@ -19,6 +20,11 @@
         {
             bool canContribute = await _chiPhiRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_TinhLuong);
             return canContribute;
+        }
+
+        public async Task<bool> ThemThongKe_ChiPhiAsync(ThongKe_ChiPhiViewModel[] model, DateTime ngayChiPhi, string loggedEmployee)
+        {
+            return await _chiPhiRepository.ThemThongKe_ChiPhiAsync(model, ngayChiPhi, loggedEmployee);
         }
 
         public async Task<TinhChiPhiViewModel> TinhChiPhiAsync(int month, int year)

@@ -455,48 +455,6 @@ namespace Up.Services
             return tongNoKhacLop + (cungLop != null ? cungLop.TienNo : 0);
         }
 
-        public async Task<List<int>> SoNgayHocAsync(Guid LopHocId, int month, int year)
-        {
-            var item = await _context.LopHocs
-                                    .Include(x => x.NgayHoc)
-                                    .Where(x => x.LopHocId == LopHocId)
-                                    .AsNoTracking()
-                                    .SingleOrDefaultAsync();
-
-            var ngayHoc = item.NgayHoc.Name.Split('-');
-            List<int> tongNgayHoc = new List<int>();
-
-            foreach (string el in ngayHoc)
-            {
-                switch (el.Trim())
-                {
-                    case "2":
-                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Monday));
-                        break;
-                    case "3":
-                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Tuesday));
-                        break;
-                    case "4":
-                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Wednesday));
-                        break;
-                    case "5":
-                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Thursday));
-                        break;
-                    case "6":
-                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Friday));
-                        break;
-                    case "7":
-                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Saturday));
-                        break;
-                    default:
-                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Sunday));
-                        break;
-                }
-            }
-
-            return tongNgayHoc.OrderBy(x => x).ToList();
-        }
-
         public async Task<bool> CanContributeAsync(ClaimsPrincipal user)
         {
             bool canContribute = await _hocPhiRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_HocPhi);

@@ -19,15 +19,19 @@
     {
         private readonly IDiemDanhService _diemDanhService;
         private readonly ILopHocService _lopHocService;
-        private readonly IHocPhiService _hocPhiService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly Converters.Converter _converter;
 
-        public DiemDanhController(IDiemDanhService diemDanhService, ILopHocService lopHocService, IHocPhiService hocPhiService, UserManager<IdentityUser> userManager)
+        public DiemDanhController(
+            IDiemDanhService diemDanhService, 
+            ILopHocService lopHocService, 
+            UserManager<IdentityUser> userManager,
+            Converters.Converter converter)
         {
             _diemDanhService = diemDanhService;
             _lopHocService = lopHocService;
-            _hocPhiService = hocPhiService;
             _userManager = userManager;
+            _converter = converter;
         }
 
         [ServiceFilter(typeof(Read_DiemDanh))]
@@ -68,11 +72,9 @@
         public async Task<IActionResult> GetDiemDanhByLopHocAsync(Guid LopHocId, int month, int year)
         {
             var list = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId, month, year);
-            List<ThongKeModel> model = new List<ThongKeModel>();
-            var soNgayHoc = await _hocPhiService.SoNgayHocAsync(LopHocId, month, year);
-            //if (list.Where(x => x.NgayDiemDanh_Date.Month == month && x.NgayDiemDanh_Date.Year == year).Any())
-            //{
-            model = list
+            var soNgayHoc = await _diemDanhService.SoNgayHocAsync(LopHocId, month, year);
+
+            var model = list
                     .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
                     {
                         Label = x.Key,
@@ -127,57 +129,13 @@
 
                 hocVien.ThongKeDiemDanh = diemDanhModel;
             }
-            //}
-            //else if (list.Where(x => (x.NgayDiemDanh_Date.Month < month && x.NgayDiemDanh_Date.Year == year) || x.NgayDiemDanh_Date.Year < year).Any())
-            //{
-            //    model = list
-            //            .GroupBy(x => x.HocVien).Select(x => new ThongKeModel
-            //            {
-            //                Label = x.Key,
-            //                HocVienId = x.Select(m => m.HocVienId).First(),
-            //                NgayBatDau_Day = x.Select(m => m.NgayBatDau).First().Day,
-            //                NgayBatDau_Month = x.Select(m => m.NgayBatDau).First().Month,
-            //                NgayBatDau_Year = x.Select(m => m.NgayBatDau).First().Year,
-            //                NgayKetThuc_Day = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Day : 0,
-            //                NgayKetThuc_Month = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Month : 0,
-            //                NgayKetThuc_Year = x.Select(m => m.NgayKetThuc).FirstOrDefault() != null ? x.Select(m => m.NgayKetThuc).FirstOrDefault().Value.Year : 0,
-            //                ThongKeDiemDanh = x.Select(m => new ThongKeDiemDanhModel
-            //                {
-            //                    Dates = m.NgayDiemDanh_Date,
-            //                    DuocNghi = m.IsDuocNghi,
-            //                    IsOff = m.IsOff,
-            //                    Day = m.NgayDiemDanh_Date.Day
-            //                }).ToList()
-            //            }).ToList();
-
-            //    foreach (var hocVien in model)
-            //    {
-            //        List<ThongKeDiemDanhModel> diemDanhModel = new List<ThongKeDiemDanhModel>();
-            //        foreach (int ngayHoc in soNgayHoc)
-            //        {
-            //            diemDanhModel.Add(new ThongKeDiemDanhModel
-            //            {
-            //                //phai~ dao~ isOff de ko sinh loi v-switch
-            //                DuocNghi = false,
-            //                IsOff = false,
-            //                Day = ngayHoc,
-            //                Dates = new DateTime(year, month, ngayHoc)
-            //            });
-            //        }
-
-            //        hocVien.ThongKeDiemDanh = diemDanhModel;
-            //    }
-            //}
-
-            return Json(
-                model
-                );
+            return Json(model);
         }
 
         [HttpGet]
-        public async Task<IActionResult> DiemDanhTungHocVienNewAsync(Guid HocVienId, Guid LopHocId, int day, int month, int year, bool IsOff)
+        public async Task<IActionResult> DiemDanhTungHocVienNewAsync(DiemDanhHocVienInput input)
         {
-            if (LopHocId == Guid.Empty || HocVienId == Guid.Empty)
+            if (input.LopHocId == Guid.Empty || input.HocVienId == Guid.Empty)
             {
                 return RedirectToAction("Index");
             }
@@ -188,40 +146,18 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime _ngayDiemDanh = new DateTime(year, month, day);
+            input.NgayDiemDanh = new DateTime(input.Year, input.Month, input.Day);
+            input.IsOff = !input.IsOff;
 
-                var successful = await _diemDanhService.DiemDanhTungHocVienAsync(LopHocId, HocVienId,
-                    !IsOff, _ngayDiemDanh, currentUser.Email);
-                if (successful == false)
-                {
-                    return Json(new ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Điểm Danh lỗi !!!"
-                    });
-                }
-
-                return Json(new ResultModel
-                {
-                    Status = "OK",
-                    Message = "Điểm Danh thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _diemDanhService.DiemDanhTungHocVienAsync(input, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Điểm Danh thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Điểm Danh lỗi !!!", false));
         }
 
         [HttpPost]
-        public async Task<IActionResult> DiemDanhTungHocVienAsync([FromBody] Models.LopHoc_DiemDanhViewModel model)
+        public async Task<IActionResult> DiemDanhTungHocVienAsync([FromBody] LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty || model.HocVienId == Guid.Empty)
             {
@@ -234,40 +170,17 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime _ngayDiemDanh = Convert.ToDateTime(model.NgayDiemDanh, System.Globalization.CultureInfo.InvariantCulture);
-
-                var successful = await _diemDanhService.DiemDanhTungHocVienAsync(model.LopHocId, model.HocVienId,
-                    model.IsOff, _ngayDiemDanh, currentUser.Email);
-                if (successful == false)
-                {
-                    return Json(new ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Điểm Danh lỗi !!!"
-                    });
-                }
-
-                return Json(new ResultModel
-                {
-                    Status = "OK",
-                    Message = "Điểm Danh thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            DateTime _ngayDiemDanh = _converter.ToDateTime(model.NgayDiemDanh);
+            var input = _converter.ToDiemDanhHocVienInput(model.LopHocId, model.HocVienId, model.IsOff, _ngayDiemDanh);
+            var successful = await _diemDanhService.DiemDanhTungHocVienAsync(input, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Điểm Danh thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Điểm Danh lỗi !!!", false));
         }
 
         [HttpPost]
-        public async Task<IActionResult> DiemDanhTatCaAsync([FromBody] Models.LopHoc_DiemDanhViewModel model)
+        public async Task<IActionResult> DiemDanhTatCaAsync([FromBody] LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -280,40 +193,17 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime _ngayDiemDanh = Convert.ToDateTime(model.NgayDiemDanh, System.Globalization.CultureInfo.InvariantCulture);
-
-                var successful = await _diemDanhService.DiemDanhTatCaAsync(model.LopHocId,
-                    model.IsOff, _ngayDiemDanh, currentUser.Email);
-                if (successful == false)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Điểm Danh lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Điểm Danh thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            DateTime _ngayDiemDanh = _converter.ToDateTime(model.NgayDiemDanh);
+            var input = _converter.ToDiemDanhHocVienInput(model.LopHocId, model.HocVienId, model.IsOff, _ngayDiemDanh);
+            var successful = await _diemDanhService.DiemDanhTatCaAsync(input, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Điểm Danh thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Điểm Danh lỗi !!!", false));
         }
 
         [HttpPost]
-        public async Task<IActionResult> LopNghiAsync([FromBody] Models.LopHoc_DiemDanhViewModel model)
+        public async Task<IActionResult> LopNghiAsync([FromBody] LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -326,35 +216,13 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime _ngayDiemDanh = Convert.ToDateTime(model.NgayDiemDanh, System.Globalization.CultureInfo.InvariantCulture);
-
-                var successful = await _diemDanhService.DuocNghi(model.LopHocId, _ngayDiemDanh, currentUser.Email);
-                if (successful == false)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Điểm Danh lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cho Lớp Nghỉ thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            DateTime _ngayDiemDanh = _converter.ToDateTime(model.NgayDiemDanh);
+            var input = _converter.ToDiemDanhHocVienInput(model.LopHocId, model.HocVienId, model.IsOff, _ngayDiemDanh);
+            var successful = await _diemDanhService.DuocNghi(model.LopHocId, _ngayDiemDanh, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Điểm Danh thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Điểm Danh lỗi !!!", false));
         }
 
         [HttpPost]
@@ -512,7 +380,7 @@
         [HttpGet]
         public async Task<IActionResult> GetSoNgayHoc(Guid LopHocId, int month, int year)
         {
-            var model = await _hocPhiService.SoNgayHocAsync(LopHocId, month, year);
+            var model = await _diemDanhService.SoNgayHocAsync(LopHocId, month, year);
             return Json(model);
         }
 
@@ -541,7 +409,7 @@
                 }).ToList();
                 int totalRows = groupedModel.Count;
 
-                var soNgayHoc = _hocPhiService.SoNgayHocAsync(LopHocId, month, year).Result;
+                var soNgayHoc = _diemDanhService.SoNgayHocAsync(LopHocId, month, year).Result;
                 string column = Number2String(soNgayHoc.Count + 3, true);
 
                 worksheet.Cells["A1:" + column + "1"].Merge = true;

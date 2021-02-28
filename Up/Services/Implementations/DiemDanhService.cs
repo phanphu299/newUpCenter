@@ -1,6 +1,5 @@
 ﻿namespace Up.Services
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -11,141 +10,48 @@
     using Up.Data.Entities;
     using Up.Enums;
     using Up.Models;
+    using Up.Repositoties;
 
     public class DiemDanhService : IDiemDanhService
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IDiemDanhRepository _diemDanhRepository;
 
-        public DiemDanhService(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public DiemDanhService(ApplicationDbContext context, IDiemDanhRepository diemDanhRepository)
         {
             _context = context;
-            _userManager = userManager;
+            _diemDanhRepository = diemDanhRepository;
         }
 
-        public async Task<bool> CanContributeAsync(ClaimsPrincipal User)
+        public async Task<bool> CanContributeAsync(ClaimsPrincipal user)
         {
-            var CurUser = await _userManager.GetUserAsync(User);
-
-            var roles = await _userManager.GetRolesAsync(CurUser);
-
-            var quyen_roles = await _context.Quyen_Roles
-                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_DiemDanh)
-                .Select(x => x.RoleId).AsNoTracking().ToListAsync();
-
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name).AsNoTracking();
-
-            bool canContribute = false;
-
-            foreach (string role in roles)
-            {
-                if (allRoles.Contains(role))
-                {
-                    canContribute = true;
-                    break;
-                }
-            }
+            bool canContribute = await _diemDanhRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_DiemDanh);
             return canContribute;
         }
 
-        public async Task<bool> CanContributeExportAsync(ClaimsPrincipal User)
+        public async Task<bool> CanContributeExportAsync(ClaimsPrincipal user)
         {
-            var CurUser = await _userManager.GetUserAsync(User);
-
-            var roles = await _userManager.GetRolesAsync(CurUser);
-
-            var quyen_roles = _context.Quyen_Roles
-                .Where(x => x.QuyenId == (int)QuyenEnums.Contribute_DiemDanh_Export)
-                .Select(x => x.RoleId).ToList();
-
-            var allRoles = _context.Roles.Where(x => quyen_roles.Contains(x.Id)).Select(x => x.Name);
-
-            bool canContribute = false;
-
-            foreach (string role in roles)
-            {
-                if (allRoles.Contains(role))
-                {
-                    canContribute = true;
-                    break;
-                }
-            }
+            bool canContribute = await _diemDanhRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_DiemDanh_Export);
             return canContribute;
         }
 
-        public async Task<bool> DiemDanhTatCaAsync(Guid LopHocId, bool isOff, DateTime NgayDiemDanh, string LoggedEmployee)
+        public async Task<bool> DiemDanhTatCaAsync(DiemDanhHocVienInput input, string loggedEmployee)
         {
-            try
-            {
-                if (LopHocId == null || isOff == null || NgayDiemDanh == null)
-                    throw new Exception("Lỗi khi Điểm Danh!!!");
+            if (input.LopHocId == null || input.IsOff == null || input.NgayDiemDanh == null)
+                throw new Exception("Lỗi khi Điểm Danh!!!");
 
-                var isExisting = await _context.LopHoc_DiemDanhs
-                                        .Where(x => x.LopHocId == LopHocId && x.NgayDiemDanh == NgayDiemDanh)
-                                        .ToListAsync();
-                if (isExisting.Any())
-                    throw new Exception("Lớp học đã được điểm danh ngày " + NgayDiemDanh.ToShortDateString());
+            if (await _diemDanhRepository.CheckDaDiemDanhAsync(input.LopHocId, input.NgayDiemDanh))
+                throw new Exception($"Lớp học đã được điểm danh ngày {input.NgayDiemDanh.ToShortDateString()}");
 
-                var hocViens = GetHocVienByLopHoc(LopHocId);
-
-                foreach (var item in hocViens.Result)
-                {
-                    LopHoc_DiemDanh lopHoc_DiemDanh = new LopHoc_DiemDanh();
-                    lopHoc_DiemDanh.NgayDiemDanh = NgayDiemDanh;
-                    lopHoc_DiemDanh.IsOff = isOff;
-                    lopHoc_DiemDanh.LopHocId = LopHocId;
-                    lopHoc_DiemDanh.HocVienId = item.HocVienId;
-                    lopHoc_DiemDanh.CreatedBy = LoggedEmployee;
-                    lopHoc_DiemDanh.CreatedDate = DateTime.Now;
-                    _context.LopHoc_DiemDanhs.Add(lopHoc_DiemDanh);
-                }
-
-                var saveResult = await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception exception)
-            {
-                throw exception;
-            }
+            return await _diemDanhRepository.DiemDanhTatCaAsync(input, loggedEmployee);
         }
 
-        public async Task<bool> DiemDanhTungHocVienAsync(Guid LopHocId, Guid HocVienId, bool isOff, DateTime NgayDiemDanh, string LoggedEmployee)
+        public async Task<bool> DiemDanhTungHocVienAsync(DiemDanhHocVienInput input, string loggedEmployee)
         {
-            try
-            {
-                if (LopHocId == null || HocVienId == null || isOff == null || NgayDiemDanh == null)
-                    throw new Exception("Lỗi khi Điểm Danh!!!");
+            if (input.LopHocId == null || input.HocVienId == null || input.IsOff == null || input.NgayDiemDanh == null)
+                throw new Exception("Lỗi khi Điểm Danh!!!");
 
-                var diemDanh = await _context.LopHoc_DiemDanhs
-                                        .Where(x => x.LopHocId == LopHocId && x.HocVienId == HocVienId && x.NgayDiemDanh == NgayDiemDanh)
-                                        .SingleOrDefaultAsync();
-
-                if (diemDanh != null)
-                {
-                    diemDanh.IsOff = isOff;
-                }
-                else
-                {
-                    LopHoc_DiemDanh lopHoc_DiemDanh = new LopHoc_DiemDanh();
-                    lopHoc_DiemDanh.NgayDiemDanh = NgayDiemDanh;
-                    lopHoc_DiemDanh.IsOff = isOff;
-                    lopHoc_DiemDanh.LopHocId = LopHocId;
-                    lopHoc_DiemDanh.HocVienId = HocVienId;
-                    lopHoc_DiemDanh.CreatedBy = LoggedEmployee;
-                    lopHoc_DiemDanh.CreatedDate = DateTime.Now;
-
-                    _context.LopHoc_DiemDanhs.Add(lopHoc_DiemDanh);
-                }
-
-                var saveResult = await _context.SaveChangesAsync();
-                if (saveResult != 1)
-                    throw new Exception("Lỗi khi Điểm Danh!!!");
-                return true;
-            }
-            catch (Exception exception)
-            {
-                throw exception;
-            }
+            return await _diemDanhRepository.DiemDanhTungHocVienAsync(input, loggedEmployee);
         }
 
         public async Task<bool> DuocNghi(Guid LopHocId, DateTime NgayDiemDanh, string LoggedEmployee)
@@ -189,108 +95,31 @@
             return true;
         }
 
-        public async Task<List<DiemDanhViewModel>> GetDiemDanhByHocVienAndLopHoc(Guid HocVienId, Guid LopHocId)
+        public async Task<List<DiemDanhViewModel>> GetDiemDanhByHocVienAndLopHoc(Guid hocVienId, Guid lopHocId)
         {
-            if (HocVienId == null)
+            if (hocVienId == null)
                 throw new Exception("Không tìm thấy Học Viên!");
 
-            if (LopHocId == null)
+            if (lopHocId == null)
                 throw new Exception("Không tìm thấy Lớp Học!");
 
-            return await _context.LopHoc_DiemDanhs.Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId)
-                                .OrderByDescending(x => x.NgayDiemDanh)
-                                .Select(x => new DiemDanhViewModel
-                                {
-                                    IsDuocNghi = x.IsDuocNghi,
-                                    IsOff = x.IsOff,
-                                    NgayDiemDanh = x.NgayDiemDanh.ToString("dd/MM/yyyy"),
-                                    NgayDiemDanh_Date = x.NgayDiemDanh,
-                                    Day = x.NgayDiemDanh.Day
-                                })
-                                .AsNoTracking()
-                                .ToListAsync();
+            return await _diemDanhRepository.GetDiemDanhByHocVienAndLopHoc(hocVienId, lopHocId);
         }
 
-        public async Task<List<DiemDanhViewModel>> GetDiemDanhByLopHoc(Guid LopHocId, int month, int year)
+        public async Task<List<DiemDanhViewModel>> GetDiemDanhByLopHoc(Guid lopHocId, int month, int year)
         {
-            if (LopHocId == null)
+            if (lopHocId == null)
                 throw new Exception("Không tìm thấy Lớp Học!");
-            try
-            {
-                var model = await _context.HocVien_LopHocs
-                    .Where(x => x.LopHocId == LopHocId)
-                                .Where(x => x.HocVien.IsDisabled == false)
-                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= month && m.NgayKetThuc.Value.Year == year) || m.NgayKetThuc.Value.Year > year)))
-                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayBatDau.Month <= month && m.NgayBatDau.Year == year) || m.NgayBatDau.Year < year))
-                                //.SelectMany(x => x.HocVien.LopHoc_DiemDanhs)
 
-
-                                //.Select(x => new DiemDanhViewModel
-                                //{
-                                //    IsDuocNghi = (x == null) ? false : x.IsDuocNghi,
-                                //    IsOff = (x == null) ? true : x.IsOff,
-                                //    NgayDiemDanh = (x == null) ? new DateTime().ToString("dd/MM/yyyy") : x.NgayDiemDanh.ToString("dd/MM/yyyy"),
-                                //    HocVien = x.HocVien.FullName,
-                                //    NgayDiemDanh_Date = (x == null) ? new DateTime() : x.NgayDiemDanh,
-                                //    HocVienId = x.HocVienId,
-                                //    NgayBatDau = x.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId).NgayBatDau,
-                                //    NgayKetThuc = x.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == x.HocVienId).NgayKetThuc.Value
-                                //})
-
-                                .GroupJoin(_context.LopHoc_DiemDanhs.Where(x => x.LopHocId == LopHocId),
-                                i => i.HocVienId,
-                                p => p.HocVienId,
-                                (i, g) =>
-                                new
-                                {
-                                    i = i,
-                                    g = g
-                                })
-                                .SelectMany(
-                                temp0 => temp0.g.DefaultIfEmpty(),
-                                (temp0, cat) =>
-                                    new DiemDanhViewModel
-                                    {
-                                        IsDuocNghi = (cat == null) ? false : cat.IsDuocNghi,
-                                        IsOff = (cat == null) ? true : cat.IsOff,
-                                        NgayDiemDanh = (cat == null) ? new DateTime().ToString("dd/MM/yyyy") : cat.NgayDiemDanh.ToString("dd/MM/yyyy"),
-                                        HocVien = temp0.i.HocVien.FullName,
-                                        NgayDiemDanh_Date = (cat == null) ? new DateTime() : cat.NgayDiemDanh,
-                                        HocVienId = temp0.i.HocVienId,
-                                        NgayBatDau = temp0.i.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayBatDau,
-                                        NgayKetThuc = temp0.i.LopHoc.HocVien_NgayHocs.FirstOrDefault(m => m.LopHocId == LopHocId && m.HocVienId == temp0.i.HocVienId).NgayKetThuc
-                                    }
-                                )
-                                .AsNoTracking()
-                                .ToListAsync();
-
-                return model;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return await _diemDanhRepository.GetDiemDanhByLopHoc(lopHocId, month, year);
         }
 
-        public async Task<List<HocVienViewModel>> GetHocVienByLopHoc(Guid LopHocId)
+        public async Task<List<HocVienViewModel>> GetHocVienByLopHoc(Guid lopHocId)
         {
-            if (LopHocId == null)
+            if (lopHocId == null)
                 throw new Exception("Không tìm thấy Lớp Học!");
 
-            return await _context.HocVien_LopHocs
-                                .Include(x => x.LopHoc)
-                                .Include(x => x.HocVien.HocVien_NgayHocs)
-                                .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
-                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc.Value >= DateTime.Now)))
-                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayBatDau <= DateTime.Now)))
-                                .Select(x => new HocVienViewModel
-                                {
-                                    FullName = x.HocVien.FullName,
-                                    EnglishName = x.HocVien.EnglishName,
-                                    HocVienId = x.HocVienId,
-                                })
-                                .AsNoTracking()
-                                .ToListAsync();
+            return await _diemDanhRepository.GetHocVienByLopHoc(lopHocId);
         }
 
         public async Task<bool> SaveHocVienHoanTac(Guid LopHocId, List<Guid> HocVienIds, List<DateTime> NgayDiemDanhs, string LoggedEmployee)
@@ -368,6 +197,11 @@
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<List<int>> SoNgayHocAsync(Guid lopHocId, int month, int year)
+        {
+            return await _diemDanhRepository.SoNgayHocAsync(lopHocId, month, year);
         }
 
         public async Task<bool> UndoDuocNghi(Guid LopHocId, DateTime NgayDiemDanh, string LoggedEmployee)

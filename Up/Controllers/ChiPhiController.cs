@@ -13,14 +13,17 @@ namespace Up.Controllers
     public class ChiPhiController : Controller
     {
         private readonly IChiPhiService _chiPhiService;
-        private readonly IThongKe_ChiPhiService _thongKe_ChiPhiService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly Converters.Converter _converter;
 
-        public ChiPhiController(IChiPhiService chiPhiService, IThongKe_ChiPhiService thongKe_ChiPhiService, UserManager<IdentityUser> userManager)
+        public ChiPhiController(
+            IChiPhiService chiPhiService, 
+            UserManager<IdentityUser> userManager,
+            Converters.Converter converter)
         {
             _chiPhiService = chiPhiService;
-            _thongKe_ChiPhiService = thongKe_ChiPhiService;
             _userManager = userManager;
+            _converter = converter;
         }
 
         [ServiceFilter(typeof(Read_TinhLuong))]
@@ -49,38 +52,16 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
+            DateTime _ngayChiPhi = new DateTime(model.models[0].year, model.models[0].month, 1);
+            foreach (var item in model.models)
             {
-                DateTime _ngayChiPhi = new DateTime(model.models[0].year, model.models[0].month, 1);
-                foreach (var item in model.models)
-                {
-                    item.DaLuu = true;
-                }
-                var successful = await _thongKe_ChiPhiService.ThemThongKe_ChiPhiAsync(model.models, _ngayChiPhi, currentUser.Email);
-                if (successful == false)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Lưu Chi Phí lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Lưu Chi Phí thành công !!!",
-                    //Result = successful
-                });
+                item.DaLuu = true;
             }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _chiPhiService.ThemThongKe_ChiPhiAsync(model.models, _ngayChiPhi, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Lưu Chi Phí thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Lưu Chi Phí lỗi !!!", false));
         }
 
         [HttpPost]
@@ -92,38 +73,16 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
+            DateTime _ngayChiPhi = new DateTime(model.models[0].year, model.models[0].month, 1);
+            foreach (var item in model.models)
             {
-                DateTime _ngayChiPhi = new DateTime(model.models[0].year, model.models[0].month, 1);
-                foreach (var item in model.models)
-                {
-                    item.DaLuu = false;
-                }
-                var successful = await _thongKe_ChiPhiService.ThemThongKe_ChiPhiAsync(model.models, _ngayChiPhi, currentUser.Email);
-                if (successful == false)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Lưu Chi Phí lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Lưu Chi Phí thành công !!!",
-                    //Result = successful
-                });
+                item.DaLuu = false;
             }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _chiPhiService.ThemThongKe_ChiPhiAsync(model.models, _ngayChiPhi, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Lưu Chi Phí thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Lưu Chi Phí lỗi !!!", false));
         }
     }
 }

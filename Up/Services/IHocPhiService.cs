@@ -17,8 +17,6 @@ namespace Up.Services
 
         Task<bool> DeleteHocPhiAsync(Guid id, string loggedEmployee);
 
-        Task<List<int>> SoNgayHocAsync(Guid LopHocId, int month, int year);
-
         Task<List<HocVienViewModel>> GetHocVien_No_NgayHocAsync(Guid LopHocId, int month, int year, double HocPhi, int SoNgayHoc, double HocPhiMoiNgay, double HocPhiMoiNgayCu);
 
         Task<TinhHocPhiViewModel> TinhHocPhiAsync(TinhHocPhiInputModel input);
