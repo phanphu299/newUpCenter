@@ -23,5 +23,15 @@ namespace Up.Repositoties
         Task<bool> CheckDaDiemDanhAsync(Guid lopHocId, DateTime ngayDiemDanh);
 
         Task<bool> DiemDanhTatCaAsync(DiemDanhHocVienInput input, string loggedEmployee);
+
+        Task<List<Guid>> GetDiemDanhByLopHocAndNgayDiemDanhAsync(Guid lopHocId, DateTime ngayDiemDanh);
+
+        Task<List<Guid>> GetDiemDanhByLopHocAndNgayDiemDanhAndHocVienIdsAsync(Guid lopHocId, DateTime ngayDiemDanh, IList<Guid> hocVienIds);
+
+        Task RemoveDiemDanhByIdsAsync(IList<Guid> ids);
+
+        Task<bool> DuocNghiAsync(DiemDanhHocVienInput input, string loggedEmployee);
+
+        Task<bool> SaveHocVienOff(Guid lopHocId, List<Guid> hocVienIds, List<DateTime> ngayDiemDanhs, string loggedEmployee);
     }
 }

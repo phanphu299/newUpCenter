@@ -50,7 +50,7 @@
                 that.itemLopHoc = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
     },
     methods: {
@@ -69,7 +69,7 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                     });
 
                 await axios.get('/DiemDanh/GetSoNgayHoc?LopHocId=' + that.selectedLopHoc + '&month=' + that.selectedThang + '&year=' + that.selectedNam)
@@ -77,7 +77,7 @@
                         that.soNgayHoc = response.data;
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                     });
             }
         },
@@ -99,9 +99,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Điểm danh lỗi: ' + error;
+                    that.messageText = 'Điểm danh lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -113,7 +113,7 @@
                     that.hocVienList = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         },
 
@@ -153,9 +153,9 @@
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
                 that.snackbar = true;
-                that.messageText = 'Điểm danh lỗi: ' + error;
+                that.messageText = 'Điểm danh lỗi: ' + error.response.data.Message;
                 that.color = 'error';
             });
         },
@@ -193,9 +193,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Điểm danh lỗi: ' + error;
+                    that.messageText = 'Điểm danh lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -241,9 +241,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Điểm danh lỗi: ' + error;
+                    that.messageText = 'Điểm danh lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -290,9 +290,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Điểm danh lỗi: ' + error;
+                    that.messageText = 'Điểm danh lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -332,9 +332,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Undo lỗi: ' + error;
+                    that.messageText = 'Undo lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -365,9 +365,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Điểm danh lỗi: ' + error;
+                    that.messageText = 'Điểm danh lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -398,9 +398,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Điểm danh lỗi: ' + error;
+                    that.messageText = 'Điểm danh lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         }

@@ -468,6 +468,40 @@ namespace Up.Converters
             .ToList();
         }
 
+        public IList<LopHoc_DiemDanh> ToDiemDanhDuocNghiList(DiemDanhHocVienInput input, IList<HocVienViewModel> hocViens, string loggedEmployee)
+        {
+            return hocViens.Select(hocVien =>
+            {
+                return new LopHoc_DiemDanh
+                {
+                    NgayDiemDanh = input.NgayDiemDanh,
+                    IsOff = true,
+                    IsDuocNghi = true,
+                    LopHocId = input.LopHocId,
+                    HocVienId = hocVien.HocVienId,
+                    CreatedBy = loggedEmployee
+                };
+            })
+            .ToList();
+        }
+
+        public IList<LopHoc_DiemDanh> ToDiemDanhSinhVienOffList(Guid lopHocId, DateTime ngayDiemDanh, IList<HocVienViewModel> hocViens, string loggedEmployee)
+        {
+            return hocViens.Select(hocVien =>
+            {
+                return new LopHoc_DiemDanh
+                {
+                    NgayDiemDanh = ngayDiemDanh,
+                    IsOff = true,
+                    IsDuocNghi = true,
+                    LopHocId = lopHocId,
+                    HocVienId = hocVien.HocVienId,
+                    CreatedBy = loggedEmployee
+                };
+            })
+            .ToList();
+        }
+
         ///MAPPING
 
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)

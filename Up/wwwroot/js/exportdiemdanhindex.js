@@ -24,7 +24,7 @@
                 that.itemLopHoc = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
     },
 
@@ -52,7 +52,7 @@
                         that.forceFileDownload(response);
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                     });
             }
             else {

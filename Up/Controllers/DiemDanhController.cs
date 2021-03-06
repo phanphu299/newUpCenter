@@ -218,7 +218,7 @@
 
             DateTime _ngayDiemDanh = _converter.ToDateTime(model.NgayDiemDanh);
             var input = _converter.ToDiemDanhHocVienInput(model.LopHocId, model.HocVienId, model.IsOff, _ngayDiemDanh);
-            var successful = await _diemDanhService.DuocNghi(model.LopHocId, _ngayDiemDanh, currentUser.Email);
+            var successful = await _diemDanhService.DuocNghiAsync(input, currentUser.Email);
             return successful ?
                 Json(_converter.ToResultModel("Điểm Danh thành công !!!", true, successful))
                 :
@@ -226,7 +226,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveHocVienOffAsync([FromBody] Models.LopHoc_DiemDanhViewModel model)
+        public async Task<IActionResult> SaveHocVienOffAsync([FromBody] LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -239,43 +239,21 @@
                 return RedirectToAction("Index");
             }
 
-            try
+            List<DateTime> ngayDiemDanhs = new List<DateTime>();
+            foreach (string item in model.NgayDiemDanhs)
             {
-                List<DateTime> ngayDiemDanhs = new List<DateTime>();
-                foreach (string item in model.NgayDiemDanhs)
-                {
-                    ngayDiemDanhs.Add(Convert.ToDateTime(item, System.Globalization.CultureInfo.InvariantCulture));
-                }
-
-                var successful = await _diemDanhService.SaveHocVienOff(model.LopHocId, model.HocVienIds, ngayDiemDanhs, currentUser.Email);
-                if (successful == false)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Điểm Danh lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cho Lớp Nghỉ thành công !!!",
-                    Result = successful
-                });
+                ngayDiemDanhs.Add(_converter.ToDateTime(item));
             }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+
+            var successful = await _diemDanhService.SaveHocVienOff(model.LopHocId, model.HocVienIds, ngayDiemDanhs, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Điểm Danh thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Điểm Danh lỗi !!!", false));
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveHocVienHoanTacAsync([FromBody] Models.LopHoc_DiemDanhViewModel model)
+        public async Task<IActionResult> SaveHocVienHoanTacAsync([FromBody] LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -288,43 +266,21 @@
                 return RedirectToAction("Index");
             }
 
-            try
+            List<DateTime> ngayDiemDanhs = new List<DateTime>();
+            foreach (string item in model.NgayDiemDanhs)
             {
-                List<DateTime> ngayDiemDanhs = new List<DateTime>();
-                foreach (string item in model.NgayDiemDanhs)
-                {
-                    ngayDiemDanhs.Add(Convert.ToDateTime(item, System.Globalization.CultureInfo.InvariantCulture));
-                }
-
-                var successful = await _diemDanhService.SaveHocVienHoanTac(model.LopHocId, model.HocVienIds, ngayDiemDanhs, currentUser.Email);
-                if (successful == false)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Điểm Danh lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cho Lớp Nghỉ thành công !!!",
-                    Result = successful
-                });
+                ngayDiemDanhs.Add(_converter.ToDateTime(item));
             }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+
+            var successful = await _diemDanhService.SaveHocVienHoanTac(model.LopHocId, model.HocVienIds, ngayDiemDanhs);
+            return successful ?
+                Json(_converter.ToResultModel("Hoàn tác thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Hoàn tác lỗi !!!", false));
         }
 
         [HttpPost]
-        public async Task<IActionResult> UndoLopNghiAsync([FromBody] Models.LopHoc_DiemDanhViewModel model)
+        public async Task<IActionResult> UndoLopNghiAsync([FromBody] LopHoc_DiemDanhViewModel model)
         {
             if (model.LopHocId == Guid.Empty)
             {
@@ -337,35 +293,13 @@
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime _ngayDiemDanh = Convert.ToDateTime(model.NgayDiemDanh, System.Globalization.CultureInfo.InvariantCulture);
-
-                var successful = await _diemDanhService.UndoDuocNghi(model.LopHocId, _ngayDiemDanh, currentUser.Email);
-                if (successful == false)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Undo lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Undo thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            DateTime _ngayDiemDanh = _converter.ToDateTime(model.NgayDiemDanh);
+            var input = _converter.ToDiemDanhHocVienInput(model.LopHocId, model.HocVienId, model.IsOff, _ngayDiemDanh);
+            var successful = await _diemDanhService.UndoDuocNghi(input, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Undo thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Undo lỗi !!!", false));
         }
 
         [HttpGet]
@@ -390,13 +324,13 @@
             return c.ToString();
         }
 
-        private System.IO.MemoryStream GenerateExcelFile(List<Models.DiemDanhViewModel> model, int month, int year, Guid LopHocId)
+        private System.IO.MemoryStream GenerateExcelFile(List<DiemDanhViewModel> model, int month, int year, Guid LopHocId)
         {
             var stream = new System.IO.MemoryStream();
-            using (OfficeOpenXml.ExcelPackage package = new OfficeOpenXml.ExcelPackage(stream))
+            using (ExcelPackage package = new ExcelPackage(stream))
             {
                 string lopHocName = _lopHocService.GetLopHocDetailAsync(LopHocId).Result.Name;
-                OfficeOpenXml.ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Diem Danh " + lopHocName);
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Diem Danh " + lopHocName);
                 var groupedModel = model.GroupBy(x => x.HocVien).Select(x => new ThongKeModel
                 {
                     Label = x.Key,

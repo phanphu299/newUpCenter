@@ -64,6 +64,27 @@ namespace Up.Repositoties
             return true;
         }
 
+        public async Task<bool> DuocNghiAsync(DiemDanhHocVienInput input, string loggedEmployee)
+        {
+            var hocViens = await _context.HocVien_LopHocs
+                                .Include(x => x.LopHoc)
+                                .Include(x => x.HocVien.HocVien_NgayHocs)
+                                .Where(x => x.LopHocId == input.LopHocId && !x.HocVien.IsDisabled)
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == input.LopHocId && (m.NgayKetThuc == null || m.NgayKetThuc.Value >= input.NgayDiemDanh)))
+                                .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == input.LopHocId && (m.NgayBatDau <= input.NgayDiemDanh)))
+                                .Select(x => new HocVienViewModel
+                                {
+                                    HocVienId = x.HocVienId,
+                                })
+                                .ToListAsync();
+
+            var diemDanhs = _entityConverter.ToDiemDanhDuocNghiList(input, hocViens, loggedEmployee);
+            _context.LopHoc_DiemDanhs.AddRange(diemDanhs);
+
+            var saveResult = await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<List<DiemDanhViewModel>> GetDiemDanhByHocVienAndLopHoc(Guid hocVienId, Guid lopHocId)
         {
             return await _context.LopHoc_DiemDanhs.Where(x => x.HocVienId == hocVienId && x.LopHocId == lopHocId)
@@ -115,6 +136,22 @@ namespace Up.Repositoties
                     .ToListAsync();
         }
 
+        public async Task<List<Guid>> GetDiemDanhByLopHocAndNgayDiemDanhAndHocVienIdsAsync(Guid lopHocId, DateTime ngayDiemDanh, IList<Guid> hocVienIds)
+        {
+            return await _context.LopHoc_DiemDanhs
+                                        .Where(x => x.LopHocId == lopHocId && x.NgayDiemDanh == ngayDiemDanh && hocVienIds.Contains(x.HocVienId))
+                                        .Select(x => x.LopHoc_DiemDanhId)
+                                        .ToListAsync();
+        }
+
+        public async Task<List<Guid>> GetDiemDanhByLopHocAndNgayDiemDanhAsync(Guid lopHocId, DateTime ngayDiemDanh)
+        {
+            return await _context.LopHoc_DiemDanhs
+                                    .Where(x => x.LopHocId == lopHocId && x.NgayDiemDanh == ngayDiemDanh)
+                                    .Select(x => x.LopHoc_DiemDanhId)
+                                    .ToListAsync();
+        }
+
         public async Task<List<HocVienViewModel>> GetHocVienByLopHoc(Guid lopHocId)
         {
             return await _context.HocVien_LopHocs
@@ -131,6 +168,43 @@ namespace Up.Repositoties
                                 })
                                 .AsNoTracking()
                                 .ToListAsync();
+        }
+
+        public async Task RemoveDiemDanhByIdsAsync(IList<Guid> ids)
+        {
+            var diemDanhs = _context.LopHoc_DiemDanhs
+                                    .Where(x => ids.Contains(x.LopHoc_DiemDanhId));
+
+            _context.LopHoc_DiemDanhs.RemoveRange(diemDanhs);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> SaveHocVienOff(Guid lopHocId, List<Guid> hocVienIds, List<DateTime> ngayDiemDanhs, string loggedEmployee)
+        {
+            foreach (DateTime NgayDiemDanh in ngayDiemDanhs)
+            {
+                var isExistingIds = await GetDiemDanhByLopHocAndNgayDiemDanhAndHocVienIdsAsync(lopHocId, NgayDiemDanh, hocVienIds);
+                if (isExistingIds.Any())
+                    await RemoveDiemDanhByIdsAsync(isExistingIds);
+
+                var hocViens = await _context.HocVien_LopHocs
+                                    .Include(x => x.LopHoc)
+                                    .Include(x => x.HocVien.HocVien_NgayHocs)
+                                    .Where(x => x.LopHocId == lopHocId && !x.HocVien.IsDisabled)
+                                    .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == lopHocId && (m.NgayKetThuc == null || m.NgayKetThuc.Value >= NgayDiemDanh)))
+                                    .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == lopHocId && (m.NgayBatDau <= NgayDiemDanh)))
+                                    .Where(x => hocVienIds.Contains(x.HocVienId))
+                                    .Select(x => new HocVienViewModel
+                                    {
+                                        HocVienId = x.HocVienId,
+                                    })
+                                    .ToListAsync();
+
+                var diemDanhs = _entityConverter.ToDiemDanhSinhVienOffList(lopHocId, NgayDiemDanh, hocViens, loggedEmployee);
+                _context.LopHoc_DiemDanhs.AddRange(diemDanhs);
+            }
+            var saveResult = await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<List<int>> SoNgayHocAsync(Guid lopHocId, int month, int year)

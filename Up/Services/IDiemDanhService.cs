@@ -11,12 +11,12 @@
         Task<List<HocVienViewModel>> GetHocVienByLopHoc(Guid lopHocId);
         Task<bool> DiemDanhTungHocVienAsync(DiemDanhHocVienInput input, string loggedEmployee);
         Task<bool> DiemDanhTatCaAsync(DiemDanhHocVienInput input, string loggedEmployee);
-        Task<bool> DuocNghi(Guid LopHocId, DateTime NgayDiemDanh, string LoggedEmployee);
+        Task<bool> DuocNghiAsync(DiemDanhHocVienInput input, string loggedEmployee);
         Task<List<DiemDanhViewModel>> GetDiemDanhByHocVienAndLopHoc(Guid hocVienId, Guid lopHocId);
         Task<List<DiemDanhViewModel>> GetDiemDanhByLopHoc(Guid lopHocId, int month, int year);
-        Task<bool> UndoDuocNghi(Guid LopHocId, DateTime NgayDiemDanh, string LoggedEmployee);
-        Task<bool> SaveHocVienOff(Guid LopHocId, List<Guid> HocVienIds, List<DateTime> NgayDiemDanhs, string LoggedEmployee);
-        Task<bool> SaveHocVienHoanTac(Guid LopHocId, List<Guid> HocVienIds, List<DateTime> NgayDiemDanhs, string LoggedEmployee);
+        Task<bool> UndoDuocNghi(DiemDanhHocVienInput input, string loggedEmployee);
+        Task<bool> SaveHocVienOff(Guid lopHocId, List<Guid> hocVienIds, List<DateTime> ngayDiemDanhs, string loggedEmployee);
+        Task<bool> SaveHocVienHoanTac(Guid lopHocId, List<Guid> hocVienIds, List<DateTime> ngayDiemDanhs);
 
         Task<List<int>> SoNgayHocAsync(Guid lopHocId, int month, int year);
 
