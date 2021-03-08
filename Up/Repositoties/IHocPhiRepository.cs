@@ -23,5 +23,7 @@ namespace Up.Repositoties
         Task<int> TinhSoNgayHocVienVoSauAsync(int year, int month, DateTime ngayBatDau, Guid lopHocId);
 
         Task<int> TinhSoNgayDuocChoNghiAsync(Guid lopHocId, int month, int year);
+
+        Task<double?> GetHocPhiCuAsync(Guid lopHocId, int month, int year);
     }
 }

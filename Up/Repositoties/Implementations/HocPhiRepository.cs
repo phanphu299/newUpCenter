@@ -131,7 +131,11 @@ namespace Up.Repositoties
             }
 
             var ngayChoNghi = await _context.LopHoc_DiemDanhs
-                                            .Where(x => x.LopHocId == lopHocId && x.IsDuocNghi == true && x.NgayDiemDanh.Month == month && x.NgayDiemDanh.Year == year)
+                                            .Where(x => 
+                                                x.LopHocId == lopHocId &&
+                                                x.IsDuocNghi == true && 
+                                                x.NgayDiemDanh.Month == month &&
+                                                x.NgayDiemDanh.Year == year)
                                             .GroupBy(x => x.NgayDiemDanh)
                                             .Select(m => new
                                             {
@@ -140,6 +144,15 @@ namespace Up.Repositoties
                                             .AsNoTracking()
                                             .ToListAsync();
             return ngayChoNghi.Count();
+        }
+
+        public async Task<double?> GetHocPhiCuAsync(Guid lopHocId, int month, int year)
+        {
+            var hocPhi = await _context.LopHoc_HocPhis
+                .Include(x => x.HocPhi)
+                .AsNoTracking().
+                FirstOrDefaultAsync(x => x.Thang == month && x.Nam == year && x.LopHocId == lopHocId);
+            return hocPhi?.HocPhi?.Gia;
         }
     }
 }

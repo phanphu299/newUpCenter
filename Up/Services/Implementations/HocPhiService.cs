@@ -155,7 +155,8 @@ namespace Up.Services
                                             TienNo = x.HocVien.HocVien_Nos
                                                             .Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year)
                                                             .Any() ?
-                                                            TinhNo(x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && m.NgayNo.Month <= month && m.NgayNo.Year <= year), LopHocId) :
+                                                            TinhNo(x.HocVien.HocVien_Nos.Where(m => m.IsDisabled == false && (m.NgayNo.Year < year ||
+                                                                        m.NgayNo.Year == year && m.NgayNo.Month <= month)), LopHocId) :
                                                             /////
                                                             x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == month && m.NgayDong.Year == year && m.DaNo) != null ?
                                                             x.HocVien.ThongKe_DoanhThuHocPhis.FirstOrDefault(m => m.LopHocId == LopHocId && m.NgayDong.Month == month && m.NgayDong.Year == year && m.DaNo).HocPhi

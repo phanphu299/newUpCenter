@@ -23,5 +23,21 @@ namespace Up
                 .Where(date => date.DayOfWeek == dow && date.Day >= startDate.Day)
                 .Select(date => date.Day);
         }
+
+        public static (int, int) TinhSubMonthSubYear(int month, int year)
+        {
+            int subMonth = month;
+            int subYear = year;
+            if (subMonth == 1)
+            {
+                subMonth = 12;
+                subYear--;
+            }
+            else
+            {
+                subMonth--;
+            }
+            return (subMonth, subYear);
+        }
     }
 }
