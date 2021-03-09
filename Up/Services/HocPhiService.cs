@@ -600,6 +600,8 @@ namespace Up.Services
                 .SelectMany(x => x.HocPhiTronGoi_LopHocs)
                 .FirstOrDefault(x => x.LopHocId == LopHocId);
 
+            if (ngayHocPhi == null) return 0;
+
             int soNgayTinhHocPhi = 0;
 
             if (ngayHocPhi.FromDate.Year == year && ngayHocPhi.FromDate.Month < month && (ngayHocPhi.ToDate.Year > year || ngayHocPhi.ToDate.Year == year && ngayHocPhi.ToDate.Month > month))
