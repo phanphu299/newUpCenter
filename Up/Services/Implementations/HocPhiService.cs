@@ -79,12 +79,9 @@ namespace Up.Services
 
             var hocPhiMoiNgay = input.HocPhi / soNgayHoc;
 
-            var hocPhiCu = await _context.LopHoc_HocPhis
-                .Include(x => x.HocPhi)
-                .AsNoTracking().
-                FirstOrDefaultAsync(x => x.Thang == subMonth && x.Nam == subYear && x.LopHocId == input.LopHocId);
-
-            var hocPhiMoiNgayCu = hocPhiCu == null ? (input.HocPhi / soNgayHocCu) : (hocPhiCu.HocPhi.Gia / soNgayHocCu);
+            var hocPhiCu = await _hocPhiRepository.GetHocPhiCuAsync(input.LopHocId, subMonth, subYear);
+            var hocPhiMoiNgayCu = hocPhiCu == null ?
+                (input.HocPhi / soNgayHocCu) : (hocPhiCu.Value / soNgayHocCu);
 
             return new TinhHocPhiViewModel
             {
@@ -92,7 +89,14 @@ namespace Up.Services
                 //SoNgayDuocNghi = soNgayDuocNghi,
                 HocPhi = input.HocPhi,
                 SoNgayHoc = soNgayHoc,
-                HocVienList = await GetHocVien_No_NgayHocAsync(input.LopHocId, input.Month, input.Year, input.HocPhi, soNgayHoc, hocPhiMoiNgay, hocPhiMoiNgayCu)
+                HocVienList = await GetHocVien_No_NgayHocAsync(
+                    input.LopHocId,
+                    input.Month,
+                    input.Year,
+                    input.HocPhi, 
+                    soNgayHoc,
+                    hocPhiMoiNgay, 
+                    hocPhiMoiNgayCu)
             };
         }
 
@@ -124,7 +128,11 @@ namespace Up.Services
                 var model = await _context.HocVien_LopHocs
                                         .Include(x => x.LopHoc)
                                         .Include(x => x.HocVien.HocVien_NgayHocs)
-                                        .Where(x => x.LopHocId == LopHocId && x.HocVien.IsDisabled == false)
+                                        .Include(x => x.HocVien.LopHoc_DiemDanhs)
+                                        .Include(x => x.HocVien.HocVien_Nos)
+                                        .Include(x => x.HocVien.ThongKe_DoanhThuHocPhis)
+                                        .ThenInclude(x => x.ThongKe_DoanhThuHocPhi_TaiLieus)
+                                        .Where(x => x.LopHocId == LopHocId && !x.HocVien.IsDisabled)
                                         .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= currentMonth && m.NgayKetThuc.Value.Year == currentYear) || m.NgayKetThuc.Value.Year > currentYear)))
                                         .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == LopHocId && (m.NgayBatDau.Month <= currentMonth && m.NgayBatDau.Year == currentYear) || m.NgayBatDau.Year < currentYear))
 

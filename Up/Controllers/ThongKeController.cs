@@ -109,8 +109,7 @@
         [HttpGet]
         public async Task<IActionResult> GetThongKeDoanhThu_HocPhiAsync()
         {
-            var doanhThu = _thongKeService.GetDoanhThuHocPhiAsync()
-                .Result
+            var doanhThu = (await _thongKeService.GetDoanhThuHocPhiAsync())
                 .GroupBy(p => p.NgayDong.Month)
                                 .Select(g => new ThongKeModel
                                 {
@@ -118,8 +117,7 @@
                                     Data = g.Sum(x => x.HocPhi)
                                 });
 
-            var doanhThuTronGoi = _thongKeService.GetDoanhThuHocPhiTronGoiAsync()
-                .Result
+            var doanhThuTronGoi = (await _thongKeService.GetDoanhThuHocPhiTronGoiAsync())
                 .GroupBy(p => p.NgayDong.Month)
                                 .Select(g => new ThongKeModel
                                 {
@@ -163,8 +161,7 @@
         [HttpGet]
         public async Task<IActionResult> GetThongKeChiPhiAsync()
         {
-            var chiPhi = _thongKeService.GetChiPhiAsync()
-                .Result
+            var chiPhi = (await _thongKeService.GetChiPhiAsync())
                 .GroupBy(p => p.NgayChiPhi.Month)
                                 .Select(g => new ThongKeModel
                                 {
@@ -184,8 +181,7 @@
         [HttpGet]
         public async Task<IActionResult> GetNoAsync()
         {
-            var no = _thongKeService.GetNoAsync()
-                .Result
+            var no = (await _thongKeService.GetNoAsync())
                 .GroupBy(p => p.NgayNo_Date.Month)
                                 .Select(g => new ThongKeModel
                                 {
@@ -206,7 +202,6 @@
         public async Task<IActionResult> GetHocVienNghiHon3NgayAsync()
         {
             var model = await _thongKeService.GetHocVienOffHon3NgayAsync();
-
             return Json(model);
         }
     }
