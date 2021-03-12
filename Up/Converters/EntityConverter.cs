@@ -292,6 +292,21 @@ namespace Up.Converters
             };
         }
 
+        public NoViewModel ToNoViewModel(HocVien_No no)
+        {
+            return new NoViewModel
+            {
+                CreatedBy = no.CreatedBy,
+                CreatedDate = no.CreatedDate.ToClearDate(),
+                LopHocId = no.LopHocId,
+                HocVienId = no.HocVienId,
+                LopHoc = no.LopHoc.Name,
+                NgayNo = no.NgayNo.ToClearDate(),
+                TienNo = no.TienNo,
+                HocVien = no.HocVien.FullName
+            };
+        }
+
         ///ENTITY
 
         public HocVien ToEntityHocVien<T>(T input, string loggedEmployee) where T : CreateHocVienInput
@@ -502,6 +517,51 @@ namespace Up.Converters
             .ToList();
         }
 
+        public ThongKe_DoanhThuHocPhi ToEntityThongKe_DoanhThuHocPhi(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee)
+        {
+            return new ThongKe_DoanhThuHocPhi
+            {
+                LopHocId = input.LopHocId,
+                HocVienId = input.HocVienId,
+                CreatedBy = loggedEmployee,
+                NgayDong = input.NgayDong,
+                HocPhi = input.HocPhi,
+                Bonus = input.Bonus,
+                KhuyenMai = input.KhuyenMai,
+                Minus = input.Minus,
+                GhiChu = input.GhiChu,
+                DaDong = input.DaDong,
+                DaNo = input.DaNo,
+                TronGoi = input.TronGoi
+            };
+        }
+
+        public HocVien_No ToEntityHocVien_No(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee)
+        {
+            return new HocVien_No
+            {
+                HocVienId = input.HocVienId,
+                CreatedBy = loggedEmployee,
+                TienNo = input.HocPhi,
+                LopHocId = input.LopHocId,
+                NgayNo = input.NgayDong
+            };
+        }
+
+        public IList<ThongKe_DoanhThuHocPhi_TaiLieu> ToThongKe_DoanhThuHocPhi_TaiLieuList(Guid thongKe_DoanhThuHocPhiId, IList<Guid> sachIds, string loggedEmployee)
+        {
+            return sachIds.Select(sachId =>
+            {
+                return new ThongKe_DoanhThuHocPhi_TaiLieu
+                {
+                    ThongKe_DoanhThuHocPhiId = thongKe_DoanhThuHocPhiId,
+                    CreatedBy = loggedEmployee,
+                    SachId = sachId
+                };
+            })
+            .ToList();
+        }
+
         ///MAPPING
 
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)
@@ -592,6 +652,18 @@ namespace Up.Converters
             item.NgayChiPhi = input.NgayChiPhi;
             item.UpdatedBy = loggedEmployee;
             item.UpdatedDate = DateTime.Now;
+        }
+
+        public void MappingEntityThongKe_DoanhThuHocPhi(ThongKe_DoanhThuHocPhiInputModel input, ThongKe_DoanhThuHocPhi item, string loggedEmployee)
+        {
+            item.GhiChu = input.GhiChu;
+            item.Bonus = input.Bonus;
+            item.KhuyenMai = input.KhuyenMai;
+            item.Minus = input.Minus;
+            item.HocPhi = input.HocPhi;
+            item.UpdatedBy = loggedEmployee;
+            item.UpdatedDate = DateTime.Now;
+            item.TronGoi = input.TronGoi;
         }
 
         //TINH CHI PHI

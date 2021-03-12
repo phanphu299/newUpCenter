@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Linq;
 using Up.Models;
+using Up.Data.Entities;
 
 namespace Up.Repositoties
 {
@@ -20,10 +22,16 @@ namespace Up.Repositoties
 
         Task<bool> DeleteHocPhiAsync(Guid id, string loggedEmployee);
 
-        Task<int> TinhSoNgayHocVienVoSauAsync(int year, int month, DateTime ngayBatDau, Guid lopHocId);
+        int TinhSoNgayHocVienVoSauAsync(int year, int month, DateTime ngayBatDau, Guid lopHocId);
 
         Task<int> TinhSoNgayDuocChoNghiAsync(Guid lopHocId, int month, int year);
 
         Task<double?> GetHocPhiCuAsync(Guid lopHocId, int month, int year);
+
+        IQueryable<HocVien_LopHoc> GetHocVien_LopHocsEntity(Guid lopHocId, int month, int year);
+
+        bool IsTronGoi(Guid hocVienId, Guid lopHocId, int month, int year);
+
+        int TinhSoNgayHocTronGoi(Guid hocVienId, Guid lopHocId, int month, int year);
     }
 }

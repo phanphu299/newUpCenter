@@ -64,13 +64,13 @@ namespace Up.Repositoties
             return _entityConverter.ToHocPhiViewModel(hocPhi);
         }
 
-        public async Task<int> TinhSoNgayHocVienVoSauAsync(int year, int month, DateTime ngayBatDau, Guid lopHocId)
+        public int TinhSoNgayHocVienVoSauAsync(int year, int month, DateTime ngayBatDau, Guid lopHocId)
         {
-            var item = await _context.LopHocs
+            var item = _context.LopHocs
                                     .Include(x => x.NgayHoc)
                                     .Where(x => x.LopHocId == lopHocId)
                                     .AsNoTracking()
-                                    .SingleOrDefaultAsync();
+                                    .FirstOrDefault();
 
             var ngayHoc = item.NgayHoc.Name.Split('-');
             int tongNgayHoc = 0;
@@ -153,6 +153,104 @@ namespace Up.Repositoties
                 .AsNoTracking().
                 FirstOrDefaultAsync(x => x.Thang == month && x.Nam == year && x.LopHocId == lopHocId);
             return hocPhi?.HocPhi?.Gia;
+        }
+
+        public IQueryable<Data.Entities.HocVien_LopHoc> GetHocVien_LopHocsEntity(Guid lopHocId, int month, int year)
+        {
+            return _context.HocVien_LopHocs
+                                    .Include(x => x.LopHoc)
+                                    .Include(x => x.HocVien.HocVien_NgayHocs)
+                                    .Include(x => x.HocVien.LopHoc_DiemDanhs)
+                                    .Include(x => x.HocVien.HocVien_Nos)
+                                    .Include(x => x.HocVien.ThongKe_DoanhThuHocPhis)
+                                    .ThenInclude(x => x.ThongKe_DoanhThuHocPhi_TaiLieus)
+                                    .ThenInclude(x => x.Sach)
+                                    .Where(x => x.LopHocId == lopHocId && !x.HocVien.IsDisabled)
+                                    .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == lopHocId && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= month && m.NgayKetThuc.Value.Year == year) || m.NgayKetThuc.Value.Year > year)))
+                                    .Where(x => x.HocVien.HocVien_NgayHocs.Any(m => m.LopHocId == lopHocId && (m.NgayBatDau.Month <= month && m.NgayBatDau.Year == year) || m.NgayBatDau.Year < year));
+        }
+
+        public bool IsTronGoi(Guid hocVienId, Guid lopHocId, int month, int year)
+        {
+            var item = _context.HocPhiTronGois
+                .Where(x => x.HocVienId == hocVienId && !x.IsDisabled && !x.IsRemoved)
+                .SelectMany(x => x.HocPhiTronGoi_LopHocs)
+                .Where(x => x.LopHocId == lopHocId && (year < x.ToDate.Year || (year == x.ToDate.Year && month <= x.ToDate.Month)))
+                .FirstOrDefault();
+
+            return item != null;
+        }
+
+        public int TinhSoNgayHocTronGoi(Guid hocVienId, Guid lopHocId, int month, int year)
+        {
+            var item = _context.LopHocs
+                                    .Include(x => x.NgayHoc)
+                                    .Where(x => x.LopHocId == lopHocId)
+                                    .AsNoTracking()
+                                    .SingleOrDefault();
+
+            var ngayHoc = item.NgayHoc.Name.Split('-');
+            List<int> tongNgayHoc = new List<int>();
+
+            foreach (string el in ngayHoc)
+            {
+                switch (el.Trim())
+                {
+                    case "2":
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Monday));
+                        break;
+                    case "3":
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Tuesday));
+                        break;
+                    case "4":
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Wednesday));
+                        break;
+                    case "5":
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Thursday));
+                        break;
+                    case "6":
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Friday));
+                        break;
+                    case "7":
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Saturday));
+                        break;
+                    default:
+                        tongNgayHoc.AddRange(Helpers.DaysInMonth(year, month, DayOfWeek.Sunday));
+                        break;
+                }
+            }
+
+            var ngayHocPhi = _context.HocPhiTronGois
+                .Where(x => x.HocVienId == hocVienId)
+                .SelectMany(x => x.HocPhiTronGoi_LopHocs)
+                .FirstOrDefault(x => x.LopHocId == lopHocId);
+
+            if (ngayHocPhi == null) return 0;
+
+            int soNgayTinhHocPhi = 0;
+
+            if (ngayHocPhi.FromDate.Year == year && ngayHocPhi.FromDate.Month < month && (ngayHocPhi.ToDate.Year > year || ngayHocPhi.ToDate.Year == year && ngayHocPhi.ToDate.Month > month))
+                return 0;
+
+            if (ngayHocPhi.FromDate.Year == year && ngayHocPhi.FromDate.Month == month)
+            {
+                foreach (var ngay in tongNgayHoc)
+                {
+                    if (ngay < ngayHocPhi.FromDate.Day)
+                        soNgayTinhHocPhi++;
+                }
+            }
+
+            if (ngayHocPhi.ToDate.Year == year && ngayHocPhi.ToDate.Month == month)
+            {
+                foreach (var ngay in tongNgayHoc)
+                {
+                    if (ngay > ngayHocPhi.ToDate.Day)
+                        soNgayTinhHocPhi++;
+                }
+            }
+
+            return soNgayTinhHocPhi;
         }
     }
 }

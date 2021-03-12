@@ -47,7 +47,7 @@
                 that.itemLopHoc = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
 
         await axios.get('/Category/GetSachAsync')
@@ -55,7 +55,7 @@
                 that.itemSach = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
 
         await axios.get('/Category/GetHocPhiAsync')
@@ -63,7 +63,7 @@
                 that.itemHocPhi = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
     },
 
@@ -82,9 +82,6 @@
             if (value === undefined) {
                 value = 0;
             }
-
-            console.log(item.hocPhiMoiFixed)
-            console.log(item.hocPhiFixed)
 
             if (item.tronGoi)
                 item.hocPhiMoi = item.hocPhiFixed - item.hocPhiBuHocVienVaoSau - item.hocPhiTruTronGoi + item.tienNo - ((item.hocPhiMoiFixed * value) / 100);
@@ -174,7 +171,7 @@
                         that.selectedLastThang = that.selectedLastThang;
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                     });
             }
 
@@ -211,7 +208,7 @@
                         that.selectedLastThang = that.selectedLastThang;
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                     });
             }
         },
@@ -244,7 +241,7 @@
                     that.forceFileDownload(response);
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         },
 
@@ -300,9 +297,9 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                         that.snackbar = true;
-                        that.messageText = 'Lưu Doanh Thu lỗi: ' + error;
+                        that.messageText = 'Lưu Doanh Thu lỗi: ' + error.response.data.Message;
                         that.color = 'error';
                     });
             }
@@ -350,9 +347,9 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                         that.snackbar = true;
-                        that.messageText = 'Lưu Nợ lỗi: ' + error;
+                        that.messageText = 'Lưu Nợ lỗi: ' + error.response.data.Message;
                         that.color = 'error';
                     });
             }
@@ -381,9 +378,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Lưu Bảng Tính lỗi: ' + error;
+                    that.messageText = 'Lưu Bảng Tính lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -406,9 +403,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Undo lỗi: ' + error;
+                    that.messageText = 'Undo lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         }

@@ -3,128 +3,34 @@ namespace Up.Services
 {
     using Microsoft.EntityFrameworkCore;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Up.Data;
     using Up.Data.Entities;
     using Up.Models;
+    using Up.Repositoties;
 
     public class ThongKe_DoanhThuHocPhiService : IThongKe_DoanhThuHocPhiService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IThongKe_DoanhThuHocPhiRepository _thongkeRepository;
 
-        public ThongKe_DoanhThuHocPhiService(ApplicationDbContext context)
+        public ThongKe_DoanhThuHocPhiService(ApplicationDbContext context, IThongKe_DoanhThuHocPhiRepository thongkeRepository)
         {
             _context = context;
+            _thongkeRepository = thongkeRepository;
         }
 
-        public Task<List<ThongKe_DoanhThuHocPhiViewModel>> GetThongKe_DoanhThuHocPhiByLopHoc(Guid LopHocId)
+        public async Task<bool> ThemThongKe_DoanhThuHocPhiAsync(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee)
         {
-            throw new NotImplementedException();
-        }
+            bool isExisting = await _thongkeRepository.IsExistingAsync(input.HocVienId, input.LopHocId, input.NgayDong);
 
-        public async Task<bool> ThemThongKe_DoanhThuHocPhiAsync(Guid LopHocId, Guid HocVienId, double HocPhi, DateTime NgayDong,
-            double Bonus, double Minus, int KhuyenMai, string GhiChu, Guid[] SachIds, bool DaDong, bool DaNo, bool TronGoi, string LoggedEmployee)
-        {
-            var item = await _context.ThongKe_DoanhThuHocPhis
-                .Where(x => x.HocVienId == HocVienId && x.LopHocId == LopHocId && x.NgayDong.Month == NgayDong.Month && x.NgayDong.Year == NgayDong.Year)
-                .SingleOrDefaultAsync();
+            if (!isExisting)
+                await _thongkeRepository.AddThongKe_DoanhThuAsync(input, loggedEmployee);
+            else
+                await _thongkeRepository.UpdateThongKe_DoanhThuAsync(input, loggedEmployee);
 
-            try
-            {
-                if (item == null)
-                {
-                    ThongKe_DoanhThuHocPhi thongKe = new ThongKe_DoanhThuHocPhi
-                    {
-                        HocVienId = HocVienId,
-                        ThongKe_DoanhThuHocPhiId = new Guid(),
-                        NgayDong = NgayDong,
-                        CreatedBy = LoggedEmployee,
-                        CreatedDate = DateTime.Now,
-                        HocPhi = HocPhi,
-                        LopHocId = LopHocId,
-                        Bonus = Bonus,
-                        KhuyenMai = KhuyenMai,
-                        Minus = Minus,
-                        GhiChu = GhiChu,
-                        DaDong = DaDong,
-                        DaNo = DaNo,
-                        TronGoi = TronGoi
-                    };
-                    await _context.ThongKe_DoanhThuHocPhis.AddAsync(thongKe);
-
-                    if (DaDong == true)
-                    {
-                        var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.NgayNo <= thongKe.NgayDong);
-                        foreach (var n in no)
-                        {
-                            n.IsDisabled = true;
-                        }
-                    }
-
-                    foreach (Guid sachId in SachIds)
-                    {
-                        ThongKe_DoanhThuHocPhi_TaiLieu thongKe_TaiLieu = new ThongKe_DoanhThuHocPhi_TaiLieu
-                        {
-                            ThongKe_DoanhThuHocPhi_TaiLieuId = new Guid(),
-                            ThongKe_DoanhThuHocPhiId = thongKe.ThongKe_DoanhThuHocPhiId,
-                            CreatedBy = LoggedEmployee,
-                            CreatedDate = DateTime.Now,
-                            SachId = sachId
-                        };
-                        await _context.ThongKe_DoanhThuHocPhi_TaiLieus.AddAsync(thongKe_TaiLieu);
-                    }
-                }
-                else
-                {
-                    item.GhiChu = GhiChu;
-                    item.Bonus = Bonus;
-                    item.KhuyenMai = KhuyenMai;
-                    item.Minus = Minus;
-                    item.HocPhi = HocPhi;
-                    item.UpdatedBy = LoggedEmployee;
-                    item.UpdatedDate = DateTime.Now;
-                    item.TronGoi = TronGoi;
-                    if (DaDong != false || DaNo != false)
-                    {
-                        item.DaDong = DaDong;
-                        item.DaNo = DaNo;
-                    }
-
-                    if (DaDong == true)
-                    {
-                        var no = _context.HocVien_Nos.Where(x => x.HocVienId == HocVienId && x.NgayNo <= item.NgayDong).ToList();
-                        foreach (var n in no)
-                        {
-                            n.IsDisabled = true;
-                        }
-                    }
-
-                    var sach = _context.ThongKe_DoanhThuHocPhi_TaiLieus.Where(x => x.ThongKe_DoanhThuHocPhiId == item.ThongKe_DoanhThuHocPhiId);
-                    _context.ThongKe_DoanhThuHocPhi_TaiLieus.RemoveRange(sach);
-
-                    foreach (Guid sachId in SachIds)
-                    {
-                        ThongKe_DoanhThuHocPhi_TaiLieu thongKe_TaiLieu = new ThongKe_DoanhThuHocPhi_TaiLieu
-                        {
-                            ThongKe_DoanhThuHocPhi_TaiLieuId = new Guid(),
-                            ThongKe_DoanhThuHocPhiId = item.ThongKe_DoanhThuHocPhiId,
-                            CreatedBy = LoggedEmployee,
-                            CreatedDate = DateTime.Now,
-                            SachId = sachId
-                        };
-                        await _context.ThongKe_DoanhThuHocPhi_TaiLieus.AddAsync(thongKe_TaiLieu);
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception exeption)
-            {
-                throw new Exception("Lỗi khi lưu doanh thu : " + exeption.Message);
-            }
+            return true;
         }
 
         public async Task<bool> Undo_DoanhThuAsync(Guid LopHocId, Guid HocVienId, int Month, int Year, string LoggedEmployee)

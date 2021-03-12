@@ -284,7 +284,7 @@ namespace Up.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LuuNhap_HocPhiAsync([FromBody] Models.LuuNhap_ThongKe_HocPhiViewModel model)
+        public async Task<IActionResult> LuuNhap_HocPhiAsync([FromBody] LuuNhap_ThongKe_HocPhiInputModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -295,16 +295,19 @@ namespace Up.Controllers
             DateTime _ngayDong = new DateTime(model.models[0].year, model.models[0].month, 1);
             foreach (var item in model.models)
             {
-                var sachIds = item.GiaSach != null ? item.GiaSach.Select(x => x.SachId).ToArray() : new Guid[0];
-                await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(item.LopHocId, item.HocVienId,
-                item.HocPhiMoi, _ngayDong, item.Bonus, item.Minus, item.KhuyenMai, item.GhiChu, sachIds, false, false, item.TronGoi, currentUser.Email);
+                item.SachIds = item.GiaSach != null ? item.GiaSach.Select(x => x.SachId).ToArray() : new Guid[0];
+                item.NgayDong = _ngayDong;
+                item.DaDong = false;
+                item.DaNo = false;
+
+                await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(item, currentUser.Email);
             }
 
             return Json(_converter.ToResultModel("Lưu Nháp Doanh Thu thành công !!!", true));
         }
 
         [HttpPost]
-        public async Task<IActionResult> LuuDoanhThu_HocPhiAsync([FromBody] Models.ThongKe_DoanhThuHocPhiViewModel model)
+        public async Task<IActionResult> LuuDoanhThu_HocPhiAsync([FromBody] ThongKe_DoanhThuHocPhiInputModel model)
         {
             if (model.LopHocId == Guid.Empty || model.HocVienId == Guid.Empty)
             {
@@ -317,10 +320,11 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            DateTime _ngayDong = new DateTime(model.year, model.month, 1);
-            var successful = await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(model.LopHocId, model.HocVienId,
-                model.HocPhi, _ngayDong, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, true, false, model.TronGoi, currentUser.Email);
+            model.NgayDong = new DateTime(model.year, model.month, 1);
+            model.DaDong = true;
+            model.DaNo = false;
 
+            var successful = await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(model, currentUser.Email);
             return successful ?
                Json(_converter.ToResultModel("Lưu Doanh Thu thành công !!!", true, successful))
                :
@@ -328,7 +332,7 @@ namespace Up.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LuuNo_HocPhiAsync([FromBody] Models.ThongKe_DoanhThuHocPhiViewModel model)
+        public async Task<IActionResult> LuuNo_HocPhiAsync([FromBody] ThongKe_DoanhThuHocPhiInputModel model)
         {
             if (model.LopHocId == Guid.Empty || model.HocVienId == Guid.Empty)
             {
@@ -341,42 +345,20 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime _ngayNo = new DateTime(model.year, model.month, 1);
-                await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(model.LopHocId, model.HocVienId,
-                    model.HocPhi, _ngayNo, model.Bonus, model.Minus, model.KhuyenMai, model.GhiChu, model.SachIds, false, true, model.TronGoi, currentUser.Email);
+            model.NgayDong = new DateTime(model.year, model.month, 1);
+            model.DaDong = false;
+            model.DaNo = true;
+            await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(model, currentUser.Email);
 
-                var successful = await _noService.ThemHocVien_NoAsync(model.LopHocId, model.HocVienId,
-                    model.HocPhi, _ngayNo, currentUser.Email);
-                if (successful == false)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Lưu Nợ lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Lưu Nợ thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _noService.ThemHocVien_NoAsync(model, currentUser.Email);
+            return successful ?
+               Json(_converter.ToResultModel("Lưu Nợ thành công !!!", true, successful))
+               :
+               Json(_converter.ToResultModel("Lưu Nợ Thu lỗi !!!", false));
         }
 
         [HttpPut]
-        public IActionResult Export([FromBody] Models.TinhHocPhiViewModel model)
+        public IActionResult Export([FromBody] TinhHocPhiViewModel model)
         {
             var stream = GenerateExcelFile(model);
             string excelName = $"UserList.xlsx";
