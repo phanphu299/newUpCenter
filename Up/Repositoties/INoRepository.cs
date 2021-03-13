@@ -16,5 +16,7 @@ namespace Up.Repositoties
         Task AddNoAsync(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee);
 
         Task UpdateNoAsync(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee);
+
+        Task<bool> Undo_NoAsync(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee);
     }
 }

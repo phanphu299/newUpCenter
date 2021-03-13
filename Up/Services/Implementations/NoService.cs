@@ -1,27 +1,21 @@
 ﻿
 namespace Up.Services
 {
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Up.Data;
-    using Up.Data.Entities;
     using Up.Models;
     using Up.Repositoties;
 
     public class NoService : INoService
     {
-        private readonly ApplicationDbContext _context;
         private readonly INoRepository _noRepository;
         private readonly IThongKe_DoanhThuHocPhiRepository _thongKeRepository;
 
-        public NoService(ApplicationDbContext context, 
+        public NoService(
             INoRepository noRepository,
             IThongKe_DoanhThuHocPhiRepository thongKeRepository)
         {
-            _context = context;
             _noRepository = noRepository;
             _thongKeRepository = thongKeRepository;
         }
@@ -52,21 +46,9 @@ namespace Up.Services
             return true;
         }
 
-        public async Task<bool> Undo_NoAsync(Guid lopHocId, Guid hocVienId, int month, int year, string loggedEmployee)
+        public async Task<bool> Undo_NoAsync(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee)
         {
-            var item = await _context.HocVien_Nos
-                                    .Where(x => x.LopHocId == lopHocId && x.HocVienId == hocVienId)
-                                    .Where(x => x.NgayNo.Month == month && x.NgayNo.Year == year)
-                                    .SingleOrDefaultAsync();
-
-            if (item != null)
-            {
-                _context.HocVien_Nos.Remove(item);
-
-                await _context.SaveChangesAsync();
-            }
-
-            return true;
+            return await _noRepository.Undo_NoAsync(input, loggedEmployee);
         }
     }
 }

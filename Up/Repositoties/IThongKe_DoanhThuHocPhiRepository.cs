@@ -14,5 +14,6 @@ namespace Up.Repositoties
 
         Task XoaDaDongThongKe_DoanhThuAsync(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee);
 
+        Task<bool> Undo_DoanhThuAsync(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee);
     }
 }

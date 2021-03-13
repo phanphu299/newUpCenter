@@ -10,12 +10,12 @@ namespace Up.Services
     public interface IHocPhiTronGoiService
     {
         Task<List<HocPhiTronGoiViewModel>> GetHocPhiTronGoiAsync();
-        Task<bool> CreateHocPhiTronGoiAsync(Guid HocVienId, double HocPhi, DateTime FromDate, DateTime ToDate, List<HocPhiTronGoi_LopHocViewModel> LopHocList, string LoggedEmployee);
-        Task<HocPhiTronGoiViewModel> UpdateHocPhiTronGoiAsync(Guid HocPhiTronGoiId, double HocPhi, DateTime FromDate, DateTime ToDate, List<HocPhiTronGoi_LopHocViewModel> LopHocList, string LoggedEmployee);
-        Task<bool> ToggleHocPhiTronGoiAsync(Guid HocPhiTronGoiId, string LoggedEmployee);
-        Task<bool> DeleteHocPhiTronGoiAsync(Guid HocPhiTronGoiId, string LoggedEmployee);
+        Task<bool> CreateHocPhiTronGoiAsync(CreateHocPhiTronGoiInputModel input, string loggedEmployee);
+        Task<HocPhiTronGoiViewModel> UpdateHocPhiTronGoiAsync(UpdateHocPhiTronGoiInputModel input, string loggedEmployee);
+        Task<bool> ToggleHocPhiTronGoiAsync(Guid id, string loggedEmployee);
+        Task<bool> DeleteHocPhiTronGoiAsync(Guid id, string loggedEmployee);
 
-        Task<bool> CanContributeAsync(ClaimsPrincipal User);
+        Task<bool> CanContributeAsync(ClaimsPrincipal user);
         Task<bool> CheckIsDisable();
     }
 }

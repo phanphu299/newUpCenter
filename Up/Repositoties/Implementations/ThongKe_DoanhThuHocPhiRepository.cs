@@ -91,5 +91,27 @@ namespace Up.Repositoties
             doanhThu.DaDong = false;
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> Undo_DoanhThuAsync(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee)
+        {
+            var item = await _context.ThongKe_DoanhThuHocPhis
+                 .Where(x => x.HocVienId == input.HocVienId && 
+                             x.LopHocId == input.LopHocId && 
+                             x.NgayDong.Month == input.month && 
+                             x.NgayDong.Year == input.year)
+                 .SingleOrDefaultAsync();
+
+            if (item != null)
+            {
+                item.DaDong = false;
+                item.DaNo = false;
+                item.UpdatedDate = DateTime.Now;
+                item.UpdatedBy = loggedEmployee;
+
+                await _context.SaveChangesAsync();
+            }
+
+            return true;
+        }
     }
 }

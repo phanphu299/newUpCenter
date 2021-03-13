@@ -307,6 +307,36 @@ namespace Up.Converters
             };
         }
 
+        public HocPhiTronGoiViewModel ToHocPhiTronGoiViewModel(HocPhiTronGoi hocPhi)
+        {
+            return new HocPhiTronGoiViewModel
+            {
+                CreatedBy = hocPhi.CreatedBy,
+                CreatedDate = hocPhi.CreatedDate.ToClearDate(),
+                HocPhiTronGoiId = hocPhi.HocPhiTronGoiId,
+                Name = hocPhi.HocVien.FullName,
+                HocVienId = hocPhi.HocVienId,
+                HocPhi = hocPhi.HocPhi,
+                IsDisabled = hocPhi.IsDisabled,
+                FromDate = hocPhi.FromDate.ToClearDate(),
+                ToDate = hocPhi.ToDate.ToClearDate(),
+                UpdatedBy = hocPhi.UpdatedBy,
+                UpdatedDate = hocPhi.UpdatedDate?.ToClearDate() ?? string.Empty,
+                LopHocList = hocPhi.HocPhiTronGoi_LopHocs
+                    .Select(m => new HocPhiTronGoi_LopHocViewModel
+                    {
+                        FromDate = m.FromDate.ToEditionDate(),
+                        ToDate = m.ToDate.ToEditionDate(),
+                        LopHoc = new LopHocViewModel
+                        {
+                            LopHocId = m.LopHocId,
+                            Name = m.LopHoc.Name
+                        }
+                    })
+                    .ToList()
+            };
+        }
+
         ///ENTITY
 
         public HocVien ToEntityHocVien<T>(T input, string loggedEmployee) where T : CreateHocVienInput
@@ -562,6 +592,35 @@ namespace Up.Converters
             .ToList();
         }
 
+        public HocPhiTronGoi ToEntityHocPhiTronGoi(CreateHocPhiTronGoiInputModel input, string loggedEmployee)
+        {
+            return new HocPhiTronGoi
+            {
+                HocVienId = input.HocVienId,
+                CreatedBy = loggedEmployee,
+                HocPhi = input.HocPhi,
+                FromDate = Convert.ToDateTime(input.FromDate),
+                ToDate = Convert.ToDateTime(input.ToDate)
+            };
+        }
+
+        public IList<HocPhiTronGoi_LopHoc> ToHocPhiTronGoi_LopHocList(Guid hocPhiTronGoiId, IList<HocPhiTronGoi_LopHocViewModel> lopHocList, string loggedEmployee)
+        {
+            return lopHocList.Select(lopHoc =>
+            {
+                return new HocPhiTronGoi_LopHoc
+                {
+                    CreatedBy = loggedEmployee,
+                    LopHocId = lopHoc.LopHoc.LopHocId,
+                    FromDate = Convert.ToDateTime(lopHoc.FromDate),
+                    ToDate = Convert.ToDateTime(lopHoc.ToDate),
+                    HocPhiTronGoiId = hocPhiTronGoiId
+                };
+            })
+            .ToList();
+        }
+
+
         ///MAPPING
 
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)
@@ -664,6 +723,15 @@ namespace Up.Converters
             item.UpdatedBy = loggedEmployee;
             item.UpdatedDate = DateTime.Now;
             item.TronGoi = input.TronGoi;
+        }
+
+        public void MappingEntityHocPhiTronGoi(UpdateHocPhiTronGoiInputModel input, HocPhiTronGoi item, string loggedEmployee)
+        {
+            item.HocPhi = input.HocPhi;
+            item.FromDate = Convert.ToDateTime(input.FromDate);
+            item.ToDate = Convert.ToDateTime(input.ToDate);
+            item.UpdatedBy = loggedEmployee;
+            item.UpdatedDate = DateTime.Now;
         }
 
         //TINH CHI PHI

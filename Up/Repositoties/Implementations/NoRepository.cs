@@ -73,6 +73,21 @@ namespace Up.Repositoties
                                 x.NgayNo.Year == ngayNo.Year);
         }
 
+        public async Task<bool> Undo_NoAsync(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee)
+        {
+            var item = await _context.HocVien_Nos
+                                    .Where(x => x.LopHocId == input.LopHocId && x.HocVienId == input.HocVienId)
+                                    .Where(x => x.NgayNo.Month == input.month && x.NgayNo.Year == input.year)
+                                    .SingleOrDefaultAsync();
+
+            if (item != null)
+            {
+                _context.HocVien_Nos.Remove(item);
+                await _context.SaveChangesAsync();
+            }
+            return true;
+        }
+
         public async Task UpdateNoAsync(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee)
         {
             var item = await _context.HocVien_Nos

@@ -71,7 +71,7 @@ namespace Up.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateHocPhiTronGoiAsync([FromBody] Models.HocPhiTronGoiViewModel model)
+        public async Task<IActionResult> CreateHocPhiTronGoiAsync([FromBody] CreateHocPhiTronGoiInputModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null)
@@ -79,30 +79,12 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                DateTime _fromDate = Convert.ToDateTime(model.FromDate);
-                DateTime _toDate = Convert.ToDateTime(model.ToDate);
-                await _hocPhiTronGoiService.CreateHocPhiTronGoiAsync(model.HocVienId, model.HocPhi, _fromDate, _toDate, model.LopHocList, currentUser.Email);
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Lưu Nháp Doanh Thu thành công !!!",
-                    Result = true
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            await _hocPhiTronGoiService.CreateHocPhiTronGoiAsync(model, currentUser.Email);
+            return Json(_converter.ToResultModel("Lưu Học Phí thành công !!!", true, true));
         }
 
         [HttpPut]
-        public async Task<IActionResult> ToggleHocPhiTronGoiAsync([FromBody] Models.HocPhiTronGoiViewModel model)
+        public async Task<IActionResult> ToggleHocPhiTronGoiAsync([FromBody] HocPhiTronGoiViewModel model)
         {
             if (model.HocPhiTronGoiId == Guid.Empty)
             {
@@ -115,37 +97,15 @@ namespace Up.Controllers
                 return RedirectToAction("HocPhiTronGoiIndex");
             }
 
-            try
-            {
-                var successful = await _hocPhiTronGoiService.ToggleHocPhiTronGoiAsync(model.HocPhiTronGoiId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _hocPhiTronGoiService.ToggleHocPhiTronGoiAsync(model.HocPhiTronGoiId, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false));
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteHocPhiTronGoiAsync([FromBody] Models.HocPhiTronGoiViewModel model)
+        public async Task<IActionResult> DeleteHocPhiTronGoiAsync([FromBody] HocPhiTronGoiViewModel model)
         {
             if (model.HocPhiTronGoiId == Guid.Empty)
             {
@@ -158,33 +118,11 @@ namespace Up.Controllers
                 return RedirectToAction("HocPhiTronGoiIndex");
             }
 
-            try
-            {
-                var successful = await _hocPhiTronGoiService.DeleteHocPhiTronGoiAsync(model.HocPhiTronGoiId, currentUser.Email);
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Xóa lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Xóa thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _hocPhiTronGoiService.DeleteHocPhiTronGoiAsync(model.HocPhiTronGoiId, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
 
         [HttpGet]
@@ -196,36 +134,14 @@ namespace Up.Controllers
                 return RedirectToAction("HocPhiTronGoiIndex");
             }
 
-            try
-            {
-                var successful = await _hocPhiTronGoiService.CheckIsDisable();
-                if (!successful)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _hocPhiTronGoiService.CheckIsDisable();
+            return successful ?
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false));
         }
 
-        public async Task<IActionResult> UpdateHocPhiTronGoiAsync([FromBody] Models.HocPhiTronGoiViewModel model)
+        public async Task<IActionResult> UpdateHocPhiTronGoiAsync([FromBody] UpdateHocPhiTronGoiInputModel model)
         {
             if (model.HocPhiTronGoiId == Guid.Empty)
             {
@@ -238,35 +154,11 @@ namespace Up.Controllers
                 return RedirectToAction("HocPhiTronGoiIndex");
             }
 
-            try
-            {
-                DateTime _fromDate = Convert.ToDateTime(model.FromDate);
-                DateTime _toDate = Convert.ToDateTime(model.ToDate);
-                var successful = await _hocPhiTronGoiService.UpdateHocPhiTronGoiAsync(model.HocPhiTronGoiId, model.HocPhi, _fromDate, _toDate, model.LopHocList, currentUser.Email);
-                if (successful == null)
-                {
-                    return Json(new Models.ResultModel
-                    {
-                        Status = "Failed",
-                        Message = "Cập nhật lỗi !!!"
-                    });
-                }
-
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Cập nhật thành công !!!",
-                    Result = successful
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            var successful = await _hocPhiTronGoiService.UpdateHocPhiTronGoiAsync(model, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful));
         }
 
         [HttpGet]
@@ -365,7 +257,7 @@ namespace Up.Controllers
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
         }
 
-        private System.IO.MemoryStream GenerateExcelFile(Models.TinhHocPhiViewModel model)
+        private System.IO.MemoryStream GenerateExcelFile(TinhHocPhiViewModel model)
         {
             var stream = new System.IO.MemoryStream();
             using (ExcelPackage package = new ExcelPackage(stream))
@@ -478,9 +370,9 @@ namespace Up.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> UndoAsync(Guid LopHocId, Guid HocVienId, int Month, int Year)
+        public async Task<IActionResult> UndoAsync(ThongKe_DoanhThuHocPhiInputModel model)
         {
-            if (LopHocId == Guid.Empty || HocVienId == Guid.Empty)
+            if (model.LopHocId == Guid.Empty || model.HocVienId == Guid.Empty)
             {
                 return RedirectToAction("Index");
             }
@@ -491,26 +383,10 @@ namespace Up.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                await _thongKe_DoanhThuHocPhiService.Undo_DoanhThuAsync(LopHocId, HocVienId, Month, Year, currentUser.Email);
-                await _noService.Undo_NoAsync(LopHocId, HocVienId, Month, Year, currentUser.Email);
+            await _thongKe_DoanhThuHocPhiService.Undo_DoanhThuAsync(model, currentUser.Email);
+            await _noService.Undo_NoAsync(model, currentUser.Email);
 
-                return Json(new Models.ResultModel
-                {
-                    Status = "OK",
-                    Message = "Undo thành công !!!",
-                    Result = true
-                });
-            }
-            catch (Exception exception)
-            {
-                return Json(new Models.ResultModel
-                {
-                    Status = "Failed",
-                    Message = exception.Message
-                });
-            }
+            return Json(_converter.ToResultModel("Undo thành công !!!", true, true));
         }
     }
 }
