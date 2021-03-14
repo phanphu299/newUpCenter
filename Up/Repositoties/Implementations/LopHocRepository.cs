@@ -170,15 +170,12 @@ namespace Up.Repositoties
         public async Task<LopHocViewModel> GetLopHocDetailAsync(Guid id)
         {
             var lopHoc = await _context.LopHocs
-                .Select(x => new LopHocViewModel
-                {
-                    LopHocId = x.LopHocId,
-                    Name = x.Name,
-                })
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
+                .Include(x => x.GioHoc)
+                .Include(x => x.KhoaHoc)
+                .Include(x => x.NgayHoc)
+                .FirstOrDefaultAsync(x => x.LopHocId == id);
 
-            return lopHoc;
+            return _entityConverter.ToLopHocViewModel(lopHoc);
         }
 
         public async Task<bool> ToggleHuyLopAsync(Guid id, string loggedEmployee)

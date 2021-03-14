@@ -38,7 +38,7 @@
                 that.roleItems = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
     },
     methods: {
@@ -52,7 +52,7 @@
                     that.itemQuyens = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         },
 
@@ -66,7 +66,7 @@
                     that.itemUsers = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         },
 
@@ -87,9 +87,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Cập nhật lỗi: ' + error;
+                    that.messageText = 'Cập nhật lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -113,9 +113,9 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                         that.snackbar = true;
-                        that.messageText = 'Tạo role lỗi: ' + error;
+                        that.messageText = 'Tạo role lỗi: ' + error.response.data.Message;
                         that.color = 'error';
                     });
             }
@@ -149,9 +149,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Cập nhật lỗi: ' + error;
+                    that.messageText = 'Cập nhật lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                     that.dialogQuyen = false;
                 });

@@ -23,20 +23,13 @@
     },
     async beforeCreate() {
         let that = this;
-        //await axios.get('/LopHoc/GetAvailableLopHocAsync')
-        //    .then(function (response) {
-        //        that.itemLopHoc = response.data;
-        //    })
-        //    .catch(function (error) {
-        //        console.log(error);
-        //    });
 
         await axios.get('/No/GetNoAsync')
             .then(function (response) {
                 that.hocVienList = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
     },
     methods: {

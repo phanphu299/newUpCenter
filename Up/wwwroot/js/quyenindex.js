@@ -34,7 +34,7 @@
                 that.quyenItems = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
     },
     methods: {
@@ -48,7 +48,7 @@
                     that.itemRoles = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         },
     }

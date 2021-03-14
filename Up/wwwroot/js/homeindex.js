@@ -147,7 +147,7 @@ var vue = new Vue({
                     that.loadedHocVien = true;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
 
             await axios.get('/ThongKe/GetThongKeGiaoVienAsync')
@@ -158,7 +158,7 @@ var vue = new Vue({
                     that.loadedGiaoVien = true;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
 
             await axios.get('/ThongKe/GetTongGiaoVienVaHocVienAsync')
@@ -169,7 +169,7 @@ var vue = new Vue({
                     that.thongKeTong.chiPhi = response.data.chiPhi;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
 
             await axios.get('/ThongKe/GetThongKeDoanhThu_HocPhiAsync')
@@ -179,7 +179,7 @@ var vue = new Vue({
                     that.loadedDoanhThuHocPhi = true;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
 
             await axios.get('/ThongKe/GetNoAsync')
@@ -188,7 +188,7 @@ var vue = new Vue({
                     that.loadedNo= true;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
 
             await axios.get('/ThongKe/GetHocVienNghiHon3NgayAsync')
@@ -196,14 +196,14 @@ var vue = new Vue({
                     that.hocVienNghiNhieu = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
 
             await axios.get('/HocPhi/CheckHocPhiTronGoiAsync')
                 .then(function (response) {
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         } catch (e) {
             console.error(e);

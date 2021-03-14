@@ -26,7 +26,7 @@
                     that.forceFileDownload(response, 'DanhSachHocVien');
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         }
     }

@@ -36,7 +36,7 @@
                 that.userItems = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
         
         await axios.get('/Setting/GetRolesAsync')
@@ -44,7 +44,7 @@
                 that.itemRoles = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
     },
     methods: {
@@ -72,9 +72,9 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                         that.snackbar = true;
-                        that.messageText = 'Tạo tài khoản lỗi: ' + error;
+                        that.messageText = 'Tạo tài khoản lỗi: ' + error.response.data.Message;
                         that.color = 'error';
                     });
             }
@@ -99,9 +99,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Reset lỗi: ' + error;
+                    that.messageText = 'Reset lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -122,9 +122,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Kích hoạt tài khoản lỗi: ' + error;
+                    that.messageText = 'Kích hoạt tài khoản lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -145,9 +145,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Khóa tài khoản lỗi: ' + error;
+                    that.messageText = 'Khóa tài khoản lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -169,9 +169,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Xóa tài khoản lỗi: ' + error;
+                    that.messageText = 'Xóa tài khoản lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -202,9 +202,9 @@
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
                 that.snackbar = true;
-                that.messageText = 'Cập nhật lỗi: ' + error;
+                that.messageText = 'Cập nhật lỗi: ' + error.response.data.Message;
                 that.color = 'error';
                 that.dialogEditRole = false;
             });

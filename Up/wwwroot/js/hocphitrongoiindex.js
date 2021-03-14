@@ -69,7 +69,7 @@
                 that.khoaHocItems = response.data;
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response.data.Message);
             });
     },
 
@@ -152,7 +152,7 @@
                     that.itemLopHoc = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         },
 
@@ -166,7 +166,7 @@
                     that.loadingHocVien = false;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         },
 
@@ -198,7 +198,7 @@
                     that.itemLopHoc = response.data;
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                 });
         },
 
@@ -230,9 +230,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Cập nhật lỗi: ' + error;
+                    that.messageText = 'Cập nhật lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
             that.dialogEdit = false;
@@ -269,7 +269,7 @@
                                     that.khoaHocItems = response.data;
                                 })
                                 .catch(function (error) {
-                                    console.log(error);
+                                    console.log(error.response.data.Message);
                                 });
 
                             that.snackbar = true;
@@ -289,9 +289,9 @@
                         }
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response.data.Message);
                         that.snackbar = true;
-                        that.messageText = 'Thêm mới lỗi: ' + error;
+                        that.messageText = 'Thêm mới lỗi: ' + error.response.data.Message;
                         that.color = 'error';
                     });
             }
@@ -319,9 +319,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Cập nhật lỗi: ' + error;
+                    that.messageText = 'Cập nhật lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         },
@@ -350,9 +350,9 @@
                     }
                 })
                 .catch(function (error) {
-                    console.log(error);
+                    console.log(error.response.data.Message);
                     that.snackbar = true;
-                    that.messageText = 'Xóa lỗi: ' + error;
+                    that.messageText = 'Xóa lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
         }
