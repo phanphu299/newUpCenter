@@ -17,7 +17,7 @@ namespace Up.Controllers
         private readonly Converters.Converter _converter;
 
         public ChiPhiController(
-            IChiPhiService chiPhiService, 
+            IChiPhiService chiPhiService,
             UserManager<IdentityUser> userManager,
             Converters.Converter converter)
         {

@@ -1,13 +1,11 @@
 ﻿namespace Up.Services
 {
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using Up.Data;
-    using Up.Data.Entities;
     using Up.Enums;
     using Up.Models;
     using Up.Repositoties;
@@ -128,7 +126,7 @@
 
             var items = await _diemDanhRepository.GetDiemDanhByLopHocAndNgayDiemDanhAsync(input.LopHocId, input.NgayDiemDanh);
             if (!items.Any())
-                throw new Exception($"Lớp học chưa được Cho nghỉ ngày {input.NgayDiemDanh.ToShortDateString()}" );
+                throw new Exception($"Lớp học chưa được Cho nghỉ ngày {input.NgayDiemDanh.ToShortDateString()}");
 
             await _diemDanhRepository.RemoveDiemDanhByIdsAsync(items);
             return true;

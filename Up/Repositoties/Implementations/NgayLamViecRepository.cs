@@ -27,8 +27,8 @@ namespace Up.Repositoties
 
         public async Task<Guid> CreateNgayLamViecAsync(string name, string loggedEmployee)
         {
-            var ngayLamViec = new NgayLamViec 
-            { 
+            var ngayLamViec = new NgayLamViec
+            {
                 Name = name,
                 CreatedBy = loggedEmployee
             };

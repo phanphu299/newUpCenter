@@ -23,8 +23,8 @@
         private readonly Converters.Converter _converter;
 
         public DiemDanhController(
-            IDiemDanhService diemDanhService, 
-            ILopHocService lopHocService, 
+            IDiemDanhService diemDanhService,
+            ILopHocService lopHocService,
             UserManager<IdentityUser> userManager,
             Converters.Converter converter)
         {

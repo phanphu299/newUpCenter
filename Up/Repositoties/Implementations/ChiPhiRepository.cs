@@ -28,8 +28,8 @@ namespace Up.Repositoties
         public async Task<bool> ThemThongKe_ChiPhiAsync(ThongKe_ChiPhiViewModel[] model, DateTime ngayChiPhi, string loggedEmployee)
         {
             var items = _context.ThongKe_ChiPhis
-                .Where(x => x.NgayChiPhi.Month == ngayChiPhi.Month && 
-                            x.NgayChiPhi.Year == ngayChiPhi.Year && 
+                .Where(x => x.NgayChiPhi.Month == ngayChiPhi.Month &&
+                            x.NgayChiPhi.Year == ngayChiPhi.Year &&
                             x.ChiPhiKhacId == null);
 
             _context.RemoveRange(items);

@@ -27,7 +27,7 @@ namespace Up.Repositoties
 
         public async Task<Guid> CreateLoaiCheDoAsync(string name, string loggedEmployee)
         {
-            var loaiCheDo = new LoaiCheDo 
+            var loaiCheDo = new LoaiCheDo
             {
                 Name = name,
                 CreatedBy = loggedEmployee

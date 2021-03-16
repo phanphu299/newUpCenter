@@ -27,7 +27,7 @@ namespace Up.Repositoties
         public async Task<bool> CheckIsDisable()
         {
             var item = await _context.HocPhiTronGois
-                                    .Where(x => !x.IsDisabled && 
+                                    .Where(x => !x.IsDisabled &&
                                                 (DateTime.Now.Year > x.ToDate.Year || (DateTime.Now.Year == x.ToDate.Year && DateTime.Now.Month > x.ToDate.Month)))
                                     .ToListAsync();
             foreach (var hocPhi in item)
@@ -121,7 +121,7 @@ namespace Up.Repositoties
 
             var hocPhi_LopHocs = _entityConverter.ToHocPhiTronGoi_LopHocList(input.HocPhiTronGoiId, input.LopHocList, loggedEmployee);
             await _context.HocPhiTronGoi_LopHocs.AddRangeAsync(hocPhi_LopHocs);
-            
+
             var saveResult = await _context.SaveChangesAsync();
             return item.HocPhiTronGoiId;
         }

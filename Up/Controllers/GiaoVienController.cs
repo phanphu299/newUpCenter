@@ -17,7 +17,7 @@
         private readonly Converters.Converter _converter;
 
         public GiaoVienController(
-            IGiaoVienService giaoVienService, 
+            IGiaoVienService giaoVienService,
             UserManager<IdentityUser> userManager,
             Converters.Converter converter)
         {

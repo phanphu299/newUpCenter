@@ -27,7 +27,7 @@ namespace Up.Repositoties
 
         public async Task<Guid> CreateChiPhiCoDinhAsync(double gia, string name, string loggedEmployee)
         {
-            var chiPhi = new ChiPhiCoDinh 
+            var chiPhi = new ChiPhiCoDinh
             {
                 Gia = gia,
                 Name = name,

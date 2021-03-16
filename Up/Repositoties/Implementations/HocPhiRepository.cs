@@ -131,9 +131,9 @@ namespace Up.Repositoties
             }
 
             var ngayChoNghi = await _context.LopHoc_DiemDanhs
-                                            .Where(x => 
+                                            .Where(x =>
                                                 x.LopHocId == lopHocId &&
-                                                x.IsDuocNghi == true && 
+                                                x.IsDuocNghi == true &&
                                                 x.NgayDiemDanh.Month == month &&
                                                 x.NgayDiemDanh.Year == year)
                                             .GroupBy(x => x.NgayDiemDanh)

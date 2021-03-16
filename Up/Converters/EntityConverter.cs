@@ -33,7 +33,8 @@ namespace Up.Converters
                                         LopHocId = x.LopHocId,
                                         Name = x.LopHoc.Name,
                                         IsCanceled = x.LopHoc.IsCanceled,
-                                        IsGraduated = x.LopHoc.IsGraduated
+                                        IsGraduated = x.LopHoc.IsGraduated,
+                                        HocVienNghi = x.HocVien.HocVien_NgayHocs.FirstOrDefault(n => n.LopHocId == x.LopHocId).NgayKetThuc == null ? false : x.HocVien.HocVien_NgayHocs.FirstOrDefault(n => n.LopHocId == x.LopHocId).NgayKetThuc < DateTime.Now ? true : false
                                     })
                                     .ToList(),
                 LopHoc_NgayHocList = hocVien.HocVien_LopHocs

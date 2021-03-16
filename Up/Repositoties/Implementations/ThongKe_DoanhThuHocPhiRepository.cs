@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Up.Converters;
@@ -49,9 +48,9 @@ namespace Up.Repositoties
         public async Task<bool> IsExistingAsync(Guid hocVienId, Guid lopHocId, DateTime ngayDong)
         {
             return await _context.ThongKe_DoanhThuHocPhis
-                .AnyAsync(x => x.HocVienId == hocVienId && 
-                               x.LopHocId == lopHocId && 
-                               x.NgayDong.Month == ngayDong.Month && 
+                .AnyAsync(x => x.HocVienId == hocVienId &&
+                               x.LopHocId == lopHocId &&
+                               x.NgayDong.Month == ngayDong.Month &&
                                x.NgayDong.Year == ngayDong.Year);
         }
 
@@ -84,9 +83,9 @@ namespace Up.Repositoties
         public async Task XoaDaDongThongKe_DoanhThuAsync(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee)
         {
             var doanhThu = await _context.ThongKe_DoanhThuHocPhis
-                .FirstOrDefaultAsync(x => x.HocVienId == input.HocVienId && 
+                .FirstOrDefaultAsync(x => x.HocVienId == input.HocVienId &&
                                         x.LopHocId == input.LopHocId &&
-                                        x.NgayDong.Month == input.NgayDong.Month && 
+                                        x.NgayDong.Month == input.NgayDong.Month &&
                                         x.NgayDong.Year == input.NgayDong.Year);
             doanhThu.DaDong = false;
             await _context.SaveChangesAsync();
@@ -95,9 +94,9 @@ namespace Up.Repositoties
         public async Task<bool> Undo_DoanhThuAsync(ThongKe_DoanhThuHocPhiInputModel input, string loggedEmployee)
         {
             var item = await _context.ThongKe_DoanhThuHocPhis
-                 .Where(x => x.HocVienId == input.HocVienId && 
-                             x.LopHocId == input.LopHocId && 
-                             x.NgayDong.Month == input.month && 
+                 .Where(x => x.HocVienId == input.HocVienId &&
+                             x.LopHocId == input.LopHocId &&
+                             x.NgayDong.Month == input.month &&
                              x.NgayDong.Year == input.year)
                  .SingleOrDefaultAsync();
 

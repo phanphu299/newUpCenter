@@ -1,7 +1,6 @@
 ﻿
 namespace Up.Services
 {
-    using System;
     using System.Threading.Tasks;
     using Up.Models;
 

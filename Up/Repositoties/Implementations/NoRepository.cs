@@ -67,9 +67,9 @@ namespace Up.Repositoties
         public async Task<bool> IsExistingAsync(Guid lopHocId, Guid hocVienId, DateTime ngayNo)
         {
             return await _context.HocVien_Nos
-                .AnyAsync(x => x.HocVienId == hocVienId && 
+                .AnyAsync(x => x.HocVienId == hocVienId &&
                                 x.LopHocId == lopHocId &&
-                                x.NgayNo.Month == ngayNo.Month && 
+                                x.NgayNo.Month == ngayNo.Month &&
                                 x.NgayNo.Year == ngayNo.Year);
         }
 

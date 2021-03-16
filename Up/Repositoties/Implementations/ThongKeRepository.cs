@@ -159,7 +159,7 @@ namespace Up.Repositoties
                     .Where(x => x.DaDong && x.NgayDong.Month == DateTime.Now.Month && x.NgayDong.Year == DateTime.Now.Year)
                     .AsNoTracking()
                     .Select(x => x.HocPhi)
-                    .SumAsync(), 0) 
+                    .SumAsync(), 0)
                     +
                     Math.Round(await _context.HocPhiTronGois
                     .Where(x => !x.IsRemoved && !x.IsDisabled && x.FromDate.Month == DateTime.Now.Month && x.FromDate.Year == DateTime.Now.Year && (DateTime.Now.Year < x.ToDate.Year || (DateTime.Now.Year == x.ToDate.Year && DateTime.Now.Month <= x.ToDate.Month)))

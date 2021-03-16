@@ -92,7 +92,7 @@ namespace Up.Repositoties
                     .ThenInclude(x => x.CheDo)
                 .Include(x => x.NhanVien_ViTris)
                     .ThenInclude(x => x.ViTri)
-                .Where(x => !x.IsDisabled && 
+                .Where(x => !x.IsDisabled &&
                             x.NhanVien_ViTris.Any(m => m.CheDoId == LoaiNhanVienEnums.GiaoVien.ToId()))
                 .AsNoTracking()
                 .ToListAsync();
