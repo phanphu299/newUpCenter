@@ -191,7 +191,7 @@ namespace Up.Services
                     };
 
                     var tinhSoNgayHoc = _hocPhiRepository.TinhSoNgayHocTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear);
-                    if (_hocPhiRepository.IsTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear) && tronGoi)
+                    if (_hocPhiRepository.IsTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear))
                     {
                         if (tinhSoNgayHoc == 0)
                         {
