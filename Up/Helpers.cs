@@ -18,6 +18,8 @@ namespace Up
         public static IEnumerable<int> DaysInMonthWithStartDate(int year, int month, DayOfWeek dow, DateTime startDate)
         {
             DateTime monthStart = new DateTime(year, month, 1);
+            if (startDate.Year == monthStart.Year && startDate.Month > monthStart.Month)
+                return new List<int>();
             return Enumerable.Range(0, DateTime.DaysInMonth(year, month))
                 .Select(day => monthStart.AddDays(day))
                 .Where(date => date.DayOfWeek == dow && date.Day >= startDate.Day)

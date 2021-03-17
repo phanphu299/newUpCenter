@@ -175,7 +175,9 @@ namespace Up.Repositoties
             var item = _context.HocPhiTronGois
                 .Where(x => x.HocVienId == hocVienId && !x.IsDisabled && !x.IsRemoved)
                 .SelectMany(x => x.HocPhiTronGoi_LopHocs)
-                .Where(x => x.LopHocId == lopHocId && (year < x.ToDate.Year || (year == x.ToDate.Year && month <= x.ToDate.Month)))
+                .Where(x => x.LopHocId == lopHocId &&
+                            (year < x.ToDate.Year || (year == x.ToDate.Year && month <= x.ToDate.Month)) &&
+                            (year > x.FromDate.Year || (year == x.FromDate.Year && month >= x.FromDate.Month)))
                 .FirstOrDefault();
 
             return item != null;

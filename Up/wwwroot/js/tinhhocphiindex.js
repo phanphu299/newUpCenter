@@ -83,10 +83,7 @@
                 value = 0;
             }
 
-            if (item.tronGoi)
-                item.hocPhiMoi = item.hocPhiFixed - item.hocPhiBuHocVienVaoSau - item.hocPhiTruTronGoi + item.tienNo - ((item.hocPhiFixed * value) / 100);
-            else
-                item.hocPhiMoi = item.hocPhiFixed - item.hocPhiBuHocVienVaoSau + item.tienNo - ((item.hocPhiFixed * value) / 100);
+            item.hocPhiMoi = item.hocPhiFixed - ((item.hocPhiFixed * value) / 100);
 
             if (item.lastGiaSach !== null) {
                 for (let i = 0; i < item.lastGiaSach.length; i++) {

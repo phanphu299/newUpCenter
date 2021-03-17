@@ -38,7 +38,7 @@
 
         public async Task<bool> CreateUpdateHocVien_NgayHocAsync(HocVien_NgayHocInputModel input, string loggedEmployee)
         {
-            if (input.NgayKetThucDate < input.NgayBatDauDate)
+            if (input.NgayKetThucDate != null && input.NgayKetThucDate < input.NgayBatDauDate)
                 throw new Exception("Ngày kết thúc phải lớn hơn Ngày bắt đầu !!!");
 
             return await _ngayHocRepository.CreateUpdateHocVien_NgayHocAsync(input, loggedEmployee);

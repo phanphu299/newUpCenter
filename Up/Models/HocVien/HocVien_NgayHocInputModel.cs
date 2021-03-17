@@ -9,6 +9,6 @@ namespace Up.Models
         public string NgayBatDau { get; set; }
         public string NgayKetThuc { get; set; }
         public DateTime NgayBatDauDate { get; set; }
-        public DateTime NgayKetThucDate { get; set; }
+        public DateTime? NgayKetThucDate { get; set; }
     }
 }

@@ -68,18 +68,10 @@
                             Số ngày học tháng này:
                             <span style="color:red">{{tongNgayHoc}}</span>
 
-                            @*- Số ngày được nghỉ:
-                            <span style="color:red">
-                                {{tongNgayDuocNghi}}
-                            </span>*@
-
                             - Học phí:
                             <span style="color:red">
                                 {{formatNumber(tongHocPhi)}}
                             </span>
-
-                            - Học phí mỗi ngày:
-                            <span style="color:red">{{formatNumber(hocPhiMoiNgay)}}</span>
                         </div>
 
                         <v-container fluid v-if="hocVienList.length > 0">
@@ -99,10 +91,10 @@
                                                 {{ props.item.fullName }} <br />
                                                 <v-tooltip top v-if="props.item.hocPhiBuHocVienVaoSau > 0">
                                                     <template v-slot:activator="{ on }">
-                                                        <v-icon color="error lighten-1" dark v-on="on">info</v-icon>
+                                                        <v-icon color="error lighten-1" dark v-on="on">money_off</v-icon>
                                                     </template>
                                                     Ngày vào học: <strong>{{ props.item.ngayBatDauHoc }}</strong><br />
-                                                    Trừ học phí: <strong>{{ formatNumber(props.item.hocPhiBuHocVienVaoSau) }}</strong>
+                                                    Hoàn học phí OFF tháng trước: <strong>{{ formatNumber(props.item.hocPhiBuHocVienVaoSau) }}</strong>
                                                 </v-tooltip>
                                                 <v-icon v-if="props.item.daDongHocPhi" color="success">check_circle_outline</v-icon>
                                                 <v-tooltip top v-if="props.item.daNo">
