@@ -197,6 +197,11 @@ namespace Up.Services
                         if (tinhSoNgayHoc == 0)
                         {
                             ResetValue(item);
+                            ngayDuocNghi = TinhSoNgayNghi(item);
+                            if (ngayDuocNghi > 0)
+                            {
+                                item.GhiChu = $"Kéo dài học phí trọn gói {ngayDuocNghi} buổi";
+                            }
                         }
                         else
                         {
@@ -223,7 +228,11 @@ namespace Up.Services
                     item.Stt = index;
 
                     if (item.TronGoi && ngayDuocNghi > 0)
+                    {
+                        item.HocPhiBuHocVienVaoSau = 0;
+                        item.HocPhiMoi = 0;
                         item.GhiChu = $"Kéo dài học phí trọn gói {ngayDuocNghi} buổi";
+                    }
 
                     index++;
                     return item;
@@ -232,6 +241,23 @@ namespace Up.Services
                 .Where(x => (x.NgayBatDau_Date.Month <= currentMonth && x.NgayBatDau_Date.Year == currentYear) || x.NgayBatDau_Date.Year < currentYear);
 
             return items.OrderBy(x => x.Stt).ToList();
+        }
+
+        private int TinhSoNgayNghi(HocVienViewModel item)
+        {
+            int ngayDuocNghi = 0;
+            if (!string.IsNullOrWhiteSpace(item.NgayBatDauHoc))
+            {
+                DateTime _ngayBatDauHoc = new DateTime(int.Parse(item.NgayBatDauHoc.Substring(6)), int.Parse(item.NgayBatDauHoc.Substring(3, 2)), int.Parse(item.NgayBatDauHoc.Substring(0, 2)));
+                foreach (var ngayNghi in item.SoNgayDuocNghi)
+                {
+                    if (ngayNghi >= _ngayBatDauHoc)
+                    {
+                        ngayDuocNghi++;
+                    }
+                }
+            }
+            return ngayDuocNghi;
         }
 
         private void CalculateHocPhi(

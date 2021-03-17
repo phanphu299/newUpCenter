@@ -153,7 +153,7 @@
                                             </td>
                                             <td><v-text-field :disabled="props.item.tronGoi && props.item.hocPhiMoi == 0" v-model="props.item.bonus" v-on:keyup="onBonusHocPhi(props.item.bonus, props.item)"></v-text-field></td>
                                             <td><v-text-field :disabled="props.item.tronGoi && props.item.hocPhiMoi == 0" v-model="props.item.minus" v-on:keyup="onMinusHocPhi(props.item.minus, props.item)"></v-text-field></td>
-                                            <td><v-text-field :disabled="props.item.tronGoi && props.item.hocPhiMoi == 0" v-model="props.item.ghiChu"></v-text-field></td>
+                                            <td><v-text-field v-model="props.item.ghiChu"></v-text-field></td>
                                             <td>
                                                 @if (ViewBag.CanContribute)
                                                 {
