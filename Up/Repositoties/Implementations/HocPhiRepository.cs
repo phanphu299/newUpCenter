@@ -183,7 +183,7 @@ namespace Up.Repositoties
             return item != null;
         }
 
-        public int TinhSoNgayHocTronGoi(Guid hocVienId, Guid lopHocId, int month, int year)
+        public int TinhSoNgayHocTronGoi(Guid hocVienId, Guid lopHocId, int month, int year, DateTime ngayBatDauHoc)
         {
             var item = _context.LopHocs
                                     .Include(x => x.NgayHoc)
@@ -227,7 +227,7 @@ namespace Up.Repositoties
                 .SelectMany(x => x.HocPhiTronGoi_LopHocs)
                 .FirstOrDefault(x => x.LopHocId == lopHocId);
 
-            if (ngayHocPhi == null) return 0;
+            if (ngayHocPhi == null || ngayHocPhi.FromDate == ngayBatDauHoc) return 0;
 
             int soNgayTinhHocPhi = 0;
 

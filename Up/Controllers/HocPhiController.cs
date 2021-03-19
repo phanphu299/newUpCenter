@@ -277,37 +277,53 @@ namespace Up.Controllers
                 worksheet.Cells["A2:L2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 worksheet.Cells["A2:L2"].Style.Font.Color.SetColor(Color.Red);
 
-                worksheet.Cells[3, 1].Value = "No";
-                worksheet.Cells[3, 2].Value = "Tên";
-                worksheet.Cells[3, 3].Value = "1.Khoảng trừ (Được nghỉ tháng trước/Vào học sau)";
-                worksheet.Cells[3, 3].Style.WrapText = true;
-                worksheet.Cells[3, 4].Value = "2.Giảm học phí";
-                worksheet.Cells[3, 4].Style.WrapText = true;
-                worksheet.Cells[3, 5].Value = "3.Học phí tháng này 3 = (HP - 1)x(100% -2)";
-                worksheet.Cells[3, 5].Style.WrapText = true;
-                worksheet.Cells[3, 6].Value = "4.Nợ/Dư";
-                worksheet.Cells[3, 6].Style.WrapText = true;
-                worksheet.Cells[3, 7].Value = "5.Tài liệu";
-                worksheet.Cells[3, 7].Style.WrapText = true;
-                worksheet.Cells[3, 8].Value = "6.(+) khác";
-                worksheet.Cells[3, 8].Style.WrapText = true;
-                worksheet.Cells[3, 9].Value = "7.(-) khác";
-                worksheet.Cells[3, 9].Style.WrapText = true;
-                worksheet.Cells[3, 10].Value = "Phải đóng 8 = 3 + 4 + 5 + 6 - 7";
-                worksheet.Cells[3, 10].Style.WrapText = true;
-                worksheet.Cells[3, 11].Value = "Chữ ký";
-                worksheet.Cells[3, 12].Value = "Ghi Chú";
-                worksheet.Cells["A3:L3"].Style.Font.Bold = true;
-                worksheet.Cells["A3:L3"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A3:L3"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
-                worksheet.Cells["A3:L3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                worksheet.Cells["A3:L3"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells["A3:B3"].Merge = true;
+                worksheet.Cells["A3:C3"].Style.Font.Bold = true;
+                worksheet.Cells["A3:C3"].Style.Font.Color.SetColor(Color.Red);
+                worksheet.Cells["A3:B3"].Value = "(1) Học phí tháng của lớp: ";
+                worksheet.Cells[3, 3].Value = model.HocPhi;
 
-                var modelCells = worksheet.Cells["A3"];
-                string modelRange = "A3:L" + (totalRows + 3);
+                worksheet.Cells["A4:B4"].Merge = true;
+                worksheet.Cells["A4:C4"].Style.Font.Bold = true;
+                worksheet.Cells["A4:C4"].Style.Font.Color.SetColor(Color.Red);
+                worksheet.Cells["A4:B4"].Value = "(2) Tổng số ngày học trong tháng: ";
+                worksheet.Cells[4, 3].Value = model.SoNgayHoc;
+
+                worksheet.Cells[5, 1].Value = "No";
+                worksheet.Cells[5, 2].Value = "Tên";
+                worksheet.Cells[5, 3].Value = "(3) Số ngày tham gia chính thức";
+                worksheet.Cells[5, 3].Style.WrapText = true;
+                worksheet.Cells[5, 4].Value = "(4) Học phí trước khuyến học (1)/(2)x(3)";
+                worksheet.Cells[5, 4].Style.WrapText = true;
+                worksheet.Cells[5, 5].Value = "(5) Khuyến học";
+                worksheet.Cells[5, 5].Style.WrapText = true;
+                worksheet.Cells[5, 6].Value = "(6)Học phí sau khuyến học (4)-(5)";
+                worksheet.Cells[5, 6].Style.WrapText = true;
+                worksheet.Cells[5, 7].Value = "(7) Học phí trả lại do được nghỉ tháng trước";
+                worksheet.Cells[5, 7].Style.WrapText = true;
+                worksheet.Cells[5, 8].Value = "(8) Nợ hoặc học phí còn dư";
+                worksheet.Cells[5, 8].Style.WrapText = true;
+                worksheet.Cells[5, 9].Value = "(9) Tài liệu mới";
+                worksheet.Cells[5, 9].Style.WrapText = true;
+                worksheet.Cells[5, 10].Value = "(10) Khoảng cộng khác";
+                worksheet.Cells[5, 10].Style.WrapText = true;
+                worksheet.Cells[5, 11].Value = "(11) Khoảng trừ khác";
+                worksheet.Cells[5, 11].Style.WrapText = true;
+                worksheet.Cells[5, 12].Value = "Tổng (Đã được làm tròn) (6)-(7)+(8)+(9)+(10)-(11)";
+                worksheet.Cells[5, 12].Style.WrapText = true;
+                worksheet.Cells[5, 13].Value = "Chữ ký";
+                worksheet.Cells[5, 14].Value = "Ghi Chú";
+                worksheet.Cells["A5:N5"].Style.Font.Bold = true;
+                worksheet.Cells["A5:N5"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A5:N5"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells["A5:N5"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells["A5:N5"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                var modelCells = worksheet.Cells["A5"];
+                string modelRange = "A5:N" + (totalRows + 5);
                 var modelTable = worksheet.Cells[modelRange];
 
-                string modelRange2 = "C4:L" + (totalRows + 3);
+                string modelRange2 = "C6:N" + (totalRows + 5);
                 var modelTable2 = worksheet.Cells[modelRange2];
                 modelTable2.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
@@ -319,13 +335,14 @@ namespace Up.Controllers
 
                 for (int i = 0; i < totalRows; i++)
                 {
-                    var hocPhiBu = (Math.Ceiling(model.HocVienList[i].HocPhiBuHocVienVaoSau));
-                    worksheet.Cells[i + 4, 1].Value = i + 1;
-                    worksheet.Cells[i + 4, 2].Value = model.HocVienList[i].FullName;
-                    worksheet.Cells[i + 4, 3].Value = hocPhiBu;
-                    worksheet.Cells[i + 4, 4].Value = model.HocVienList[i].KhuyenMai + "%";
-                    worksheet.Cells[i + 4, 5].Value = (model.HocPhi - hocPhiBu) * ((100 - model.HocVienList[i].KhuyenMai) / 100);
-                    worksheet.Cells[i + 4, 6].Value = model.HocVienList[i].TienNo;
+                    worksheet.Cells[i + 6, 1].Value = i + 1;
+                    worksheet.Cells[i + 6, 2].Value = model.HocVienList[i].FullName;
+                    worksheet.Cells[i + 6, 3].Value = model.HocVienList[i].SoNgayHoc;
+                    worksheet.Cells[i + 6, 4].Value = model.HocVienList[i].HocPhiFixed;
+                    worksheet.Cells[i + 6, 5].Value = $"{model.HocVienList[i].KhuyenMai}%";
+                    worksheet.Cells[i + 6, 6].Value = model.HocVienList[i].HocPhiSauKhuyenMai;
+                    worksheet.Cells[i + 6, 7].Value = model.HocVienList[i].HocPhiBuHocVienVaoSau;
+                    worksheet.Cells[i + 6, 8].Value = model.HocVienList[i].TienNo;
 
                     if (model.HocVienList[i].GiaSach != null && model.HocVienList[i].GiaSach.Length > 0)
                     {
@@ -334,19 +351,19 @@ namespace Up.Controllers
                         {
                             giaSach += item.Gia;
                         }
-                        worksheet.Cells[i + 4, 7].Value = giaSach;
+                        worksheet.Cells[i + 6, 9].Value = giaSach;
                     }
 
-                    worksheet.Cells[i + 4, 8].Value = model.HocVienList[i].Bonus;
-                    worksheet.Cells[i + 4, 9].Value = model.HocVienList[i].Minus;
-                    worksheet.Cells[i + 4, 10].Value = model.HocVienList[i].HocPhiMoi;
+                    worksheet.Cells[i + 6, 10].Value = model.HocVienList[i].Bonus;
+                    worksheet.Cells[i + 6, 11].Value = model.HocVienList[i].Minus;
+                    worksheet.Cells[i + 6, 12].Value = model.HocVienList[i].HocPhiMoi;
 
                     if (model.HocVienList[i].DaDongHocPhi)
                     {
-                        worksheet.Cells[i + 4, 11].Value = "- ĐÃ ĐÓNG HP";
+                        worksheet.Cells[i + 6, 13].Value = "- ĐÃ ĐÓNG HP";
                     }
 
-                    worksheet.Cells[i + 4, 12].Value = model.HocVienList[i].GhiChu;
+                    worksheet.Cells[i + 6, 14].Value = model.HocVienList[i].GhiChu;
                 }
 
                 worksheet.PrinterSettings.Orientation = eOrientation.Landscape;

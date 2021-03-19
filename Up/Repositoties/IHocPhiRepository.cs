@@ -32,6 +32,6 @@ namespace Up.Repositoties
 
         bool IsTronGoi(Guid hocVienId, Guid lopHocId, int month, int year);
 
-        int TinhSoNgayHocTronGoi(Guid hocVienId, Guid lopHocId, int month, int year);
+        int TinhSoNgayHocTronGoi(Guid hocVienId, Guid lopHocId, int month, int year, DateTime ngayBatDauHoc);
     }
 }

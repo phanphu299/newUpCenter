@@ -23,9 +23,7 @@
         itemSach: [],
         itemHocPhi: [],
         tongNgayHoc: 0,
-        tongNgayDuocNghi: 0,
         tongHocPhi: 0,
-        hocPhiMoiNgay: 0,
         hocVienList: [],
         headers: [
             { text: 'STT', value: 'stt', align: 'left', sortable: true },
@@ -187,10 +185,8 @@
                 await axios.get('/HocPhi/GetTinhHocPhiAsync?LopHocId=' + this.selectedLopHoc.lopHocId + '&Month=' + this.selectedThang + '&Year=' + this.selectedNam + '&HocPhi=' + this.selectedHocPhi.gia + '&HocPhiId=' + this.selectedHocPhi.hocPhiId)
                     .then(function (response) {
                         that.tongNgayHoc = response.data.soNgayHoc;
-                        that.tongNgayDuocNghi = response.data.soNgayDuocNghi;
                         that.tongHocPhi = response.data.hocPhi;
                         that.hocVienList = response.data.hocVienList;
-                        that.hocPhiMoiNgay = response.data.hocPhiMoiNgay;
 
                         for (let i = 0; i < that.hocVienList.length; i++) {
                             that.hocVienList[i].year = that.selectedNam;
@@ -231,7 +227,8 @@
                         LopHocId: that.selectedLopHoc.lopHocId,
                         month: that.selectedThang,
                         year: that.selectedNam,
-                        HocPhi: that.tongHocPhi
+                        HocPhi: that.tongHocPhi,
+                        SoNgayHoc: that.tongNgayHoc
                     }
                 })
                 .then(function (response) {
