@@ -204,7 +204,7 @@
                     </li>
                 }
 
-                @if (Model.CanViewChiPhiCoDinh || Model.CanViewNo || Model.CanViewTinhHocPhi || Model.CanViewTinhLuong)
+                @if (Model.CanViewChiPhiCoDinh || Model.CanViewNo || Model.CanViewTinhHocPhi || Model.CanViewTinhLuong || Model.CanViewChiPhiKhac)
                 {
                     <li class="bold">
                         <a class="collapsible-header waves-effect waves-cyan">
@@ -231,7 +231,10 @@
                                             <span> Chi Phí Cố Định</span>
                                         </a>
                                     </li>
-
+                                }
+                                
+                                @if (Model.CanViewChiPhiKhac)
+                                {
                                     <li>
                                         <a asp-area="" asp-controller="Category" asp-action="OtherExpenseIndex">
                                             <i class="material-icons">keyboard_arrow_right</i>

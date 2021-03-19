@@ -22,5 +22,7 @@
         public bool CanViewTinhLuong { get; set; }
         public bool CanViewDiemDanh { get; set; }
         public bool CanViewDiemDanh_Export { get; set; }
+
+        public bool CanViewChiPhiKhac { get; set; }
     }
 }

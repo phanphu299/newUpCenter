@@ -20,7 +20,7 @@ namespace Up.Services
 
         public async Task<bool> CanContributeAsync(ClaimsPrincipal user)
         {
-            bool canContribute = await _chiPhiKhacRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_ChiPhiCoDinh);
+            bool canContribute = await _chiPhiKhacRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_ChiPhiKhac);
             return canContribute;
         }
 

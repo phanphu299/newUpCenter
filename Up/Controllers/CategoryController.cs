@@ -815,7 +815,7 @@
         }
 
         /// /////////////////////////////////////////////////////////////////////////////////////////////////////
-        [ServiceFilter(typeof(Read_ChiPhiCoDinh))]
+        [ServiceFilter(typeof(Read_ChiPhiKhac))]
         public async Task<IActionResult> OtherExpenseIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);

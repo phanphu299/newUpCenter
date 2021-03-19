@@ -1,0 +1,50 @@
+HỌC PHÍ THÁNG NÀY
+
+(1) HỌC PHÍ THÁNG NÀY  
+(2) TỔNG SỐ NGÀY HỌC THÁNG NÀY 
+(3) TỔNG SỐ NGÀY HỌC THỰC TẾ THÁNG NÀY (bao gồm OFF, học, nghỉ ---- ngoại trừ ngày vô sau hoặc ngày kết thúc trước) 
+
+
+(4) HỌC PHÍ THÁNG NÀY CỦA HỌC VIÊN : (1)/(2) x (3)
+
+(5) KHUYẾN MÃI THÁNG NÀY: xx% x (4)
+
+(6) HỌC PHÍ SAU KHI KHUYẾN MÃI : (4) - (5)
+
+(7) TRỪ HỌC PHÍ DO OFF THÁNG TRƯỚC : (7b) x (8b)
+
+FINAL : (6) - (7) ( =- bonus, minus, nợ, tài liệu) 
+*** TRÒN TỪ 5k => 10, <5k => 0
+------------------------------------------------
+
+THÁNG TRƯỚC
+
+(1b) HỌC PHÍ THÁNG TRƯỚC
+(2b) TỔNG SỐ NGÀY HỌC THÁNG TRƯỚC
+(3b) TỔNG SỐ NGÀY HỌC THỰC TẾ THÁNG TRƯỚC(bao gồm OFF, học, nghỉ ---- ngoại trừ ngày vô sau hoặc ngày kết thúc trước) 
+
+
+(4b) HỌC PHÍ THÁNG TRƯỚC CỦA HỌC VIÊN : (1b)/(2b) x (3b)
+
+(5b) KHUYẾN MÃI THÁNG TRƯỚC: xx% x (4b)
+
+(6b) HỌC PHÍ SAU KHI KHUYẾN MÃI : (4b) - (5b)
+
+(7b) HỌC PHÍ MỖI NGÀY SAU KHUYẾN MÃI : (6b) / (3b)
+
+
+(8b) SỐ NGÀY OFF
+
+-------------------
+TRỌN GÓI
+
+(1c) SỐ NGÀY CẦN TÍNH HỌC PHÍ NGOÀI TRỌN GÓI (trọn gói bắt đầu/kêt thúc lỡ cỡ trong tháng)
+
+(2c) CÓ LÀ TRỌN GÓI Ở THÁNG HIỆN TẠI KO
+
+***nếu (2c) true và (1c) = 0 => trọn vẹn 1 tháng trọn gói => HỌC PHÍ FINAL = 0
+***else if (2c) true và (1c) > 0 => (3c) HỌC PHÍ CẦN TÍNH NGOÀI TRỌN GÓI : ((6)/(3)) x (1c) => HỌC PHÍ FINAL =  (3c)
+*** else : HỌC PHÍ FINAL = HỌC PHÍ FINAL
+
+
+

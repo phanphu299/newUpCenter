@@ -347,11 +347,14 @@ namespace Up.Controllers
                     if (model.HocVienList[i].GiaSach != null && model.HocVienList[i].GiaSach.Length > 0)
                     {
                         double giaSach = 0;
+                        string sachcc = string.Empty;
                         foreach (var item in model.HocVienList[i].GiaSach)
                         {
                             giaSach += item.Gia;
+                            sachcc += $"{item.Name} - {item.Gia}\r\n";
                         }
-                        worksheet.Cells[i + 6, 9].Value = giaSach;
+                        worksheet.Cells[i + 6, 9].Value = sachcc;
+                        worksheet.Cells[i + 6, 9].Style.WrapText = true;
                     }
 
                     worksheet.Cells[i + 6, 10].Value = model.HocVienList[i].Bonus;
@@ -378,6 +381,7 @@ namespace Up.Controllers
                 worksheet.Column(4).Width = 8;
                 worksheet.Column(5).Width = 11;
                 worksheet.Column(6).Width = 9;
+                worksheet.Column(9).Width = 35;
 
                 package.Save();
             }
