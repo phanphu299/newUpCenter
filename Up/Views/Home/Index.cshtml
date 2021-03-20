@@ -68,7 +68,7 @@
         </div>
     }
 
-    @if (User.IsInRole("Admin"))
+    @if (User.IsInRole("Admin") || User.IsInRole("TK_HocVienNghiNhieu"))
     {
         <v-card-title v-if="hocVienNghiNhieu.length > 0">
             <h4 class="header mt-0">

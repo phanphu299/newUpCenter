@@ -42,6 +42,9 @@ namespace Up.Enums
         Contribute_DiemDanh_Export,
 
         Read_ChiPhiKhac,
-        Contribute_ChiPhiKhac
+        Contribute_ChiPhiKhac,
+        Read_HocPhiTronGoi,
+        Contribute_HocPhiTronGoi
+
     }
 }

@@ -60,6 +60,7 @@
             //builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.TK_DoanhThu, NormalizedName = Constants.TK_DoanhThu.ToUpper() });
             //builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.TK_GiaoVien, NormalizedName = Constants.TK_GiaoVien.ToUpper() });
             //builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.TK_HocVien, NormalizedName = Constants.TK_HocVien.ToUpper() });
+            //builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.TK_HocVienNghiNhieu, NormalizedName = Constants.TK_HocVienNghiNhieu.ToUpper() });
 
             // LOPHOC RELATIONSHIPS
             builder.Entity<LopHoc>()

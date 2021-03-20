@@ -16,6 +16,9 @@ namespace Up.Services
         Task<bool> DeleteHocPhiTronGoiAsync(Guid id, string loggedEmployee);
 
         Task<bool> CanContributeAsync(ClaimsPrincipal user);
+
+        Task<bool> CanContributeHocPhiTronGoiAsync(ClaimsPrincipal user);
+
         Task<bool> CheckIsDisable();
     }
 }

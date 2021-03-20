@@ -53,13 +53,13 @@ namespace Up.Controllers
             return View();
         }
 
-        [ServiceFilter(typeof(Read_TinhHocPhi))]
+        [ServiceFilter(typeof(Read_HocPhiTronGoi))]
         public async Task<IActionResult> HocPhiTronGoiIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
-            ViewBag.CanContribute = await _hocPhiTronGoiService.CanContributeAsync(User);
+            ViewBag.CanContribute = await _hocPhiTronGoiService.CanContributeHocPhiTronGoiAsync(User);
             return View();
         }
 

@@ -51,7 +51,8 @@ namespace Up.ViewComponents
                     CanViewTinhLuong = true,
                     CanViewDiemDanh = true,
                     CanViewDiemDanh_Export = true,
-                    CanViewChiPhiKhac = true
+                    CanViewChiPhiKhac = true,
+                    CanViewHocPhiTronGoi = true
                 });
             }
             else
@@ -76,7 +77,8 @@ namespace Up.ViewComponents
                     CanViewTinhLuong = await GetQuyen(roles, QuyenEnums.Read_TinhLuong, QuyenEnums.Contribute_TinhLuong),
                     CanViewDiemDanh = await GetQuyen(roles, QuyenEnums.Read_DiemDanh, QuyenEnums.Contribute_DiemDanh),
                     CanViewDiemDanh_Export = await GetQuyen(roles, QuyenEnums.Read_DiemDanh_Export, QuyenEnums.Contribute_DiemDanh_Export),
-                    CanViewChiPhiKhac = await GetQuyen(roles, QuyenEnums.Read_ChiPhiKhac, QuyenEnums.Contribute_ChiPhiKhac)
+                    CanViewChiPhiKhac = await GetQuyen(roles, QuyenEnums.Read_ChiPhiKhac, QuyenEnums.Contribute_ChiPhiKhac),
+                    CanViewHocPhiTronGoi = await GetQuyen(roles, QuyenEnums.Read_HocPhiTronGoi, QuyenEnums.Contribute_HocPhiTronGoi)
                 });
             }
         }

@@ -204,7 +204,7 @@
                     </li>
                 }
 
-                @if (Model.CanViewChiPhiCoDinh || Model.CanViewNo || Model.CanViewTinhHocPhi || Model.CanViewTinhLuong || Model.CanViewChiPhiKhac)
+                @if (Model.CanViewChiPhiCoDinh || Model.CanViewNo || Model.CanViewTinhHocPhi || Model.CanViewTinhLuong || Model.CanViewChiPhiKhac || Model.CanViewHocPhiTronGoi)
                 {
                     <li class="bold">
                         <a class="collapsible-header waves-effect waves-cyan">
@@ -232,7 +232,7 @@
                                         </a>
                                     </li>
                                 }
-                                
+
                                 @if (Model.CanViewChiPhiKhac)
                                 {
                                     <li>
@@ -252,7 +252,10 @@
                                             <span> QL Học Phí Thường</span>
                                         </a>
                                     </li>
+                                }
 
+                                @if (Model.CanViewHocPhiTronGoi)
+                                {
                                     <li>
                                         <a asp-area="" asp-controller="HocPhi" asp-action="HocPhiTronGoiIndex">
                                             <i class="material-icons">keyboard_arrow_right</i>

@@ -54,5 +54,11 @@ namespace Up.Services
         {
             return await _hocPhiTronGoiRepository.DeleteHocPhiTronGoiAsync(id, loggedEmployee);
         }
+
+        public async Task<bool> CanContributeHocPhiTronGoiAsync(ClaimsPrincipal user)
+        {
+            bool canContribute = await _hocPhiTronGoiRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_HocPhiTronGoi);
+            return canContribute;
+        }
     }
 }

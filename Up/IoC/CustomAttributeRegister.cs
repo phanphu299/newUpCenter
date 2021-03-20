@@ -27,6 +27,7 @@ namespace Up.IoC
             services.AddScoped<Read_DiemDanh>();
             services.AddScoped<Read_DiemDanh_Export>();
             services.AddScoped<Read_ChiPhiKhac>();
+            services.AddScoped<Read_HocPhiTronGoi>();
         }
     }
 }

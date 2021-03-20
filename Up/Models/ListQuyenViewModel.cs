@@ -24,5 +24,6 @@
         public bool CanViewDiemDanh_Export { get; set; }
 
         public bool CanViewChiPhiKhac { get; set; }
+        public bool CanViewHocPhiTronGoi { get; set; }
     }
 }
