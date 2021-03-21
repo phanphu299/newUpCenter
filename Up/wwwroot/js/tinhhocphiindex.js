@@ -215,6 +215,15 @@
             link.click();
         },
 
+        forceFileDownloadPdf(response, name) {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'bienlai_' + name + '.pdf'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        },
+
         async onExport() {
             let that = this;
             await axios
@@ -233,6 +242,31 @@
                 })
                 .then(function (response) {
                     that.forceFileDownload(response);
+                })
+                .catch(function (error) {
+                    console.log(error.response.data.Message);
+                });
+        },
+
+        async onExportBienLai(item) {
+            let that = this;
+            await axios
+                ({
+                    url: '/HocPhi/ExportBienLai',
+                    method: 'put',
+                    responseType: 'blob', // important
+                    data: {
+                        LopHocId: this.selectedLopHoc.lopHocId,
+                        HocVienId: item.hocVienId,
+                        HocPhi: item.hocPhiMoi,
+                        month: this.selectedThang,
+                        year: this.selectedNam,
+                        TronGoi: item.tronGoi
+                    }
+                })
+                .then(function (response) {
+                    console.log(response)
+                    that.forceFileDownloadPdf(response, item.fullName);
                 })
                 .catch(function (error) {
                     console.log(error.response.data.Message);

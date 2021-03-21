@@ -1,6 +1,8 @@
 ﻿
 namespace Up.Controllers
 {
+    using DinkToPdf;
+    using DinkToPdf.Contracts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -8,6 +10,8 @@ namespace Up.Controllers
     using OfficeOpenXml.Style;
     using System;
     using System.Drawing;
+    using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using Up.Extensions;
@@ -24,6 +28,8 @@ namespace Up.Controllers
         private readonly INoService _noService;
         private readonly IHocPhiTronGoiService _hocPhiTronGoiService;
         private readonly Converters.Converter _converter;
+        private readonly IConverter _converterPdf;
+        private readonly IHocVienService _hocVienService;
 
         public HocPhiController(
             UserManager<IdentityUser> userManager,
@@ -32,7 +38,9 @@ namespace Up.Controllers
             ILopHocService lopHocService,
             IThongKe_DoanhThuHocPhiService thongKe_DoanhThuHocPhiService,
             INoService noService,
-            Converters.Converter converter)
+            Converters.Converter converter,
+            IConverter converterPdf,
+            IHocVienService hocVienService)
         {
             _userManager = userManager;
             _hocPhiService = hocPhiService;
@@ -41,6 +49,8 @@ namespace Up.Controllers
             _noService = noService;
             _hocPhiTronGoiService = hocPhiTronGoiService;
             _converter = converter;
+            _converterPdf = converterPdf;
+            _hocVienService = hocVienService;
         }
 
         [ServiceFilter(typeof(Read_TinhHocPhi))]
@@ -408,6 +418,51 @@ namespace Up.Controllers
             await _noService.Undo_NoAsync(model, currentUser.Email);
 
             return Json(_converter.ToResultModel("Undo thành công !!!", true, true));
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> ExportBienLai([FromBody] ThongKe_DoanhThuHocPhiInputModel model)
+        {
+            CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
+            var hocVien = await _hocVienService.GetHocVienDetailAsync(model.HocVienId);
+            var ngayXuat = DateTime.Now;
+            string[] args = new string[] {
+                "1234567",
+                ngayXuat.Day.ToString(),
+                ngayXuat.Month.ToString(),
+                ngayXuat.Year.ToString(),
+                hocVien.FullName,
+                hocVien.NgaySinh, 
+                string.Empty, 
+                $"{model.HocPhi.ToString("#,###", cul.NumberFormat)}đ",
+                $"{model.month}/{model.year}" };
+
+            var pdf = SetupPdf(TemplateGenerator.GetHocPhiTheoThangTemplate(), args);
+            var file = _converterPdf.Convert(pdf);
+            return File(file, "application/pdf");
+        }
+
+        private HtmlToPdfDocument SetupPdf(string template, string[] args)
+        {
+            var globalSettings = new GlobalSettings
+            {
+                ColorMode = ColorMode.Color,
+                Orientation = Orientation.Landscape,
+                PaperSize = PaperKind.A5,
+                Margins = new MarginSettings { Top = 10 },
+                DocumentTitle = "Biên Lai Học Phí",
+            };
+            var objectSettings = new ObjectSettings
+            {
+                PagesCount = true,
+                HtmlContent = string.Format(template, args),
+                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "bootstrap.css") }
+            };
+            return new HtmlToPdfDocument()
+            {
+                GlobalSettings = globalSettings,
+                Objects = { objectSettings }
+            };
         }
     }
 }

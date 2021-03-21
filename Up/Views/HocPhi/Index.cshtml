@@ -187,6 +187,20 @@
                                                         </template>
                                                         <strong>Undo</strong>
                                                     </v-tooltip>
+
+                                                    <v-tooltip top
+                                                               v-if="props.item.daDongHocPhi">
+                                                        <template v-slot:activator="{ on }">
+                                                            <v-btn flat icon
+                                                                   small
+                                                                   color="indigo"
+                                                                   v-on="on"
+                                                                   v-on:click="onExportBienLai(props.item)">
+                                                                <v-icon>print</v-icon>
+                                                            </v-btn>
+                                                        </template>
+                                                        <strong>Xuất Biên Lai</strong>
+                                                    </v-tooltip>
                                                 }
                                             </td>
 
@@ -226,7 +240,7 @@
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/tinhhocphiindex.min.js" type="text/javascript"></script>
+<script src="~/js/tinhhocphiindex.js" type="text/javascript"></script>
 
 <style>
     .v-input__slot:before, .v-input__slot:after {

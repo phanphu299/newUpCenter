@@ -1,6 +1,8 @@
 ﻿
 namespace Up
 {
+    using DinkToPdf;
+    using DinkToPdf.Contracts;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -10,9 +12,11 @@ namespace Up
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using System;
+    using System.IO;
     using Up.Data;
     using Up.IoC;
     using Up.Middlewares;
+    using Up.Utils;
 
     public class Startup
     {
@@ -54,6 +58,10 @@ namespace Up
             services.AddLogics(Configuration);
             services.AddDataAccess(Configuration);
             services.AddCustomAttributes(Configuration);
+
+            var context2 = new CustomAssemblyLoadContext();
+            context2.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
