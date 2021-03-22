@@ -29,7 +29,7 @@ namespace Up
                     </div>
                   </div>
 
-                  <div class='row justify-content-center mt-3' style='text-align: center;'>
+                  <div class='row justify-content-center' style='text-align: center;'>
                     <h1>BIÊN LAI THU TIỀN</h1>
                   </div>
 
@@ -37,11 +37,14 @@ namespace Up
                     <p style='font-style: italic'>Ngày {1} tháng {2} năm {3}</p>
                   </div>
 
-                  <div class='row mt-3'>
+                  <div class='row'>
                     <p>Họ và tên người nộp tiền: {4}</p>
                   </div>
                   <div class='row'>
                     <p>Ngày sinh: {5}</p>
+                  </div>
+                  <div class='row'>
+                    <p>CMND: {10}</p>
                   </div>
                   <div class='row'>
                     <p>Địa chỉ: {6}</p>
@@ -95,7 +98,7 @@ namespace Up
                     </div>
                   </div>
 
-                  <div class='row justify-content-center mt-3' style='text-align: center;'>
+                  <div class='row justify-content-center' style='text-align: center;'>
                     <h1>BIÊN LAI THU TIỀN</h1>
                   </div>
 
@@ -103,11 +106,14 @@ namespace Up
                     <p style='font-style: italic'>Ngày {1} tháng {2} năm {3}</p>
                   </div>
 
-                  <div class='row mt-3'>
+                  <div class='row'>
                     <p>Họ và tên người nộp tiền: {4}</p>
                   </div>
                   <div class='row'>
                     <p>Ngày sinh: {5}</p>
+                  </div>
+                  <div class='row'>
+                    <p>CMND: {9}</p>
                   </div>
                   <div class='row'>
                     <p>Địa chỉ: {6}</p>

@@ -19,6 +19,11 @@ namespace Up.Data.Entities
         public string EnglishName { get; set; }
         public bool IsDisabled { get; set; }
 
+        public string CMND { get; set; }
+
+        public string Notes { get; set; }
+        public string DiaChi { get; set; }
+
         [ForeignKey("QuanHeId")]
         public QuanHe QuanHe { get; set; }
         public ICollection<LopHoc_DiemDanh> LopHoc_DiemDanhs { get; set; }

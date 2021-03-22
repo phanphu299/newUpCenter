@@ -77,7 +77,16 @@
                                                 <v-text-field label="SĐT Phụ Huynh" v-model="newItem.parentPhone"></v-text-field>
                                             </v-flex>
 
-                                            <v-flex xs12 sm2>
+                                            <v-flex xs12 sm3>
+                                                <v-text-field label="CMND" v-model="newItem.cmnd"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm3>
+                                                <v-text-field label="Địa Chỉ" v-model="newItem.diaChi"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm3>
+                                                <v-text-field label="Notes" v-model="newItem.notes"></v-text-field>
+                                            </v-flex>
+                                            <v-flex xs12 sm3>
                                                 <v-select :items="itemQuanHe"
                                                           item-text="name"
                                                           item-value="quanHeId"
@@ -87,7 +96,7 @@
                                                 </v-select>
                                             </v-flex>
 
-                                            <v-flex xs12 sm4>
+                                            <v-flex xs12 sm5>
                                                 <v-menu v-model="isShowDatePickerNgayHoc"
                                                         :close-on-content-click="false"
                                                         :nudge-right="40"
@@ -105,7 +114,7 @@
                                                 </v-menu>
                                             </v-flex>
 
-                                            <v-flex xs12 sm4>
+                                            <v-flex xs12 sm5>
                                                 <v-select v-model="newItem.lopHoc"
                                                           :items="itemLopHoc"
                                                           item-text="name"
@@ -271,12 +280,15 @@
                             </v-tooltip>
                         </td>
                         <td>{{ props.item.ngaySinh }}</td>
-                        <td>{{ props.item.englishName }}</td>
+                        <td>{{ props.item.cmnd }}</td>
                         <td>{{ props.item.phone }}</td>
                         <td>{{ props.item.otherPhone }}</td>
+                        <td>{{ props.item.diaChi }}</td>
+                        <td>{{ props.item.notes }}</td>
                         <td>{{ props.item.facebookAccount }}</td>
                         <td>{{ props.item.parentFullName }}</td>
                         <td>{{ props.item.parentPhone }}</td>
+                        <td>{{ props.item.englishName }}</td>
                         <td>{{ props.item.quanHe }}</td>
                         <td>{{ props.item.createdDate }}</td>
                         <td>{{ props.item.createdBy }}</td>
@@ -373,7 +385,16 @@
                                 <v-text-field label="SĐT Phụ Huynh" v-model="itemToEdit.parentPhone"></v-text-field>
                             </v-flex>
 
-                            <v-flex xs12 sm2>
+                            <v-flex xs12 sm3>
+                                <v-text-field label="CMND" v-model="itemToEdit.cmnd"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm3>
+                                <v-text-field label="Địa Chỉ" v-model="itemToEdit.diaChi"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm3>
+                                <v-text-field label="Notes" v-model="itemToEdit.notes"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm3>
                                 <v-select :items="itemQuanHe"
                                           item-text="name"
                                           item-value="quanHeId"
@@ -383,7 +404,7 @@
                                 </v-select>
                             </v-flex>
 
-                            <v-flex xs12 sm4>
+                            <v-flex xs12 sm5>
                                 <v-menu v-model="isShowDatePickerNgayHoc2"
                                         :close-on-content-click="false"
                                         :nudge-right="40"
@@ -401,7 +422,7 @@
                                 </v-menu>
                             </v-flex>
 
-                            <v-flex xs12 sm4>
+                            <v-flex xs12 sm5>
                                 <v-select v-model="itemToEdit.lopHoc"
                                           :items="itemLopHoc"
                                           item-text="name"

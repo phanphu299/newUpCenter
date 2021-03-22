@@ -15,5 +15,10 @@ namespace Up.Models
         public DateTime? NgaySinhDate { get; set; }
         public string EnglishName { get; set; }
         public DateTime? NgayBatDau { get; set; }
+
+        public string CMND { get; set; }
+
+        public string Notes { get; set; }
+        public string DiaChi { get; set; }
     }
 }

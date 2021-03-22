@@ -226,13 +226,17 @@
 
                     if (!string.IsNullOrWhiteSpace(itemHocVien.Phone))
                     {
-                        worksheet.Cells[i + 2, 1].Value = itemHocVien.FullName;
-                        worksheet.Cells[i + 2, 2].Value = itemHocVien.Phone;
-                        worksheet.Cells[i + 2, 3].Value = itemHocVien.OtherPhone;
+                        worksheet.Cells[i + 2, 1].Value = itemHocVien.Notes;
+                        worksheet.Cells[i + 2, 2].Value = itemHocVien.DiaChi;
+                        worksheet.Cells[i + 2, 3].Value = string.Empty;
+                        worksheet.Cells[i + 2, 4].Value = itemHocVien.FullName;
+                        worksheet.Cells[i + 2, 5].Value = itemHocVien.Phone;
+                        worksheet.Cells[i + 2, 6].Value = itemHocVien.OtherPhone;
 
-                        worksheet.Cells[i + 2, 4].Value = lopHoc;
-                        //worksheet.Cells[i + 2, 5].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
-                        worksheet.Cells[i + 2, 6].Value = itemHocVien.FacebookAccount;
+                        worksheet.Cells[i + 2, 7].Value = lopHoc;
+                        //worksheet.Cells[i + 2, 8].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
+                        worksheet.Cells[i + 2, 9].Value = itemHocVien.FacebookAccount;
+                        worksheet.Cells[i + 2, 10].Value = itemHocVien.NgaySinh;
 
                         i++;
 
@@ -242,30 +246,38 @@
                     {
                         phuHuynhRows++;
 
-                        worksheet.Cells[i + 2, 1].Value = itemHocVien.FullName;
-                        worksheet.Cells[i + 2, 2].Value = itemHocVien.ParentPhone;
-                        worksheet.Cells[i + 2, 3].Value = "";
-                        worksheet.Cells[i + 2, 4].Value = lopHoc;
-                        worksheet.Cells[i + 2, 5].Value = itemHocVien.QuanHe + " " + itemHocVien.ParentFullName;
-                        worksheet.Cells[i + 2, 6].Value = itemHocVien.FacebookAccount;
+                        worksheet.Cells[i + 2, 1].Value = itemHocVien.Notes;
+                        worksheet.Cells[i + 2, 2].Value = itemHocVien.DiaChi;
+                        worksheet.Cells[i + 2, 3].Value = string.Empty;
+                        worksheet.Cells[i + 2, 4].Value = itemHocVien.FullName;
+                        worksheet.Cells[i + 2, 5].Value = itemHocVien.ParentPhone;
+                        worksheet.Cells[i + 2, 6].Value = "";
+                        worksheet.Cells[i + 2, 7].Value = lopHoc;
+                        worksheet.Cells[i + 2, 8].Value = itemHocVien.QuanHe + " " + itemHocVien.ParentFullName;
+                        worksheet.Cells[i + 2, 9].Value = itemHocVien.FacebookAccount;
+                        worksheet.Cells[i + 2, 10].Value = itemHocVien.NgaySinh;
 
                         i++;
                     }
                 }
 
-                worksheet.Cells[1, 1].Value = "First Name";
-                worksheet.Cells[1, 2].Value = "Mobile Phone";
-                worksheet.Cells[1, 3].Value = "Other Phone";
-                worksheet.Cells[1, 4].Value = "Middle Name";
-                worksheet.Cells[1, 5].Value = "Last Name";
-                worksheet.Cells[1, 6].Value = "E-mail Address";
+                worksheet.Cells[1, 1].Value = "Notes";
+                worksheet.Cells[1, 2].Value = "Địa chỉ";
+                worksheet.Cells[1, 3].Value = "Thử thách đã hoàn thành";
+                worksheet.Cells[1, 4].Value = "First Name";
+                worksheet.Cells[1, 5].Value = "Mobile Phone";
+                worksheet.Cells[1, 6].Value = "Other Phone";
+                worksheet.Cells[1, 7].Value = "Middle Name";
+                worksheet.Cells[1, 8].Value = "Last Name";
+                worksheet.Cells[1, 9].Value = "E-mail Address";
+                worksheet.Cells[1, 10].Value = "Birthday";
 
-                worksheet.Cells["A1:F1"].Style.Font.Bold = true;
-                worksheet.Cells["A1:F1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A1:F1"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells["A1:J1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:J1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A1:J1"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 var modelCells = worksheet.Cells["A1"];
-                string modelRange = "A1:F" + (totalRows + 1 + phuHuynhRows);
+                string modelRange = "A1:J" + (totalRows + 1 + phuHuynhRows);
                 var modelTable = worksheet.Cells[modelRange];
 
 
@@ -306,18 +318,18 @@
                 worksheet.Cells["A1:I1"].Style.Font.Bold = true;
                 worksheet.Cells["A1:I1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                worksheet.Cells[1, 12].Value = "Lớp Học";
-                worksheet.Cells[1, 12].Style.Font.Bold = true;
-                worksheet.Cells[1, 13].Value = LopHocId;
-                worksheet.Cells["L1:M1"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["L1:M1"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["L1:M1"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["L1:M1"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[1, 15].Value = "Lớp Học";
+                worksheet.Cells[1, 15].Style.Font.Bold = true;
+                worksheet.Cells[1, 16].Value = LopHocId;
+                worksheet.Cells["O1:P1"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["O1:P1"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["O1:P1"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["O1:P1"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
 
-                worksheet.Cells[5, 12].Value = "ID Quan Hệ";
-                worksheet.Cells[5, 12].Style.Font.Bold = true;
-                worksheet.Cells[5, 13].Value = "Quan Hệ";
-                worksheet.Cells[5, 13].Style.Font.Bold = true;
+                worksheet.Cells[5, 15].Value = "ID Quan Hệ";
+                worksheet.Cells[5, 15].Style.Font.Bold = true;
+                worksheet.Cells[5, 16].Value = "Quan Hệ";
+                worksheet.Cells[5, 16].Style.Font.Bold = true;
 
                 worksheet.Cells[2, 1].Value = "Họ và Tên";
                 worksheet.Cells[2, 2].Value = "English Name";
@@ -329,13 +341,16 @@
                 worksheet.Cells[2, 8].Value = "SĐT Người Thân";
                 worksheet.Cells[2, 9].Value = "ID Quan Hệ";
                 worksheet.Cells[2, 10].Value = "Ngày Bắt Đầu (yyyy-mm-dd)";
+                worksheet.Cells[2, 11].Value = "CMND";
+                worksheet.Cells[2, 12].Value = "Địa Chỉ";
+                worksheet.Cells[2, 13].Value = "Notes";
 
-                worksheet.Cells["A2:J2"].Style.Font.Bold = true;
-                worksheet.Cells["A2:J2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A2:J2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells["A2:M2"].Style.Font.Bold = true;
+                worksheet.Cells["A2:M2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A2:M2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 var modelCells = worksheet.Cells["A2"];
-                string modelRange = "A2:J22";
+                string modelRange = "A2:M22";
                 var modelTable = worksheet.Cells[modelRange];
 
 
@@ -349,8 +364,8 @@
                 var quanHe = _quanHeService.GetQuanHeAsync().Result;
                 int totalRowsQuanHe = quanHe.Count;
 
-                var modelCellsQuanHe = worksheet.Cells["L5"];
-                string modelRangeQuanHe = "L5:M" + (totalRowsQuanHe + 5);
+                var modelCellsQuanHe = worksheet.Cells["O5"];
+                string modelRangeQuanHe = "O5:P" + (totalRowsQuanHe + 5);
                 var modelTableQuanHe = worksheet.Cells[modelRangeQuanHe];
 
                 // Assign borders
@@ -361,8 +376,8 @@
 
                 for (int i = 0; i < totalRowsQuanHe; i++)
                 {
-                    worksheet.Cells[i + 6, 12].Value = quanHe[i].QuanHeId;
-                    worksheet.Cells[i + 6, 13].Value = quanHe[i].Name;
+                    worksheet.Cells[i + 6, 15].Value = quanHe[i].QuanHeId;
+                    worksheet.Cells[i + 6, 16].Value = quanHe[i].Name;
                 }
 
                 worksheet.Cells.AutoFitColumns();
@@ -393,7 +408,7 @@
                 {
                     ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
                     var rowCount = worksheet.Dimension.Rows;
-                    Guid lopHocId = new Guid(worksheet.Cells[1, 13].Value.ToString().Trim());
+                    Guid lopHocId = new Guid(worksheet.Cells[1, 16].Value.ToString().Trim());
                     List<HocVienViewModel> hocViens = new List<HocVienViewModel>();
 
                     for (int row = 3; row <= rowCount; row++)

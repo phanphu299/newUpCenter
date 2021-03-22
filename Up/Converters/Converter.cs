@@ -33,7 +33,10 @@ namespace Up.Converters
                 FacebookAccount = worksheet.Cells[row, 5].Value?.ToString().Trim() ?? string.Empty,
                 ParentFullName = worksheet.Cells[row, 7].Value?.ToString().Trim() ?? string.Empty,
                 ParentPhone = worksheet.Cells[row, 8].Value?.ToString().Trim() ?? string.Empty,
-                QuanHeId = worksheet.Cells[row, 9].Value == null ? quanHe : new Guid(worksheet.Cells[row, 9].Value.ToString().Trim())
+                QuanHeId = worksheet.Cells[row, 9].Value == null ? quanHe : new Guid(worksheet.Cells[row, 9].Value.ToString().Trim()),
+                CMND = worksheet.Cells[row, 11].Value?.ToString().Trim() ?? string.Empty,
+                DiaChi = worksheet.Cells[row, 12].Value?.ToString().Trim() ?? string.Empty,
+                Notes = worksheet.Cells[row, 13].Value?.ToString().Trim() ?? string.Empty
             };
         }
 
@@ -45,6 +48,30 @@ namespace Up.Converters
                 HocVienId = hocVienId,
                 IsOff = isOff,
                 NgayDiemDanh = ngayDiemDanh
+            };
+        }
+
+        public CreateBienLaiInputModel ToCreateBienLai(ThongKe_DoanhThuHocPhiInputModel model, string maBienLai)
+        {
+            return new CreateBienLaiInputModel
+            {
+                HocPhi = model.HocPhi,
+                HocVienId = model.HocVienId,
+                LopHocId = model.LopHocId,
+                MaBienLai = maBienLai,
+                ThangHocPhi = $"{model.month}/{model.year}"
+            };
+        }
+        
+        public CreateBienLaiInputModel ToCreateBienLaiTronGoi(CreateBienLaiTronGoiInputModel model, string maBienLai)
+        {
+            return new CreateBienLaiInputModel
+            {
+                HocPhi = model.HocPhi,
+                HocVienId = model.HocVienId,
+                LopHocId = Guid.Empty,
+                MaBienLai = maBienLai,
+                ThangHocPhi = $"{model.FromDate} - {model.ToDate}"
             };
         }
     }

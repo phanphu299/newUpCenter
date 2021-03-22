@@ -26,6 +26,11 @@
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate_Date { get; set; }
 
+        public string CMND { get; set; }
+
+        public string Notes { get; set; }
+        public string DiaChi { get; set; }
+
         public double TienNo { get; set; }
         public int SoNgayHoc { get; set; }
         public double HocPhiMoi { get; set; }

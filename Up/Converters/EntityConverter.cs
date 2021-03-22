@@ -27,6 +27,9 @@ namespace Up.Converters
                 OtherPhone = hocVien.OtherPhone,
                 HocVienId = hocVien.HocVienId,
                 QuanHe = hocVien.QuanHe?.Name ?? string.Empty,
+                CMND = hocVien.CMND,
+                DiaChi = hocVien.DiaChi,
+                Notes = hocVien.Notes,
                 LopHocList = hocVien.HocVien_LopHocs
                                     .Select(x => new LopHocViewModel
                                     {
@@ -353,7 +356,10 @@ namespace Up.Converters
                 QuanHeId = input.QuanHeId,
                 EnglishName = input.EnglishName,
                 NgaySinh = input.NgaySinhDate,
-                CreatedBy = loggedEmployee
+                CreatedBy = loggedEmployee,
+                CMND = input.CMND,
+                DiaChi = input.DiaChi,
+                Notes = input.Notes
             };
         }
 
@@ -621,6 +627,19 @@ namespace Up.Converters
             .ToList();
         }
 
+        public BienLai ToEntityBienLai(CreateBienLaiInputModel input, string loggedEmployee)
+        {
+            return new BienLai
+            {
+                MaBienLai = input.MaBienLai,
+                HocPhi = input.HocPhi,
+                HocVienId = input.HocVienId,
+                LopHocId = input.LopHocId,
+                IsDisabled = false,
+                ThangHocPhi = input.ThangHocPhi,
+                CreatedBy = loggedEmployee
+            };
+        }
 
         ///MAPPING
 
@@ -637,6 +656,9 @@ namespace Up.Converters
             item.NgaySinh = input.NgaySinhDate;
             item.UpdatedBy = loggedEmployee;
             item.UpdatedDate = DateTime.Now;
+            item.CMND = input.CMND;
+            item.DiaChi = input.DiaChi;
+            item.Notes = input.Notes;
         }
 
         public void MappingEntityLopHoc(UpdateLopHocInputModel input, LopHoc item, string loggedEmployee)

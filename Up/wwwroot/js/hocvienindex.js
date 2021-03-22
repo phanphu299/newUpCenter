@@ -35,7 +35,10 @@
             lopHoc: '',
             isAppend: false,
             ngaySinh: "",
-            ngayHoc: ''
+            ngayHoc: '',
+            cmnd: '',
+            diaChi: '',
+            notes:''
         },
         selectedThang: '',
         selectedNam: '',
@@ -57,12 +60,15 @@
             { text: 'Họ Tên', value: 'fullName', align: 'left', sortable: true },
             { text: 'Lớp Học', value: '', align: 'left', sortable: false },
             { text: 'Ngày Sinh', value: 'ngaySinh', align: 'left', sortable: true },
-            { text: 'English Name', value: 'englishName', align: 'left', sortable: true },
+            { text: 'CMND', value: 'cmnd', align: 'left', sortable: true },
             { text: 'SĐT', value: 'phone', align: 'left', sortable: true },
             { text: 'SĐT Khác', value: 'otherPhone', align: 'left', sortable: true },
+            { text: 'Địa Chỉ', value: 'diaChi', align: 'left', sortable: true },
+            { text: 'Notes', value: 'notes', align: 'left', sortable: true },
             { text: 'Email', value: 'facebookAccount', align: 'left', sortable: true },
             { text: 'Họ Tên Phụ Huynh', value: 'parentFullName', align: 'left', sortable: true },
             { text: 'SĐT Phụ Huynh', value: 'parentPhone', align: 'left', sortable: true },
+            { text: 'English Name', value: 'englishName', align: 'left', sortable: true },
             { text: 'Quan Hệ', value: 'quanHe', align: 'left', sortable: true },
             { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: true },
             { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: true },
@@ -195,7 +201,10 @@
                         QuanHeId: item.quanHeId,
                         NgaySinh: item.ngaySinh,
                         LopHocIds: item.lopHocIds,
-                        LopHoc_NgayHocList: item.lopHoc_NgayHocList
+                        LopHoc_NgayHocList: item.lopHoc_NgayHocList,
+                        CMND: item.cmnd,
+                        DiaChi: item.diaChi,
+                        Notes: item.notes
                     }
                 })
                     .then(function (response) {
@@ -404,7 +413,10 @@
                         ParentFullName: that.newItem.parentFullName,
                         ParentPhone: that.newItem.parentPhone,
                         QuanHeId: that.newItem.quanHe,
-                        LopHoc_NgayHocList: that.arrayNgayHocLopHoc
+                        LopHoc_NgayHocList: that.arrayNgayHocLopHoc,
+                        CMND: that.newItem.cmnd,
+                        DiaChi: that.newItem.diaChi,
+                        Notes: that.newItem.notes
                     }
                 })
                     .then(function (response) {
@@ -423,6 +435,9 @@
                             that.newItem.parentFullName = '';
                             that.newItem.quanHe = '';
                             that.newItem.lopHoc = [];
+                            that.newItem.cmnd = '';
+                            that.newItem.diaChi = '';
+                            that.newItem.notes = '';
                         }
                         else {
                             that.snackbar = true;

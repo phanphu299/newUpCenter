@@ -265,7 +265,6 @@
                     }
                 })
                 .then(function (response) {
-                    console.log(response)
                     that.forceFileDownloadPdf(response, item.fullName);
                 })
                 .catch(function (error) {

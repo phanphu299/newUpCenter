@@ -44,6 +44,8 @@
         public DbSet<HocPhiTronGoi> HocPhiTronGois { get; set; }
         public DbSet<HocPhiTronGoi_LopHoc> HocPhiTronGoi_LopHocs { get; set; }
 
+        public DbSet<BienLai> BienLais { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

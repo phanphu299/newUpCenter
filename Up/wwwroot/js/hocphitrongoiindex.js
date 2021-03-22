@@ -238,6 +238,37 @@
             that.dialogEdit = false;
         },
 
+        forceFileDownloadPdf(response, name) {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'bienlaitrongoi_' + name + '.pdf'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        },
+
+        async onExportBienLai(item) {
+            let that = this;
+            await axios
+                ({
+                    url: '/HocPhi/ExportBienLaiTronGoi',
+                    method: 'put',
+                    responseType: 'blob', // important
+                    data: {
+                        HocVienId: item.hocVienId,
+                        HocPhi: item.hocPhi,
+                        FromDate: item.fromDate,
+                        ToDate: item.toDate
+                    }
+                })
+                .then(function (response) {
+                    that.forceFileDownloadPdf(response, item.name);
+                })
+                .catch(function (error) {
+                    console.log(error.response.data.Message);
+                });
+        },
+
         async onSave(item) {
             if (this.newItem.hocVien.length === 0) {
                 this.alertMessage = "Phải chọn ít nhất 1 học viên";

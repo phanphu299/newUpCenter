@@ -227,7 +227,9 @@ namespace Up.Repositoties
                 .SelectMany(x => x.HocPhiTronGoi_LopHocs)
                 .FirstOrDefault(x => x.LopHocId == lopHocId);
 
-            if (ngayHocPhi == null || ngayHocPhi.FromDate == ngayBatDauHoc) return 0;
+            if (ngayHocPhi == null || 
+                (ngayHocPhi.FromDate == ngayBatDauHoc && ngayHocPhi.FromDate.Month == month && ngayHocPhi.FromDate.Year == year))
+                return 0;
 
             int soNgayTinhHocPhi = 0;
 

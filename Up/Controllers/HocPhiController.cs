@@ -30,6 +30,7 @@ namespace Up.Controllers
         private readonly Converters.Converter _converter;
         private readonly IConverter _converterPdf;
         private readonly IHocVienService _hocVienService;
+        private readonly IBienLaiService _bienLaiService;
 
         public HocPhiController(
             UserManager<IdentityUser> userManager,
@@ -40,7 +41,8 @@ namespace Up.Controllers
             INoService noService,
             Converters.Converter converter,
             IConverter converterPdf,
-            IHocVienService hocVienService)
+            IHocVienService hocVienService,
+            IBienLaiService bienLaiService)
         {
             _userManager = userManager;
             _hocPhiService = hocPhiService;
@@ -51,6 +53,7 @@ namespace Up.Controllers
             _converter = converter;
             _converterPdf = converterPdf;
             _hocVienService = hocVienService;
+            _bienLaiService = bienLaiService;
         }
 
         [ServiceFilter(typeof(Read_TinhHocPhi))]
@@ -179,7 +182,7 @@ namespace Up.Controllers
             {
                 return RedirectToAction("Index");
             }
-
+            
             var updateHocPhi = await _lopHocService.UpdateHocPhiLopHocAsync(model, currentUser.Email);
             var modeal = await _hocPhiService.TinhHocPhiAsync(model);
             return Json(modeal);
@@ -423,22 +426,75 @@ namespace Up.Controllers
         [HttpPut]
         public async Task<IActionResult> ExportBienLai([FromBody] ThongKe_DoanhThuHocPhiInputModel model)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
             CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
             var hocVien = await _hocVienService.GetHocVienDetailAsync(model.HocVienId);
             var ngayXuat = DateTime.Now;
+            string maBienLai = await _bienLaiService.GenerateMaBienLaiAsync();
+            if (string.IsNullOrEmpty(maBienLai))
+                return Json(_converter.ToResultModel("Lỗi export Biên Lai !!!", false));
+
             string[] args = new string[] {
-                "1234567",
+                maBienLai,
                 ngayXuat.Day.ToString(),
                 ngayXuat.Month.ToString(),
                 ngayXuat.Year.ToString(),
                 hocVien.FullName,
                 hocVien.NgaySinh, 
-                string.Empty, 
+                hocVien.DiaChi, 
                 $"{model.HocPhi.ToString("#,###", cul.NumberFormat)}đ",
-                $"{model.month}/{model.year}" };
+                $"{model.month}/{model.year}",
+                hocVien.CMND
+            };
 
             var pdf = SetupPdf(TemplateGenerator.GetHocPhiTheoThangTemplate(), args);
             var file = _converterPdf.Convert(pdf);
+
+            var input = _converter.ToCreateBienLai(model, maBienLai);
+            await _bienLaiService.CreateBienLaiAsync(input, currentUser.Email);
+            return File(file, "application/pdf");
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> ExportBienLaiTronGoi([FromBody] CreateBienLaiTronGoiInputModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
+            var hocVien = await _hocVienService.GetHocVienDetailAsync(model.HocVienId);
+            var ngayXuat = DateTime.Now;
+            string maBienLai = await _bienLaiService.GenerateMaBienLaiAsync();
+            if (string.IsNullOrEmpty(maBienLai))
+                return Json(_converter.ToResultModel("Lỗi export Biên Lai !!!", false));
+
+            string[] args = new string[] {
+                maBienLai,
+                ngayXuat.Day.ToString(),
+                ngayXuat.Month.ToString(),
+                ngayXuat.Year.ToString(),
+                hocVien.FullName,
+                hocVien.NgaySinh,
+                hocVien.DiaChi,
+                $"{model.HocPhi.ToString("#,###", cul.NumberFormat)}đ",
+                model.FromDate,
+                model.ToDate,
+                hocVien.CMND
+            };
+
+            var pdf = SetupPdf(TemplateGenerator.GetHocPhiTronGoiTemplate(), args);
+            var file = _converterPdf.Convert(pdf);
+
+            var input = _converter.ToCreateBienLaiTronGoi(model, maBienLai);
+            await _bienLaiService.CreateBienLaiAsync(input, currentUser.Email);
             return File(file, "application/pdf");
         }
 
@@ -449,7 +505,7 @@ namespace Up.Controllers
                 ColorMode = ColorMode.Color,
                 Orientation = Orientation.Landscape,
                 PaperSize = PaperKind.A5,
-                Margins = new MarginSettings { Top = 10 },
+                Margins = new MarginSettings { Top = 5 },
                 DocumentTitle = "Biên Lai Học Phí",
             };
             var objectSettings = new ObjectSettings
