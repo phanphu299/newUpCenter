@@ -100,7 +100,9 @@
                                                  props.item.role != 'TK_GiaoVien' && 
                                                  props.item.role != 'TK_HocVien' && 
                                                  props.item.role != 'TK_ChiPhi' &&
-                                                 props.item.role != 'TK_HocVienNghiNhieu'"
+                                                 props.item.role != 'TK_HocVienNghiNhieu' &&
+                                                 props.item.role != 'TK_BienLai_Read' &&
+                                                 props.item.role != 'TK_BienLai_Contribute'"
                                            v-on:save="onUpdate(props.item.id, props.item.role)">
                                 {{ props.item.role }}
                                 <v-text-field slot="input"

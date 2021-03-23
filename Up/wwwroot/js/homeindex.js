@@ -133,7 +133,31 @@ var vue = new Vue({
             { text: 'Lớp Học', value: 'tenLop', align: 'left', sortable: true },
             { text: 'Ngày Học Cuối', value: 'ngayHocCuoi', align: 'left', sortable: true },
         ],
-        search: ''
+        search: '',
+
+        bienLai: {},
+        headersBienLai: [
+            {
+                text: 'Action',
+                align: 'left',
+                sortable: false,
+                value: ''
+            },
+            { text: 'Mã Biên Lai', value: 'maBienLai', align: 'left', sortable: true },
+            { text: 'Tên Học Viên', value: 'fullName', align: 'left', sortable: true },
+            { text: 'Lớp Học', value: 'tenLop', align: 'left', sortable: true },
+            { text: 'Học Phí', value: 'hocPhi', align: 'left', sortable: true },
+            { text: 'Tháng Học Phí', value: 'thangHocPhi', align: 'left', sortable: true },
+            { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: true },
+            { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: true },
+        ],
+        searchBienLai: '',
+        messageText: '',
+        color: '',
+        timeout: 3000,
+        snackbar: false,
+        deleteBienLaiDialog: false,
+        bienLaiToDelete: {}
     },
 
     async mounted() {
@@ -205,6 +229,14 @@ var vue = new Vue({
                 .catch(function (error) {
                     console.log(error.response.data.Message);
                 });
+
+            await axios.get('/BienLai/GetBienLaiAsync')
+                .then(function (response) {
+                    that.bienLai = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error.response.data.Message);
+                });
         } catch (e) {
             console.error(e);
         }
@@ -214,5 +246,37 @@ var vue = new Vue({
         formatNumber(val) {
             return val.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
         },
+
+        async onDeleteBienLai(item) {
+            let that = this;
+            await axios({
+                method: 'delete',
+                url: '/BienLai/DeleteBienLaiAsync',
+                data: {
+                    BienLaiId: item.bienLaiId
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.bienLai.splice(that.bienLai.indexOf(item), 1);
+                        that.snackbar = true;
+                        that.messageText = 'Xóa thành công !!!';
+                        that.color = 'success';
+                        that.deleteBienLaiDialog = false;
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error.response.data.Message);
+                    that.snackbar = true;
+                    that.messageText = 'Xóa lỗi: ' + error.response.data.Message;
+                    that.color = 'error';
+                });
+        }
     }
 });

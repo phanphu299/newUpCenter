@@ -341,6 +341,21 @@ namespace Up.Converters
             };
         }
 
+        public BienLaiViewModel ToBienLaiViewModel(BienLai bienLai, LopHocViewModel lopHoc)
+        {
+            return new BienLaiViewModel
+            {
+                CreatedBy = bienLai.CreatedBy,
+                CreatedDate = bienLai.CreatedDate.ToClearDate(),
+                HocPhi = bienLai.HocPhi,
+                FullName = bienLai.HocVien.FullName,
+                ThangHocPhi = bienLai.ThangHocPhi,
+                BienLaiId = bienLai.BienLaiId,
+                TenLop = lopHoc?.Name ?? string.Empty,
+                MaBienLai = bienLai.MaBienLai
+            };
+        }
+
         ///ENTITY
 
         public HocVien ToEntityHocVien<T>(T input, string loggedEmployee) where T : CreateHocVienInput

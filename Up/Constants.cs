@@ -14,6 +14,7 @@
         public const string TK_DoanhThu = "TK_DoanhThu";
         public const string TK_HocVien = "TK_HocVien";
         public const string TK_HocVienNghiNhieu = "TK_HocVienNghiNhieu";
+        public const string TK_BienLai = "TK_BienLai";
         public const string ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     }
 }

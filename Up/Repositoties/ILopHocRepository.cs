@@ -37,5 +37,7 @@ namespace Up.Repositoties
         Task<bool> UpdateHocPhiLopHocAsync(TinhHocPhiInputModel input, string loggedEmployee);
 
         Task<int> DemSoNgayHocAsync(Guid id, int month, int year);
+
+        Task<List<LopHocViewModel>> GetLopHocByIdsAsync(IList<Guid> ids);
     }
 }

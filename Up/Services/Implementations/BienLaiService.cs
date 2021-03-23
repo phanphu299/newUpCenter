@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Up.Models;
 using Up.Repositoties;
@@ -20,6 +21,11 @@ namespace Up.Services
                 throw new Exception("Mã Biên Lai Đã Tồn Tại!!");
 
             await _bienLaiRepository.CreateBienLaiAsync(input, loggedEmployee);
+        }
+
+        public async Task<bool> DeleteBienLaiAsync(Guid id, string loggedEmployee)
+        {
+            return await _bienLaiRepository.DeleteBienLaiAsync(id, loggedEmployee);
         }
 
         public async Task<string> GenerateMaBienLaiAsync()
@@ -45,6 +51,11 @@ namespace Up.Services
             }
 
             return result;
+        }
+
+        public async Task<List<BienLaiViewModel>> GetBienLaiAsync()
+        {
+            return await _bienLaiRepository.GetBienLaiAsync();
         }
     }
 }

@@ -272,5 +272,17 @@ namespace Up.Repositoties
                 .Select(x => x.LopHocId)
                 .ToListAsync();
         }
+
+        public async Task<List<LopHocViewModel>> GetLopHocByIdsAsync(IList<Guid> ids)
+        {
+            return await _context.LopHocs
+                .Where(x => ids.Contains(x.LopHocId))
+                .Select(x => new LopHocViewModel
+                {
+                    LopHocId = x.LopHocId,
+                    Name = x.Name
+                })
+                .ToListAsync();
+        }
     }
 }
