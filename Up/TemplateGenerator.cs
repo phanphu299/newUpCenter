@@ -38,22 +38,22 @@ namespace Up
                   </div>
 
                   <div class='row'>
-                    <p>Họ và tên người nộp tiền: {4}</p>
+                    <p style='word-spacing: 8px;'>Họ và tên người nộp tiền: {4}</p>
                   </div>
                   <div class='row'>
-                    <p>Ngày sinh: {5}</p>
+                    <p style='word-spacing: 8px;'>Ngày sinh: {5}</p>
                   </div>
                   <div class='row'>
-                    <p>CMND: {10}</p>
+                    <p style='word-spacing: 8px;'>CMND: {10}</p>
                   </div>
                   <div class='row'>
-                    <p>Địa chỉ: {6}</p>
+                    <p style='word-spacing: 8px;'>Địa chỉ: {6}</p>
                   </div>
                   <div class='row'>
-                    <p>Số tiền thu: <b>{7}</b></p>
+                    <p style='word-spacing: 8px;'>Số tiền thu: <b>{7}</b></p>
                   </div>
                   <div class='row'>
-                    <p>Nội dung thu: Học phí trọn gói từ {8} đến {9}</p>
+                    <p style='word-spacing: 8px;'>Nội dung thu: Học phí trọn gói từ {8} đến {9}</p>
                   </div>
 
                   <div style='text-align: center; float: right; margin-right: 30px'>
@@ -107,22 +107,22 @@ namespace Up
                   </div>
 
                   <div class='row'>
-                    <p>Họ và tên người nộp tiền: {4}</p>
+                    <p style='word-spacing: 8px;'>Họ và tên người nộp tiền: {4}</p>
                   </div>
                   <div class='row'>
-                    <p>Ngày sinh: {5}</p>
+                    <p style='word-spacing: 8px;'>Ngày sinh: {5}</p>
                   </div>
                   <div class='row'>
-                    <p>CMND: {9}</p>
+                    <p style='word-spacing: 8px;'>CMND: {9}</p>
                   </div>
                   <div class='row'>
-                    <p>Địa chỉ: {6}</p>
+                    <p style='word-spacing: 8px;'>Địa chỉ: {6}</p>
                   </div>
                   <div class='row'>
-                    <p>Số tiền thu: <b>{7}</b></p>
+                    <p style='word-spacing: 8px;'>Số tiền thu: <b>{7}</b></p>
                   </div>
                   <div class='row'>
-                    <p>Nội dung thu: Nộp học phí lớp tháng {8}</p>
+                    <p style='word-spacing: 8px;'>Nội dung thu: Nộp học phí lớp tháng {8}</p>
                   </div>
 
                   <div style='text-align: center; float: right; margin-right: 30px'>

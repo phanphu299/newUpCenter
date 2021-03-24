@@ -239,7 +239,7 @@ namespace Up.Services
 
 
                     #region TRON GOI
-                    var soNgayTinhHocPhiNgoaiTronGoi = _hocPhiRepository.TinhSoNgayHocTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear, ngayBatDau_Date.Value);
+                    var soNgayTinhHocPhiNgoaiTronGoi = _hocPhiRepository.TinhSoNgayHocTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear, ngayBatDau_Date.Value, ngayKetThuc_Date);
                     var isTronGoi = _hocPhiRepository.IsTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear);
 
                     if (isTronGoi && soNgayTinhHocPhiNgoaiTronGoi == 0)
