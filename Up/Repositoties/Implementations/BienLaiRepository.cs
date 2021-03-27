@@ -52,6 +52,7 @@ namespace Up.Repositoties
             var bienLais = await _context.BienLais
                 .Include(x => x.HocVien)
                 .Where(x => !x.IsDisabled)
+                .OrderByDescending(x => x.CreatedDate)
                 .ToListAsync();
 
             var lopHocIds = bienLais

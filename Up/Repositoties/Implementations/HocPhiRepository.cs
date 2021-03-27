@@ -239,7 +239,7 @@ namespace Up.Repositoties
 
             if (ngayHocPhi.FromDate.Year == year && ngayHocPhi.FromDate.Month == month)
             {
-                foreach (var ngay in tongNgayHoc)
+                foreach (var ngay in tongNgayHoc.Where(x => x >= ngayBatDauHoc.Day))
                 {
                     if (ngay < ngayHocPhi.FromDate.Day)
                         soNgayTinhHocPhi++;
@@ -248,6 +248,7 @@ namespace Up.Repositoties
 
             if (ngayHocPhi.ToDate.Year == year && ngayHocPhi.ToDate.Month == month)
             {
+                if (ngayKetThuc.HasValue) tongNgayHoc = tongNgayHoc.Where(x => x <= ngayKetThuc.Value.Day).ToList();
                 foreach (var ngay in tongNgayHoc)
                 {
                     if (ngay > ngayHocPhi.ToDate.Day)

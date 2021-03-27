@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Up
 {
@@ -40,6 +41,24 @@ namespace Up
                 subMonth--;
             }
             return (subMonth, subYear);
+        }
+
+        public static string ToTiengVietKhongDau(string str)
+        {
+            string strFormD = str.Normalize(NormalizationForm.FormD);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < strFormD.Length; i++)
+            {
+                System.Globalization.UnicodeCategory uc =
+                System.Globalization.CharUnicodeInfo.GetUnicodeCategory(strFormD[i]);
+                if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(strFormD[i]);
+                }
+            }
+            sb = sb.Replace('Đ', 'D');
+            sb = sb.Replace('đ', 'd');
+            return (sb.ToString().Normalize(NormalizationForm.FormD));
         }
     }
 }

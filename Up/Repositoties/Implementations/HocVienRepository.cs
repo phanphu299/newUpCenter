@@ -29,6 +29,7 @@ namespace Up.Repositoties
         public async Task<Guid> CreateHocVienAsync(CreateHocVienInputModel input, string loggedEmployee)
         {
             HocVien hocVien = _entityConverter.ToEntityHocVien(input, loggedEmployee);
+            hocVien.Trigram = await GenerateTrigramAsync(input.FullName);
 
             _context.HocViens.Add(hocVien);
 
@@ -103,6 +104,7 @@ namespace Up.Repositoties
         public async Task<Guid> ImportHocVienAsync(ImportHocVienInputModel input, string loggedEmployee)
         {
             HocVien hocVien = _entityConverter.ToEntityHocVien(input, loggedEmployee);
+            hocVien.Trigram = await GenerateTrigramAsync(input.FullName);
 
             _context.HocViens.Add(hocVien);
 
@@ -253,6 +255,45 @@ namespace Up.Repositoties
                 .Where(x => x.QuanHeId == quanHeId)
                 .Select(x => x.HocVienId)
                 .ToListAsync();
+        }
+
+        private async Task<string> GenerateTrigramAsync(string fullName)
+        {
+            var name = Helpers.ToTiengVietKhongDau(fullName.Trim())
+                    .Split(' ')
+                    .ToList();
+
+            string trigram = $"{name.First()[0]}";
+
+            if (name[name.Count - 1].StartsWith('('))
+            {
+                trigram += name[name.Count - 2].Length >= 2 ?
+                    $"{name[name.Count - 2].Substring(0, 2)}"
+                    : $"{name[name.Count - 2][0]}{name[name.Count - 2][0]}";
+            }
+            else
+            {
+                trigram += name[name.Count - 1].Length >= 2 ?
+                    $"{name[name.Count - 1].Substring(0, 2)}"
+                    : $"{name[name.Count - 1][0]}{name[name.Count - 1][0]}";
+            }
+
+            var latestTrigram = await _context.HocViens
+                    .Where(x => x.Trigram.ToLower().Contains(trigram.ToLower()))
+                    .OrderByDescending(x => x)
+                    .Select(x => x.Trigram)
+                    .FirstOrDefaultAsync();
+
+            if (latestTrigram == null)
+                trigram += 1.ToString("D2");
+            else
+            {
+                var currentNumber = int.Parse(latestTrigram.Substring(3, 2));
+                currentNumber++;
+                trigram += currentNumber.ToString("D2");
+            }
+
+            return trigram.ToUpper();
         }
     }
 }

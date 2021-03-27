@@ -58,7 +58,7 @@
 
                                                 <v-text-field :rules='rules' prefix="VNĐ" label="Giá *" required v-model="newItem.hocPhi" v-on:keyup.enter="onSave"></v-text-field>
                                             </v-flex>
-                                            <v-flex xs12>
+                                            <v-flex md6 xs12>
                                                 <v-menu v-model="isShowDatePicker"
                                                         :close-on-content-click="false"
                                                         :nudge-right="40"
@@ -74,7 +74,7 @@
                                                                   readonly></v-text-field>
                                                     <v-date-picker locale="vi-vn" v-model="newItem.fromDate" v-on:input="isShowDatePicker = false"></v-date-picker>
                                             </v-flex>
-                                            <v-flex xs12>
+                                            <v-flex md6 xs12>
                                                 <v-menu v-model="isShowDatePicker2"
                                                         :close-on-content-click="false"
                                                         :nudge-right="40"
@@ -89,6 +89,10 @@
                                                                   prepend-icon="event"
                                                                   readonly></v-text-field>
                                                     <v-date-picker locale="vi-vn" v-model="newItem.toDate" v-on:input="isShowDatePicker2 = false"></v-date-picker>
+                                            </v-flex>
+
+                                            <v-flex xs12>
+                                                <v-text-field label="Ghi Chú" required v-model="newItem.ghiChu"></v-text-field>
                                             </v-flex>
 
                                             <v-flex xs12 sm3>
@@ -145,7 +149,7 @@
                                             <v-flex xs12 sm3>
                                                 <v-tooltip top>
                                                     <template v-slot:activator="{ on }">
-                                                        <v-btn slot="activator" v-on="on" color="primary darken-1" small v-on:click="onAddLopHoc" >Thêm</v-btn>
+                                                        <v-btn slot="activator" v-on="on" color="primary darken-1" small v-on:click="onAddLopHoc">Thêm</v-btn>
                                                     </template>
                                                     <strong>Thêm Lớp Học</strong>
                                                 </v-tooltip>
@@ -257,6 +261,7 @@
                         <td><span>{{ props.item.name }}</span></td>
                         <td><span>{{ formatNumber(props.item.hocPhi) }}</span></td>
                         <td><v-switch v-model="props.item.isDisabled" color="error" hide-details v-on:change="onToggle(props.item.hocPhiTronGoiId)"></v-switch></td>
+                        <td><span>{{ props.item.ghiChu }}</span></td>
                         <td>{{ props.item.fromDate }}</td>
                         <td>{{ props.item.toDate }}</td>
                         <td>{{ props.item.createdDate }}</td>
@@ -285,7 +290,7 @@
                                 <v-text-field label="Tên *" readonly v-model="itemToEdit.name"></v-text-field>
                                 <v-text-field :rules='rules' prefix="VNĐ" label="Giá *" required v-model="itemToEdit.hocPhi" v-on:keyup.enter="onSave"></v-text-field>
                             </v-flex>
-                            <v-flex xs12>
+                            <v-flex xs12 md6>
                                 <v-menu v-model="isShowDatePicker3"
                                         :close-on-content-click="false"
                                         :nudge-right="40"
@@ -302,7 +307,7 @@
                                     <v-date-picker locale="vi-vn" v-model="itemToEdit.fromDate" v-on:input="isShowDatePicker3 = false"></v-date-picker>
                             </v-flex>
 
-                            <v-flex xs12>
+                            <v-flex xs12 md6>
                                 <v-menu v-model="isShowDatePicker4"
                                         :close-on-content-click="false"
                                         :nudge-right="40"
@@ -317,6 +322,10 @@
                                                   prepend-icon="event"
                                                   readonly></v-text-field>
                                     <v-date-picker locale="vi-vn" v-model="itemToEdit.toDate" v-on:input="isShowDatePicker4 = false"></v-date-picker>
+                            </v-flex>
+
+                            <v-flex xs12>
+                                <v-text-field label="Ghi Chú" required v-model="itemToEdit.ghiChu"></v-text-field>
                             </v-flex>
 
                             <v-flex xs12 sm3>

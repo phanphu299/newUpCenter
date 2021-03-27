@@ -30,6 +30,7 @@ namespace Up.Converters
                 CMND = hocVien.CMND,
                 DiaChi = hocVien.DiaChi,
                 Notes = hocVien.Notes,
+                Trigram = hocVien.Trigram,
                 LopHocList = hocVien.HocVien_LopHocs
                                     .Select(x => new LopHocViewModel
                                     {
@@ -322,6 +323,7 @@ namespace Up.Converters
                 HocVienId = hocPhi.HocVienId,
                 HocPhi = hocPhi.HocPhi,
                 IsDisabled = hocPhi.IsDisabled,
+                GhiChu = hocPhi.GhiChu,
                 FromDate = hocPhi.FromDate.ToClearDate(),
                 ToDate = hocPhi.ToDate.ToClearDate(),
                 UpdatedBy = hocPhi.UpdatedBy,
@@ -622,7 +624,8 @@ namespace Up.Converters
                 CreatedBy = loggedEmployee,
                 HocPhi = input.HocPhi,
                 FromDate = Convert.ToDateTime(input.FromDate),
-                ToDate = Convert.ToDateTime(input.ToDate)
+                ToDate = Convert.ToDateTime(input.ToDate),
+                GhiChu = input.GhiChu
             };
         }
 
@@ -770,6 +773,7 @@ namespace Up.Converters
             item.ToDate = Convert.ToDateTime(input.ToDate);
             item.UpdatedBy = loggedEmployee;
             item.UpdatedDate = DateTime.Now;
+            item.GhiChu = input.GhiChu;
         }
 
         //TINH CHI PHI

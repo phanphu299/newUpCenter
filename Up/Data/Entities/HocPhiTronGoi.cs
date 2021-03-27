@@ -15,6 +15,8 @@ namespace Up.Data.Entities
         public bool IsRemoved { get; set; }
         public bool IsDisabled { get; set; }
 
+        public string GhiChu { get; set; }
+
         [ForeignKey("HocVienId")]
         public HocVien HocVien { get; set; }
         public ICollection<HocPhiTronGoi_LopHoc> HocPhiTronGoi_LopHocs { get; set; }

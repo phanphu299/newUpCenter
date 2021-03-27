@@ -24,6 +24,8 @@ namespace Up.Data.Entities
         public string Notes { get; set; }
         public string DiaChi { get; set; }
 
+        public string Trigram { get; set; }
+
         [ForeignKey("QuanHeId")]
         public QuanHe QuanHe { get; set; }
         public ICollection<LopHoc_DiemDanh> LopHoc_DiemDanhs { get; set; }

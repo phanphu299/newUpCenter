@@ -31,6 +31,8 @@
         public string Notes { get; set; }
         public string DiaChi { get; set; }
 
+        public string Trigram { get; set; }
+
         public double TienNo { get; set; }
         public int SoNgayHoc { get; set; }
         public double HocPhiMoi { get; set; }

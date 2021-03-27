@@ -6,6 +6,7 @@ namespace Up.Models
         public double HocPhi { get; set; }
         public string FromDate { get; set; }
         public string ToDate { get; set; }
+        public string GhiChu { get; set; }
         public List<HocPhiTronGoi_LopHocViewModel> LopHocList { get; set; }
     }
 }

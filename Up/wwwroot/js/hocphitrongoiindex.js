@@ -36,6 +36,7 @@
             lopHoc: {},
             fromDateLopHoc: new Date().toISOString().substr(0, 10),
             toDateLopHoc: new Date().toISOString().substr(0, 10),
+            ghiChu: ""
         },
         itemLopHoc: [],
         itemToDelete: {},
@@ -51,6 +52,7 @@
             { text: 'Tên', value: 'name', align: 'left', sortable: false },
             { text: 'Học Phí', value: 'hocPhi', align: 'left', sortable: false },
             { text: 'Hết Hiệu Lực?', value: 'isDisabled', align: 'left', sortable: false },
+            { text: 'Ghi Chú', value: 'ghiChu', align: 'left', sortable: false },
             { text: 'Từ Ngày', value: 'fromDate', align: 'left', sortable: false },
             { text: 'Đến Ngày', value: 'toDate', align: 'left', sortable: false },
             { text: 'Ngày Tạo', value: 'createdDate', align: 'left', sortable: false },
@@ -213,7 +215,8 @@
                     FromDate: item.fromDate,
                     ToDate: item.toDate,
                     HocPhiTronGoiId: item.hocPhiTronGoiId,
-                    LopHocList: item.lopHocList
+                    LopHocList: item.lopHocList,
+                    GhiChu: item.ghiChu
                 }
             })
                 .then(function (response) {
@@ -289,7 +292,8 @@
                         HocPhi: that.newItem.hocPhi,
                         FromDate: that.newItem.fromDate,
                         ToDate: that.newItem.toDate,
-                        LopHocList: that.arrayLopHoc
+                        LopHocList: that.arrayLopHoc,
+                        GhiChu: that.newItem.ghiChu
                     }
                 })
                     .then(function (response) {
@@ -312,6 +316,7 @@
                             that.newItem.toDate = new Date().toISOString().substr(0, 10);
                             that.arrayLopHoc = [];
                             that.itemLopHoc = [];
+                            that.newItem.ghiChu = "";
                         }
                         else {
                             that.snackbar = true;

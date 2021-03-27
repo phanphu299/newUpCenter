@@ -38,7 +38,7 @@
             ngayHoc: '',
             cmnd: '',
             diaChi: '',
-            notes:''
+            notes: ''
         },
         selectedThang: '',
         selectedNam: '',
@@ -58,6 +58,7 @@
                 value: ''
             },
             { text: 'Họ Tên', value: 'fullName', align: 'left', sortable: true },
+            { text: 'Trigram', value: 'trigram', align: 'left', sortable: true },
             { text: 'Lớp Học', value: '', align: 'left', sortable: false },
             { text: 'Ngày Sinh', value: 'ngaySinh', align: 'left', sortable: true },
             { text: 'CMND', value: 'cmnd', align: 'left', sortable: true },
