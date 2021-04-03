@@ -150,6 +150,32 @@
                     </li>
                 }
 
+                <li class="bold">
+                    <a class="collapsible-header waves-effect waves-cyan">
+                        <i class="material-icons">quiz</i>
+                        <span class="nav-text">Quản Lý Thử Thách</span>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+
+                            <li>
+                                <a asp-area="" asp-controller="ThuThach" asp-action="Index">
+                                    <i class="material-icons">keyboard_arrow_right</i>
+                                    <span> Thử Thách</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a asp-area="" asp-controller="Category" asp-action="QuanHeIndex">
+                                    <i class="material-icons">keyboard_arrow_right</i>
+                                    <span> Câu Hỏi</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
                 @if (Model.CanViewVitri || Model.CanViewCheDo || Model.CanViewNgayLamViec || Model.CanViewNhanVien)
                 {
                     <li class="bold">
@@ -314,6 +340,15 @@
                         </a>
                     </li>
                 }
+
+                <li class="bold">
+                    <a asp-area="" asp-controller="HocVien" asp-action="ExportIndex" class="waves-effect waves-cyan">
+                        <i class="material-icons">
+                            help_outline
+                        </i>
+                        <span class="nav-text">Export Thử Thách</span>
+                    </a>
+                </li>
             </ul>
         </li>
     </ul>

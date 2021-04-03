@@ -4,7 +4,7 @@ namespace Up.Models
     using System;
     using System.Collections.Generic;
 
-    public class HocPhiTronGoiViewModel
+    public class HocPhiTronGoiViewModel : BaseViewModel
     {
         public Guid HocPhiTronGoiId { get; set; }
         public Guid HocVienId { get; set; }
@@ -13,11 +13,6 @@ namespace Up.Models
         public bool IsDisabled { get; set; }
         public string FromDate { get; set; }
         public string ToDate { get; set; }
-        public string CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
-        public string UpdatedDate { get; set; }
-        public string UpdatedBy { get; set; }
-
         public string GhiChu { get; set; }
         public List<Guid> HocVienIds { get; set; }
         public List<HocPhiTronGoi_LopHocViewModel> LopHocList { get; set; }

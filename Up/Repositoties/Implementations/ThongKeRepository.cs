@@ -58,7 +58,7 @@ namespace Up.Repositoties
         public async Task<List<ThongKe_DoanhThuHocPhiViewModel>> GetDoanhThuHocPhiTronGoiAsync()
         {
             return await _context.HocPhiTronGois
-                .Where(x => !x.IsRemoved && x.FromDate.Year == DateTime.Now.Year && !x.IsDisabled && (DateTime.Now.Year < x.ToDate.Year || (DateTime.Now.Year == x.ToDate.Year && DateTime.Now.Month <= x.ToDate.Month)))
+                .Where(x => !x.IsRemoved && x.FromDate.Year == DateTime.Now.Year && (DateTime.Now.Year < x.ToDate.Year || (DateTime.Now.Year == x.ToDate.Year && DateTime.Now.Month <= x.ToDate.Month)))
                 .OrderBy(x => x.FromDate)
                 .AsNoTracking()
                 .Select(g => new ThongKe_DoanhThuHocPhiViewModel
@@ -267,7 +267,7 @@ namespace Up.Repositoties
                 var thongKeHocVien = new ThongKeHocVienTheoThang
                 {
                     Date = DateTime.Now,
-                    LoaiHocVien = (byte)LoaiHocVienEnums.ThieuNhi,
+                    LoaiHocVien = (byte)loaiHocVien,
                     ThongKeHocVienTheoThangId = new Guid(),
                     SoLuong = soLuong
                 };

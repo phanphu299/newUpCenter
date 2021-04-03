@@ -359,13 +359,15 @@ namespace Up.Controllers
 
                     if (model.HocVienList[i].GiaSach != null && model.HocVienList[i].GiaSach.Length > 0)
                     {
-                        double giaSach = 0;
                         string sachcc = string.Empty;
-                        foreach (var item in model.HocVienList[i].GiaSach)
+                        for (int j = 0; j < model.HocVienList[i].GiaSach.Length; j++)
                         {
-                            giaSach += item.Gia;
-                            sachcc += $"{item.Name} - {item.Gia}\r\n";
+                            if (j != model.HocVienList[i].GiaSach.Length -1)
+                                sachcc += $"{model.HocVienList[i].GiaSach[j].Name} - {model.HocVienList[i].GiaSach[j].Gia}\r\n";
+                            else
+                                sachcc += $"{model.HocVienList[i].GiaSach[j].Name} - {model.HocVienList[i].GiaSach[j].Gia}";
                         }
+                        
                         worksheet.Cells[i + 6, 9].Value = sachcc;
                         worksheet.Cells[i + 6, 9].Style.WrapText = true;
                     }

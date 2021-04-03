@@ -16,7 +16,7 @@ namespace Up
             //using (var scope = host.Services.CreateScope())
             //{
             //    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            //    //db.Database.Migrate();
+            //    db.Database.Migrate();
             //    if (db.HocViens.Any(x => string.IsNullOrEmpty(x.Trigram)))
             //        ApplicationDbInitializer.SeedTrigram(db);
             //}

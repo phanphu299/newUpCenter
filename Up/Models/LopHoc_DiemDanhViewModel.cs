@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class LopHoc_DiemDanhViewModel
+    public class LopHoc_DiemDanhViewModel : BaseViewModel
     {
         public Guid LopHoc_DiemDanhId { get; set; }
         public Guid LopHocId { get; set; }
@@ -13,11 +13,6 @@
         public bool IsOff { get; set; }
         public bool? IsDuocNghi { get; set; }
         public string NgayDiemDanh { get; set; }
-        public string CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
-        public string UpdatedDate { get; set; }
-        public string UpdatedBy { get; set; }
-
         public List<string> NgayDiemDanhs { get; set; }
 
         public List<Guid> HocVienIds { get; set; }

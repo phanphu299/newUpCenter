@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class GiaoVienViewModel
+    public class GiaoVienViewModel : BaseViewModel
     {
         public Guid GiaoVienId { get; set; }
         public string Name { get; set; }
@@ -15,10 +15,6 @@
         public string DiaChi { get; set; }
         public string InitialName { get; set; }
         public string CMND { get; set; }
-        public string CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
-        public string UpdatedDate { get; set; }
-        public string UpdatedBy { get; set; }
         public DateTime CreatedDate_Date { get; set; }
         public List<LoaiNhanVien_CheDoViewModel> LoaiNhanVien_CheDo { get; set; }
         public double MucHoaHong { get; set; }
@@ -28,6 +24,7 @@
         public string NgayKetThuc { get; set; }
         public string NganHang { get; set; }
     }
+
     public class LoaiNhanVien_CheDoViewModel
     {
         public LoaiGiaoVienViewModel LoaiGiaoVien { get; set; }

@@ -98,7 +98,7 @@ namespace Up.Repositoties
                     var soNgayNghi = thongKeData?.SoNgayNghi ?? 0;
                     var ghiChu = thongKeData?.GhiChu ?? string.Empty;
 
-                    if (soNgayLam > soNgayLamVoSau)
+                    if (soNgayLam > soNgayLamVoSau && dailySalary > 0)
                     {
                         salary_Expense = /*(Math.Ceiling(*/(dailySalary * soNgayLamVoSau)/* / 10000) * 10000)*/;
                         chiPhiMoi = salary_Expense;

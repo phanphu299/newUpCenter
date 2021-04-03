@@ -29,6 +29,7 @@ namespace Up.IoC
             services.AddScoped<IThongKe_DoanhThuHocPhiRepository, ThongKe_DoanhThuHocPhiRepository>();
             services.AddScoped<IHocPhiTronGoiRepository, HocPhiTronGoiRepository>();
             services.AddScoped<IBienLaiRepository, BienLaiRepository>();
+            services.AddScoped<IThuThachRepository, ThuThachRepository>();
         }
     }
 }

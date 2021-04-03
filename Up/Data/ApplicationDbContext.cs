@@ -46,6 +46,12 @@
 
         public DbSet<BienLai> BienLais { get; set; }
 
+        public DbSet<ThuThach> ThuThachs { get; set; }
+
+        public DbSet<CauHoi> CauHois { get; set; }
+
+        public DbSet<DapAn> DapAns { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

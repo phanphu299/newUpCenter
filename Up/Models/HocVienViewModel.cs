@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class HocVienViewModel
+    public class HocVienViewModel : BaseViewModel
     {
         public int Stt { get; set; }
         public Guid HocVienId { get; set; }
@@ -20,10 +20,6 @@
         public bool IsDisabled { get; set; }
         public IList<LopHocViewModel> LopHocList { get; set; }
         public Guid[] LopHocIds { get; set; }
-        public string CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
-        public string UpdatedDate { get; set; }
-        public string UpdatedBy { get; set; }
         public DateTime CreatedDate_Date { get; set; }
 
         public string CMND { get; set; }

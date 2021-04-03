@@ -358,6 +358,24 @@ namespace Up.Converters
             };
         }
 
+        public ThuThachViewModel ToThuThachViewModel(ThuThach thuThach)
+        {
+            return new ThuThachViewModel
+            {
+                CreatedBy = thuThach.CreatedBy,
+                CreatedDate = thuThach.CreatedDate.ToClearDate(),
+                ThuThachId = thuThach.ThuThachId,
+                Name = thuThach.Name,
+                MinGrade = thuThach.MinGrade,
+                SoCauHoi = thuThach.SoCauHoi,
+                KhoaHocId = thuThach.KhoaHocId,
+                TenKhoaHoc = thuThach.KhoaHoc.Name,
+                ThoiGianLamBai = thuThach.ThoiGianLamBai,
+                UpdatedBy = thuThach.UpdatedBy,
+                UpdatedDate = thuThach.UpdatedDate?.ToClearDate() ?? string.Empty
+            };
+        }
+
         ///ENTITY
 
         public HocVien ToEntityHocVien<T>(T input, string loggedEmployee) where T : CreateHocVienInput
@@ -659,6 +677,19 @@ namespace Up.Converters
             };
         }
 
+        public ThuThach ToEntityThuThach(CreateThuThachInputModel input, string loggedEmployee)
+        {
+            return new ThuThach
+            {
+                Name = input.Name,
+                KhoaHocId = input.KhoaHocId,
+                SoCauHoi = input.SoCauHoi,
+                MinGrade = input.MinGrade,
+                ThoiGianLamBai = input.ThoiGianLamBai,
+                CreatedBy = loggedEmployee
+            };
+        }
+
         ///MAPPING
 
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)
@@ -774,6 +805,17 @@ namespace Up.Converters
             item.UpdatedBy = loggedEmployee;
             item.UpdatedDate = DateTime.Now;
             item.GhiChu = input.GhiChu;
+        }
+
+        public void MappingEntityThuThach(UpdateThuThachInputModel input, ThuThach item, string loggedEmployee)
+        {
+            item.Name = input.Name;
+            item.KhoaHocId = input.KhoaHocId;
+            item.SoCauHoi = input.SoCauHoi;
+            item.ThoiGianLamBai = input.ThoiGianLamBai;
+            item.MinGrade = input.MinGrade;
+            item.UpdatedBy = loggedEmployee;
+            item.UpdatedDate = DateTime.Now;
         }
 
         //TINH CHI PHI

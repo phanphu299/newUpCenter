@@ -3,7 +3,7 @@ namespace Up.Models
 {
     using System;
 
-    public class LopHocViewModel
+    public class LopHocViewModel : BaseViewModel
     {
         public Guid LopHocId { get; set; }
         public string Name { get; set; }
@@ -19,10 +19,6 @@ namespace Up.Models
         public string GioHocTo { get; set; }
         public string NgayKhaiGiang { get; set; }
         public string NgayKetThuc { get; set; }
-        public string CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
-        public string UpdatedDate { get; set; }
-        public string UpdatedBy { get; set; }
         public bool HocVienNghi { get; set; }
         public HocPhiViewModel HocPhi { get; set; }
     }

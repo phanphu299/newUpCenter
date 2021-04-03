@@ -176,6 +176,7 @@ namespace Up.Services
                         GhiChu = ghiChu,
                         HocPhiFixed = hocPhiCurrent,
                         GiaSach = giaSach,
+                        LastGiaSach = giaSach,
                         DaDongHocPhi = daDongHocPhi,
                         TronGoi = tronGoi,
                         DaNo = daNo,

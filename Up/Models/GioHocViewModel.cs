@@ -2,14 +2,10 @@
 
 namespace Up.Models
 {
-    public class GioHocViewModel
+    public class GioHocViewModel : BaseViewModel
     {
         public Guid GioHocId { get; set; }
         public string From { get; set; }
         public string To { get; set; }
-        public string CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
-        public string UpdatedDate { get; set; }
-        public string UpdatedBy { get; set; }
     }
 }
