@@ -7,7 +7,7 @@
         timeout: 3000,
         snackbar: false,
         deleteDialog: false,
-        dialogEdit: false,
+        dialogDapAn: false,
         dialog: false,
         alert: false,
         search: '',
@@ -31,7 +31,6 @@
             { text: 'Tên Thử Thách', value: 'name', align: 'left', sortable: false },
             { text: 'Câu Hỏi Số', value: 'stt', align: 'left', sortable: false },
             { text: 'Tên Câu Hỏi', value: 'tenThuThach', align: 'left', sortable: false },
-            { text: 'Đáp Án', align: 'left', sortable: false }
         ],
         cauHoiItems: [],
         itemThuThach: [],
@@ -42,10 +41,10 @@
             { prefix: 'd', value: 4 },
             { prefix: 'e', value: 5 },
             { prefix: 'f', value: 6 },
-            { prefix: 'g', value: 7 },
         ],
         message: '',
-        soDapAn: 3
+        soDapAn: 3,
+        expanded: []
     },
     async beforeCreate() {
         let that = this;
@@ -68,59 +67,6 @@
     methods: {
         calculateSoCauHoi(item) {
             return [...Array(item).keys()].map(x => ++x);;
-        },
-
-        async onUpdate(item) {
-            let that = this;
-            if (item.name === '' || item.khoaHoc == '') {
-                this.alert = true;
-                this.message = 'Không được bỏ trống';
-            }
-            else if (item.soCauHoi <= 0 || item.thoiGianLamBai <= 0 || item.minGrade <= 0) {
-                this.alert = true;
-                this.message = 'Số câu hỏi, Thời gian làm bài, Số điểm cần đạt phải lớn hơn 0';
-            }
-            else if (isNaN(item.soCauHoi) || isNaN(item.thoiGianLamBai) || isNaN(item.minGrade)) {
-                this.message = "Số câu hỏi, Thời gian làm bài, Số điểm cần đạt chỉ được nhập số";
-                this.alert = true;
-            }
-            else {
-                await axios({
-                    method: 'put',
-                    url: '/ThuThach/UpdateThuThachAsync',
-                    data: {
-                        ThuThachId: item.thuThachId,
-                        Name: item.name,
-                        KhoaHocId: item.khoaHocId,
-                        SoCauHoi: item.soCauHoi,
-                        ThoiGianLamBai: item.thoiGianLamBai,
-                        MinGrade: item.minGrade
-                    }
-                })
-                    .then(function (response) {
-                        console.log(response);
-                        if (response.data.status === "OK") {
-                            Object.assign(that.cauHoiItems[that.editedIndex], response.data.result);
-                            that.snackbar = true;
-                            that.messageText = 'Cập nhật thành công !!!';
-                            that.color = 'success';
-                            that.dialogEdit = false;
-                        }
-                        else {
-                            that.snackbar = true;
-                            that.messageText = response.data.message;
-                            that.color = 'error';
-                            that.dialogEdit = false;
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error.response.data.Message);
-                        that.snackbar = true;
-                        that.messageText = 'Cập nhật lỗi: ' + error.response.data.Message;
-                        that.color = 'error';
-                        that.dialogEdit = false;
-                    });
-            }
         },
 
         mappingEditItem(item) {
@@ -149,7 +95,7 @@
             }
             else {
                 var dapAnsFormatted = this.formatDapAns(item);
-
+                let that = this;
                 this.dialog = false;
                 await axios({
                     method: 'post',
@@ -162,7 +108,6 @@
                     }
                 })
                     .then(function (response) {
-                        console.log(response);
                         if (response.data.status === "OK") {
                             that.cauHoiItems.splice(0, 0, response.data.result);
                             that.snackbar = true;
@@ -193,13 +138,12 @@
             let that = this;
             await axios({
                 method: 'delete',
-                url: '/ThuThach/DeleteThuThachAsync',
+                url: '/CauHoi/DeleteCauHoiAsync',
                 data: {
-                    ThuThachId: item.thuThachId
+                    CauHoiId: item.cauHoiId
                 }
             })
                 .then(function (response) {
-                    console.log(response);
                     if (response.data.status === "OK") {
                         that.cauHoiItems.splice(that.cauHoiItems.indexOf(item), 1);
                         that.snackbar = true;

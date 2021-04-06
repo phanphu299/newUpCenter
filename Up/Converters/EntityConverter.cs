@@ -386,6 +386,7 @@ namespace Up.Converters
                 TenThuThach = cauHoi.ThuThach.Name,
                 CauHoiId = cauHoi.CauHoiId,
                 Name = cauHoi.Name,
+                STT = cauHoi.STT,
                 DapAns = cauHoi.DapAns
                             .Select(dapAn => new DapAnModel 
                             {

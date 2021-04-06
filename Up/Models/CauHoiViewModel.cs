@@ -9,6 +9,8 @@ namespace Up.Models
 
         public string Name { get; set; }
 
+        public int STT { get; set; }
+
         public Guid ThuThachId { get; set; }
 
         public string TenThuThach { get; set; }

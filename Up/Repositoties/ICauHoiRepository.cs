@@ -12,5 +12,7 @@ namespace Up.Repositoties
         Task<List<CauHoiViewModel>> GetCauHoiAsync();
 
         Task<CauHoiViewModel> GetCauHoiDetailAsync(Guid id);
+
+        Task<bool> DeleteCauHoiAsync(Guid id, string loggedEmployee);
     }
 }

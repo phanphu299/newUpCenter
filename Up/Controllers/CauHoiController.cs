@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using Up.Converters;
 using Up.Models;
@@ -52,6 +53,27 @@ namespace Up.Controllers
                 Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
                 :
                 Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCauHoiAsync([FromBody] CauHoiViewModel model)
+        {
+            if (model.CauHoiId == Guid.Empty)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var successful = await _cauHoiService.DeleteCauHoiAsync(model.CauHoiId, currentUser.Email);
+            return successful ?
+               Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+               :
+               Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
     }
 }

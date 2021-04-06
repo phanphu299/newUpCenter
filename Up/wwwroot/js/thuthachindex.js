@@ -89,7 +89,6 @@
                     }
                 })
                     .then(function (response) {
-                        console.log(response);
                         if (response.data.status === "OK") {
                             Object.assign(that.thuThachItems[that.editedIndex], response.data.result);
                             that.snackbar = true;

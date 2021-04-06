@@ -27,6 +27,11 @@ namespace Up.Services
             return await _cauHoiRepository.GetCauHoiDetailAsync(result);
         }
 
+        public async Task<bool> DeleteCauHoiAsync(Guid id, string loggedEmployee)
+        {
+            return await _cauHoiRepository.DeleteCauHoiAsync(id, loggedEmployee);
+        }
+
         public async Task<List<CauHoiViewModel>> GetCauHoiAsync()
         {
             return await _cauHoiRepository.GetCauHoiAsync();

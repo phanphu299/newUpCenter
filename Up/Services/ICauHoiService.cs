@@ -13,5 +13,7 @@ namespace Up.Services
         Task<CauHoiViewModel> CreateCauHoiAsync(CreateCauHoiInputModel input, string loggedEmployee);
 
         Task<List<CauHoiViewModel>> GetCauHoiAsync();
+
+        Task<bool> DeleteCauHoiAsync(Guid id, string loggedEmployee);
     }
 }

@@ -34,6 +34,19 @@ namespace Up.Repositoties
             return cauHoi.CauHoiId;
         }
 
+        public async Task<bool> DeleteCauHoiAsync(Guid id, string loggedEmployee)
+        {
+            var item = await _context.CauHois
+                                    .FindAsync(id);
+
+            item.IsDisabled = true;
+            item.UpdatedBy = loggedEmployee;
+            item.UpdatedDate = DateTime.Now;
+
+            var saveResult = await _context.SaveChangesAsync();
+            return saveResult == 1;
+        }
+
         public async Task<List<CauHoiViewModel>> GetCauHoiAsync()
         {
             var cauHois = await _context.CauHois
