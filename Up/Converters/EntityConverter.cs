@@ -376,6 +376,29 @@ namespace Up.Converters
             };
         }
 
+        public CauHoiViewModel ToCauHoiViewModel(CauHoi cauHoi)
+        {
+            return new CauHoiViewModel
+            {
+                CreatedBy = cauHoi.CreatedBy,
+                CreatedDate = cauHoi.CreatedDate.ToClearDate(),
+                ThuThachId = cauHoi.ThuThachId,
+                TenThuThach = cauHoi.ThuThach.Name,
+                CauHoiId = cauHoi.CauHoiId,
+                Name = cauHoi.Name,
+                DapAns = cauHoi.DapAns
+                            .Select(dapAn => new DapAnModel 
+                            {
+                                DapAnId = dapAn.DapAnId,
+                                Name = dapAn.Name,
+                                IsTrue = dapAn.IsTrue
+                            })
+                            .ToList(),
+                UpdatedBy = cauHoi.UpdatedBy,
+                UpdatedDate = cauHoi.UpdatedDate?.ToClearDate() ?? string.Empty
+            };
+        }
+
         ///ENTITY
 
         public HocVien ToEntityHocVien<T>(T input, string loggedEmployee) where T : CreateHocVienInput
@@ -686,6 +709,25 @@ namespace Up.Converters
                 SoCauHoi = input.SoCauHoi,
                 MinGrade = input.MinGrade,
                 ThoiGianLamBai = input.ThoiGianLamBai,
+                CreatedBy = loggedEmployee
+            };
+        }
+
+        public CauHoi ToEntityCauHoi(CreateCauHoiInputModel input, string loggedEmployee)
+        {
+            return new CauHoi
+            {
+                Name = input.Name,
+                ThuThachId = input.ThuThachId,
+                STT = input.STT,
+                DapAns = input.DapAns
+                            .Select(dapAn => new DapAn 
+                            {
+                                Name = dapAn.Name,
+                                IsTrue = dapAn.IsTrue,
+                                CreatedBy = loggedEmployee
+                            })
+                            .ToList(),
                 CreatedBy = loggedEmployee
             };
         }

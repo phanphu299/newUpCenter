@@ -32,6 +32,7 @@ namespace Up.IoC
             services.AddScoped<IHocPhiTronGoiService, HocPhiTronGoiService>();
             services.AddScoped<IBienLaiService, BienLaiService>();
             services.AddScoped<IThuThachService, ThuThachService>();
+            services.AddScoped<ICauHoiService, CauHoiService>();
 
             services.AddScoped<Converters.Converter>();
             services.AddScoped<Converters.EntityConverter>();
