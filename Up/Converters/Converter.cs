@@ -1,5 +1,7 @@
 ﻿using OfficeOpenXml;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Up.Models;
 
 namespace Up.Converters
@@ -37,6 +39,34 @@ namespace Up.Converters
                 CMND = worksheet.Cells[row, 11].Value?.ToString().Trim() ?? string.Empty,
                 DiaChi = worksheet.Cells[row, 12].Value?.ToString().Trim() ?? string.Empty,
                 Notes = worksheet.Cells[row, 13].Value?.ToString().Trim() ?? string.Empty
+            };
+        }
+
+        public CreateCauHoiInputModel ToImportCauHoi(ExcelWorksheet worksheet, int row)
+        {
+            int stt = 0;
+            int dapAnIndex = 3;
+            var dapAns = new List<string> { "a", "b", "c", "d" };
+            string trueValue = worksheet.Cells[row, 7].Value?.ToString().Trim() ?? string.Empty;
+
+            if (!dapAns.Contains(trueValue))
+                throw new Exception("Đáp Án Đúng phải là 1 trong a, b, c, d !!!");
+
+            return new CreateCauHoiInputModel
+            {
+                STT = int.TryParse(worksheet.Cells[row, 1].Value?.ToString().Trim(), out stt) ? stt : 0,
+                Name = worksheet.Cells[row, 2].Value?.ToString().Trim() ?? string.Empty,
+                DapAns = dapAns.Select(x => {
+                    var dapAn = new DapAnModel
+                    {
+                        Name = worksheet.Cells[row, dapAnIndex].Value?.ToString().Trim() ?? string.Empty,
+                        IsTrue = x == trueValue ? true : false
+                    };
+
+                    dapAnIndex++;
+                    return dapAn;
+                })
+                .ToList()
             };
         }
 

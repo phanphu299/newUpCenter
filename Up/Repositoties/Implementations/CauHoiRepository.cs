@@ -28,7 +28,7 @@ namespace Up.Repositoties
         public async Task<Guid> CreateCauHoiAsync(CreateCauHoiInputModel input, string loggedEmployee)
         {
             var cauHoi = _entityConverter.ToEntityCauHoi(input, loggedEmployee);
-            _context.CauHois.Add(cauHoi);
+            await _context.CauHois.AddAsync(cauHoi);
 
             await _context.SaveChangesAsync();
             return cauHoi.CauHoiId;
@@ -58,6 +58,17 @@ namespace Up.Repositoties
             return cauHois.Select(cauHoi => _entityConverter.ToCauHoiViewModel(cauHoi)).ToList();
         }
 
+        public async Task<List<CauHoiViewModel>> GetCauHoiAsync(IList<Guid> ids)
+        {
+            var cauHois = await _context.CauHois
+                                        .Include(x => x.ThuThach)
+                                        .Include(x => x.DapAns)
+                                        .Where(x => !x.IsDisabled && ids.Contains(x.CauHoiId))
+                                        .ToListAsync();
+
+            return cauHois.Select(cauHoi => _entityConverter.ToCauHoiViewModel(cauHoi)).ToList();
+        }
+
         public async Task<CauHoiViewModel> GetCauHoiDetailAsync(Guid id)
         {
             var cauHoi = await _context.CauHois
@@ -66,6 +77,15 @@ namespace Up.Repositoties
                                         .FirstOrDefaultAsync(x => x.CauHoiId == id);
 
             return _entityConverter.ToCauHoiViewModel(cauHoi);
+        }
+
+        public async Task<List<Guid>> ImportCauHoiAsync(ImportCauHoiInputModel input, string loggedEmployee)
+        {
+            var cauHois = _entityConverter.ToEntityCauHoiList(input, loggedEmployee);
+            await _context.CauHois.AddRangeAsync(cauHois);
+
+            await _context.SaveChangesAsync();
+            return cauHois.Select(x => x.CauHoiId).ToList();
         }
     }
 }

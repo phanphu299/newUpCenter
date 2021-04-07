@@ -11,8 +11,12 @@ namespace Up.Services
         Task<bool> CanContributeAsync(ClaimsPrincipal user);
 
         Task<CauHoiViewModel> CreateCauHoiAsync(CreateCauHoiInputModel input, string loggedEmployee);
+        
+        Task<List<CauHoiViewModel>> ImportCauHoiAsync(ImportCauHoiInputModel input, string loggedEmployee);
 
         Task<List<CauHoiViewModel>> GetCauHoiAsync();
+
+        Task<List<CauHoiViewModel>> GetCauHoiAsync(IList<Guid> ids);
 
         Task<bool> DeleteCauHoiAsync(Guid id, string loggedEmployee);
     }

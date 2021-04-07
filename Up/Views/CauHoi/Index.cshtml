@@ -9,6 +9,14 @@
                 <v-card-title>
                     @*@if (ViewBag.CanContribute)
                     {*@
+
+                    <v-btn color="success"
+                           v-on:click.stop="dialogImport = true"
+                           class="white--text">
+                        Thêm Từ Excel
+                        <v-icon right dark>attach_file</v-icon>
+                    </v-btn>
+
                     <v-dialog v-model="dialog" persistent max-width="600px">
                         <v-btn color="primary"
                                slot="activator"
@@ -142,6 +150,47 @@
             </v-card>
         </div>
 
+        @*Import Dialog*@
+        <v-dialog v-model="dialogImport" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Thêm Câu Hỏi Từ Excel</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-container grid-list-md>
+                        <v-layout wrap>
+
+                            <v-flex xs12 sm4>
+                                <v-select v-model="selectedThuThach"
+                                          :items="itemThuThach"
+                                          item-text="name"
+                                          item-value="thuThachId"
+                                          return-object
+                                          label="Chọn Thử Thách">
+                                </v-select>
+                            </v-flex>
+
+                            <v-flex xs12 sm4 v-if="selectedThuThach != ''">
+                                <v-btn color="primary"
+                                       class="white--text" v-on:click="onExportTemplate">
+                                    Download mẫu excel
+                                    <v-icon right dark>attach_file</v-icon>
+                                </v-btn>
+                            </v-flex>
+
+                            <input v-if="selectedThuThach != ''" type="file" id="file" ref="myFiles" class="custom-file-input" />
+
+                        </v-layout>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="secondary darken-1" flat v-on:click="dialogImport = false; selectedThuThach = ''">Đóng</v-btn>
+                    <v-btn color="blue darken-1 white--text" v-on:click="onImport">Lưu</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
         @*DapAn dialog*@
         <v-dialog v-model="dialogDapAn"
                   max-width="800px">
@@ -163,7 +212,7 @@
                                         <v-list-tile-content>
                                             <v-tooltip top>
                                                 <template v-slot:activator="{ on }">
-                                                     <v-list-tile-title v-on="on" slot="activator" v-text="item.name"></v-list-tile-title>
+                                                    <v-list-tile-title v-on="on" slot="activator" v-text="item.name"></v-list-tile-title>
                                                 </template>
                                                 <strong>{{ item.name }}</strong>
                                             </v-tooltip>
@@ -173,7 +222,7 @@
                                             <v-icon v-if="item.isTrue" color="success">check_circle_outline</v-icon>
                                         </v-list-tile-action>
                                     </v-list-tile>
-                                    
+
                                 </v-list>
                             </v-flex>
                         </v-layout>
@@ -235,7 +284,7 @@
 </div>
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/cauhoiindex.js" type="text/javascript"></script>
+<script src="~/js/cauhoiindex.min.js" type="text/javascript"></script>
 
 <style>
     .v-input__slot:before, .v-input__slot:after {

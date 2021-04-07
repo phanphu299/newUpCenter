@@ -9,18 +9,12 @@
                 <v-card-title>
                     @if (ViewBag.CanContribute)
                     {
-                        <v-tooltip top>
-                            <template v-slot:activator="{ on }">
-                                <v-btn color="success"
-                                       v-on="on"
-                                       v-on:click.stop="dialogImport = true"
-                                       class="white--text">
-                                    Thêm Từ Excel
-                                    <v-icon right dark>attach_file</v-icon>
-                                </v-btn>
-                            </template>
-                            <strong>Thêm Ngày Bắt Đầu Và Kết Thúc</strong>
-                        </v-tooltip>
+                        <v-btn color="success"
+                               v-on:click.stop="dialogImport = true"
+                               class="white--text">
+                            Thêm Từ Excel
+                            <v-icon right dark>attach_file</v-icon>
+                        </v-btn>
 
                         <v-dialog v-model="dialog" persistent max-width="600px">
                             <v-btn color="primary"

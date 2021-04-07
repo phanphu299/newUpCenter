@@ -578,8 +578,6 @@
                         that.color = 'error';
                     });
             });
-
-
         },
 
         async GetNgayHocByHocVien() {

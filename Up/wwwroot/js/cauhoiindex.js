@@ -8,6 +8,7 @@
         snackbar: false,
         deleteDialog: false,
         dialogDapAn: false,
+        dialogImport: false,
         dialog: false,
         alert: false,
         search: '',
@@ -44,7 +45,8 @@
         ],
         message: '',
         soDapAn: 3,
-        expanded: []
+        expanded: [],
+        selectedThuThach: ''
     },
     async beforeCreate() {
         let that = this;
@@ -89,7 +91,7 @@
         },
 
         async onSave(item) {
-            if (item.name === '' || item.thuThach === '' || item.stt === 0 || item.dapAnDung === '' || !this.validateDapAns(item.dapAns)) {
+            if (item.name === '' || item.thuThach === '' || item.stt <= 0 || item.dapAnDung === '' || !this.validateDapAns(item.dapAns)) {
                 this.alert = true;
                 this.message = 'Không được bỏ trống';
             }
@@ -163,6 +165,79 @@
                     that.messageText = 'Xóa lỗi: ' + error.response.data.Message;
                     that.color = 'error';
                 });
-        }
+        },
+
+        forceFileDownload(response, name) {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', name + '.xlsx'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        },
+
+        async onExportTemplate() {
+            let that = this;
+            await axios
+                ({
+                    url: '/CauHoi/ExportTemplate?ThuThachId=' + that.selectedThuThach.thuThachId + '&ThuThachName=' + that.selectedThuThach.name + '&SoCauHoi=' + that.selectedThuThach.soCauHoi,
+                    method: 'get',
+                    responseType: 'blob' // important
+                })
+                .then(function (response) {
+                    that.forceFileDownload(response, 'MauImportCauHoi');
+                })
+                .catch(function (error) {
+                    console.log(error.response.data.Message);
+                });
+        },
+
+        async onImport() {
+            let that = this;
+            if (!that.$refs.myFiles.files.length) {
+                that.snackbar = true;
+                that.messageText = 'Phải chọn file để import !!!';
+                that.color = 'error';
+                return;
+            }
+
+            const fr = new FileReader();
+            fr.readAsDataURL(that.$refs.myFiles.files[0]);
+            fr.addEventListener('load', () => {
+                axios
+                    ({
+                        url: '/CauHoi/Import',
+                        method: 'post',
+                        data: {
+                            File: fr.result,
+                            Name: that.$refs.myFiles.files[0].name
+                        }
+                    })
+                    .then(function (response) {
+                        if (response.data.status === "OK") {
+                            for (let i = 0; i < response.data.result.length; i++) {
+                                that.cauHoiItems.splice(0, 0, response.data.result[i]);
+                            }
+
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'success';
+
+                            that.dialogImport = false;
+                        }
+                        else {
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'error';
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error.response.data.Message);
+                        that.snackbar = true;
+                        that.messageText = 'Import lỗi: ' + error.response.data.Message;
+                        that.color = 'error';
+                    });
+            });
+        },
     }
 });

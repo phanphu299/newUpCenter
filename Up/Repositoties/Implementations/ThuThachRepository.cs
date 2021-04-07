@@ -28,7 +28,7 @@ namespace Up.Repositoties
         public async Task<Guid> CreateThuThachAsync(CreateThuThachInputModel input, string loggedEmployee)
         {
             var thuThach = _entityConverter.ToEntityThuThach(input, loggedEmployee);
-            _context.ThuThachs.Add(thuThach);
+            await _context.ThuThachs.AddAsync(thuThach);
 
             await _context.SaveChangesAsync();
             return thuThach.ThuThachId;

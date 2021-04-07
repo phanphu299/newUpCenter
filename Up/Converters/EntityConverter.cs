@@ -733,6 +733,29 @@ namespace Up.Converters
             };
         }
 
+        public IList<CauHoi> ToEntityCauHoiList(ImportCauHoiInputModel input, string loggedEmployee)
+        {
+            return input.CauHois.Select(cauHoi =>
+            {
+                return new CauHoi
+                {
+                    Name = cauHoi.Name,
+                    ThuThachId = input.ThuThachId,
+                    STT = cauHoi.STT,
+                    DapAns = cauHoi.DapAns
+                            .Select(dapAn => new DapAn
+                            {
+                                Name = dapAn.Name,
+                                IsTrue = dapAn.IsTrue,
+                                CreatedBy = loggedEmployee
+                            })
+                            .ToList(),
+                    CreatedBy = loggedEmployee
+                };
+            })
+            .ToList();
+        }
+
         ///MAPPING
 
         public void MappingEntityHocVien(UpdateHocVienInputModel input, HocVien item, string loggedEmployee)
