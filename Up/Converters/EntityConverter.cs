@@ -35,6 +35,7 @@ namespace Up.Converters
                                     .Select(x => new LopHocViewModel
                                     {
                                         LopHocId = x.LopHocId,
+                                        KhoaHocId = x.LopHoc.KhoaHocId,
                                         Name = x.LopHoc.Name,
                                         IsCanceled = x.LopHoc.IsCanceled,
                                         IsGraduated = x.LopHoc.IsGraduated,

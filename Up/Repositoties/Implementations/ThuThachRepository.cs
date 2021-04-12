@@ -57,6 +57,16 @@ namespace Up.Repositoties
             return thuThachs.Select(thuThach => _entityConverter.ToThuThachViewModel(thuThach)).ToList();
         }
 
+        public async Task<List<ThuThachViewModel>> GetThuThachByKhoaHocIdsAsync(IList<Guid> khoaHocIds)
+        {
+            var thuThachs = await _context.ThuThachs
+                                        .Include(x => x.KhoaHoc)
+                                        .Where(x => !x.IsDisabled && khoaHocIds.Contains(x.KhoaHocId))
+                                        .ToListAsync();
+
+            return thuThachs.Select(thuThach => _entityConverter.ToThuThachViewModel(thuThach)).ToList();
+        }
+
         public async Task<ThuThachViewModel> GetThuThachDetailAsync(Guid id)
         {
             var thuThach = await _context.ThuThachs

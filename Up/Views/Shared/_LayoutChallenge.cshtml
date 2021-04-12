@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<!--================================================================================
+Item Name: Materialize - Material Design Admin Template
+Version: 4.0
+Author: PIXINVENT
+Author URL: https://themeforest.net/user/pixinvent/portfolio
+================================================================================ -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="description" content="Materialize is a Material Design Admin Template,It's modern, responsive and based on Material Design by Google. ">
+    <meta name="keywords" content="materialize, admin template, dashboard template, flat admin template, responsive admin template,">
+    <title>Up Center</title>
+    <!-- Favicons-->
+    <link rel="icon" href="~/login_page/images/icons/logo.ico" sizes="32x32">
+    <!-- CORE CSS-->
+    <link href="~/layout_page/css/themes/collapsible-menu/materialize.css" type="text/css" rel="stylesheet">
+    <link href="~/layout_page/css/themes/collapsible-menu/style.css" type="text/css" rel="stylesheet">
+    <!-- Custome CSS-->
+    <link href="~/layout_page/css/custom/custom.css" type="text/css" rel="stylesheet">
+    <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
+    <link href="~/layout_page/vendors/perfect-scrollbar/perfect-scrollbar.css" type="text/css" rel="stylesheet">
+    <link href="~/layout_page/vendors/jvectormap/jquery-jvectormap.css" type="text/css" rel="stylesheet">
+    <link href="~/layout_page/vendors/flag-icon/css/flag-icon.min.css" type="text/css" rel="stylesheet">
+    <!--Vue-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.min.css" rel="stylesheet">
+
+
+
+    <!-- ================================================
+    Scripts
+    ================================================ -->
+    <!-- jQuery Library -->
+    <script type="text/javascript" src="~/layout_page/vendors/jquery-3.2.1.min.js"></script>
+    <!--materialize js-->
+    <script type="text/javascript" src="~/layout_page/js/materialize.min.js"></script>
+    <!--prism-->
+    <script type="text/javascript" src="~/layout_page/vendors/prism/prism.js"></script>
+    <!--scrollbar-->
+    <script type="text/javascript" src="~/layout_page/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <!-- chartjs -->
+    <script type="text/javascript" src="~/layout_page/vendors/chartjs/chart.min.js"></script>
+    <!--plugins.js - Some Specific JS codes for Plugin Settings-->
+    <script type="text/javascript" src="~/layout_page/js/plugins.js"></script>
+    <!--custom-script.js - Add your own theme custom JS-->
+    <script type="text/javascript" src="~/layout_page/js/custom-script.js"></script>
+    <!--Vue-->
+    @*<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>*@
+    <script src="~/layout_page/js/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.js"></script>
+</head>
+<body style="background-image: url(/img/transparent-logo.png);
+        background-size: 500px;
+        background-position: center center;
+        background-repeat: no-repeat;
+    ">
+    <!-- Start Page Loading -->
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+    </div>
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- START MAIN -->
+    <div class="container">
+        <!-- START WRAPPER -->
+        <div class="wrapper">
+            <!-- START CONTENT -->
+            <section id="content" style="text-align: center">
+                <!--start container-->
+                @RenderBody()
+            </section>
+        </div>
+        <!-- END WRAPPER -->
+    </div>
+    <!-- END MAIN -->
+
+</body>
+</html>
+@RenderSection("Scripts", required: false)

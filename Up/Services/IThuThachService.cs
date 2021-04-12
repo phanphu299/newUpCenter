@@ -17,5 +17,7 @@ namespace Up.Services
         Task<bool> DeleteThuThachAsync(Guid id, string loggedEmployee);
 
         Task<bool> CanContributeAsync(ClaimsPrincipal user);
+
+        Task<List<ThuThachViewModel>> GetThuThachByHocVienAsync(Guid hocVienId);
     }
 }

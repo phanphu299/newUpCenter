@@ -26,6 +26,8 @@
 
         Task<List<HocVienLightViewModel>> GetHocVienByNameAsync(string name);
 
+        Task<HocVienLightViewModel> GetHocVienByTrigramAsync(string trigram);
+
         Task<HocVienViewModel> GetHocVienDetailAsync(Guid id);
     }
 }

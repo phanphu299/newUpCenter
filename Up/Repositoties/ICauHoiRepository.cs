@@ -11,6 +11,8 @@ namespace Up.Repositoties
 
         Task<List<CauHoiViewModel>> GetCauHoiAsync();
 
+        Task<List<CauHoiViewModel>> GetCauHoiAsync(Guid thuThachId, int stt);
+
         Task<List<CauHoiViewModel>> GetCauHoiAsync(IList<Guid> ids);
 
         Task<CauHoiViewModel> GetCauHoiDetailAsync(Guid id);

@@ -108,7 +108,7 @@
                               :items="cauHoiItems"
                               :search="search">
                     <template v-slot:items="props">
-                        <td class="justify-center layout px-0" v-on:click="props.expanded = !props.expanded">
+                        <td class="justify-center layout px-0">
                             @*@if (ViewBag.CanContribute)
                             {*@
                             <v-tooltip top>
@@ -196,7 +196,7 @@
                   max-width="800px">
             <v-card>
                 <v-card-title class="cyan darken-1">
-                    <span class="headline white--text">{{ itemToEdit.name }}'</span>
+                    <span class="headline white--text">{{ itemToEdit.name }}</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container grid-list-md>

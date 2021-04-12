@@ -79,13 +79,25 @@ namespace Up.Repositoties
         public async Task<List<HocVienLightViewModel>> GetHocVienByNameAsync(string name)
         {
             var hocViens = await _context.HocViens
-                .Where(x => x.IsDisabled == false && x.FullName.ToLower().Contains(name.ToLower()))
+                .Where(x => !x.IsDisabled && x.FullName.ToLower().Contains(name.ToLower()))
                 .AsNoTracking()
                 .ToListAsync();
 
             return hocViens
                 .Select(hocVien => _entityConverter.ToHocVienLightViewModel(hocVien))
                 .ToList();
+        }
+
+        public async Task<HocVienLightViewModel> GetHocVienByTrigramAsync(string trigram)
+        {
+            var hocVien = await _context.HocViens
+                .Where(x => !x.IsDisabled && x.Trigram.ToLower().Equals(trigram.ToLower()))
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            if (hocVien == null) return null;
+
+            return _entityConverter.ToHocVienLightViewModel(hocVien);
         }
 
         public async Task<HocVienViewModel> GetHocVienDetailAsync(Guid id)

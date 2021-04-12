@@ -11,10 +11,12 @@ namespace Up.Services
     public class ThuThachService : IThuThachService
     {
         private readonly IThuThachRepository _thuThachRepository;
+        private readonly IHocVienRepository _hocvienRepository;
 
-        public ThuThachService(IThuThachRepository thuThachRepository)
+        public ThuThachService(IThuThachRepository thuThachRepository, IHocVienRepository hocvienRepository)
         {
             _thuThachRepository = thuThachRepository;
+            _hocvienRepository = hocvienRepository;
         }
 
         public async Task<bool> CanContributeAsync(ClaimsPrincipal user)
@@ -43,6 +45,18 @@ namespace Up.Services
         public async Task<List<ThuThachViewModel>> GetThuThachAsync()
         {
             return await _thuThachRepository.GetThuThachAsync();
+        }
+
+        public async Task<List<ThuThachViewModel>> GetThuThachByHocVienAsync(Guid hocVienId)
+        {
+            var hocVien = await _hocvienRepository.GetHocVienDetailAsync(hocVienId);
+
+            var khoaHocIds = hocVien.LopHocList
+                                    .Where(x => !x.IsCanceled && !x.IsDisabled && !x.HocVienNghi)
+                                    .Select(x => x.KhoaHocId)
+                                    .ToList();
+
+            return await _thuThachRepository.GetThuThachByKhoaHocIdsAsync(khoaHocIds);
         }
 
         public async Task<ThuThachViewModel> UpdateThuThachAsync(UpdateThuThachInputModel input, string loggedEmployee)

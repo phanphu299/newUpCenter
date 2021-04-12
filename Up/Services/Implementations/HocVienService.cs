@@ -74,6 +74,13 @@ namespace Up.Services
             return await _hocVienRepository.GetHocVienByNameAsync(name);
         }
 
+        public async Task<HocVienLightViewModel> GetHocVienByTrigramAsync(string trigram)
+        {
+            if (string.IsNullOrWhiteSpace(trigram)) return null;
+
+            return await _hocVienRepository.GetHocVienByTrigramAsync(trigram);
+        }
+
         public async Task<HocVienViewModel> GetHocVienDetailAsync(Guid id)
         {
             return await _hocVienRepository.GetHocVienDetailAsync(id);

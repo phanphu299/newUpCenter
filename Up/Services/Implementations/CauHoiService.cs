@@ -48,6 +48,11 @@ namespace Up.Services
             return await _cauHoiRepository.GetCauHoiAsync(ids);
         }
 
+        public async Task<List<CauHoiViewModel>> GetCauHoiAsync(Guid thuThachId, int stt = 1)
+        {
+            return await _cauHoiRepository.GetCauHoiAsync(thuThachId, stt);
+        }
+
         public async Task<List<CauHoiViewModel>> ImportCauHoiAsync(ImportCauHoiInputModel input, string loggedEmployee)
         {
             if (!(await ValidateImportCauHoi(input)))

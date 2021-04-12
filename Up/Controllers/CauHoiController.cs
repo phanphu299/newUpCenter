@@ -42,6 +42,13 @@ namespace Up.Controllers
             return Json(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCauHoiByThuThachAsync(Guid thuThachId, int stt)
+        {
+            var model = await _cauHoiService.GetCauHoiAsync(thuThachId, stt);
+            return Json(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateCauHoiAsync([FromBody] CreateCauHoiInputModel model)
         {

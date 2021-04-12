@@ -20,6 +20,8 @@ namespace Up.Repositoties
 
         Task<List<HocVienLightViewModel>> GetHocVienByNameAsync(string name);
 
+        Task<HocVienLightViewModel> GetHocVienByTrigramAsync(string trigram);
+
         Task<Guid> UpdateHocVienAsync(UpdateHocVienInputModel input, string loggedEmployee);
 
         Task<bool> DeleteHocVienAsync(Guid hocVienId, string loggedEmployee);
