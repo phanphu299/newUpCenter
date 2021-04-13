@@ -40,5 +40,12 @@ namespace Up.Controllers
             var model = await _thuThachService.GetThuThachByHocVienAsync(hocVienId);
             return Json(model);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCauHoiAsync(Guid thuThachId)
+        {
+            var model = await _thuThachService.GetCauHoiAsync(thuThachId);
+            return Json(model);
+        }
     }
 }

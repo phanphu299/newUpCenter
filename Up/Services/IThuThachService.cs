@@ -19,5 +19,7 @@ namespace Up.Services
         Task<bool> CanContributeAsync(ClaimsPrincipal user);
 
         Task<List<ThuThachViewModel>> GetThuThachByHocVienAsync(Guid hocVienId);
+
+        Task<List<CauHoiViewModel>> GetCauHoiAsync(Guid thuThachId);
     }
 }

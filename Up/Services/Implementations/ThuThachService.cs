@@ -12,11 +12,13 @@ namespace Up.Services
     {
         private readonly IThuThachRepository _thuThachRepository;
         private readonly IHocVienRepository _hocvienRepository;
+        private readonly ICauHoiRepository _cauHoiRepository;
 
-        public ThuThachService(IThuThachRepository thuThachRepository, IHocVienRepository hocvienRepository)
+        public ThuThachService(IThuThachRepository thuThachRepository, IHocVienRepository hocvienRepository, ICauHoiRepository cauHoiRepository)
         {
             _thuThachRepository = thuThachRepository;
             _hocvienRepository = hocvienRepository;
+            _cauHoiRepository = cauHoiRepository;
         }
 
         public async Task<bool> CanContributeAsync(ClaimsPrincipal user)
@@ -40,6 +42,24 @@ namespace Up.Services
         public async Task<bool> DeleteThuThachAsync(Guid id, string loggedEmployee)
         {
             return await _thuThachRepository.DeleteThuThachAsync(id, loggedEmployee);
+        }
+
+        public async Task<List<CauHoiViewModel>> GetCauHoiAsync(Guid thuThachId)
+        {
+            var cauHois = await _cauHoiRepository.GetCauHoiAsync(thuThachId);
+
+            return cauHois
+                .OrderBy(x => x.STT)
+                .GroupBy(x => x.STT)
+                .Select(group => 
+                {
+                    Random rand = new Random();
+                    int toSkip = rand.Next(1, group.Count());
+
+                    var randomCauHoi = group.OrderBy(x => Guid.NewGuid()).Skip(toSkip).Take(1).FirstOrDefault();
+                    return randomCauHoi;
+                })
+                .ToList();
         }
 
         public async Task<List<ThuThachViewModel>> GetThuThachAsync()

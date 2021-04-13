@@ -80,6 +80,17 @@ namespace Up.Repositoties
             return cauHois.Select(cauHoi => _entityConverter.ToCauHoiViewModel(cauHoi)).ToList();
         }
 
+        public async Task<List<CauHoiViewModel>> GetCauHoiAsync(Guid thuThachId)
+        {
+            var cauHois = await _context.CauHois
+                                        .Include(x => x.ThuThach)
+                                        .Include(x => x.DapAns)
+                                        .Where(x => !x.IsDisabled && x.ThuThachId == thuThachId)
+                                        .ToListAsync();
+
+            return cauHois.Select(cauHoi => _entityConverter.ToCauHoiViewModel(cauHoi)).ToList();
+        }
+
         public async Task<CauHoiViewModel> GetCauHoiDetailAsync(Guid id)
         {
             var cauHoi = await _context.CauHois
