@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Up.Converters;
+using Up.Extensions;
 using Up.Models;
 using Up.Services;
 
@@ -23,11 +24,13 @@ namespace Up.Controllers
             _thuThachService = thuThachService;
         }
 
+        [ServiceFilter(typeof(Read_ThuThach))]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
+            ViewBag.CanContribute = await _thuThachService.CanContributeAsync(User);
             return View();
         }
 

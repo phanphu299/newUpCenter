@@ -47,6 +47,15 @@ namespace Up.Repositoties
             return saveResult == 1;
         }
 
+        public async Task<int> GetLatestLanThi(Guid hocVienId, Guid thuThachId)
+        {
+            var result = await _context.ChallengeResults
+                                        .FirstOrDefaultAsync(x => x.ThuThachId == thuThachId && x.HocVienId == hocVienId);
+            if (result == null) return 0;
+
+            return result.LanThi;
+        }
+
         public async Task<List<ThuThachViewModel>> GetThuThachAsync()
         {
             var thuThachs = await _context.ThuThachs
@@ -74,6 +83,14 @@ namespace Up.Repositoties
                                         .FirstOrDefaultAsync(x => x.ThuThachId == id);
 
             return _entityConverter.ToThuThachViewModel(thuThach);
+        }
+
+        public async Task LuuKetQuaAsync(ResultInputModel input)
+        {
+            var ketQua = _entityConverter.ToEntityKetQua(input);
+            await _context.ChallengeResults.AddAsync(ketQua);
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Guid> UpdateThuThachAsync(UpdateThuThachInputModel input, string loggedEmployee)

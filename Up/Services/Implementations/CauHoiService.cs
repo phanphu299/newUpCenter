@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Up.Enums;
 using Up.Models;
 using Up.Repositoties;
 
@@ -19,9 +20,9 @@ namespace Up.Services
             _thuThachRepository = thuThachRepository;
         }
 
-        public Task<bool> CanContributeAsync(ClaimsPrincipal user)
+        public async Task<bool> CanContributeAsync(ClaimsPrincipal user)
         {
-            throw new NotImplementedException();
+            return await _cauHoiRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_CauHoi);
         }
 
         public async Task<CauHoiViewModel> CreateCauHoiAsync(CreateCauHoiInputModel input, string loggedEmployee)

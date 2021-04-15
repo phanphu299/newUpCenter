@@ -52,7 +52,9 @@ namespace Up.ViewComponents
                     CanViewDiemDanh = true,
                     CanViewDiemDanh_Export = true,
                     CanViewChiPhiKhac = true,
-                    CanViewHocPhiTronGoi = true
+                    CanViewHocPhiTronGoi = true,
+                    CanViewCauHoi = true,
+                    CanViewThuThach = true
                 });
             }
             else
@@ -78,7 +80,9 @@ namespace Up.ViewComponents
                     CanViewDiemDanh = await GetQuyen(roles, QuyenEnums.Read_DiemDanh, QuyenEnums.Contribute_DiemDanh),
                     CanViewDiemDanh_Export = await GetQuyen(roles, QuyenEnums.Read_DiemDanh_Export, QuyenEnums.Contribute_DiemDanh_Export),
                     CanViewChiPhiKhac = await GetQuyen(roles, QuyenEnums.Read_ChiPhiKhac, QuyenEnums.Contribute_ChiPhiKhac),
-                    CanViewHocPhiTronGoi = await GetQuyen(roles, QuyenEnums.Read_HocPhiTronGoi, QuyenEnums.Contribute_HocPhiTronGoi)
+                    CanViewHocPhiTronGoi = await GetQuyen(roles, QuyenEnums.Read_HocPhiTronGoi, QuyenEnums.Contribute_HocPhiTronGoi),
+                    CanViewThuThach = await GetQuyen(roles, QuyenEnums.Read_ThuThach, QuyenEnums.Contribute_ThuThach),
+                    CanViewCauHoi = await GetQuyen(roles, QuyenEnums.Read_CauHoi, QuyenEnums.Contribute_CauHoi)
                 });
             }
         }

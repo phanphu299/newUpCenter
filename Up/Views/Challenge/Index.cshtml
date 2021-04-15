@@ -14,38 +14,11 @@
         </div>
 
         <div v-if="showExam" class="center">
-            <div class="countdown">
-                <h2>
-                    Time left {{ timeLeft }}
-                </h2>
-            </div>
+            <partial name="_Exam" />
+        </div>
 
-            <v-stepper v-model="e6" vertical>
-                <v-stepper-item v-for="(item, index) in cauHoiItems">
-                    <v-stepper-step :key="`${index}-step`"
-                                    :step="(index + 1)"
-                                    :complete="e6 > (index + 1)"
-                                    editable>
-                        {{ item.name }}
-                    </v-stepper-step>
-                    <v-stepper-content :step="(index + 1)"
-                                       :key="`${index}-content`">
-                        <v-card color="grey lighten-3" class="mb-5 pt-2 pl-2">
-                            <v-radio-group>
-                                <v-radio v-for="(dapAn, dapAnIndex) in item.dapAns"
-                                         :key="dapAn.dapAnId"
-                                         :value="dapAnIndex">
-                                    <template v-slot:label>
-                                        <div style="color: black">{{ dapAn.name }}</div>
-                                    </template>
-                                </v-radio>
-                            </v-radio-group>
-                        </v-card>
-                        <v-btn color="primary" v-on:click="nextStep((index + 1))">Continue</v-btn>
-                        <v-btn flat>Cancel</v-btn>
-                    </v-stepper-content>
-                </v-stepper-item>
-            </v-stepper>
+        <div v-if="showResult" class="center">
+            <partial name="_Result" />
         </div>
 
         <partial name="_Toast" />

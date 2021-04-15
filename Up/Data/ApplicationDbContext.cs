@@ -52,6 +52,8 @@
 
         public DbSet<DapAn> DapAns { get; set; }
 
+        public DbSet<ChallengeResult> ChallengeResults { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

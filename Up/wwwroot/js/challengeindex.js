@@ -17,12 +17,15 @@ var vue = new Vue({
         showTrigram: true,
         showIntroduce: false,
         showExam: false,
+        showResult: false,
         timeLeft: '00:00',
         endTime: '0',
         cauHoiItems: [],
         result: [],
         e6: 1,
-        steps: 1
+        steps: 1,
+        isPass: false,
+        score: 0 
     },
     async beforeCreate() {
     },
@@ -60,7 +63,6 @@ var vue = new Vue({
                     }
                 })
                     .then(function (response) {
-                        console.log(response);
                         if (response.data.status === "OK") {
                             that.hocVien = response.data.result;
                             that.showTrigram = false;
@@ -105,6 +107,65 @@ var vue = new Vue({
                 });
         },
 
+        async onTraLoi(cauHoi, dapAn) {
+            var that = this;
+            var isExisting = this.result.find(x => x.cauHoiId == cauHoi.cauHoiId && cauHoi.stt);
+            if (isExisting)
+                this.result = this.result.filter(item => item !== isExisting);
+
+            this.result.push({
+                cauHoiId: cauHoi.cauHoiId,
+                cauHoi: cauHoi.name,
+                stt: cauHoi.stt,
+                dapAnId: dapAn.dapAnId,
+                dapAn: dapAn.name
+            })
+
+        },
+
+        async onSubmit() {
+            var that = this;
+            var dapAnDungs = this.cauHoiItems.map((item, index) => {
+                return {
+                    cauHoiId: item.cauHoiId,
+                    stt: item.stt,
+                    dapAn: item.dapAns.find(x => x.isTrue)
+                }
+            });
+
+            this.result.forEach((item) => {
+                var isCorrect = dapAnDungs.find(x =>
+                    x.cauHoiId == item.cauHoiId &&
+                    x.stt == item.stt &&
+                    x.dapAn.dapAnId == item.dapAnId);
+                if (isCorrect)
+                    that.score++;
+            })
+
+            this.showExam = false;
+            this.showResult = true;
+            if (that.score >= that.selectedThuThach.minGrade)
+                that.isPass = true;
+
+            await axios({
+                method: 'post',
+                url: '/Challenge/LuuKetQuaAsync',
+                data: {
+                    HocVienId: that.hocVien.hocVienId,
+                    ThuThachId: that.selectedThuThach.thuThachId,
+                    LanThi: 0,
+                    IsPass: that.isPass,
+                    Score: that.score
+                }
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        },
+
         setTime(seconds) {
             clearInterval(intervalTimer);
             this.timer(seconds);
@@ -124,6 +185,7 @@ var vue = new Vue({
 
                 if (secondsLeft === 0) {
                     this.endTime = 0;
+                    this.onSubmit();
                 }
 
                 if (secondsLeft < 0) {

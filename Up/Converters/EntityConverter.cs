@@ -715,6 +715,19 @@ namespace Up.Converters
             };
         }
 
+        public ChallengeResult ToEntityKetQua(ResultInputModel input)
+        {
+            return new ChallengeResult
+            {
+                HocVienId = input.HocVienId,
+                ThuThachId = input.ThuThachId,
+                IsPass = input.IsPass,
+                LanThi = input.LanThi,
+                Score = input.Score,
+                CreatedBy = string.Empty
+            };
+        }
+
         public CauHoi ToEntityCauHoi(CreateCauHoiInputModel input, string loggedEmployee)
         {
             return new CauHoi

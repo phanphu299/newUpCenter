@@ -25,5 +25,8 @@
 
         public bool CanViewChiPhiKhac { get; set; }
         public bool CanViewHocPhiTronGoi { get; set; }
+
+        public bool CanViewThuThach { get; set; }
+        public bool CanViewCauHoi { get; set; }
     }
 }

@@ -7,8 +7,8 @@
 
             <v-card>
                 <v-card-title>
-                    @*@if (ViewBag.CanContribute)
-                    {*@
+                    @if (ViewBag.CanContribute)
+                    {
                     <v-dialog v-model="dialog" persistent max-width="600px">
                         <v-btn color="primary"
                                slot="activator"
@@ -65,7 +65,7 @@
                             </v-card-actions>
                         </v-card>
                     </v-dialog>
-                    @*}*@
+                    }
 
                     <v-spacer></v-spacer>
                     <v-text-field v-model="search"
@@ -79,8 +79,8 @@
                               :search="search">
                     <template slot="items" slot-scope="props">
                         <td class="justify-center layout px-0">
-                            @*@if (ViewBag.CanContribute)
-                            {*@
+                            @if (ViewBag.CanContribute)
+                            {
                             <v-tooltip top>
                                 <template v-slot:activator="{ on }">
                                     <v-btn flat icon slot="activator"
@@ -119,7 +119,7 @@
                                 </template>
                                 <strong>Xem Câu Hỏi</strong>
                             </v-tooltip>
-                            @*}*@
+                            }
                         </td>
                         <td>{{ props.item.name }}</td>
                         <td>{{ props.item.tenKhoaHoc }}</td>
@@ -165,8 +165,8 @@
                                               :search="searchCauHoi">
                                     <template v-slot:items="props">
                                         <td class="justify-center layout px-0">
-                                            @*@if (ViewBag.CanContribute)
-                                            {*@
+                                            @if (ViewBag.CanContribute)
+                                            {
                                             <v-tooltip top>
                                                 <template v-slot:activator="{ on }">
                                                     <v-btn flat icon slot="activator"
@@ -180,7 +180,7 @@
                                                 <strong>Xóa</strong>
                                             </v-tooltip>
 
-                                            @*}*@
+                                            }
                                         </td>
                                         <td>{{ props.item.name }}</td>
                                         <td v-for="(item, index) in props.item.dapAns"
@@ -323,18 +323,7 @@
             </v-card>
         </v-dialog>
 
-        <v-snackbar v-model="snackbar"
-                    :color="color"
-                    :timeout="timeout"
-                    top
-                    right>
-            {{ messageText }}
-            <v-btn dark
-                   flat
-                   v-on:click="snackbar = false">
-                Close
-            </v-btn>
-        </v-snackbar>
+        <partial name="_Toast" />
     </v-app>
 </div>
 

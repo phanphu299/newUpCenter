@@ -34,5 +34,6 @@ namespace Up.Data.Entities
         public ICollection<HocVien_No> HocVien_Nos { get; set; }
         public ICollection<ThongKe_DoanhThuHocPhi> ThongKe_DoanhThuHocPhis { get; set; }
         public ICollection<HocPhiTronGoi> HocPhiTronGois { get; set; }
+        public ICollection<ChallengeResult> ChallengeResults { get; set; }
     }
 }

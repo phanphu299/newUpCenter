@@ -150,31 +150,40 @@
                     </li>
                 }
 
-                <li class="bold">
-                    <a class="collapsible-header waves-effect waves-cyan">
-                        <i class="material-icons">quiz</i>
-                        <span class="nav-text">Quản Lý Thử Thách</span>
-                    </a>
-                    <div class="collapsible-body">
-                        <ul>
+                @if (Model.CanViewThuThach || Model.CanViewCauHoi)
+                {
+                    <li class="bold">
+                        <a class="collapsible-header waves-effect waves-cyan">
+                            <i class="material-icons">quiz</i>
+                            <span class="nav-text">Quản Lý Thử Thách</span>
+                        </a>
+                        <div class="collapsible-body">
+                            <ul>
 
-                            <li>
-                                <a asp-area="" asp-controller="ThuThach" asp-action="Index">
-                                    <i class="material-icons">keyboard_arrow_right</i>
-                                    <span> Thử Thách</span>
-                                </a>
-                            </li>
+                                @if (Model.CanViewThuThach)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="ThuThach" asp-action="Index">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Thử Thách</span>
+                                        </a>
+                                    </li>
+                                }
 
-                            <li>
-                                <a asp-area="" asp-controller="CauHoi" asp-action="Index">
-                                    <i class="material-icons">keyboard_arrow_right</i>
-                                    <span> Câu Hỏi</span>
-                                </a>
-                            </li>
+                                @if (Model.CanViewCauHoi)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="CauHoi" asp-action="Index">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Câu Hỏi</span>
+                                        </a>
+                                    </li>
+                                }
 
-                        </ul>
-                    </div>
-                </li>
+                            </ul>
+                        </div>
+                    </li>
+                }
 
                 @if (Model.CanViewVitri || Model.CanViewCheDo || Model.CanViewNgayLamViec || Model.CanViewNhanVien)
                 {

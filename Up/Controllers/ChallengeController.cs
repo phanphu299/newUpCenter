@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using Up.Converters;
+using Up.Models;
 using Up.Services;
 
 namespace Up.Controllers
@@ -46,6 +47,13 @@ namespace Up.Controllers
         {
             var model = await _thuThachService.GetCauHoiAsync(thuThachId);
             return Json(model);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> LuuKetQuaAsync([FromBody] ResultInputModel model)
+        {
+            await _thuThachService.LuuKetQuaAsync(model);
+            return Ok();
         }
     }
 }

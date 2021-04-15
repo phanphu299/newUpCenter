@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Up.Models;
 
@@ -22,5 +23,7 @@ namespace Up.Repositoties
         Task<bool> DeleteCauHoiAsync(Guid id, string loggedEmployee);
 
         Task<List<Guid>> ImportCauHoiAsync(ImportCauHoiInputModel input, string loggedEmployee);
+
+        Task<bool> CanContributeAsync(ClaimsPrincipal user, int right);
     }
 }

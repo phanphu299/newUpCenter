@@ -44,7 +44,11 @@ namespace Up.Enums
         Read_ChiPhiKhac,
         Contribute_ChiPhiKhac,
         Read_HocPhiTronGoi,
-        Contribute_HocPhiTronGoi
+        Contribute_HocPhiTronGoi,
 
+        Read_ThuThach,
+        Contribute_ThuThach,
+        Read_CauHoi,
+        Contribute_CauHoi
     }
 }

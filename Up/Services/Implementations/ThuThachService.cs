@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Up.Enums;
 using Up.Models;
 using Up.Repositoties;
 
@@ -23,7 +24,7 @@ namespace Up.Services
 
         public async Task<bool> CanContributeAsync(ClaimsPrincipal user)
         {
-            throw new NotImplementedException();
+            return await _thuThachRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_ThuThach);
         }
 
         public async Task<ThuThachViewModel> CreateThuThachAsync(CreateThuThachInputModel input, string loggedEmployee)
@@ -77,6 +78,14 @@ namespace Up.Services
                                     .ToList();
 
             return await _thuThachRepository.GetThuThachByKhoaHocIdsAsync(khoaHocIds);
+        }
+
+        public async Task LuuKetQuaAsync(ResultInputModel input)
+        {
+            var latestLanThi = await _thuThachRepository.GetLatestLanThi(input.HocVienId, input.ThuThachId);
+            input.LanThi = latestLanThi + 1;
+
+            await _thuThachRepository.LuuKetQuaAsync(input);
         }
 
         public async Task<ThuThachViewModel> UpdateThuThachAsync(UpdateThuThachInputModel input, string loggedEmployee)

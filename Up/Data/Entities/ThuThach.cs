@@ -24,5 +24,7 @@ namespace Up.Data.Entities
         public KhoaHoc KhoaHoc { get; set; }
 
         public ICollection<CauHoi> CauHois { get; set; }
+
+        public ICollection<ChallengeResult> ChallengeResults { get; set; }
     }
 }

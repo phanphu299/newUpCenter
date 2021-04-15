@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using Up.Converters;
+using Up.Extensions;
 using Up.Models;
 using Up.Services;
 
@@ -27,11 +28,13 @@ namespace Up.Controllers
             _cauHoiService = cauHoiService;
         }
 
+        [ServiceFilter(typeof(Read_CauHoi))]
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null) return Challenge();
 
+            ViewBag.CanContribute = await _cauHoiService.CanContributeAsync(User);
             return View();
         }
 
