@@ -56,6 +56,8 @@
         public IEnumerable<DateTime> SoNgayDuocNghi { get; set; }
 
         public double HocPhiSauKhuyenMai { get; set; }
+
+        public IEnumerable<string> PassedChallenge { get; set; }
     }
     public class LopHoc_NgayHocViewModel
     {

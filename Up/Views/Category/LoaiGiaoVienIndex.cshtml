@@ -9,45 +9,7 @@
                 <v-card-title>
                     @if (ViewBag.CanContribute)
                     {
-                        <v-dialog v-model="dialog" persistent max-width="600px">
-                            <v-btn color="primary"
-                                   slot="activator"
-                                   class="white--text">
-                                Thêm Mới
-                                <v-icon right dark>add</v-icon>
-                            </v-btn>
-                            <v-card>
-                                <v-card-title>
-                                    <span class="headline">Thêm Loại Nhân Viên Mới</span>
-                                </v-card-title>
-                                <v-card-text>
-                                    <v-container grid-list-md>
-                                        <v-layout wrap>
-                                            <v-flex xs12 sm6>
-                                                <v-text-field label="Tên Loại Nhân Viên *" required v-model="newItem.name" v-on:keyup.enter="onSave"></v-text-field>
-                                            </v-flex>
-
-                                            <v-flex xs12 sm6>
-                                                <v-text-field label="Thứ Tự *" required v-model="newItem.order" v-on:keyup.enter="onSave"></v-text-field>
-                                            </v-flex>
-                                        </v-layout>
-                                    </v-container>
-                                    <small>* bắt buộc</small>
-                                    <v-alert v-model="alert"
-                                             dismissible
-                                             color="warning"
-                                             icon="priority_high"
-                                             outline>
-                                        Không được bỏ trống
-                                    </v-alert>
-                                </v-card-text>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="secondary darken-1" flat v-on:click="dialog = false">Đóng</v-btn>
-                                    <v-btn color="blue darken-1 white--text" v-on:click="onSave">Lưu</v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
+                        <partial name="_LoaiGiaoVienCreationDialog" />
                     }
 
                     <v-spacer></v-spacer>
@@ -57,122 +19,13 @@
                                   single-line
                                   hide-details></v-text-field>
                 </v-card-title>
-                <v-data-table :headers="headers"
-                              :items="khoaHocItems"
-                              :search="search">
-                    <template slot="items" slot-scope="props">
-                        <td>
-                            @if (ViewBag.CanContribute)
-                            {
-                                <v-tooltip top>
-                                    <template v-slot:activator="{ on }">
-                                        <v-btn flat icon slot="activator"
-                                               v-on="on"
-                                               color="red"
-                                               v-on:click.stop="deleteDialog = true"
-                                               v-on:click="itemToDelete = props.item">
-                                            <v-icon>delete</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <strong>Xóa</strong>
-                                </v-tooltip>
-                            }
-
-                        </td>
-                        <td>
-                            @if (ViewBag.CanContribute)
-                            {
-                                <v-edit-dialog :return-value.sync="props.item.name"
-                                               lazy
-                                               v-on:save="onUpdate(props.item)">
-                                    {{ props.item.name }}
-                                    <v-text-field slot="input"
-                                                  v-model="props.item.name"
-                                                  label="Edit"
-                                                  single-line></v-text-field>
-                                </v-edit-dialog>
-                            }
-                            else
-                            {
-                                <span>{{ props.item.name }}</span>
-                            }
-
-                        </td>
-                        <td>
-                            @if (ViewBag.CanContribute)
-                            {
-                                <v-edit-dialog :return-value.sync="props.item.order"
-                                               lazy
-                                               v-on:save="onUpdate(props.item)">
-                                    {{ props.item.order }}
-                                    <v-text-field slot="input"
-                                                  v-model="props.item.order"
-                                                  label="Edit"
-                                                  single-line></v-text-field>
-                                </v-edit-dialog>
-                            }
-                            else
-                            {
-                                <span>{{ props.item.order }}</span>
-                            }
-
-                        </td>
-                        <td>{{ props.item.createdDate }}</td>
-                        <td>{{ props.item.createdBy }}</td>
-                        <td>{{ props.item.updatedDate }}</td>
-                        <td>{{ props.item.updatedBy }}</td>
-                    </template>
-                    <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                        Không tìm thấy "{{ search }}".
-                    </v-alert>
-                </v-data-table>
+                <partial name="_LoaiGiaoVienDataTable" />
             </v-card>
         </div>
 
-        @*DELETE DIALOG*@
-        <v-dialog v-model="deleteDialog"
-                  width="500">
-            <v-card>
-                <v-card-title class="headline error lighten-2 white--text"
-                              primary-title>
-                    Xác Nhận
-                </v-card-title>
+        <partial name="_LoaiGiaoVienDeleteDialog" />
 
-                <v-card-text>
-                    Bạn có chắc xóa '{{ itemToDelete.name }}'?
-                </v-card-text>
-
-                <v-divider></v-divider>
-
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-
-                    <v-btn color="secondary"
-                           flat
-                           v-on:click="deleteDialog = false">
-                        Đóng
-                    </v-btn>
-
-                    <v-btn color="error white--text"
-                           v-on:click="onDelete(itemToDelete)">
-                        Xóa
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
-        <v-snackbar v-model="snackbar"
-                    :color="color"
-                    :timeout="timeout"
-                    top
-                    right>
-            {{ messageText }}
-            <v-btn dark
-                   flat
-                   v-on:click="snackbar = false">
-                Close
-            </v-btn>
-        </v-snackbar>
+        <partial name="_Toast" />
     </v-app>
 </div>
 

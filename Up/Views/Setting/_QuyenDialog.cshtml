@@ -1,0 +1,23 @@
+﻿<div v-if="dialog">
+    <v-dialog v-model="dialog" persistent max-width="600px">
+        <v-card>
+            <v-card-title>
+                <span class="headline">Danh Sách Role Thuộc Quyền '{{ itemToEdit.name }}'</span>
+            </v-card-title>
+            <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+
+                        <v-flex xs12 sm12>
+                            <v-chip v-for="item in itemRoles" text-color="white" color="success" :key="item.id">{{ item.role }}</v-chip>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="secondary darken-1" flat v-on:click="dialog = false">Đóng</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</div>

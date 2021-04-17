@@ -6,250 +6,24 @@
 @inject UserManager<IdentityUser> UserManager
 
 <div class="container" id="HomeIndex">
-    <!--card stats start-->
-
     @if (User.IsInRole("Admin") || User.IsInRole("TK_ChiPhi") || User.IsInRole("TK_DoanhThu") || User.IsInRole("TK_GiaoVien") || User.IsInRole("TK_HocVien"))
     {
-        <div id="ecommerce-offer">
-            <div class="row">
-                @if (User.IsInRole("TK_HocVien") || User.IsInRole("Admin"))
-                {
-                    <div class="col s12 m3">
-                        <div class="card gradient-shadow gradient-45deg-light-blue-cyan border-radius-3">
-                            <div class="card-content center">
-                                <img src="~/layout_page/images/icon/giaovien.png" class="width-40">
-                                <h5 class="white-text lighten-4">{{ thongKeTong.hocVien }}</h5>
-                                <p class="white-text lighten-4">Học Viên</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-
-                @if (User.IsInRole("TK_GiaoVien") || User.IsInRole("Admin"))
-                {
-                    <div class="col s12 m3">
-                        <div class="card gradient-shadow gradient-45deg-amber-amber border-radius-3">
-                            <div class="card-content center">
-                                <img src="~/layout_page/images/icon/hocvien.png" class="width-40">
-                                <h5 class="white-text lighten-4">{{ thongKeTong.giaoVien }}</h5>
-                                <p class="white-text lighten-4">Giáo Viên</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-
-                @if (User.IsInRole("TK_DoanhThu") || User.IsInRole("Admin"))
-                {
-                    <div class="col s12 m3">
-                        <div class="card gradient-shadow gradient-45deg-green-teal border-radius-3">
-                            <div class="card-content center">
-                                <img src="~/layout_page/images/icon/doanhthu.png" class="width-40">
-                                <h5 class="white-text lighten-4">{{ formatNumber(thongKeTong.doanhThu) }}</h5>
-                                <p class="white-text lighten-4">Doanh Thu</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-
-                @if (User.IsInRole("TK_ChiPhi") || User.IsInRole("Admin"))
-                {
-                    <div class="col s12 m3">
-                        <div class="card gradient-shadow gradient-45deg-red-pink border-radius-3">
-                            <div class="card-content center">
-                                <img src="~/layout_page/images/icon/chiphi.png" class="width-40">
-                                <h5 class="white-text lighten-4">{{ formatNumber(thongKeTong.chiPhi) }}</h5>
-                                <p class="white-text lighten-4">Chi Phí</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-
-            </div>
-        </div>
+        <partial name="_ThongKeTong" />
     }
 
     @if (User.IsInRole("Admin") || User.IsInRole("TK_HocVienNghiNhieu"))
     {
-        <v-card-title v-if="hocVienNghiNhieu.length > 0">
-            <h4 class="header mt-0">
-                HỌC VIÊN NGHỈ TỪ 1 TUẦN TRỞ LÊN
-            </h4>
-
-            <v-spacer></v-spacer>
-            <v-text-field v-model="search"
-                          append-icon="search"
-                          label="Tìm Kiếm"
-                          single-line
-                          hide-details></v-text-field>
-        </v-card-title>
-        <v-data-table :headers="headers"
-                      :items="hocVienNghiNhieu"
-                      :search="search"
-                      class="elevation-1"
-                      v-if="hocVienNghiNhieu.length > 0">
-            <template slot="items" slot-scope="props">
-                <td>{{ props.item.tenHocVien }}</td>
-                <td>{{ props.item.tenLop }}</td>
-                <td>{{ props.item.ngayHocCuoi }}</td>
-            </template>
-            <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                Không tìm thấy "{{ search }}".
-            </v-alert>
-        </v-data-table>
+        <partial name="_HocVienNghiNhieu" />
     }
 
     @if (User.IsInRole("Admin") || User.IsInRole("TK_BienLai_Read") || User.IsInRole("TK_BienLai_Contribute"))
     {
-        <v-card-title v-if="bienLai.length > 0">
-            <h4 class="header mt-0">
-                BIÊN LAI HỌC PHÍ
-            </h4>
-
-            <v-spacer></v-spacer>
-            <v-text-field v-model="searchBienLai"
-                          append-icon="search"
-                          label="Tìm Kiếm"
-                          single-line
-                          hide-details></v-text-field>
-        </v-card-title>
-        <v-data-table :headers="headersBienLai"
-                      :items="bienLai"
-                      :search="searchBienLai"
-                      class="elevation-1"
-                      v-if="bienLai.length > 0">
-            <template slot="items" slot-scope="props">
-                <td>
-                    @if (User.IsInRole("Admin") || User.IsInRole("TK_BienLai_Contribute"))
-                    {
-                        <v-tooltip top>
-                            <template v-slot:activator="{ on }">
-                                <v-btn flat icon slot="activator"
-                                       v-on="on"
-                                       color="red"
-                                       v-on:click.stop="deleteBienLaiDialog = true"
-                                       v-on:click="bienLaiToDelete = props.item">
-                                    <v-icon>delete</v-icon>
-                                </v-btn>
-                            </template>
-                            <strong>Xóa</strong>
-                        </v-tooltip>
-                    }
-                </td>
-                <td>{{ props.item.maBienLai }}</td>
-                <td>{{ props.item.fullName }}</td>
-                <td>{{ props.item.tenLop }}</td>
-                <td>{{ props.item.hocPhi }}</td>
-                <td>{{ props.item.thangHocPhi }}</td>
-                <td>{{ props.item.createdDate }}</td>
-                <td>{{ props.item.createdBy }}</td>
-            </template>
-            <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                Không tìm thấy "{{ searchBienLai }}".
-            </v-alert>
-        </v-data-table>
-
-        @*DELETE DIALOG*@
-        <v-dialog v-model="deleteBienLaiDialog"
-                  width="500">
-
-            <v-card>
-                <v-card-title class="headline error lighten-2 white--text"
-                              primary-title style="background-color: #ff8c84 !important; border-color: #ff8c84 !important;">
-                    Xác Nhận
-                </v-card-title>
-
-                <v-card-text>
-                    Bạn có chắc xóa biên lai mã '{{ bienLaiToDelete.maBienLai }}'?
-                </v-card-text>
-
-                <v-divider></v-divider>
-
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-
-                    <v-btn color="secondary"
-                           flat
-                           v-on:click="deleteBienLaiDialog = false">
-                        Đóng
-                    </v-btn>
-
-                    <v-btn color="error white--text" style="background-color: #ff5252 !important; border-color: #ff5252 !important;"
-                           v-on:click="onDeleteBienLai(bienLaiToDelete)">
-                        Xóa
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
-        <v-snackbar v-model="snackbar"
-                    :color="color"
-                    :timeout="timeout"
-                    top
-                    right>
-            {{ messageText }}
-            <v-btn dark
-                   flat
-                   v-on:click="snackbar = false">
-                Close
-            </v-btn>
-        </v-snackbar>
+        <partial name="_BienLai" />
     }
-
 
     @if (User.IsInRole("Admin") || User.IsInRole("Chart_DoanhThu") || User.IsInRole("Chart_GiaoVien") || User.IsInRole("Chart_HocVien") || User.IsInRole("Chart_No"))
     {
-        <div id="sales-chart">
-            <div class="row">
-                <div class="col s12 m12 l12">
-                    <div id="revenue-chart" class="card">
-                        <div class="card-content">
-                            <h4 class="header mt-0">
-                                THỐNG KÊ
-                            </h4>
-                            <div class="row">
-                                <div class="col s12">
-                                    @if (User.IsInRole("Chart_HocVien") || User.IsInRole("Admin"))
-                                    {
-                                        <div class="col s12 m6 l6">
-                                            <header style="color:#1976d2">Học Viên</header>
-                                            <line-chart v-if="loadedHocVien"
-                                                        :chartdata="chartdataHocVien" />
-                                        </div>
-                                    }
-
-                                    @if (User.IsInRole("Chart_GiaoVien") || User.IsInRole("Admin"))
-                                    {
-                                        <div class="col s12 m6 l6">
-                                            <header style="color:#1976d2">Giáo Viên</header>
-                                            <line-chart v-if="loadedGiaoVien"
-                                                        :chartdata="chartdataGiaoVien" />
-                                        </div>
-                                    }
-
-                                    @if (User.IsInRole("Chart_DoanhThu") || User.IsInRole("Admin"))
-                                    {
-                                        <div class="col s12 m6 l6">
-                                            <header style="color:#1976d2">Doanh Thu/Chi Phí</header>
-                                            <line-chart v-if="loadedDoanhThuHocPhi"
-                                                        :chartdata="chartdataDoanhThuHocPhi" />
-                                        </div>
-                                    }
-
-                                    @if (User.IsInRole("Chart_No") || User.IsInRole("Admin"))
-                                    {
-                                        <div class="col s12 m6 l6">
-                                            <header style="color:#1976d2">Học Viên Nợ</header>
-                                            <line-chart v-if="loadedNo"
-                                                        :chartdata="chartdataNo" />
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <partial name="_Chart" />
     }
 
     <!--end container-->
@@ -320,7 +94,6 @@
         vertical-align: top;
         border-top: 1px solid #ddd;
     }
-
 </style>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>

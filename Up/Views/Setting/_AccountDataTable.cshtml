@@ -1,0 +1,79 @@
+﻿<v-data-table :headers="headers"
+              :items="userItems"
+              :search="searchUser">
+    <template slot="items" slot-scope="props">
+        <td class="justify-center layout px-0">
+            <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                    <v-btn flat icon v-on="on"
+                           v-on:click="Xoa(props.item)"
+                           color="error">
+                        <v-icon>delete</v-icon>
+                    </v-btn>
+                </template>
+                <strong>Xóa</strong>
+            </v-tooltip>
+
+            <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                    <v-btn flat icon v-on="on"
+                           v-on:click="Khoa(props.item.id)"
+                           color="warning">
+                        <v-icon>lock</v-icon>
+                    </v-btn>
+                </template>
+                <strong>Khóa</strong>
+            </v-tooltip>
+
+            <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                    <v-btn color="primary" v-on="on"
+                           v-on:click="KichHoat(props.item.id)"
+                           flat icon>
+                        <v-icon>check</v-icon>
+                    </v-btn>
+                </template>
+                <strong>Kích Hoạt</strong>
+            </v-tooltip>
+
+            <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                    <v-btn flat icon v-on="on"
+                           v-on:click="ResetMatKhau(props.item.id)"
+                           color="success">
+                        <v-icon>autorenew</v-icon>
+                    </v-btn>
+                </template>
+                <strong>Reset Mật Khẩu</strong>
+            </v-tooltip>
+
+            <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                    <v-btn flat icon v-on="on"
+                           color="indigo"
+                           v-on:click.stop="dialogEditRole = true"
+                           v-on:click="mappingEditRoleItem(props.item)">
+                        <v-icon>edit</v-icon>
+                    </v-btn>
+                </template>
+                <strong>Cập Nhật Role</strong>
+            </v-tooltip>
+
+        </td>
+        <td>{{ props.item.email }}</td>
+        <td>
+            <v-tooltip top v-if="props.item.roles.length > 0">
+                <template v-slot:activator="{ on }">
+                    <v-icon color="grey lighten-1" dark v-on="on">security</v-icon>
+                </template>
+                <div v-for="role in props.item.roles">
+                    <strong>{{ role }}</strong>
+                </div>
+            </v-tooltip>
+        </td>
+
+    </template>
+    <v-alert slot="no-results" :value="true" color="error" icon="warning">
+        Không tìm thấy "{{ searchUser }}".
+    </v-alert>
+</v-data-table>

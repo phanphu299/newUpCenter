@@ -62,7 +62,7 @@
             model.NgayBatDauDate = _converter.ToDateTime(model.NgayBatDau);
 
             if (!string.IsNullOrWhiteSpace(model.NgayKetThuc))
-                model.NgayBatDauDate = _converter.ToDateTime(model.NgayKetThuc);
+                model.NgayKetThucDate = _converter.ToDateTime(model.NgayKetThuc);
 
             var successful = await _giaoVienService.CreateGiaoVienAsync(model, currentUser.Email);
             return successful == null ?

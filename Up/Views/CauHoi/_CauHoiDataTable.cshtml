@@ -1,0 +1,43 @@
+﻿<v-data-table :headers="headers"
+              :items="cauHoiItems"
+              :search="search">
+    <template v-slot:items="props">
+        <td class="justify-center layout px-0">
+            @if (ViewBag.CanContribute)
+            {
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn flat icon slot="activator"
+                               v-on="on"
+                               color="red"
+                               v-on:click.stop="deleteDialog = true"
+                               v-on:click="itemToDelete = props.item">
+                            <v-icon>delete</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Xóa</strong>
+                </v-tooltip>
+
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn flat icon
+                               color="success"
+                               v-on="on"
+                               v-on:click.stop="dialogDapAn = true"
+                               v-on:click="mappingEditItem(props.item)">
+                            <v-icon>info</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Xem Đáp Án</strong>
+                </v-tooltip>
+
+            }
+        </td>
+        <td>{{ props.item.tenThuThach }}</td>
+        <td>{{ props.item.stt }}</td>
+        <td>{{ props.item.name }}</td>
+    </template>
+    <v-alert slot="no-results" :value="true" color="error" icon="warning">
+        Không tìm thấy "{{ search }}".
+    </v-alert>
+</v-data-table>

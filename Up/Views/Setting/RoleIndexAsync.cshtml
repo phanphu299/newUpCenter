@@ -15,39 +15,7 @@
                         <v-icon right dark>keyboard_arrow_left</v-icon>
                     </v-btn>
 
-                    <v-dialog v-model="dialog" persistent max-width="800px">
-                        <v-btn color="primary"
-                               slot="activator"
-                               class="white--text">
-                            Thêm Mới
-                            <v-icon right dark>add</v-icon>
-                        </v-btn>
-                        <v-card>
-                            <v-card-title>
-                                <span class="headline">Thêm Role Mới</span>
-                            </v-card-title>
-                            <v-card-text>
-                                <v-container grid-list-md>
-                                    <v-layout wrap>
-                                        <v-text-field label="Tên (Viết liền không dấu) *" required v-model="newItem" v-on:keyup.enter="onSave"></v-text-field>
-                                    </v-layout>
-                                </v-container>
-                                <small>* bắt buộc</small>
-                                <v-alert v-model="alert"
-                                         dismissible
-                                         color="warning"
-                                         icon="priority_high"
-                                         outline>
-                                    Không được bỏ trống
-                                </v-alert>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="secondary darken-1" flat v-on:click="dialog = false">Đóng</v-btn>
-                                <v-btn color="blue darken-1 white--text" v-on:click="onSave">Lưu</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-dialog>
+                    <partial name="_RoleCreationDialog" />
 
                     <v-spacer></v-spacer>
                     <v-text-field v-model="search"
@@ -56,132 +24,14 @@
                                   single-line
                                   hide-details></v-text-field>
                 </v-card-title>
-                <v-data-table :headers="headers"
-                              :items="roleItems"
-                              :search="search">
-                    <template slot="items" slot-scope="props">
-                        <td class="justify-center layout px-0">
-
-                            <v-tooltip top>
-                                <template v-slot:activator="{ on }">
-                                    <v-btn color="primary" v-on="on"
-                                           flat icon
-                                           v-on:click.stop="dialogUser = true"
-                                           v-on:click="mappingQuyenRoleItem(props.item)">
-                                        <v-icon>info</v-icon>
-                                    </v-btn>
-                                </template>
-                                <strong>Xem Danh Sách User Thuộc Role</strong>
-                            </v-tooltip>
-
-                            <v-tooltip top>
-                                <template v-slot:activator="{ on }">
-                                    <v-btn flat icon
-                                           color="success"
-                                           v-on="on"
-                                           v-on:click.stop="dialogQuyen = true"
-                                           v-on:click="mappingUserRoleItem(props.item)">
-                                        <v-icon>security</v-icon>
-                                    </v-btn>
-                                </template>
-                                <strong>Xem Danh Sách Quyền Của Role</strong>
-                            </v-tooltip>
-
-                        </td>
-                        <td>
-                            <v-edit-dialog :return-value.sync="props.item.role"
-                                           lazy
-                                           v-if="props.item.role != 'Admin' &&
-                                                 props.item.role != 'Chart_DoanhThu' && 
-                                                 props.item.role != 'Chart_GiaoVien' && 
-                                                 props.item.role != 'Chart_HocVien' && 
-                                                 props.item.role != 'Chart_No' && 
-                                                 props.item.role != 'TK_DoanhThu' && 
-                                                 props.item.role != 'TK_GiaoVien' && 
-                                                 props.item.role != 'TK_HocVien' && 
-                                                 props.item.role != 'TK_ChiPhi' &&
-                                                 props.item.role != 'TK_HocVienNghiNhieu' &&
-                                                 props.item.role != 'TK_BienLai_Read' &&
-                                                 props.item.role != 'TK_BienLai_Contribute'"
-                                           v-on:save="onUpdate(props.item.id, props.item.role)">
-                                {{ props.item.role }}
-                                <v-text-field slot="input"
-                                              v-model="props.item.role"
-                                              label="Edit"
-                                              single-line></v-text-field>
-                            </v-edit-dialog>
-                            <span v-else>{{ props.item.role }}</span>
-                        </td>
-
-                    </template>
-                    <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                        Không tìm thấy "{{ search }}".
-                    </v-alert>
-                </v-data-table>
+                <partial name="_RoleDataTable" />
             </v-card>
 
+            <partial name="_UserDialog" />
 
-            @*Users Dialog*@
-            <v-dialog v-model="dialogUser" persistent max-width="600px">
-                    <v-card>
-                        <v-card-title>
-                            <span class="headline">Danh Sách Account Thuộc Role '{{ itemToEdit.role }}'</span>
-                        </v-card-title>
-                        <v-card-text>
-                            <v-container grid-list-md>
-                                <v-layout wrap>
+            <partial name="_RoleQuyenDialog" />
 
-                                    <v-flex xs12 sm12>
-                                        <v-chip v-for="item in itemUsers" text-color="white" color="success" :key="item.id">{{ item.email }}</v-chip>
-                                    </v-flex>
-                                </v-layout>
-                            </v-container>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="secondary darken-1" flat v-on:click="dialogUser = false">Đóng</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-
-            @*Quyền Dialog*@
-            <v-dialog v-model="dialogQuyen" persistent max-width="800px">
-                <v-card>
-                    <v-card-title>
-                        <span class="headline">Xem/Cập Nhật Quyền Cho Role '{{ itemToEdit.role }}'</span>
-                    </v-card-title>
-                    <v-card-text>
-                        <v-container grid-list-md>
-                            <v-layout wrap>
-
-                                <v-flex xs12 sm6 v-for="item in itemQuyens" :key="item.id">
-                                    <v-checkbox v-model="item.isTrue"
-                                                :label="item.name"></v-checkbox>
-                                </v-flex>
-
-                            </v-layout>
-                        </v-container>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="secondary darken-1" flat v-on:click="dialogQuyen = false">Đóng</v-btn>
-                        <v-btn color="blue darken-1 white--text" v-on:click="onUpdateQuyenRole(itemToEdit)">Lưu</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
-
-            <v-snackbar v-model="snackbar"
-                        :color="color"
-                        :timeout="timeout"
-                        top
-                        right>
-                {{ messageText }}
-                <v-btn dark
-                       flat
-                       v-on:click="snackbar = false">
-                    Close
-                </v-btn>
-            </v-snackbar>
+            <partial name="_Toast" />
         </div>
     </v-app>
 </div>

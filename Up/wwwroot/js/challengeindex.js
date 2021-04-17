@@ -25,7 +25,9 @@ var vue = new Vue({
         e6: 1,
         steps: 1,
         isPass: false,
-        score: 0 
+        score: 0,
+        resultList: [],
+        dialogResult: false
     },
     async beforeCreate() {
     },
@@ -128,6 +130,7 @@ var vue = new Vue({
             var dapAnDungs = this.cauHoiItems.map((item, index) => {
                 return {
                     cauHoiId: item.cauHoiId,
+                    name: item.name,
                     stt: item.stt,
                     dapAn: item.dapAns.find(x => x.isTrue)
                 }
@@ -141,6 +144,24 @@ var vue = new Vue({
                 if (isCorrect)
                     that.score++;
             })
+
+            this.resultList = dapAnDungs.map((item) => {
+                var choice = that.result.find(x =>
+                    x.cauHoiId == item.cauHoiId &&
+                    x.stt == item.stt
+                );
+
+                let selectedChoice = '';
+                if (choice)
+                    selectedChoice = choice.dapAn;
+
+                return {
+                    name: item.name,
+                    stt: item.stt,
+                    dapAnDung: item.dapAn.name,
+                    dapAnHocVien: selectedChoice
+                }
+            });
 
             this.showExam = false;
             this.showResult = true;

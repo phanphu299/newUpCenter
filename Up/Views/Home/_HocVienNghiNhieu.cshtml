@@ -1,0 +1,26 @@
+﻿<v-card-title v-if="hocVienNghiNhieu.length > 0">
+    <h4 class="header mt-0">
+        HỌC VIÊN NGHỈ TỪ 1 TUẦN TRỞ LÊN
+    </h4>
+
+    <v-spacer></v-spacer>
+    <v-text-field v-model="search"
+                  append-icon="search"
+                  label="Tìm Kiếm"
+                  single-line
+                  hide-details></v-text-field>
+</v-card-title>
+<v-data-table :headers="headers"
+              :items="hocVienNghiNhieu"
+              :search="search"
+              class="elevation-1"
+              v-if="hocVienNghiNhieu.length > 0">
+    <template slot="items" slot-scope="props">
+        <td>{{ props.item.tenHocVien }}</td>
+        <td>{{ props.item.tenLop }}</td>
+        <td>{{ props.item.ngayHocCuoi }}</td>
+    </template>
+    <v-alert slot="no-results" :value="true" color="error" icon="warning">
+        Không tìm thấy "{{ search }}".
+    </v-alert>
+</v-data-table>

@@ -31,6 +31,10 @@ namespace Up.Converters
                 DiaChi = hocVien.DiaChi,
                 Notes = hocVien.Notes,
                 Trigram = hocVien.Trigram,
+                PassedChallenge = hocVien.ChallengeResults
+                                        .Where(x => x.IsPass)
+                                        .Select(x => x.ThuThach.Name)
+                                        .Distinct(),
                 LopHocList = hocVien.HocVien_LopHocs
                                     .Select(x => new LopHocViewModel
                                     {
@@ -490,6 +494,10 @@ namespace Up.Converters
 
         public GiaoVien ToEntityGiaoVien(CreateGiaoVienInputModel input, string loggedEmployee)
         {
+            DateTime? ngayKetThuc = null;
+            if (input.NgayKetThucDate != new DateTime())
+                ngayKetThuc = input.NgayKetThucDate;
+
             return new GiaoVien
             {
                 Name = input.Name,
@@ -502,7 +510,7 @@ namespace Up.Converters
                 TutoringRate = input.TutoringRate,
                 BasicSalary = input.BasicSalary,
                 MucHoaHong = input.MucHoaHong,
-                NgayKetThuc = input.NgayKetThucDate,
+                NgayKetThuc = ngayKetThuc,
                 NgayLamViecId = input.NgayLamViecId,
                 NgayBatDau = input.NgayBatDauDate,
                 NganHang = input.NganHang,
@@ -837,6 +845,10 @@ namespace Up.Converters
 
         public void MappingEntityGiaoVien(UpdateGiaoVienInputModel input, GiaoVien item, string loggedEmployee)
         {
+            DateTime? ngayKetThuc = null;
+            if (input.NgayKetThucDate != new DateTime())
+                ngayKetThuc = input.NgayKetThucDate;
+
             item.Name = input.Name;
             item.Phone = input.Phone;
             item.FacebookAccount = input.FacebookAccount;
@@ -851,7 +863,7 @@ namespace Up.Converters
             item.UpdatedDate = DateTime.Now;
             item.MucHoaHong = input.MucHoaHong;
             item.NgayBatDau = input.NgayBatDauDate;
-            item.NgayKetThuc = input.NgayKetThucDate;
+            item.NgayKetThuc = ngayKetThuc;
             item.NgayLamViecId = input.NgayLamViecId;
             item.NganHang = input.NganHang;
         }

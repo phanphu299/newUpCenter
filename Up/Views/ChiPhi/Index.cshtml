@@ -8,83 +8,12 @@
             <v-card>
                 <v-card-title>
                     <v-layout wrap>
-
-                        <v-flex xs12 sm4>
-                            <v-select :items="itemThang"
-                                      v-model="selectedThang"
-                                      chips
-                                      label="Chọn Tháng"
-                                      v-on:change="onTinhTien"></v-select>
-                        </v-flex>
-
-                        <v-flex xs12 sm4>
-                            <v-select :items="itemNam"
-                                      v-model="selectedNam"
-                                      chips
-                                      label="Chọn Năm"
-                                      v-on:change="onTinhTien"></v-select>
-                        </v-flex>
-
-                        <v-flex xs12 sm2>
-                            <v-btn color="primary" v-on:click="onTinhTien" v-if="selectedNam !== '' && selectedThang !== ''">Refresh</v-btn>
-                        </v-flex>
-
-                        @if (ViewBag.CanContribute)
-                        {
-                            <v-flex xs12 sm2>
-                                <v-btn color="success" v-on:click="onLuuChiPhi" v-if="chiPhiList.length > 0">Lưu Chi Phí</v-btn>
-                            </v-flex>
-                        }
+                        <partial name="_ChiPhiActionItems" />
 
                         <v-container fluid v-if="chiPhiList.length > 0">
                             <v-layout wrap>
                                 <v-flex>
-                                    <v-data-table :headers="headers"
-                                                  :items="chiPhiList">
-                                        <template slot="items" slot-scope="props">
-
-                                            <td>
-                                                {{ props.item.name }}  <br />
-                                                <v-tooltip top>
-                                                    <template v-slot:activator="{ on }">
-                                                        <v-icon color="secondary lighten-1" dark v-on="on">info</v-icon>
-                                                    </template>
-                                                    Ngày Làm: <strong>{{ props.item.ngayLamViec }}</strong><br />
-                                                    Tổng Ngày Làm: <strong>{{ props.item.soNgayLam }}</strong><br />
-                                                    Tổng Ngày Thực Tế Làm: <strong>{{ props.item.soNgayLamVoSau }}</strong><br />
-                                                    Lương Mỗi Ngày: <strong>{{ props.item.dailySalary }}</strong>
-                                                </v-tooltip>
-                                                <v-icon v-if="props.item.daLuu" color="success">check_circle_outline</v-icon>
-                                            </td>
-
-                                            <td><span style="color: red">{{ formatNumber(props.item.chiPhiMoi) }}</span></td>
-                                            <td>
-                                                <span v-if="props.item.loaiChiPhi != 3"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" v-model="props.item.soNgayNghi" :value="props.item.soNgayNghi"></v-text-field></span>
-                                            </td>
-                                            <td>{{ formatNumber(props.item.salary_Expense) }}</td>
-                                            <td>
-                                                <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" v-model="props.item.teachingRate" :value="props.item.teachingRate"></v-text-field></span>
-                                            </td>
-                                            <td>
-                                                <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" v-model="props.item.tutoringRate" :value="props.item.tutoringRate"></v-text-field></span>
-                                            </td>
-                                            <td>
-                                                <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" label="Số Giờ Dạy" v-model="props.item.soGioDay" :value="props.item.soGioDay"></v-text-field></span>
-                                            </td>
-                                            <td>
-                                                <span v-if="props.item.loaiChiPhi == 1 || props.item.loaiChiPhi == 4"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" label="Số Giờ Kèm" v-model="props.item.soGioKem" :value="props.item.soGioKem"></v-text-field></span>
-                                            </td>
-                                            <td>
-                                                <span v-if="props.item.loaiChiPhi == 2 || props.item.loaiChiPhi == 4">{{ props.item.mucHoaHong }}/học viên</span>
-                                            </td>
-                                            <td>
-                                                <span v-if="props.item.loaiChiPhi == 2 || props.item.loaiChiPhi == 4"><v-text-field v-on:keyup="onTinhChiPhi(props.item)" label="Số Học Viên" v-model="props.item.soHocVien" :value="props.item.soHocVien"></v-text-field></span>
-                                            </td>
-                                            <td><v-text-field label="Bonus" v-on:keyup="onTinhChiPhi(props.item)" v-model="props.item.bonus" :value="props.item.bonus"></v-text-field></td>
-                                            <td><v-text-field label="Khoảng Trừ Khác" v-on:keyup="onTinhChiPhi(props.item)" v-model="props.item.minus" :value="props.item.minus"></v-text-field></td>
-                                            <td><v-text-field v-model="props.item.ghiChu"></v-text-field></td>
-                                        </template>
-                                    </v-data-table>
+                                    <partial name="_ChiPhiDataTable" />
                                     <span><b>Tổng Chi Phí: {{ formatNumber(total) }}</b></span>
                                 </v-flex>
                             </v-layout>
@@ -97,23 +26,11 @@
                                     <v-btn color="primary" v-on:click="onLuuNhapChiPhi" v-if="chiPhiList.length > 0">Lưu Bảng Tính</v-btn>
                                 </v-flex>
                             }
-
                         </v-layout>
             </v-card>
         </div>
 
-        <v-snackbar v-model="snackbar"
-                    :color="color"
-                    :timeout="timeout"
-                    top
-                    right>
-            {{ messageText }}
-            <v-btn dark
-                   flat
-                   v-on:click="snackbar = false">
-                Close
-            </v-btn>
-        </v-snackbar>
+        <partial name="_Toast" />
     </v-app>
 </div>
 

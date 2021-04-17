@@ -27,6 +27,11 @@ namespace Up.Services
             return await _thuThachRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_ThuThach);
         }
 
+        public async Task<bool> CanContributeExportAsync(ClaimsPrincipal user)
+        {
+            return await _thuThachRepository.CanContributeAsync(user, (int)QuyenEnums.Contribute_ThuThach_Export);
+        }
+
         public async Task<ThuThachViewModel> CreateThuThachAsync(CreateThuThachInputModel input, string loggedEmployee)
         {
             if (input.MinGrade <= 0 ||

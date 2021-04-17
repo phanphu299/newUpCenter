@@ -8,7 +8,6 @@
             <v-card>
                 <v-card-title>
                     <v-layout wrap>
-
                     </v-layout>
                     <br />
                     <v-spacer></v-spacer>
@@ -23,42 +22,12 @@
                 <v-container fluid v-if="hocVienList.length > 0">
                     <v-layout wrap>
                         <v-flex>
-                            <v-data-table :headers="headers"
-                                          :items="hocVienList"
-                                          :search="search">
-                                <template slot="items" slot-scope="props">
-
-                                    <td>{{ props.item.hocVien }}</td>
-                                    <td>{{ props.item.lopHoc }}</td>
-                                    <td>{{ props.item.ngayNo }}</td>
-                                    <td>{{ formatNumber(props.item.tienNo) }}</td>
-                                    <td>{{ props.item.createdDate }}</td>
-                                    <td>{{ props.item.createdBy }}</td>
-
-                                </template>
-                                <v-alert slot="no-results" :value="true" color="error" icon="warning">
-                                    Không tìm thấy "{{ search }}".
-                                </v-alert>
-                            </v-data-table>
+                            <partial name="_NoDataTable" />
                         </v-flex>
                     </v-layout>
                 </v-container>
-
             </v-card>
         </div>
-
-        <v-snackbar v-model="snackbar"
-                    :color="color"
-                    :timeout="timeout"
-                    top
-                    right>
-            {{ messageText }}
-            <v-btn dark
-                   flat
-                   v-on:click="snackbar = false">
-                Close
-            </v-btn>
-        </v-snackbar>
     </v-app>
 </div>
 

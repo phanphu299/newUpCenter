@@ -1,0 +1,40 @@
+﻿<div v-if="dialogEdit">
+    <v-dialog v-model="dialogEdit"
+              max-width="800px">
+        <v-card>
+            <v-card-title>
+                <span class="headline">Cập Nhật Giờ Học</span>
+            </v-card-title>
+            <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+
+                        <v-flex lg6 xs12>
+                            Giờ Bắt Đầu
+                            <v-time-picker v-model="itemToEdit.from"></v-time-picker>
+                        </v-flex>
+
+                        <v-flex lg6 xs12>
+                            Giờ Kết Thúc
+                            <v-time-picker v-model="itemToEdit.to"></v-time-picker>
+                        </v-flex>
+
+                    </v-layout>
+                </v-container>
+                <small>* bắt buộc</small>
+                <v-alert v-model="alertEdit"
+                         dismissible
+                         color="warning"
+                         icon="priority_high"
+                         outline>
+                    Không được bỏ trống
+                </v-alert>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="secondary darken-1" flat v-on:click="dialogEdit = false">Đóng</v-btn>
+                <v-btn color="blue darken-1 white--text" v-on:click="onUpdate(itemToEdit)">Lưu</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</div>

@@ -1,0 +1,192 @@
+﻿<v-dialog v-model="dialog" persistent max-width="900px">
+    <v-btn color="primary"
+           slot="activator"
+           class="white--text">
+        Thêm Mới
+        <v-icon right dark>add</v-icon>
+    </v-btn>
+    <v-card>
+        <v-card-title>
+            <span class="headline">Thêm Học Viên Đóng Trọn Gói Mới</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container grid-list-md>
+                <v-layout wrap>
+                    <v-flex xs12>
+                        <v-autocomplete v-model="newItem.hocVien"
+                                        :loading="loadingHocVien"
+                                        :items="itemsHocVien"
+                                        :search-input.sync="searchHocVien"
+                                        cache-items
+                                        class="mx-3"
+                                        flat
+                                        return-object
+                                        hide-no-data
+                                        hide-details
+                                        label="Chọn học viên"
+                                        item-text="fullName"
+                                        item-value="hocVienId"
+                                        solo
+                                        chips
+                                        v-on:change="onChangeHocVien">
+                            <template v-slot:selection="data">
+                                <v-chip :selected="data.selected"
+                                        color="green"
+                                        text-color="white">
+                                    <span>{{ data.item.fullName }}</span>
+
+                                </v-chip>
+                            </template>
+                            <template v-slot:item="data">
+                                <template>
+                                    <v-list-tile-content v-text="data.item.fullName"></v-list-tile-content>
+                                    <v-list-tile-content v-text="data.item.phone"></v-list-tile-content>
+                                </template>
+                            </template>
+                        </v-autocomplete>
+
+                        <v-text-field :rules='rules' prefix="VNĐ" label="Giá *" required v-model="newItem.hocPhi" v-on:keyup.enter="onSave"></v-text-field>
+                    </v-flex>
+                    <v-flex md6 xs12>
+                        <v-menu v-model="isShowDatePicker"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                lazy
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px">
+                            <v-text-field slot="activator"
+                                          v-model="newItem.fromDate"
+                                          label="Từ Ngày"
+                                          prepend-icon="event"
+                                          readonly></v-text-field>
+                            <v-date-picker locale="vi-vn" v-model="newItem.fromDate" v-on:input="isShowDatePicker = false"></v-date-picker>
+                    </v-flex>
+                    <v-flex md6 xs12>
+                        <v-menu v-model="isShowDatePicker2"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                lazy
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px">
+                            <v-text-field slot="activator"
+                                          v-model="newItem.toDate"
+                                          label="Đến Ngày"
+                                          prepend-icon="event"
+                                          readonly></v-text-field>
+                            <v-date-picker locale="vi-vn" v-model="newItem.toDate" v-on:input="isShowDatePicker2 = false"></v-date-picker>
+                    </v-flex>
+
+                    <v-flex xs12>
+                        <v-text-field label="Ghi Chú" required v-model="newItem.ghiChu"></v-text-field>
+                    </v-flex>
+
+                    <v-flex xs12 sm3>
+                        <v-select v-model="newItem.lopHoc"
+                                  :items="itemLopHoc"
+                                  item-text="name"
+                                  return-object
+                                  chips
+                                  label="Chọn Lớp Học">
+                            <template v-slot:selection="data">
+                                <v-chip :selected="data.selected"
+                                        color="green"
+                                        text-color="white">
+                                    <span>{{ data.item.name }}</span>
+
+                                </v-chip>
+                            </template>
+                        </v-select>
+                    </v-flex>
+
+                    <v-flex xs12 sm3>
+                        <v-menu v-model="isShowDatePickerLopHoc"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                lazy
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px">
+                            <v-text-field slot="activator"
+                                          v-model="newItem.fromDateLopHoc"
+                                          label="Từ Ngày"
+                                          prepend-icon="event"
+                                          readonly></v-text-field>
+                            <v-date-picker locale="vi-vn" v-model="newItem.fromDateLopHoc" v-on:input="isShowDatePickerLopHoc = false"></v-date-picker>
+                    </v-flex>
+                    <v-flex xs12 sm3>
+                        <v-menu v-model="isShowDatePickerLopHoc2"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                lazy
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px">
+                            <v-text-field slot="activator"
+                                          v-model="newItem.toDateLopHoc"
+                                          label="Đến Ngày"
+                                          prepend-icon="event"
+                                          readonly></v-text-field>
+                            <v-date-picker locale="vi-vn" v-model="newItem.toDateLopHoc" v-on:input="isShowDatePickerLopHoc2 = false"></v-date-picker>
+                    </v-flex>
+
+                    <v-flex xs12 sm3>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on }">
+                                <v-btn slot="activator" v-on="on" color="primary darken-1" small v-on:click="onAddLopHoc">Thêm</v-btn>
+                            </template>
+                            <strong>Thêm Lớp Học</strong>
+                        </v-tooltip>
+                    </v-flex>
+
+                    <v-flex xs12 sm12>
+                        <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
+                            <thead style="background-color: orange;">
+                                <tr style="border: 1px solid #ddd;">
+                                    <th style="border: 1px solid #ddd;text-align:center"> Lớp Học</th>
+                                    <th style="border: 1px solid #ddd;text-align:center"> Từ Ngày</th>
+                                    <th style="border: 1px solid #ddd;text-align:center"> Đến Ngày</th>
+                                    <th style="border: 1px solid #ddd;text-align:center"> Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border: 1px solid #ddd;" v-for="(item,i) in arrayLopHoc" :key="i">
+                                    <td style="border: 1px solid #ddd; vertical-align: middle; padding-right:5px; padding-top: 0px; padding-bottom: 0px; text-align:center">{{ item.lopHoc.name }}</td>
+                                    <td style="border: 1px solid #ddd; vertical-align: middle; padding-right:5px; padding-top: 0px; padding-bottom: 0px; text-align:center">{{ item.fromDate }}</td>
+                                    <td style="border: 1px solid #ddd; vertical-align: middle; padding-right:5px; padding-top: 0px; padding-bottom: 0px; text-align:center">{{ item.toDate }}</td>
+                                    <td style="border: 1px solid #ddd; vertical-align: middle; padding-right:5px; padding-top: 0px; padding-bottom: 0px; text-align:center">
+                                        <v-tooltip top>
+                                            <template v-slot:activator="{ on }">
+                                                <v-btn slot="activator" v-on="on" color="error darken-1" fab small flat v-on:click="onXoaLopHoc(item)"><v-icon>delete</v-icon></v-btn>
+                                            </template>
+                                            <strong>Xóa Lớp Học</strong>
+                                        </v-tooltip>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </v-flex>
+
+                </v-layout>
+            </v-container>
+            <small>* bắt buộc</small>
+            <v-alert v-model="alert"
+                     dismissible
+                     color="warning"
+                     icon="priority_high"
+                     outline>
+                {{ alertMessage }}
+            </v-alert>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="secondary darken-1" flat v-on:click="dialog = false; alert = false; itemLopHoc = []; arrayLopHoc = []">Đóng</v-btn>
+            <v-btn color="blue darken-1 white--text" v-on:click="onSave">Lưu</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-dialog>

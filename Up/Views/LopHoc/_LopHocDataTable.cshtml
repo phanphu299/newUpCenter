@@ -1,0 +1,79 @@
+﻿<v-data-table :headers="headers"
+              :items="khoaHocItems"
+              :search="search">
+    <template slot="items" slot-scope="props">
+        <td class="justify-center layout px-0">
+            @if (ViewBag.CanContribute)
+            {
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn flat icon slot="activator"
+                               v-on="on"
+                               color="red"
+                               v-on:click.stop="deleteDialog = true"
+                               v-on:click="itemToDelete = props.item">
+                            <v-icon>delete</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Xóa</strong>
+                </v-tooltip>
+
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn color="primary"
+                               flat icon
+                               v-on="on"
+                               v-on:click.stop="dialogEdit = true"
+                               v-on:click="mappingEditItem(props.item)">
+                            <v-icon>edit</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Sửa</strong>
+                </v-tooltip>
+
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn flat icon
+                               color="success"
+                               v-on="on"
+                               v-on:click.stop="dialogDiemDanh = true"
+                               v-on:click="mappingDiemDanhItem(props.item)">
+                            <v-icon>info</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Xem Điểm Danh</strong>
+                </v-tooltip>
+            }
+        </td>
+        <td>{{ props.item.name }}</td>
+        <td>{{ props.item.khoaHoc }}</td>
+        <td>{{ props.item.ngayHoc }}</td>
+        <td>{{ props.item.gioHocFrom }} - {{ props.item.gioHocTo }}</td>
+        <td>
+            @if (ViewBag.CanContribute)
+            {
+                <v-switch v-model="props.item.isCanceled" color="success" hide-details v-on:change="onToggleCanceled(props.item.lopHocId)"></v-switch>
+            }
+            else
+            {
+                <v-switch v-model="props.item.isCanceled" readonly color="success" hide-details v-on:change="onToggleCanceled(props.item.lopHocId)"></v-switch>
+            }
+        </td>
+        <td>
+            @if (ViewBag.CanContribute)
+            {
+                <v-switch v-model="props.item.isGraduated" color="success" hide-details v-on:change="onToggleGraduated(props.item.lopHocId)"></v-switch>
+            }
+            else
+            {
+                <v-switch v-model="props.item.isGraduated" readonly color="success" hide-details v-on:change="onToggleGraduated(props.item.lopHocId)"></v-switch>
+            }
+        </td>
+        <td>{{ props.item.ngayKhaiGiang }}</td>
+        <td>{{ props.item.ngayKetThuc }}</td>
+        <td>{{ props.item.createdDate }}</td>
+        <td>{{ props.item.createdBy }}</td>
+        <td>{{ props.item.updatedDate }}</td>
+        <td>{{ props.item.updatedBy }}</td>
+    </template>
+</v-data-table>

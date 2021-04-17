@@ -350,14 +350,17 @@
                     </li>
                 }
 
-                <li class="bold">
-                    <a asp-area="" asp-controller="HocVien" asp-action="ExportIndex" class="waves-effect waves-cyan">
-                        <i class="material-icons">
-                            help_outline
-                        </i>
-                        <span class="nav-text">Export Thử Thách</span>
-                    </a>
-                </li>
+                @if (Model.CanViewThuThach_Export)
+                {
+                    <li class="bold">
+                        <a asp-area="" asp-controller="ThuThach" asp-action="ExportIndex" class="waves-effect waves-cyan">
+                            <i class="material-icons">
+                                help_outline
+                            </i>
+                            <span class="nav-text">Export Thử Thách</span>
+                        </a>
+                    </li>
+                }
             </ul>
         </li>
     </ul>

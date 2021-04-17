@@ -1,0 +1,81 @@
+﻿<div v-if="dialogDiemDanh">
+    <v-dialog v-model="dialogDiemDanh" persistent max-width="600px">
+        <v-card>
+            <v-card-title>
+                <span class="headline">Lịch Sử Điểm Danh Học Viên '{{ itemToDiemDanh.fullName }}'</span>
+            </v-card-title>
+            <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+
+                        <v-flex xs12 sm4>
+                            <v-select v-model="selectedLopHoc"
+                                      :items="itemDiemDanh"
+                                      item-text="name"
+                                      item-value="lopHocId"
+                                      chips
+                                      label="Chọn Lớp Học"
+                                      v-on:change="GetDiemDanhByHocVien">
+                                <template v-slot:selection="data">
+                                    <v-chip :selected="data.selected"
+                                            color="green"
+                                            text-color="white">
+                                        <span>{{ data.item.name }}</span>
+                                    </v-chip>
+                                </template>
+                            </v-select>
+                        </v-flex>
+
+                        <v-flex xs12 sm4>
+                            <v-select :items="itemThang"
+                                      v-model="selectedThang"
+                                      chips
+                                      label="Chọn Tháng"
+                                      v-on:change="GetDiemDanhByHocVien"></v-select>
+                        </v-flex>
+
+                        <v-flex xs12 sm4>
+                            <v-select :items="itemNam"
+                                      v-model="selectedNam"
+                                      chips
+                                      label="Chọn Năm"
+                                      v-on:change="GetDiemDanhByHocVien"></v-select>
+                        </v-flex>
+
+                        <v-container fluid v-if="diemDanhItems.length > 0">
+                            <v-layout wrap>
+                                <v-flex>
+                                    <div style="overflow-x:auto;">
+                                        <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
+                                            <thead style="background-color: orange;">
+                                                <tr style="border: 1px solid #ddd;">
+                                                    <th style="border: 1px solid #ddd; text-align: center" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr style="border: 1px solid #ddd;">
+                                                    <td style="border: 1px solid #ddd; text-align: center" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
+                                                        <span v-for="(item, index) in diemDanhItems" :key="index">
+                                                            <i v-if="item.day == column && item.isOff == false">x</i>
+                                                            <i v-else-if="item.day == column && item.isOff == true && item.isDuocNghi == true">OFF</i>
+                                                            <i v-else-if="item.day == column && item.isOff == true && item.isDuocNghi == null"></i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+
+                    </v-layout>
+                </v-container>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="secondary darken-1" flat v-on:click="dialogDiemDanh = false; diemDanhItems = []; selectedLopHoc = {}">Đóng</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</div>

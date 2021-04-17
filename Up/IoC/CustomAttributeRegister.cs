@@ -30,6 +30,7 @@ namespace Up.IoC
             services.AddScoped<Read_HocPhiTronGoi>();
             services.AddScoped<Read_CauHoi>();
             services.AddScoped<Read_ThuThach>();
+            services.AddScoped<Read_ThuThach_Export>();
         }
     }
 }

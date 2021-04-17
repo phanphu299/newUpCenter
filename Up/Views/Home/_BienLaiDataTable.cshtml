@@ -1,0 +1,35 @@
+﻿<v-data-table :headers="headersBienLai"
+              :items="bienLai"
+              :search="searchBienLai"
+              class="elevation-1"
+              v-if="bienLai.length > 0">
+    <template slot="items" slot-scope="props">
+        <td>
+            @if (User.IsInRole("Admin") || User.IsInRole("TK_BienLai_Contribute"))
+            {
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn flat icon slot="activator"
+                               v-on="on"
+                               color="red"
+                               v-on:click.stop="deleteBienLaiDialog = true"
+                               v-on:click="bienLaiToDelete = props.item">
+                            <v-icon>delete</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Xóa</strong>
+                </v-tooltip>
+            }
+        </td>
+        <td>{{ props.item.maBienLai }}</td>
+        <td>{{ props.item.fullName }}</td>
+        <td>{{ props.item.tenLop }}</td>
+        <td>{{ props.item.hocPhi }}</td>
+        <td>{{ props.item.thangHocPhi }}</td>
+        <td>{{ props.item.createdDate }}</td>
+        <td>{{ props.item.createdBy }}</td>
+    </template>
+    <v-alert slot="no-results" :value="true" color="error" icon="warning">
+        Không tìm thấy "{{ searchBienLai }}".
+    </v-alert>
+</v-data-table>

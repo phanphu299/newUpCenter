@@ -1,0 +1,115 @@
+﻿<v-data-table :headers="headers"
+              :items="khoaHocItems"
+              :search="search"
+              class="elevation-1">
+    <template slot="items" slot-scope="props">
+        <td class="justify-center layout px-0">
+            @if (ViewBag.CanContribute)
+            {
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn flat icon
+                               color="red"
+                               v-on="on"
+                               v-on:click.stop="deleteDialog = true"
+                               v-on:click="itemToDelete = props.item">
+                            <v-icon>delete</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Xóa</strong>
+                </v-tooltip>
+
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn flat icon
+                               color="primary"
+                               v-on="on"
+                               v-on:click.stop="dialogEdit = true"
+                               v-on:click="mappingEditItem(props.item)">
+                            <v-icon>edit</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Sửa</strong>
+                </v-tooltip>
+
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn flat icon
+                               color="success"
+                               v-on="on"
+                               v-on:click.stop="dialogDiemDanh = true"
+                               v-on:click="mappingDiemDanhItem(props.item)">
+                            <v-icon>info</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Xem Điểm Danh</strong>
+                </v-tooltip>
+
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn flat icon
+                               color="warning"
+                               v-on="on"
+                               v-on:click.stop="dialogNgayHoc = true"
+                               v-on:click="mappingNgayHocItem(props.item)">
+                            <v-icon>calendar_today</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Thêm Ngày Bắt Đầu Và Kết Thúc</strong>
+                </v-tooltip>
+
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn flat icon
+                               color="secondary"
+                               v-on="on"
+                               v-on:click.stop="dialogThemLop = true"
+                               v-on:click="mappingThemLopItem(props.item)">
+                            <v-icon>add</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Thêm Học Viên Vào Lớp Cũ ( Hủy hoặc Tốt Nghiệp )</strong>
+                </v-tooltip>
+            }
+        </td>
+        <td class="px-0">{{ props.item.fullName }}</td>
+        <td>{{ props.item.trigram }}</td>
+        <td>
+            <v-tooltip top v-if="props.item.lopHocList.length > 0">
+                <template v-slot:activator="{ on }">
+                    <v-icon color="grey lighten-1" dark v-on="on">class</v-icon>
+                </template>
+                <div v-for="lop in props.item.lopHocList">
+                    <strong>{{ lop.name }}</strong><v-icon v-if="lop.isCanceled || lop.isGraduated" color="grey lighten-1">report</v-icon>
+                </div>
+            </v-tooltip>
+
+            <v-tooltip top v-if="props.item.passedChallenge.length > 0">
+                <template v-slot:activator="{ on }">
+                    <v-icon color="grey lighten-1" dark v-on="on">school</v-icon>
+                </template>
+                <div v-for="thuThach in props.item.passedChallenge">
+                    <strong>{{ thuThach }}</strong>
+                </div>
+            </v-tooltip>
+        </td>
+        <td>{{ props.item.ngaySinh }}</td>
+        <td>{{ props.item.cmnd }}</td>
+        <td>{{ props.item.phone }}</td>
+        <td>{{ props.item.otherPhone }}</td>
+        <td>{{ props.item.diaChi }}</td>
+        <td>{{ props.item.notes }}</td>
+        <td>{{ props.item.facebookAccount }}</td>
+        <td>{{ props.item.parentFullName }}</td>
+        <td>{{ props.item.parentPhone }}</td>
+        <td>{{ props.item.englishName }}</td>
+        <td>{{ props.item.quanHe }}</td>
+        <td>{{ props.item.createdDate }}</td>
+        <td>{{ props.item.createdBy }}</td>
+        <td>{{ props.item.updatedDate }}</td>
+        <td>{{ props.item.updatedBy }}</td>
+    </template>
+    <v-alert slot="no-results" :value="true" color="error" icon="warning">
+        Không tìm thấy "{{ search }}".
+    </v-alert>
+</v-data-table>

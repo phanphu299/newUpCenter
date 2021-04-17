@@ -1,0 +1,32 @@
+﻿<div v-if="deleteBienLaiDialog">
+    <v-dialog v-model="deleteBienLaiDialog"
+              width="500">
+        <v-card>
+            <v-card-title class="headline error lighten-2 white--text"
+                          primary-title style="background-color: #ff8c84 !important; border-color: #ff8c84 !important;">
+                Xác Nhận
+            </v-card-title>
+
+            <v-card-text>
+                Bạn có chắc xóa biên lai mã '{{ bienLaiToDelete.maBienLai }}'?
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn color="secondary"
+                       flat
+                       v-on:click="deleteBienLaiDialog = false">
+                    Đóng
+                </v-btn>
+
+                <v-btn color="error white--text" style="background-color: #ff5252 !important; border-color: #ff5252 !important;"
+                       v-on:click="onDeleteBienLai(bienLaiToDelete)">
+                    Xóa
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</div>

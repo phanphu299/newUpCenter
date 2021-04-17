@@ -1,0 +1,79 @@
+﻿<v-dialog v-model="dialog" persistent max-width="600px">
+    <v-btn color="primary"
+           slot="activator"
+           class="white--text">
+        Thêm Mới
+        <v-icon right dark>add</v-icon>
+    </v-btn>
+    <v-card>
+        <v-card-title>
+            <span class="headline">Thêm Lớp Học Mới</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container grid-list-md>
+                <v-layout wrap>
+
+                    <v-flex xs12 sm4>
+                        <v-text-field label="Tên Lớp Học *" required v-model="newItem.name"></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm4>
+                        <v-select :items="itemKhoaHoc"
+                                  item-text="name"
+                                  item-value="khoaHocId"
+                                  v-model="newItem.khoaHoc"
+                                  label="Chọn Khóa Học *">
+                        </v-select>
+                    </v-flex>
+                    <v-flex xs12 sm4>
+                        <v-select :items="itemNgayHoc"
+                                  item-text="name"
+                                  item-value="ngayHocId"
+                                  v-model="newItem.ngayHoc"
+                                  label="Chọn Ngày Học *">
+                        </v-select>
+                    </v-flex>
+
+                    <v-flex xs12 sm4>
+                        <v-select :items="itemGioHoc"
+                                  :item-text="DisplayGioHoc"
+                                  item-value="gioHocId"
+                                  v-model="newItem.gioHoc"
+                                  label="Chọn Giờ Học *">
+                        </v-select>
+                    </v-flex>
+                    <v-flex xs12 sm4>
+                        <v-menu v-model="isShowDatePicker"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                lazy
+                                transition="scale-transition"
+                                offset-y
+                                full-width
+                                min-width="290px">
+                            <v-text-field slot="activator"
+                                          v-model="newItem.ngayKhaiGiang"
+                                          label="Ngày Khai Giảng"
+                                          prepend-icon="event"
+                                          readonly></v-text-field>
+                            <v-date-picker locale="vi-vn" v-model="newItem.ngayKhaiGiang" v-on:input="isShowDatePicker = false"></v-date-picker>
+                        </v-menu>
+                    </v-flex>
+
+                </v-layout>
+            </v-container>
+            <small>* bắt buộc</small>
+            <v-alert v-model="alert"
+                     dismissible
+                     color="warning"
+                     icon="priority_high"
+                     outline>
+                Không được bỏ trống
+            </v-alert>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="secondary darken-1" flat v-on:click="dialog = false">Đóng</v-btn>
+            <v-btn color="blue darken-1 white--text" v-on:click="onSave">Lưu</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-dialog>

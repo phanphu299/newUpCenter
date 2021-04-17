@@ -1,0 +1,26 @@
+﻿<div v-if="dialogQuyen">
+    <v-dialog v-model="dialogQuyen" persistent max-width="800px">
+        <v-card>
+            <v-card-title>
+                <span class="headline">Xem/Cập Nhật Quyền Cho Role '{{ itemToEdit.role }}'</span>
+            </v-card-title>
+            <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+
+                        <v-flex xs12 sm6 v-for="item in itemQuyens" :key="item.id">
+                            <v-checkbox v-model="item.isTrue"
+                                        :label="item.name"></v-checkbox>
+                        </v-flex>
+
+                    </v-layout>
+                </v-container>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="secondary darken-1" flat v-on:click="dialogQuyen = false">Đóng</v-btn>
+                <v-btn color="blue darken-1 white--text" v-on:click="onUpdateQuyenRole(itemToEdit)">Lưu</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</div>

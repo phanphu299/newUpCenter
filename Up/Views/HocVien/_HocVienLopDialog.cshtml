@@ -1,0 +1,39 @@
+﻿<div v-if="dialogThemLop">
+    <v-dialog v-model="dialogThemLop" persistent max-width="600px">
+        <v-card>
+            <v-card-title>
+                <span class="headline">Thêm Học Viên '{{ itemToThemLop.fullName }}' Vào Lớp Học</span>
+            </v-card-title>
+            <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+
+                        <v-flex xs12>
+                            <v-select v-model="selectedArrayLopHoc"
+                                      :items="itemThemLop"
+                                      item-text="name"
+                                      item-value="lopHocId"
+                                      chips
+                                      multiple
+                                      label="Chọn Lớp Học">
+                                <template v-slot:selection="data">
+                                    <v-chip :selected="data.selected"
+                                            color="green"
+                                            text-color="white">
+                                        <span>{{ data.item.name }}</span>
+                                    </v-chip>
+                                </template>
+                            </v-select>
+                        </v-flex>
+
+                    </v-layout>
+                </v-container>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="secondary darken-1" flat v-on:click="dialogThemLop = false; selectedArrayLopHoc = {}">Đóng</v-btn>
+                <v-btn color="blue darken-1 white--text" v-on:click="onThemLop(itemToThemLop)">Lưu</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</div>

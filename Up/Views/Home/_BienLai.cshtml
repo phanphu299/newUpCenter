@@ -1,0 +1,17 @@
+﻿<v-card-title v-if="bienLai.length > 0">
+    <h4 class="header mt-0">
+        BIÊN LAI HỌC PHÍ
+    </h4>
+
+    <v-spacer></v-spacer>
+    <v-text-field v-model="searchBienLai"
+                  append-icon="search"
+                  label="Tìm Kiếm"
+                  single-line
+                  hide-details></v-text-field>
+</v-card-title>
+<partial name="_BienLaiDataTable" />
+
+<partial name="_BienLaiDeleteDialog" />
+
+<partial name="_Toast" />

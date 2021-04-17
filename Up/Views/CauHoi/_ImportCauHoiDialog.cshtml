@@ -1,0 +1,41 @@
+﻿<div v-if="dialogImport">
+    <v-dialog v-model="dialogImport" persistent max-width="600px">
+        <v-card>
+            <v-card-title>
+                <span class="headline">Thêm Câu Hỏi Từ Excel</span>
+            </v-card-title>
+            <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+
+                        <v-flex xs12 sm4>
+                            <v-select v-model="selectedThuThach"
+                                      :items="itemThuThach"
+                                      item-text="name"
+                                      item-value="thuThachId"
+                                      return-object
+                                      label="Chọn Thử Thách">
+                            </v-select>
+                        </v-flex>
+
+                        <v-flex xs12 sm4 v-if="selectedThuThach != ''">
+                            <v-btn color="primary"
+                                   class="white--text" v-on:click="onExportTemplate">
+                                Download mẫu excel
+                                <v-icon right dark>attach_file</v-icon>
+                            </v-btn>
+                        </v-flex>
+
+                        <input v-if="selectedThuThach != ''" type="file" id="file" ref="myFiles" class="custom-file-input" />
+
+                    </v-layout>
+                </v-container>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="secondary darken-1" flat v-on:click="dialogImport = false; selectedThuThach = ''">Đóng</v-btn>
+                <v-btn color="blue darken-1 white--text" v-on:click="onImport">Lưu</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</div>

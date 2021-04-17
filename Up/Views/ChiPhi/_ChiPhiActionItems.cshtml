@@ -1,0 +1,26 @@
+﻿<v-flex xs12 sm4>
+    <v-select :items="itemThang"
+              v-model="selectedThang"
+              chips
+              label="Chọn Tháng"
+              v-on:change="onTinhTien"></v-select>
+</v-flex>
+
+<v-flex xs12 sm4>
+    <v-select :items="itemNam"
+              v-model="selectedNam"
+              chips
+              label="Chọn Năm"
+              v-on:change="onTinhTien"></v-select>
+</v-flex>
+
+<v-flex xs12 sm2>
+    <v-btn color="primary" v-on:click="onTinhTien" v-if="selectedNam !== '' && selectedThang !== ''">Refresh</v-btn>
+</v-flex>
+
+@if (ViewBag.CanContribute)
+{
+    <v-flex xs12 sm2>
+        <v-btn color="success" v-on:click="onLuuChiPhi" v-if="chiPhiList.length > 0">Lưu Chi Phí</v-btn>
+    </v-flex>
+}

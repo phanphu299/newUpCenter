@@ -1,0 +1,35 @@
+﻿<v-dialog v-model="dialog" persistent max-width="600px">
+    <v-btn color="primary"
+           slot="activator"
+           class="white--text">
+        Thêm Mới
+        <v-icon right dark>add</v-icon>
+    </v-btn>
+    <v-card>
+        <v-card-title>
+            <span class="headline">Thêm Loại Chế Độ Mới</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container grid-list-md>
+                <v-layout wrap>
+                    <v-flex xs12>
+                        <v-text-field label="Tên Loại Chế Độ *" required v-model="newItem" v-on:keyup.enter="onSave"></v-text-field>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+            <small>* bắt buộc</small>
+            <v-alert v-model="alert"
+                     dismissible
+                     color="warning"
+                     icon="priority_high"
+                     outline>
+                Không được bỏ trống
+            </v-alert>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="secondary darken-1" flat v-on:click="dialog = false">Đóng</v-btn>
+            <v-btn color="blue darken-1 white--text" v-on:click="onSave">Lưu</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-dialog>

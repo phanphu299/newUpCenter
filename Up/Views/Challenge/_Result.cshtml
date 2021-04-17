@@ -16,9 +16,50 @@
         <h3>You can do better!</h3>
         <h3>Good luck next time.</h3>
 
-
         <h3>Your score is {{ score }}/{{ selectedThuThach.soCauHoi }}</h3>
         <v-btn color="blue darken-1 white--text"
-               v-if="score < selectedThuThach.soCauHoi">Show wrong answers</v-btn>
+               v-if="score < selectedThuThach.soCauHoi"
+               v-on:click.stop="dialogResult = true">Show wrong answers</v-btn>
     </div>
+
+    <v-dialog v-model="dialogResult"
+              max-width="800px">
+        <v-card>
+            <v-card-title class="cyan darken-1">
+                <span class="headline white--text">Your exam</span>
+            </v-card-title>
+            <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+                        <v-flex xs12>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Question</th>
+                                            <th scope="col">Your Answer</th>
+                                            <th scope="col">Correct Answer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="item in resultList" :key="item.stt">
+                                            <th scope="row">{{ item.stt }}</th>
+                                            <td>{{ item.name }}</td>
+                                            <td><v-icon v-if="item.dapAnHocVien == item.dapAnDung" color="success">check_circle_outline</v-icon>{{ item.dapAnHocVien }}</td>
+                                            <td>{{ item.dapAnDung }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="secondary darken-1" flat v-on:click="dialogResult = false">Đóng</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </div>

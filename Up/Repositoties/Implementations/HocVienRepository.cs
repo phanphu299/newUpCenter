@@ -68,6 +68,8 @@ namespace Up.Repositoties
                                         .Include(x => x.HocVien_LopHocs)
                                         .ThenInclude(x => x.LopHoc)
                                         .Include(x => x.HocVien_NgayHocs)
+                                        .Include(x => x.ChallengeResults)
+                                        .ThenInclude(x => x.ThuThach)
                                         .AsNoTracking()
                                         .ToListAsync();
 
@@ -107,6 +109,8 @@ namespace Up.Repositoties
                                         .Include(x => x.HocVien_LopHocs)
                                         .ThenInclude(x => x.LopHoc)
                                         .Include(x => x.HocVien_NgayHocs)
+                                        .Include(x => x.ChallengeResults)
+                                        .ThenInclude(x => x.ThuThach)
                                         .AsNoTracking()
                                         .FirstOrDefaultAsync(x => x.HocVienId == id);
 
@@ -253,6 +257,8 @@ namespace Up.Repositoties
                             .Include(x => x.HocVien_LopHocs)
                             .ThenInclude(x => x.LopHoc)
                             .Include(x => x.HocVien_NgayHocs)
+                            .Include(x => x.ChallengeResults)
+                            .ThenInclude(x => x.ThuThach)
                             .AsNoTracking()
                             .ToListAsync();
 

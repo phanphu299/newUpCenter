@@ -49,6 +49,8 @@ namespace Up.Enums
         Read_ThuThach,
         Contribute_ThuThach,
         Read_CauHoi,
-        Contribute_CauHoi
+        Contribute_CauHoi,
+        Read_ThuThach_Export,
+        Contribute_ThuThach_Export,
     }
 }

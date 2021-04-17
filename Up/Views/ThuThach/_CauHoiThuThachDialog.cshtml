@@ -1,0 +1,33 @@
+﻿<div v-if="dialogCauHoi">
+    <v-dialog v-model="dialogCauHoi"
+              max-width="800px">
+        <v-card>
+            <v-card-title class="darken-1">
+                <span class="headline">Cập Nhật Câu Hỏi '{{ itemToEdit.name }}'</span>
+            </v-card-title>
+            <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+                        <v-flex xs12 sm6>
+                            <v-select :items="calculateSoCauHoi(itemToEdit.soCauHoi)"
+                                      item-text="value"
+                                      item-value="value"
+                                      v-model="cauHoiSo"
+                                      v-on:change="changeCauHoiSo(itemToEdit)"
+                                      label="Câu Hỏi Số *">
+                            </v-select>
+                        </v-flex>
+
+                        <v-flex xs12>
+                            <partial name="_CauHoiThuThachDataTable" />
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="secondary darken-1" flat v-on:click="dialogCauHoi = false; cauHoiItems = []; cauHoiSo = 1">Đóng</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</div>

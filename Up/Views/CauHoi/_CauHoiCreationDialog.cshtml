@@ -1,0 +1,78 @@
+﻿<v-dialog v-model="dialog" persistent max-width="600px">
+    <v-btn color="primary"
+           slot="activator"
+           class="white--text">
+        Thêm Mới
+        <v-icon right dark>add</v-icon>
+    </v-btn>
+    <v-card>
+        <v-card-title>
+            <span class="headline">Thêm Câu Hỏi Mới</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container grid-list-md>
+                <v-layout wrap>
+                    <v-flex xs12 sm6>
+                        <v-select :items="itemThuThach"
+                                  item-text="name"
+                                  item-value="thuThachId"
+                                  v-model="newItem.thuThach"
+                                  return-object
+                                  label="Chọn Thử Thách *">
+                        </v-select>
+                    </v-flex>
+
+                    <v-flex xs12 sm6>
+                        <v-select :items="calculateSoCauHoi(newItem.thuThach.soCauHoi)"
+                                  v-model="newItem.stt"
+                                  label="Chọn Số Câu *"
+                                  v-if="newItem.thuThach != ''">
+                        </v-select>
+                    </v-flex>
+
+                    <v-flex xs12 sm6>
+                        <v-select :items="itemSoDapAn"
+                                  item-text="value"
+                                  item-value="value"
+                                  v-model="soDapAn"
+                                  label="Số Đáp Án *">
+                        </v-select>
+                    </v-flex>
+
+                    <v-flex xs12 sm6>
+                        <v-select :items="itemSoDapAn.slice(0, soDapAn)"
+                                  item-text="prefix"
+                                  item-value="value"
+                                  v-model="newItem.dapAnDung"
+                                  label="Đáp Án Đúng *">
+                        </v-select>
+                    </v-flex>
+
+                    <v-flex xs12>
+                        <v-text-field label="Tên Câu Hỏi *" required v-model="newItem.name"></v-text-field>
+                    </v-flex>
+
+                    <v-flex xs12 sm6 v-for="item in soDapAn" :accesskey="item">
+                        <v-text-field :label="itemSoDapAn[item-1].prefix" required v-model="newItem.dapAns[item-1]"></v-text-field>
+                    </v-flex>
+
+
+                </v-layout>
+            </v-container>
+            <small>* bắt buộc</small><br />
+            <small>** đáp án không được để trống</small>
+            <v-alert v-model="alert"
+                     dismissible
+                     color="warning"
+                     icon="priority_high"
+                     outline>
+                {{ message }}
+            </v-alert>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="secondary darken-1" flat v-on:click="dialog = false">Đóng</v-btn>
+            <v-btn color="blue darken-1 white--text" v-on:click="onSave(newItem)">Lưu</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-dialog>

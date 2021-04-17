@@ -34,6 +34,16 @@ namespace Up.Controllers
             return View();
         }
 
+        [ServiceFilter(typeof(Read_ThuThach_Export))]
+        public async Task<IActionResult> ExportIndex()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            ViewBag.CanContribute = await _thuThachService.CanContributeExportAsync(User);
+            return View();
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetThuThachAsync()
         {

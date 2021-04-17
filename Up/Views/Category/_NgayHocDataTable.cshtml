@@ -1,0 +1,48 @@
+﻿<v-data-table :headers="headers"
+              :items="khoaHocItems"
+              :search="search">
+    <template slot="items" slot-scope="props">
+        <td>
+            @if (ViewBag.CanContribute)
+            {
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn flat icon slot="activator"
+                               v-on="on"
+                               color="red"
+                               v-on:click.stop="deleteDialog = true"
+                               v-on:click="itemToDelete = props.item">
+                            <v-icon>delete</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Xóa</strong>
+                </v-tooltip>
+            }
+        </td>
+        <td>
+            @if (ViewBag.CanContribute)
+            {
+                <v-edit-dialog :return-value.sync="props.item.name"
+                               lazy
+                               v-on:save="onUpdate(props.item)">
+                    {{ props.item.name }}
+                    <v-text-field slot="input"
+                                  v-model="props.item.name"
+                                  label="Edit"
+                                  single-line></v-text-field>
+                </v-edit-dialog>
+            }
+            else
+            {
+                <span>{{ props.item.name }}</span>
+            }
+        </td>
+        <td>{{ props.item.createdDate }}</td>
+        <td>{{ props.item.createdBy }}</td>
+        <td>{{ props.item.updatedDate }}</td>
+        <td>{{ props.item.updatedBy }}</td>
+    </template>
+    <v-alert slot="no-results" :value="true" color="error" icon="warning">
+        Không tìm thấy "{{ search }}".
+    </v-alert>
+</v-data-table>

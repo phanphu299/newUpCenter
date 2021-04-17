@@ -1,0 +1,93 @@
+﻿<v-data-table :headers="headers"
+              :items="khoaHocItems"
+              :search="search">
+    <template slot="items" slot-scope="props">
+        <td class="justify-center layout px-0">
+
+            @if (ViewBag.CanContribute)
+            {
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn flat icon slot="activator"
+                               v-on="on"
+                               color="red"
+                               v-on:click.stop="deleteDialog = true"
+                               v-on:click="itemToDelete = props.item">
+                            <v-icon>delete</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Xóa</strong>
+                </v-tooltip>
+
+                <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                        <v-btn color="primary"
+                               flat icon
+                               v-on="on"
+                               v-on:click.stop="dialogEdit = true"
+                               v-on:click="mappingEditItem(props.item)">
+                            <v-icon>edit</v-icon>
+                        </v-btn>
+                    </template>
+                    <strong>Sửa</strong>
+                </v-tooltip>
+            }
+
+        </td>
+        <td>{{ props.item.name }}</td>
+        <td>
+            <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                    <v-icon color="grey lighten-1" dark v-on="on">info</v-icon>
+                </template>
+                <div v-for="loaiItem in props.item.loaiNhanVien_CheDo">
+                    <strong>{{ loaiItem.loaiGiaoVien.name }}/{{ loaiItem.loaiCheDo.name }}</strong><br />
+                </div>
+            </v-tooltip>
+        </td>
+        <td>{{ props.item.phone }}</td>
+        @if (User.IsInRole("Admin"))
+        {
+            <td>{{ props.item.teachingRate }}</td>
+            <td>{{ props.item.tutoringRate }}</td>
+            <td>{{ props.item.basicSalary }}</td>
+            <td>{{ props.item.mucHoaHong }}</td>
+        }
+        else
+        {
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        }
+        <td>
+            <v-tooltip top>
+                <template slot="activator" slot-scope="{ on }">
+                    <span v-on="on" v-if="props.item.nganHang">{{ props.item.nganHang | truncate(10, '...')}}</span>
+                </template>
+                <span>{{ props.item.nganHang}}</span>
+            </v-tooltip>
+        </td>
+        <td>{{ props.item.facebookAccount }}</td>
+        <td>
+            <v-tooltip top>
+                <template slot="activator" slot-scope="{ on }">
+                    <span v-on="on" v-if="props.item.diaChi">{{ props.item.diaChi | truncate(10, '...')}}</span>
+                </template>
+                <span>{{ props.item.diaChi}}</span>
+            </v-tooltip>
+        </td>
+        <td>{{ props.item.initialName }}</td>
+        <td>{{ props.item.cmnd }}</td>
+        <td>{{ props.item.ngayLamViec }}</td>
+        <td>{{ props.item.ngayBatDau }}</td>
+        <td>{{ props.item.ngayKetThuc }}</td>
+        <td>{{ props.item.createdDate }}</td>
+        <td>{{ props.item.createdBy }}</td>
+        <td>{{ props.item.updatedDate }}</td>
+        <td>{{ props.item.updatedBy }}</td>
+    </template>
+    <v-alert slot="no-results" :value="true" color="error" icon="warning">
+        Không tìm thấy "{{ search }}".
+    </v-alert>
+</v-data-table>

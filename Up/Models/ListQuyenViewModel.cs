@@ -28,5 +28,7 @@
 
         public bool CanViewThuThach { get; set; }
         public bool CanViewCauHoi { get; set; }
+
+        public bool CanViewThuThach_Export { get; set; }
     }
 }

@@ -1,0 +1,65 @@
+﻿<div v-if="dialogDiemDanh">
+    <v-dialog v-model="dialogDiemDanh" persistent max-width="600px">
+        <v-card>
+            <v-card-title>
+                <span class="headline">Lịch Sử Điểm Danh Lớp '{{ itemToDiemDanh.name }}'</span>
+            </v-card-title>
+
+            <v-card-text>
+
+                <v-layout wrap>
+                    <v-flex xs12 sm6>
+                        <v-select :items="itemThang"
+                                  v-model="selectedThang"
+                                  chips
+                                  label="Chọn Tháng"
+                                  v-on:change="onTinhDiemDanh"></v-select>
+                    </v-flex>
+
+                    <v-flex xs12 sm6>
+                        <v-select :items="itemNam"
+                                  v-model="selectedNam"
+                                  chips
+                                  label="Chọn Năm"
+                                  v-on:change="onTinhDiemDanh"></v-select>
+                    </v-flex>
+                </v-layout>
+
+                <v-container fluid v-if="diemDanhItems.length > 0">
+                    <v-layout wrap>
+                        <v-flex>
+                            <div style="overflow-x:auto;">
+                                <table class="table table-condensed table-hover table-bordered" style="border: 1px solid #ddd;">
+                                    <thead style="background-color: orange;">
+                                        <tr style="border: 1px solid #ddd;">
+                                            <th style="border: 1px solid #ddd;">Học Viên</th>
+                                            <th style="border: 1px solid #ddd;" v-for="(column, index) in soNgayHoc" :key="index"> {{ column }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr style="border: 1px solid #ddd;" v-for="(item, index) in diemDanhItems" :key="index">
+                                            <td style="border: 1px solid #ddd;">{{ item.label }}</td>
+                                            <td style="border: 1px solid #ddd;" v-for="(column, indexColumn) in soNgayHoc" :key="indexColumn">
+                                                <span v-for="(content, indexSpan) in item.thongKeDiemDanh" :key="indexSpan">
+                                                    <i v-if="content.day == column && content.isOff != false">x</i>
+                                                    <i v-else-if="content.day == column && content.isOff != true && content.duocNghi == true">off</i>
+                                                    <i v-else-if="content.day == column && content.isOff != true && content.duocNghi == null"></i>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="secondary darken-1" flat v-on:click="dialogDiemDanh = false; diemDanhItems = [];">Đóng</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</div>

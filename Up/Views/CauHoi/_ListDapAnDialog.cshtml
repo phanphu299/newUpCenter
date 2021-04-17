@@ -1,0 +1,44 @@
+﻿<div v-if="dialogDapAn">
+    <v-dialog v-model="dialogDapAn"
+              max-width="800px">
+        <v-card>
+            <v-card-title class="cyan darken-1">
+                <span class="headline white--text">{{ itemToEdit.name }}</span>
+            </v-card-title>
+            <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+                        <v-flex xs12>
+                            <v-list>
+                                <v-list-tile v-for="(item, index) in itemToEdit.dapAns"
+                                             :key="item.name">
+                                    <v-list-tile-action>
+                                        <b>{{ itemSoDapAn[index].prefix }})</b>
+                                    </v-list-tile-action>
+
+                                    <v-list-tile-content>
+                                        <v-tooltip top>
+                                            <template v-slot:activator="{ on }">
+                                                <v-list-tile-title v-on="on" slot="activator" v-text="item.name"></v-list-tile-title>
+                                            </template>
+                                            <strong>{{ item.name }}</strong>
+                                        </v-tooltip>
+                                    </v-list-tile-content>
+
+                                    <v-list-tile-action>
+                                        <v-icon v-if="item.isTrue" color="success">check_circle_outline</v-icon>
+                                    </v-list-tile-action>
+                                </v-list-tile>
+
+                            </v-list>
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="secondary darken-1" flat v-on:click="dialogDapAn = false">Đóng</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</div>
