@@ -1,5 +1,6 @@
 ﻿namespace Up.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Up.Enums;
@@ -112,6 +113,27 @@
         public async Task<List<ThongKe_DoanhThuHocPhiViewModel>> GetDoanhThuHocPhiTronGoiAsync()
         {
             return await _thongKeRepository.GetDoanhThuHocPhiTronGoiAsync();
+        }
+
+        public async Task<List<HocVienTheoDoiViewModel>> GetHocVienTheoDoiAsync()
+        {
+            return await _thongKeRepository.GetHocVienTheoDoiAsync();
+        }
+
+        public async Task<HocVienTheoDoiViewModel> CreateHocVienTheoDoiAsync(Guid hocVienId, string ghiChu, string loggedEmployee)
+        {
+            var result = await _thongKeRepository.CreateHocVienTheoDoiAsync(hocVienId, ghiChu, loggedEmployee);
+            return await _thongKeRepository.GetHocVienTheoDoiDetailAsync(result);
+        }
+
+        public async Task<bool> UpdateHocVienTheoDoiAsync(Guid id, string ghiChu, string loggedEmployee)
+        {
+            return await _thongKeRepository.UpdateHocVienTheoDoiAsync(id, ghiChu, loggedEmployee);
+        }
+
+        public async Task<bool> DeleteHocVienTheoDoiAsync(Guid id, string loggedEmployee)
+        {
+            return await _thongKeRepository.DeleteHocVienTheoDoiAsync(id, loggedEmployee);
         }
     }
 }

@@ -60,7 +60,7 @@ namespace Up.Services
                 .Select(group => 
                 {
                     Random rand = new Random();
-                    int toSkip = rand.Next(1, group.Count());
+                    int toSkip = rand.Next(0, group.Count());
 
                     var randomCauHoi = group.OrderBy(x => Guid.NewGuid()).Skip(toSkip).Take(1).FirstOrDefault();
                     return randomCauHoi;

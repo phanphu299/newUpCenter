@@ -32,7 +32,7 @@ namespace Up.Converters
                 Notes = hocVien.Notes,
                 Trigram = hocVien.Trigram,
                 PassedChallenge = hocVien.ChallengeResults
-                                        .Where(x => x.IsPass)
+                                        .Where(x => x.IsPass && !x.ThuThach.IsDisabled)
                                         .Select(x => x.ThuThach.Name)
                                         .Distinct(),
                 LopHocList = hocVien.HocVien_LopHocs

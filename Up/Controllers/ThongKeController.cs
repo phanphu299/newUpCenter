@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Mvc;
     using System.Linq;
     using System.Threading.Tasks;
+    using Up.Converters;
     using Up.Models;
     using Up.Services;
 
@@ -13,11 +14,13 @@
     {
         private readonly IThongKeService _thongKeService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly Converters.Converter _converter;
 
-        public ThongKeController(IThongKeService thongKeService, UserManager<IdentityUser> userManager)
+        public ThongKeController(IThongKeService thongKeService, UserManager<IdentityUser> userManager, Converter converter)
         {
             _thongKeService = thongKeService;
             _userManager = userManager;
+            _converter = converter;
         }
 
         public async Task<IActionResult> Index()
@@ -203,6 +206,49 @@
         {
             var model = await _thongKeService.GetHocVienOffHon3NgayAsync();
             return Json(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetHocVienTheoDoiAsync()
+        {
+            var model = await _thongKeService.GetHocVienTheoDoiAsync();
+            return Json(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateKHocVienTheoDoiAsync([FromBody] HocVienTheoDoiViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            var successful = await _thongKeService.CreateHocVienTheoDoiAsync(model.HocVienId, model.GhiChu, currentUser.Email);
+            return successful == null ?
+                Json(_converter.ToResultModel("Thêm mới lỗi !!!", false))
+                :
+                Json(_converter.ToResultModel("Thêm mới thành công !!!", true, successful));
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateHocVienTheoDoiAsync([FromBody] HocVienTheoDoiViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            var successful = await _thongKeService.UpdateHocVienTheoDoiAsync(model.NoteId, model.GhiChu, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Cập nhật thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Cập nhật lỗi !!!", false));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteHocVienTheoDoiAsync([FromBody] HocVienTheoDoiViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            var successful = await _thongKeService.DeleteHocVienTheoDoiAsync(model.NoteId, currentUser.Email);
+            return successful ?
+                Json(_converter.ToResultModel("Xóa thành công !!!", true, successful))
+                :
+                Json(_converter.ToResultModel("Xóa lỗi !!!", false));
         }
     }
 }

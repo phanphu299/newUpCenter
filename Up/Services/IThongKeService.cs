@@ -1,5 +1,6 @@
 ﻿namespace Up.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Up.Models;
@@ -25,5 +26,13 @@
         Task<List<NoViewModel>> GetNoAsync();
 
         Task<List<HocVienOffHon3NgayViewModel>> GetHocVienOffHon3NgayAsync();
+
+        Task<List<HocVienTheoDoiViewModel>> GetHocVienTheoDoiAsync();
+
+        Task<HocVienTheoDoiViewModel> CreateHocVienTheoDoiAsync(Guid hocVienId, string ghiChu, string loggedEmployee);
+        
+        Task<bool> UpdateHocVienTheoDoiAsync(Guid id, string ghiChu, string loggedEmployee);
+
+        Task<bool> DeleteHocVienTheoDoiAsync(Guid id, string loggedEmployee);
     }
 }

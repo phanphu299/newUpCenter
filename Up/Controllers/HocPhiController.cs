@@ -267,7 +267,7 @@ namespace Up.Controllers
         {
             var stream = GenerateExcelFile(model);
             string excelName = $"UserList.xlsx";
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+            return File(stream, Constants.ContentType, excelName);
         }
 
         private System.IO.MemoryStream GenerateExcelFile(TinhHocPhiViewModel model)

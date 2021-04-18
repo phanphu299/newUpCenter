@@ -18,6 +18,8 @@ namespace Up.Services
 
         Task<List<CauHoiViewModel>> GetCauHoiAsync(Guid thuThachId, int stt = 1);
 
+        Task<List<CauHoiViewModel>> GetCauHoiAsync(Guid thuThachId);
+
         Task<List<CauHoiViewModel>> GetCauHoiAsync(IList<Guid> ids);
 
         Task<bool> DeleteCauHoiAsync(Guid id, string loggedEmployee);

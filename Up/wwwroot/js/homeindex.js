@@ -152,12 +152,21 @@ var vue = new Vue({
             { text: 'Người Tạo', value: 'createdBy', align: 'left', sortable: true },
         ],
         searchBienLai: '',
+        deleteBienLaiDialog: false,
+        bienLaiToDelete: {},
+
+        hocVienTheoDoi: {},
+        headersTheoDoi: [
+            { text: 'Họ Tên', value: 'tenHocVien', align: 'left', sortable: true },
+            { text: 'Trigram', value: 'trigram', align: 'left', sortable: true },
+            { text: 'Ghi Chú', value: 'ghiChu', align: 'left', sortable: true },
+        ],
+        searchTheoDoi: '',
+
         messageText: '',
         color: '',
         timeout: 3000,
         snackbar: false,
-        deleteBienLaiDialog: false,
-        bienLaiToDelete: {}
     },
 
     async mounted() {

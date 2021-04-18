@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Up.Enums;
 using Up.Models;
@@ -34,5 +35,15 @@ namespace Up.Repositoties
         Task<List<HocVienOffHon3NgayViewModel>> GetHocVienOffHon3NgayAsync();
 
         Task<List<ThongKe_DoanhThuHocPhiViewModel>> GetDoanhThuHocPhiTronGoiAsync();
+
+        Task<List<HocVienTheoDoiViewModel>> GetHocVienTheoDoiAsync();
+
+        Task<HocVienTheoDoiViewModel> GetHocVienTheoDoiDetailAsync(Guid id);
+
+        Task<Guid> CreateHocVienTheoDoiAsync(Guid hocVienId, string ghiChu, string loggedEmployee);
+
+        Task<bool> UpdateHocVienTheoDoiAsync(Guid id, string ghiChu, string loggedEmployee);
+
+        Task<bool> DeleteHocVienTheoDoiAsync(Guid id, string loggedEmployee);
     }
 }

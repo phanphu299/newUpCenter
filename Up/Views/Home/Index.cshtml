@@ -11,6 +11,36 @@
         <partial name="_ThongKeTong" />
     }
 
+    @if (User.IsInRole("Admin") || User.IsInRole("TK_TheoDoiHocVien_Read") || User.IsInRole("TK_TheoDoiHocVien_Contribute"))
+    {
+        <v-card-title v-if="hocVienTheoDoi.length > 0">
+            <h4 class="header mt-0">
+                HỌC VIÊN CẦN THEO DÕI
+            </h4>
+
+            <v-spacer></v-spacer>
+            <v-text-field v-model="searchTheoDoi"
+                          append-icon="search"
+                          label="Tìm Kiếm"
+                          single-line
+                          hide-details></v-text-field>
+        </v-card-title>
+        <v-data-table :headers="headersTheoDoi"
+                      :items="hocVienTheoDoi"
+                      :search="searchTheoDoi"
+                      class="elevation-1"
+                      v-if="hocVienTheoDoi.length > 0">
+            <template slot="items" slot-scope="props">
+                <td>{{ props.item.tenHocVien }}</td>
+                <td>{{ props.item.trigram }}</td>
+                <td>{{ props.item.ghiChu }}</td>
+            </template>
+            <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                Không tìm thấy "{{ searchTheoDoi }}".
+            </v-alert>
+        </v-data-table>
+    }
+
     @if (User.IsInRole("Admin") || User.IsInRole("TK_HocVienNghiNhieu"))
     {
         <partial name="_HocVienNghiNhieu" />
@@ -98,4 +128,4 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
-<script src="~/js/homeindex.min.js" type="text/javascript"></script>
+<script src="~/js/homeindex.js" type="text/javascript"></script>

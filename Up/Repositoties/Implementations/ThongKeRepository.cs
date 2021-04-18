@@ -27,6 +27,35 @@ namespace Up.Repositoties
             _entityConverter = entityConverter;
         }
 
+        public async Task<Guid> CreateHocVienTheoDoiAsync(Guid hocVienId, string ghiChu, string loggedEmployee)
+        {
+            var note = new Note
+            {
+                CreatedBy = loggedEmployee,
+                GhiChu = ghiChu,
+                HocVienId = hocVienId,
+                CreatedDate = DateTime.Now
+            };
+
+            await _context.Notes.AddAsync(note);
+            await _context.SaveChangesAsync();
+
+            return note.NoteId;
+        }
+
+        public async Task<bool> DeleteHocVienTheoDoiAsync(Guid id, string loggedEmployee)
+        {
+            var item = await _context.Notes
+                                    .FindAsync(id);
+
+            item.IsDisabled = true;
+            item.UpdatedBy = loggedEmployee;
+            item.UpdatedDate = DateTime.Now;
+
+            var saveResult = await _context.SaveChangesAsync();
+            return saveResult == 1;
+        }
+
         public async Task<List<ThongKe_ChiPhiViewModel>> GetChiPhiAsync()
         {
             return await _context.ThongKe_ChiPhis
@@ -102,6 +131,37 @@ namespace Up.Repositoties
                 TenHocVien = x.HocVien
             })
             .ToList();
+        }
+
+        public async Task<List<HocVienTheoDoiViewModel>> GetHocVienTheoDoiAsync()
+        {
+            return await _context.Notes
+                .Include(x => x.HocVien)
+                .Where(x => !x.IsDisabled)
+                .Select(x => new HocVienTheoDoiViewModel { 
+                    NoteId = x.NoteId,
+                    GhiChu = x.GhiChu,
+                    HocVienId = x.HocVienId,
+                    TenHocVien = x.HocVien.FullName,
+                    Trigram = x.HocVien.Trigram
+                })
+                .ToListAsync();
+        }
+
+        public async Task<HocVienTheoDoiViewModel> GetHocVienTheoDoiDetailAsync(Guid id)
+        {
+            var hocVien = await _context.Notes
+                .Include(x => x.HocVien)
+                .FirstOrDefaultAsync(x => x.NoteId == id);
+
+            return new HocVienTheoDoiViewModel
+            {
+                NoteId = hocVien.NoteId,
+                GhiChu = hocVien.GhiChu,
+                HocVienId = hocVien.HocVienId,
+                TenHocVien = hocVien.HocVien.FullName,
+                Trigram = hocVien.HocVien.Trigram
+            };
         }
 
         public async Task<List<NoViewModel>> GetNoAsync()
@@ -281,6 +341,18 @@ namespace Up.Repositoties
                 }
             }
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> UpdateHocVienTheoDoiAsync(Guid id, string ghiChu, string loggedEmployee)
+        {
+            var note = await _context.Notes.FirstOrDefaultAsync(x => x.NoteId == id);
+
+            note.GhiChu = ghiChu;
+            note.UpdatedBy = loggedEmployee;
+            note.UpdatedDate = DateTime.Now;
+
+            var saveResult = await _context.SaveChangesAsync();
+            return saveResult == 1;
         }
     }
 }

@@ -308,7 +308,7 @@
             var model = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId, month, year);
             var stream = GenerateExcelFile(model.ToList(), month, year, LopHocId);
             string excelName = $"UserList.xlsx";
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+            return File(stream, Constants.ContentType, excelName);
         }
 
         [HttpGet]

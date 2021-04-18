@@ -5,10 +5,10 @@
         <h3>You've passed</h3>
         <h3><b>{{ selectedThuThach.name }}</b></h3>
 
-
         <h3>Your score is {{ score }}/{{ selectedThuThach.soCauHoi }}</h3>
         <v-btn color="blue darken-1 white--text"
-               v-if="score < selectedThuThach.soCauHoi">Show wrong answers</v-btn>
+               v-if="score < selectedThuThach.soCauHoi"
+               v-on:click.stop="dialogResult = true">Show wrong answers</v-btn>
 
     </div>
     <div v-else class="border-radius-10 p-5 bg-white">
@@ -58,7 +58,7 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="secondary darken-1" flat v-on:click="dialogResult = false">Đóng</v-btn>
+                <v-btn color="danger darken-1" flat v-on:click="dialogResult = false">Đóng</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
