@@ -155,18 +155,41 @@ var vue = new Vue({
         deleteBienLaiDialog: false,
         bienLaiToDelete: {},
 
-        hocVienTheoDoi: {},
+        hocVienTheoDoi: [],
         headersTheoDoi: [
+            {
+                text: 'Action',
+                align: 'left',
+                sortable: false,
+                value: ''
+            },
             { text: 'Họ Tên', value: 'tenHocVien', align: 'left', sortable: true },
             { text: 'Trigram', value: 'trigram', align: 'left', sortable: true },
             { text: 'Ghi Chú', value: 'ghiChu', align: 'left', sortable: true },
         ],
         searchTheoDoi: '',
+        loadingHocVien: false,
+        itemsHocVien: [],
+        itemToDeleteTheoDoi: {},
+        dialogTheoDoi: false,
+        deleteDialogTheoDoi: false,
+        newItemTheoDoi: {
+            hocVien: '',
+            ghiChu: ''
+        },
+        alert: false,
+        searchHocVien: null,
 
         messageText: '',
         color: '',
         timeout: 3000,
         snackbar: false,
+    },
+
+    watch: {
+        searchHocVien(val) {
+            val && val !== this.newItemTheoDoi.hocVien && this.querySelections(val)
+        }
     },
 
     async mounted() {
@@ -246,6 +269,14 @@ var vue = new Vue({
                 .catch(function (error) {
                     console.log(error.response.data.Message);
                 });
+
+            await axios.get('/ThongKe/GetHocVienTheoDoiAsync')
+                .then(function (response) {
+                    that.hocVienTheoDoi = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error.response.data.Message);
+                });
         } catch (e) {
             console.error(e);
         }
@@ -254,6 +285,124 @@ var vue = new Vue({
     methods: {
         formatNumber(val) {
             return val.toLocaleString('it-IT', { style: 'currency', currency: 'VND' });
+        },
+
+        async querySelections(v) {
+            this.loadingHocVien = true;
+
+            let that = this;
+            await axios.get('/hocvien/GetHocVienByNameAsync?name=' + v)
+                .then(function (response) {
+                    that.itemsHocVien = response.data;
+                    that.loadingHocVien = false;
+                })
+                .catch(function (error) {
+                    console.log(error.response.data.Message);
+                });
+        },
+
+        async onSaveTheoDoi() {
+            if (this.newItemTheoDoi.ghiChu === '') {
+                this.alert = true;
+            }
+            else {
+                this.dialog = false;
+                let that = this;
+                await axios({
+                    method: 'post',
+                    url: '/thongke/CreateHocVienTheoDoiAsync',
+                    data: {
+                        GhiChu: that.newItemTheoDoi.ghiChu,
+                        HocVienId: that.newItemTheoDoi.hocVien.hocVienId
+                    }
+                })
+                    .then(function (response) {
+                        console.log(response);
+                        if (response.data.status === "OK") {
+                            that.hocVienTheoDoi.splice(0, 0, response.data.result);
+                            that.snackbar = true;
+                            that.messageText = 'Thêm mới thành công !!!';
+                            that.color = 'success';
+                            that.newItemTheoDoi.ghiChu = '';
+                            that.newItemTheoDoi.hocVien = '';
+                            that.dialogTheoDoi = false;
+                        }
+                        else {
+                            that.snackbar = true;
+                            that.messageText = response.data.message;
+                            that.color = 'error';
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error.response.data.Message);
+                        that.snackbar = true;
+                        that.messageText = 'Thêm mới lỗi: ' + error.response.data.Message;
+                        that.color = 'error';
+                    });
+            }
+        },
+
+        async onDeleteTheoDoi(item) {
+            let that = this;
+            await axios({
+                method: 'delete',
+                url: '/thongke/DeleteHocVienTheoDoiAsync',
+                data: {
+                    NoteId: item.noteId
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.hocVienTheoDoi.splice(that.hocVienTheoDoi.indexOf(item), 1);
+                        that.snackbar = true;
+                        that.messageText = 'Xóa thành công !!!';
+                        that.color = 'success';
+                        that.deleteDialogTheoDoi = false;
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error.response.data.Message);
+                    that.snackbar = true;
+                    that.messageText = 'Xóa lỗi: ' + error.response.data.Message;
+                    that.color = 'error';
+                });
+        },
+
+        async onUpdateTheoDoi(item) {
+            let that = this;
+            await axios({
+                method: 'put',
+                url: '/thongke/UpdateHocVienTheoDoiAsync',
+                data: {
+                    GhiChu: item.ghiChu,
+                    NoteId: item.noteId
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.data.status === "OK") {
+                        that.snackbar = true;
+                        that.messageText = 'Cập nhật thành công !!!';
+                        that.color = 'success';
+                    }
+                    else {
+                        that.snackbar = true;
+                        that.messageText = response.data.message;
+                        that.color = 'error';
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error.response.data.Message);
+                    that.snackbar = true;
+                    that.messageText = 'Cập nhật lỗi: ' + error.response.data.Message;
+                    that.color = 'error';
+                });
         },
 
         async onDeleteBienLai(item) {

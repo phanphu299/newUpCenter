@@ -1,0 +1,17 @@
+﻿<v-card-title>
+    <h4 class="header mt-0">
+        HỌC VIÊN CẦN THEO DÕI
+    </h4>
+
+    <partial name="_TheoDoiHocVienCreationDialog" />
+
+    <v-spacer></v-spacer>
+    <v-text-field v-model="searchTheoDoi"
+                  append-icon="search"
+                  label="Tìm Kiếm"
+                  single-line
+                  hide-details></v-text-field>
+</v-card-title>
+
+<partial name="_TheoDoiHocVienDataTable" />
+<partial name="_TheoDoiHocVienDeleteDialog" />

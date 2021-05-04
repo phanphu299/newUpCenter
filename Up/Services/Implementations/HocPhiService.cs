@@ -17,13 +17,13 @@ namespace Up.Services
     {
         private readonly IHocPhiRepository _hocPhiRepository;
         private readonly ILopHocRepository _lopHocRepository;
+        private readonly IHocPhiTronGoiRepository _hocPhiTronGoiRepository;
 
-        public HocPhiService(
-            IHocPhiRepository hocPhiRepository,
-            ILopHocRepository lopHocRepository)
+        public HocPhiService(IHocPhiRepository hocPhiRepository, ILopHocRepository lopHocRepository, IHocPhiTronGoiRepository hocPhiTronGoiRepository)
         {
             _hocPhiRepository = hocPhiRepository;
             _lopHocRepository = lopHocRepository;
+            _hocPhiTronGoiRepository = hocPhiTronGoiRepository;
         }
 
         public async Task<HocPhiViewModel> CreateHocPhiAsync(CreateHocPhiInputModel input, string loggedEmployee)
@@ -200,19 +200,21 @@ namespace Up.Services
                     }
                     var soNgayHocThucTeThangTruoc = preSoNgayHoc > soNgayHocVienVaoSauThangTruoc ?
                                                                             soNgayHocVienVaoSauThangTruoc - soNgayConLaiSauKhiNghiThangTruoc : preSoNgayHoc - soNgayConLaiSauKhiNghiThangTruoc;
-                    var hocPhiThangTruoc = (preHocPhi / preSoNgayHoc) * soNgayHocThucTeThangTruoc;
+
+                    var (soNgayNamTrongThoiHanHocPhiTronGoiThangTruoc, notUsed, notUsed2, notUsed3) = TinhSoNgayNamTrongThoiHanHocPhiTronGoi(item.HocVienId, lopHocId, month, year).Result;
+                    var hocPhiThangTruoc = (preHocPhi / preSoNgayHoc) * (soNgayHocThucTeThangTruoc - soNgayNamTrongThoiHanHocPhiTronGoiThangTruoc);
                     var khuyenMaiThangTruocValue = (khuyenMaiThangTruoc / 100.0) * hocPhiThangTruoc;
                     var hocPhiSauKhuyenMaiThangTruoc = hocPhiThangTruoc - khuyenMaiThangTruocValue;
-                    var hocPhiMoiNgaySauKhuyenMai = soNgayHocThucTeThangTruoc == 0 ? 0 : hocPhiSauKhuyenMaiThangTruoc / soNgayHocThucTeThangTruoc;
+                    var hocPhiMoiNgaySauKhuyenMai = soNgayHocThucTeThangTruoc == 0 ? 0 : hocPhiSauKhuyenMaiThangTruoc / (soNgayHocThucTeThangTruoc - soNgayNamTrongThoiHanHocPhiTronGoiThangTruoc);
 
-                    int ngayDuocNghi = 0;
-                    foreach (var ngayNghi in item.SoNgayDuocNghi)
-                    {
-                        if (ngayNghi >= item.NgayBatDau_Date)
-                        {
-                            ngayDuocNghi++;
-                        }
-                    }
+                    //List<DateTime> ngayDuocNghiDate = new List<DateTime>();
+                    //foreach (var ngayNghi in item.SoNgayDuocNghi)
+                    //{
+                    //    if (ngayNghi >= item.NgayBatDau_Date)
+                    //    {
+                    //        ngayDuocNghiDate.Add(ngayNghi);
+                    //    }
+                    //}
 
                     #endregion
 
@@ -228,34 +230,40 @@ namespace Up.Services
                     var soNgayHocThucTeThangNay = soNgayHocCurrent > soNgayHocVienVaoSau ?
                                                                             soNgayHocVienVaoSau - soNgayConLaiSauKhiNghi : soNgayHocCurrent - soNgayConLaiSauKhiNghi;
 
-                    var hocPhiThangNay = (hocPhiCurrent / soNgayHocCurrent) * soNgayHocThucTeThangNay;
+                    var (soNgayNamTrongThoiHanHocPhiTronGoi, buTronGoi, isInTronGoi, ngayDuocNghi) = TinhSoNgayNamTrongThoiHanHocPhiTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear, item.SoNgayDuocNghi, item.NgayBatDau_Date).Result;
+
+                    var hocPhiThangNay = (hocPhiCurrent / soNgayHocCurrent) * (soNgayHocThucTeThangNay - soNgayNamTrongThoiHanHocPhiTronGoi);
                     var khuyenMaiThangNay = (khuyenMai / 100.0) * hocPhiThangNay;
                     var hocPhiSauKhuyenMai = hocPhiThangNay - khuyenMaiThangNay;
                     var truHocPhiDoOffThangTruoc = hocPhiMoiNgaySauKhuyenMai * ngayDuocNghi;
 
                     var calculatedGiaSach = item.GiaSach != null ? item.GiaSach.Select(x => x.Gia).Sum() : 0;
                     var final = hocPhiSauKhuyenMai - truHocPhiDoOffThangTruoc + item.Bonus - item.Minus + calculatedGiaSach + item.TienNo;
-                    
+
                     #endregion
 
 
                     #region TRON GOI
-                    var soNgayTinhHocPhiNgoaiTronGoi = _hocPhiRepository.TinhSoNgayHocTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear, ngayBatDau_Date.Value, ngayKetThuc_Date);
+                    //var soNgayTinhHocPhiNgoaiTronGoi = _hocPhiRepository.TinhSoNgayHocTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear, ngayBatDau_Date.Value, ngayKetThuc_Date);
                     var isTronGoi = _hocPhiRepository.IsTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear);
 
-                    if (isTronGoi && soNgayTinhHocPhiNgoaiTronGoi == 0)
-                    {
-                        final = 0;
-                        ResetValue(item);
-                    }
-                    else if (isTronGoi && soNgayTinhHocPhiNgoaiTronGoi > 0)
-                    {
-                        var hocPhiCanTinhNgoaiTronGoi = (hocPhiSauKhuyenMai / soNgayHocThucTeThangNay) * soNgayTinhHocPhiNgoaiTronGoi;
-                        final = hocPhiCanTinhNgoaiTronGoi;
-                    }
+                    //if (isTronGoi && soNgayTinhHocPhiNgoaiTronGoi == 0)
+                    //{
+                    //    final = 0;
+                    //    ResetValue(item);
+                    //}
+                    //else if (isTronGoi && soNgayTinhHocPhiNgoaiTronGoi > 0)
+                    //{
+                    //    var hocPhiCanTinhNgoaiTronGoi = (hocPhiSauKhuyenMai / soNgayHocThucTeThangNay) * soNgayTinhHocPhiNgoaiTronGoi;
+                    //    final = hocPhiCanTinhNgoaiTronGoi;
+                    //}
+                    item.TronGoi = isInTronGoi;
 
-                    if (ngayDuocNghi > 0 && isTronGoi)
-                        item.GhiChu = $"Kéo dài học phí trọn gói {ngayDuocNghi} buổi";
+                    if (buTronGoi > 0)
+                        item.GhiChu = isInTronGoi ?
+                        $"Gia hạn {buTronGoi} buổi HPTG"
+                        :
+                        $"Đã trừ lại {buTronGoi} buổi cho nghỉ nằm trong HPTG";
                     #endregion
 
                     item.SoNgayHoc = soNgayHocThucTeThangNay;
@@ -271,6 +279,52 @@ namespace Up.Services
                 .Where(x => (x.NgayBatDau_Date.Month <= currentMonth && x.NgayBatDau_Date.Year == currentYear) || x.NgayBatDau_Date.Year < currentYear);
 
             return items.OrderBy(x => x.Stt).ToList();
+        }
+
+        private async Task<(int, int, bool, int)> TinhSoNgayNamTrongThoiHanHocPhiTronGoi(Guid hocVienId, Guid lopHocId, int month, int year, IEnumerable<DateTime> soNgayDuocNghi = null, DateTime? ngayBatDau = null)
+        {
+            var hocPhis = await _hocPhiTronGoiRepository.GetHocPhiTronGoiAsync(hocVienId, lopHocId);
+
+            var ngayHocs = _hocPhiRepository.TinhSoNgayHoc(lopHocId, month, year);
+
+            int result = 0;
+            int soNgayBu = 0;
+            bool isInTronGoi = false;
+            List<DateTime> ngayDuocNghiDate = new List<DateTime>();
+
+            foreach (var hocPhi in hocPhis)
+            {
+                int yearHP = int.Parse(hocPhi.LopHocList.FirstOrDefault(x => x.LopHoc.LopHocId == lopHocId).FromDate.Substring(0, 4));
+                int monthHP = int.Parse(hocPhi.LopHocList.FirstOrDefault(x => x.LopHoc.LopHocId == lopHocId).FromDate.Substring(5, 2));
+                int dayHP = int.Parse(hocPhi.LopHocList.FirstOrDefault(x => x.LopHoc.LopHocId == lopHocId).FromDate.Substring(8, 2));
+                DateTime fromDate = new DateTime(yearHP, monthHP, dayHP);
+
+                int yearHP2 = int.Parse(hocPhi.LopHocList.FirstOrDefault(x => x.LopHoc.LopHocId == lopHocId).ToDate.Substring(0, 4));
+                int monthHP2 = int.Parse(hocPhi.LopHocList.FirstOrDefault(x => x.LopHoc.LopHocId == lopHocId).ToDate.Substring(5, 2));
+                int dayHP2 = int.Parse(hocPhi.LopHocList.FirstOrDefault(x => x.LopHoc.LopHocId == lopHocId).ToDate.Substring(8, 2));
+                DateTime toDate = new DateTime(yearHP2, monthHP2, dayHP2);
+
+                result = ngayHocs.Count(x => x >= fromDate && x <= toDate);
+
+                if (soNgayDuocNghi != null)
+                    soNgayBu = soNgayDuocNghi.Count(x => x >= fromDate && x <= toDate);
+
+                if (ngayHocs.FirstOrDefault() >= fromDate && ngayHocs.FirstOrDefault() <= toDate)
+                    isInTronGoi = true;
+
+                if (ngayBatDau != null && soNgayDuocNghi != null)
+                {
+                    foreach (var ngayNghi in soNgayDuocNghi)
+                    {
+                        if (ngayNghi >= ngayBatDau && (ngayNghi < fromDate || ngayNghi > toDate) && !hocPhi.IsDisabled)
+                        {
+                            ngayDuocNghiDate.Add(ngayNghi);
+                        }
+                    }
+                }
+
+            }
+            return (result, soNgayBu, isInTronGoi, ngayDuocNghiDate.Count);
         }
 
         private void ResetValue(HocVienViewModel item)

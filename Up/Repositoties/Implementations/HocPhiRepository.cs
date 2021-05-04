@@ -173,7 +173,7 @@ namespace Up.Repositoties
         public bool IsTronGoi(Guid hocVienId, Guid lopHocId, int month, int year)
         {
             var item = _context.HocPhiTronGois
-                .Where(x => x.HocVienId == hocVienId && !x.IsDisabled && !x.IsRemoved)
+                .Where(x => x.HocVienId == hocVienId/* && !x.IsDisabled && !x.IsRemoved*/)
                 .SelectMany(x => x.HocPhiTronGoi_LopHocs)
                 .Where(x => x.LopHocId == lopHocId &&
                             (year < x.ToDate.Year || (year == x.ToDate.Year && month <= x.ToDate.Month)) &&
@@ -257,6 +257,47 @@ namespace Up.Repositoties
             }
 
             return soNgayTinhHocPhi;
+        }
+
+        public List<DateTime> TinhSoNgayHoc(Guid lopHocId, int month, int year)
+        {
+            var item = _context.LopHocs
+                                    .Include(x => x.NgayHoc)
+                                    .Where(x => x.LopHocId == lopHocId)
+                                    .AsNoTracking()
+                                    .SingleOrDefault();
+
+            var ngayHoc = item.NgayHoc.Name.Split('-');
+            List<DateTime> tongNgayHoc = new List<DateTime>();
+
+            foreach (string el in ngayHoc)
+            {
+                switch (el.Trim())
+                {
+                    case "2":
+                        tongNgayHoc.AddRange(Helpers.DatesInMonth(year, month, DayOfWeek.Monday));
+                        break;
+                    case "3":
+                        tongNgayHoc.AddRange(Helpers.DatesInMonth(year, month, DayOfWeek.Tuesday));
+                        break;
+                    case "4":
+                        tongNgayHoc.AddRange(Helpers.DatesInMonth(year, month, DayOfWeek.Wednesday));
+                        break;
+                    case "5":
+                        tongNgayHoc.AddRange(Helpers.DatesInMonth(year, month, DayOfWeek.Thursday));
+                        break;
+                    case "6":
+                        tongNgayHoc.AddRange(Helpers.DatesInMonth(year, month, DayOfWeek.Friday));
+                        break;
+                    case "7":
+                        tongNgayHoc.AddRange(Helpers.DatesInMonth(year, month, DayOfWeek.Saturday));
+                        break;
+                    default:
+                        tongNgayHoc.AddRange(Helpers.DatesInMonth(year, month, DayOfWeek.Sunday));
+                        break;
+                }
+            }
+            return tongNgayHoc.OrderBy(x => x).ToList();
         }
     }
 }

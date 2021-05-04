@@ -105,27 +105,27 @@ namespace Up.Controllers
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("MauImportHocVien");
 
-                worksheet.Cells["A1:G1"].Merge = true;
-                worksheet.Cells["A1:G1"].Value = "MẪU IMPORT CÂU HỎI";
-                worksheet.Cells["A1:G1"].Style.Font.Bold = true;
-                worksheet.Cells["A1:G1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells["A1:I1"].Merge = true;
+                worksheet.Cells["A1:I1"].Value = "MẪU IMPORT CÂU HỎI";
+                worksheet.Cells["A1:I1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:I1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                worksheet.Cells[1, 9].Value = "ID";
-                worksheet.Cells[1, 9].Style.Font.Bold = true;
-                worksheet.Cells[1, 10].Value = thuThachId;
-                worksheet.Cells[2, 9].Value = "Thử Thách";
-                worksheet.Cells[2, 9].Style.Font.Bold = true;
-                worksheet.Cells[2, 10].Value = thuThachName;
-                worksheet.Cells[3, 9].Value = "Số Câu Hỏi";
-                worksheet.Cells[3, 9].Style.Font.Bold = true;
-                worksheet.Cells[3, 10].Value = soCauHoi;
-                worksheet.Cells[4, 10].Value = "** cột Câu Hỏi Số không được vượt quá Số Câu Hỏi";
-                worksheet.Cells[4, 10].Style.Font.Bold = true;
+                worksheet.Cells[1, 11].Value = "ID";
+                worksheet.Cells[1, 11].Style.Font.Bold = true;
+                worksheet.Cells[1, 12].Value = thuThachId;
+                worksheet.Cells[2, 11].Value = "Thử Thách";
+                worksheet.Cells[2, 11].Style.Font.Bold = true;
+                worksheet.Cells[2, 12].Value = thuThachName;
+                worksheet.Cells[3, 11].Value = "Số Câu Hỏi";
+                worksheet.Cells[3, 11].Style.Font.Bold = true;
+                worksheet.Cells[3, 12].Value = soCauHoi;
+                worksheet.Cells[4, 12].Value = "** cột Câu Hỏi Số không được vượt quá Số Câu Hỏi";
+                worksheet.Cells[4, 12].Style.Font.Bold = true;
 
-                worksheet.Cells["I1:J2"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["I1:J2"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["I1:J2"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                worksheet.Cells["I1:J2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["K1:L2"].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["K1:L2"].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["K1:L2"].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells["K1:L2"].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
 
                 worksheet.Cells[2, 1].Value = "Câu Hỏi Số";
                 worksheet.Cells[2, 2].Value = "Nội Dung Câu Hỏi";
@@ -133,14 +133,16 @@ namespace Up.Controllers
                 worksheet.Cells[2, 4].Value = "Đáp án b";
                 worksheet.Cells[2, 5].Value = "Đáp án c";
                 worksheet.Cells[2, 6].Value = "Đáp án d";
-                worksheet.Cells[2, 7].Value = "Đáp án đúng";
+                worksheet.Cells[2, 7].Value = "Đáp án e";
+                worksheet.Cells[2, 8].Value = "Đáp án f";
+                worksheet.Cells[2, 9].Value = "Đáp án đúng";
 
-                worksheet.Cells["A2:G2"].Style.Font.Bold = true;
-                worksheet.Cells["A2:G2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A2:G2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells["A2:I2"].Style.Font.Bold = true;
+                worksheet.Cells["A2:I2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A2:I2"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 var modelCells = worksheet.Cells["A2"];
-                string modelRange = "A2:G50";
+                string modelRange = "A2:I50";
                 var modelTable = worksheet.Cells[modelRange];
 
 
@@ -182,7 +184,7 @@ namespace Up.Controllers
 
                     var input = new ImportCauHoiInputModel
                     {
-                        ThuThachId = new Guid(worksheet.Cells[1, 10].Value.ToString().Trim())
+                        ThuThachId = new Guid(worksheet.Cells[1, 12].Value.ToString().Trim())
                     };
 
                     for (int row = 3; row <= rowCount; row++)

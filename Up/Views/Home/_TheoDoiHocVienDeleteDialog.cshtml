@@ -1,0 +1,32 @@
+﻿<div v-if="deleteDialogTheoDoi">
+    <v-dialog v-model="deleteDialogTheoDoi"
+              width="500">
+        <v-card>
+            <v-card-title class="headline error lighten-2 white--text"
+                          primary-title>
+                Xác Nhận
+            </v-card-title>
+
+            <v-card-text>
+                Bạn có chắc xóa ?
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+                <v-spacer></v-spacer>
+
+                <v-btn color="secondary"
+                       flat
+                       v-on:click="deleteDialogTheoDoi = false">
+                    Đóng
+                </v-btn>
+
+                <v-btn color="error white--text"
+                       v-on:click="onDeleteTheoDoi(itemToDeleteTheoDoi)">
+                    Xóa
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</div>

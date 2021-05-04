@@ -23,5 +23,7 @@ namespace Up.Repositoties
         Task<bool> DeleteHocPhiTronGoiAsync(Guid id, string loggedEmployee);
 
         Task<Guid> UpdateHocPhiTronGoiAsync(UpdateHocPhiTronGoiInputModel input, string loggedEmployee);
+
+        Task<List<HocPhiTronGoiViewModel>> GetHocPhiTronGoiAsync(Guid hocVienId, Guid lopHocId);
     }
 }

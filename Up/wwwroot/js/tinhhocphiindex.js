@@ -81,7 +81,7 @@
                 value = 0;
             }
 
-            item.hocPhiMoi = item.hocPhiFixed - ((item.hocPhiFixed * value) / 100);
+            item.hocPhiMoi = item.hocPhiMoi - ((item.hocPhiFixed * value) / 100);
 
             if (item.lastGiaSach !== null) {
                 for (let i = 0; i < item.lastGiaSach.length; i++) {

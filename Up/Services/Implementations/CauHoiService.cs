@@ -88,8 +88,8 @@ namespace Up.Services
             if (input.CauHois.Any(x => string.IsNullOrWhiteSpace(x.Name)))
                 throw new Exception("Câu hỏi không được có giá trị rỗng !!!");
 
-            if (input.CauHois.Any(x => x.DapAns.Any(m => string.IsNullOrWhiteSpace(m.Name))))
-                throw new Exception("Đáp án không được có giá trị rỗng !!!");
+            //if (input.CauHois.Any(x => x.DapAns.Any(m => string.IsNullOrWhiteSpace(m.Name))))
+            //    throw new Exception("Đáp án không được có giá trị rỗng !!!");
 
             var thuThach = await _thuThachRepository.GetThuThachDetailAsync(input.ThuThachId);
             if (input.CauHois.Any(x => x.STT <= 0 || x.STT > thuThach.SoCauHoi))

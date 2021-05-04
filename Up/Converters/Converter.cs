@@ -46,11 +46,11 @@ namespace Up.Converters
         {
             int stt = 0;
             int dapAnIndex = 3;
-            var dapAns = new List<string> { "a", "b", "c", "d" };
-            string trueValue = worksheet.Cells[row, 7].Value?.ToString().Trim() ?? string.Empty;
+            var dapAns = new List<string> { "a", "b", "c", "d", "e", "f" };
+            string trueValue = worksheet.Cells[row, 9].Value?.ToString().Trim() ?? string.Empty;
 
             if (!dapAns.Contains(trueValue))
-                throw new Exception("Đáp Án Đúng phải là 1 trong a, b, c, d !!!");
+                throw new Exception("Đáp Án Đúng phải là 1 trong a, b, c, d, e, f !!!");
 
             return new CreateCauHoiInputModel
             {

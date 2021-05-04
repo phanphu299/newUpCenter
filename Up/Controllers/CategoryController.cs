@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Up.Extensions;
     using Up.Models;
@@ -829,6 +830,13 @@
         public async Task<IActionResult> GetOtherExpenseAsync()
         {
             var model = await _chiPhiKhacService.GetChiPhiKhacAsync();
+
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            if (currentUser.UserName != "huynhquan.nguyen@gmail.com")
+                model = model.Where(x => x.CreatedBy != "huynhquan.nguyen@gmail.com")
+                    .ToList();
+
             return Json(model);
         }
 

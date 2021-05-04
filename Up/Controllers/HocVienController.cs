@@ -228,7 +228,22 @@
                     {
                         worksheet.Cells[i + 2, 1].Value = itemHocVien.Notes;
                         worksheet.Cells[i + 2, 2].Value = itemHocVien.DiaChi;
-                        worksheet.Cells[i + 2, 3].Value = string.Empty;
+                        var challenges = itemHocVien.PassedChallenge.ToList();
+                        if (itemHocVien.PassedChallenge != null && challenges.Count > 0)
+                        {
+                            string thuThach = string.Empty;
+                            for (int j = 0; j < challenges.Count; j++)
+                            {
+                                if (j != challenges.Count - 1)
+                                    thuThach += $"{challenges[j]}\r\n";
+                                else
+                                    thuThach += $"{challenges[j]}";
+                            }
+
+                            worksheet.Cells[i + 2, 3].Value = thuThach;
+                            worksheet.Cells[i + 2, 3].Style.WrapText = true;
+                        }
+
                         worksheet.Cells[i + 2, 4].Value = itemHocVien.FullName;
                         worksheet.Cells[i + 2, 5].Value = itemHocVien.Phone;
                         worksheet.Cells[i + 2, 6].Value = itemHocVien.OtherPhone;
@@ -237,6 +252,7 @@
                         //worksheet.Cells[i + 2, 8].Value = hocVien[i].QuanHe + " " + hocVien[i].ParentFullName;
                         worksheet.Cells[i + 2, 9].Value = itemHocVien.FacebookAccount;
                         worksheet.Cells[i + 2, 10].Value = itemHocVien.NgaySinh;
+                        worksheet.Cells[i + 2, 11].Value = itemHocVien.Trigram;
 
                         i++;
 
@@ -248,7 +264,22 @@
 
                         worksheet.Cells[i + 2, 1].Value = itemHocVien.Notes;
                         worksheet.Cells[i + 2, 2].Value = itemHocVien.DiaChi;
-                        worksheet.Cells[i + 2, 3].Value = string.Empty;
+                        var challenges = itemHocVien.PassedChallenge.ToList();
+                        if (itemHocVien.PassedChallenge != null && challenges.Count > 0)
+                        {
+                            string thuThach = string.Empty;
+                            for (int j = 0; j < challenges.Count; j++)
+                            {
+                                if (j != challenges.Count - 1)
+                                    thuThach += $"{challenges[j]}\r\n";
+                                else
+                                    thuThach += $"{challenges[j]}";
+                            }
+
+                            worksheet.Cells[i + 2, 3].Value = thuThach;
+                            worksheet.Cells[i + 2, 3].Style.WrapText = true;
+                        }
+
                         worksheet.Cells[i + 2, 4].Value = itemHocVien.FullName;
                         worksheet.Cells[i + 2, 5].Value = itemHocVien.ParentPhone;
                         worksheet.Cells[i + 2, 6].Value = "";
@@ -256,6 +287,7 @@
                         worksheet.Cells[i + 2, 8].Value = itemHocVien.QuanHe + " " + itemHocVien.ParentFullName;
                         worksheet.Cells[i + 2, 9].Value = itemHocVien.FacebookAccount;
                         worksheet.Cells[i + 2, 10].Value = itemHocVien.NgaySinh;
+                        worksheet.Cells[i + 2, 11].Value = itemHocVien.Trigram;
 
                         i++;
                     }
@@ -271,13 +303,14 @@
                 worksheet.Cells[1, 8].Value = "Last Name";
                 worksheet.Cells[1, 9].Value = "E-mail Address";
                 worksheet.Cells[1, 10].Value = "Birthday";
+                worksheet.Cells[1, 11].Value = "Trigram";
 
-                worksheet.Cells["A1:J1"].Style.Font.Bold = true;
-                worksheet.Cells["A1:J1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A1:J1"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                worksheet.Cells["A1:K1"].Style.Font.Bold = true;
+                worksheet.Cells["A1:K1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A1:K1"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 var modelCells = worksheet.Cells["A1"];
-                string modelRange = "A1:J" + (totalRows + 1 + phuHuynhRows);
+                string modelRange = "A1:K" + (totalRows + 1 + phuHuynhRows);
                 var modelTable = worksheet.Cells[modelRange];
 
 

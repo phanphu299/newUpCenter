@@ -16,6 +16,15 @@ namespace Up
                 .Select(date => date.Day);
         }
 
+        public static IEnumerable<DateTime> DatesInMonth(int year, int month, DayOfWeek dow)
+        {
+            DateTime monthStart = new DateTime(year, month, 1);
+            return Enumerable.Range(0, DateTime.DaysInMonth(year, month))
+                .Select(day => monthStart.AddDays(day))
+                .Where(date => date.DayOfWeek == dow)
+                .Select(date => date.Date);
+        }
+
         public static IEnumerable<int> DaysInMonthWithStartDate(int year, int month, DayOfWeek dow, DateTime startDate)
         {
             DateTime monthStart = new DateTime(year, month, 1);

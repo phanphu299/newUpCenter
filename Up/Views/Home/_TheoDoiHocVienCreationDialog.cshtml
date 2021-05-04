@@ -1,0 +1,67 @@
+﻿<v-dialog v-model="dialogTheoDoi" persistent max-width="600px">
+    <v-btn color="primary"
+           slot="activator"
+           class="white--text"
+           small
+           fab>
+        <v-icon dark>add</v-icon>
+    </v-btn>
+    <v-card>
+        <v-card-title>
+            <span class="headline">Thêm Học Viên Theo Dõi Mới</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container grid-list-md>
+                <v-layout wrap>
+                    <v-flex xs12>
+                        <v-autocomplete v-model="newItemTheoDoi.hocVien"
+                                        :loading="loadingHocVien"
+                                        :items="itemsHocVien"
+                                        :search-input.sync="searchHocVien"
+                                        cache-items
+                                        class="mx-3"
+                                        flat
+                                        return-object
+                                        hide-no-data
+                                        hide-details
+                                        label="Chọn học viên"
+                                        item-text="fullName"
+                                        item-value="hocVienId"
+                                        solo>
+                            <template v-slot:selection="data">
+                                <v-chip :selected="data.selected"
+                                        color="green"
+                                        text-color="white">
+                                    <span>{{ data.item.fullName }}</span>
+
+                                </v-chip>
+                            </template>
+                            <template v-slot:item="data">
+                                <template>
+                                    <v-list-tile-content v-text="data.item.fullName"></v-list-tile-content>
+                                    <v-list-tile-content v-text="data.item.phone"></v-list-tile-content>
+                                </template>
+                            </template>
+                        </v-autocomplete>
+                    </v-flex>
+
+                    <v-flex xs12>
+                        <v-text-field label="Ghi Chú *" required v-model="newItemTheoDoi.ghiChu" v-on:keyup.enter="onSaveTheoDoi"></v-text-field>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+            <small></small>
+            <v-alert v-model="alert"
+                     dismissible
+                     color="warning"
+                     icon="priority_high"
+                     outline>
+            </v-alert>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="secondary darken-1" flat v-on:click="dialogTheoDoi = false">Đóng</v-btn>
+            <v-btn color="blue darken-1 white--text" v-on:click="onSaveTheoDoi">Lưu</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-dialog>

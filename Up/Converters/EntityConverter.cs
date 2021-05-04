@@ -765,6 +765,7 @@ namespace Up.Converters
                     ThuThachId = input.ThuThachId,
                     STT = cauHoi.STT,
                     DapAns = cauHoi.DapAns
+                            .Where(x => !string.IsNullOrWhiteSpace(x.Name))
                             .Select(dapAn => new DapAn
                             {
                                 Name = dapAn.Name,

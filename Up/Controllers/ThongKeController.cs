@@ -216,7 +216,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateKHocVienTheoDoiAsync([FromBody] HocVienTheoDoiViewModel model)
+        public async Task<IActionResult> CreateHocVienTheoDoiAsync([FromBody] HocVienTheoDoiViewModel model)
         {
             var currentUser = await _userManager.GetUserAsync(User);
 

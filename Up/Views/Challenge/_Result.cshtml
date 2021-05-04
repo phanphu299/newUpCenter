@@ -46,7 +46,11 @@
                                         <tr v-for="item in resultList" :key="item.stt">
                                             <th scope="row">{{ item.stt }}</th>
                                             <td>{{ item.name }}</td>
-                                            <td><v-icon v-if="item.dapAnHocVien == item.dapAnDung" color="success">check_circle_outline</v-icon>{{ item.dapAnHocVien }}</td>
+                                            <td>
+                                                <v-icon v-if="item.dapAnHocVien == item.dapAnDung" color="success">check_circle_outline</v-icon>
+                                                <v-icon v-else color="error">cancel</v-icon>
+                                                {{ item.dapAnHocVien }}
+                                            </td>
                                             <td>{{ item.dapAnDung }}</td>
                                         </tr>
                                     </tbody>
