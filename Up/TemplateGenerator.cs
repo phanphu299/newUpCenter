@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
+using Up.Models;
 
 namespace Up
 {
@@ -139,6 +141,68 @@ namespace Up
               </body>
             </html>
             ");
+            return sb.ToString();
+        }
+
+        public static string GetChallengeResultTemplate(IList<ChallengeResultInputModel> model)
+        {
+            var sb = new StringBuilder();
+            sb.Append(@"
+            <html>
+              <head>
+              </head>
+              <body>
+                <div class='container'>
+                    <h2 style='color: #00008b;'>CHALLENGE RESULT</h2>
+                    
+                    <p style='margin-bottom: 0'><b>Student Name: </b> {0}</p>
+                    <p style='margin-bottom: 0'><b>Student ID: </b> {1}</p>
+                    <p style='margin-bottom: 0'><b>Challenge Name: </b> {2}</p>
+                    <p style='margin-bottom: 0'><b>Date taken: </b> {3}</p>
+                    <p style='margin-bottom: 0'><b>Time(s): </b> {4}</p>
+                    
+                    </br>
+
+                    <p style='margin-bottom: 0'><b>Score: </b> {5}</p>
+                    <p style='margin-bottom: 0'><b>Result: </b> {6}</p>
+
+                    <table class='table table-bordered' style='page-break-inside:auto'>
+                        <thead style='display:table-header-group'>
+                          <tr style='page-break-inside:avoid; page-break-after:auto'>
+                            <th>#</th>
+                            <th>Question</th>
+                            <th>Your Answer</th>
+                            <th>Correct Answer</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+            ");
+
+            foreach(var item in model)
+            {
+                string[] args = new string[] {
+                    item.Stt.ToString(),
+                    item.Name,
+                    item.DapAnHocVien,
+                    item.DapAnDung
+                };
+
+                sb.Append(string.Format(@"
+                    <tr style='page-break-inside:avoid; page-break-after:auto'>
+                        <td style='padding: 0 4px'><b>{0}</b></td>
+                        <td style='padding: 0 4px'>{1}</td>
+                        <td style='padding: 0 4px'>{2}</td>
+                        <td style='padding: 0 4px'>{3}</td>
+                    </tr>
+                ", args));
+            }
+
+            sb.Append(@"</tbody>
+                    </table>
+                </div>
+              </body>
+            </html>");
+
             return sb.ToString();
         }
     }

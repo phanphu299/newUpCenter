@@ -27,7 +27,9 @@ var vue = new Vue({
         isPass: false,
         score: 0,
         resultList: [],
-        dialogResult: false
+        dialogResult: false,
+        lanThi: 0,
+        submitLoading: false
     },
     async beforeCreate() {
     },
@@ -127,6 +129,7 @@ var vue = new Vue({
 
         async onSubmit() {
             var that = this;
+            this.submitLoading = true;
             var dapAnDungs = this.cauHoiItems.map((item, index) => {
                 return {
                     cauHoiId: item.cauHoiId,
@@ -163,8 +166,7 @@ var vue = new Vue({
                 }
             });
 
-            this.showExam = false;
-            this.showResult = true;
+            
             if (that.score >= that.selectedThuThach.minGrade)
                 that.isPass = true;
 
@@ -179,12 +181,47 @@ var vue = new Vue({
                     Score: that.score
                 }
             })
-            .then(function (response) {
-                console.log(response);
+                .then(function (response) {
+                    that.lanThi = response.data;
             })
             .catch(function (error) {
                 console.log(error);
             });
+
+            await axios
+                ({
+                    url: '/Challenge/ExportResult',
+                    method: 'post',
+                    responseType: 'blob', // important
+                    data: {
+                        Results: that.resultList,
+                        IsPass: that.isPass,
+                        Score: that.score,
+                        TenHocVien: that.hocVien.fullName,
+                        Trigram: that.trigram,
+                        ChallengeName: that.selectedThuThach.name,
+                        LanThi: that.lanThi
+                    }
+                })
+                .then(function (response) {
+                    that.forceFileDownloadPdf(response, that.hocVien.fullName);
+
+                    that.submitLoading = false;
+                    that.showExam = false;
+                    that.showResult = true;
+                })
+                .catch(function (error) {
+                    console.log(error.response.data.Message);
+                });
+        },
+
+        forceFileDownloadPdf(response, name) {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'challenge_result_' + name + '.pdf'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
         },
 
         setTime(seconds) {

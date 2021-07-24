@@ -43,90 +43,90 @@ namespace Up.Repositoties
 
         public async Task<TinhChiPhiViewModel> TinhChiPhiAsync(int month, int year)
         {
-            var giaoVienList = await _context.GiaoViens
-                .Include(x => x.NgayLamViec)
-                .Include(x => x.ThongKe_ChiPhis)
-                .Include(x => x.NhanVien_ViTris)
-                    .ThenInclude(x => x.ViTri)
-                .Where(x => !x.IsDisabled)
-                .Where(x => (x.NgayBatDau.Month <= month && x.NgayBatDau.Year == year) || x.NgayBatDau.Year < year)
-                .Where(x => (x.NgayKetThuc == null || (x.NgayKetThuc.Value.Month >= month && x.NgayKetThuc.Value.Year == year) || x.NgayKetThuc.Value.Year > year))
-                .AsNoTracking()
-                .ToListAsync();
+            //var giaoVienList = await _context.GiaoViens
+            //    .Include(x => x.NgayLamViec)
+            //    .Include(x => x.ThongKe_ChiPhis)
+            //    .Include(x => x.NhanVien_ViTris)
+            //        .ThenInclude(x => x.ViTri)
+            //    .Where(x => !x.IsDisabled)
+            //    .Where(x => (x.NgayBatDau.Month <= month && x.NgayBatDau.Year == year) || x.NgayBatDau.Year < year)
+            //    .Where(x => (x.NgayKetThuc == null || (x.NgayKetThuc.Value.Month >= month && x.NgayKetThuc.Value.Year == year) || x.NgayKetThuc.Value.Year > year))
+            //    .AsNoTracking()
+            //    .ToListAsync();
 
-            var giaoVien = giaoVienList
-                .OrderBy(x => x.NhanVien_ViTris.OrderBy(m => m.ViTri.Order).First().ViTri.Order)
-                .Select(nhanVien =>
-                {
-                    var thongKeData = nhanVien
-                                            .ThongKe_ChiPhis
-                                            .FirstOrDefault(m => m.NgayChiPhi.Month == month &&
-                                                                 m.NgayChiPhi.Year == year &&
-                                                                 m.NhanVienId == nhanVien.GiaoVienId);
+            //var giaoVien = giaoVienList
+            //    .OrderBy(x => x.NhanVien_ViTris.OrderBy(m => m.ViTri.Order).First().ViTri.Order)
+            //    .Select(nhanVien =>
+            //    {
+            //        var thongKeData = nhanVien
+            //                                .ThongKe_ChiPhis
+            //                                .FirstOrDefault(m => m.NgayChiPhi.Month == month &&
+            //                                                     m.NgayChiPhi.Year == year &&
+            //                                                     m.NhanVienId == nhanVien.GiaoVienId);
 
-                    var salary_Expense = thongKeData?.Salary_Expense ?? nhanVien.BasicSalary;
-                    var teachingRate = thongKeData?.TeachingRate ?? nhanVien.TeachingRate;
-                    var tutoringRate = thongKeData?.TutoringRate ?? nhanVien.TutoringRate;
-                    var hoaHong = thongKeData?.MucHoaHong ?? nhanVien.MucHoaHong;
-                    var bonus = thongKeData?.Bonus ?? 0;
-                    var minus = thongKeData?.Minus ?? 0;
-                    var loaiChiPhi = (nhanVien.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && nhanVien.NhanVien_ViTris.Count > 1) ?
-                                4 : (nhanVien.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && nhanVien.NhanVien_ViTris.Count == 1) ?
-                                1 : 2;
-                    var chiPhiMoi = thongKeData?.ChiPhi ?? nhanVien.BasicSalary;
-                    var soGioDay = thongKeData?.SoGioDay ?? 0;
-                    var soGioKem = thongKeData?.SoGioKem ?? 0;
-                    var soHocVien = thongKeData?.SoHocVien ?? 0;
-                    bool daLuu = thongKeData?.DaLuu ?? false;
-                    var ngayLamViec = thongKeData?.NgayLamViec ?? nhanVien.NgayLamViec.Name;
-                    var soNgayLam = thongKeData?.SoNgayLam ?? TongNgayLam(nhanVien.NgayLamViec.Name, month, year, null);
+            //        var salary_Expense = thongKeData?.Salary_Expense ?? nhanVien.BasicSalary;
+            //        var teachingRate = thongKeData?.TeachingRate ?? nhanVien.TeachingRate;
+            //        var tutoringRate = thongKeData?.TutoringRate ?? nhanVien.TutoringRate;
+            //        var hoaHong = thongKeData?.MucHoaHong ?? nhanVien.MucHoaHong;
+            //        var bonus = thongKeData?.Bonus ?? 0;
+            //        var minus = thongKeData?.Minus ?? 0;
+            //        var loaiChiPhi = (nhanVien.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && nhanVien.NhanVien_ViTris.Count > 1) ?
+            //                    4 : (nhanVien.NhanVien_ViTris.Any(m => m.ViTriId == LoaiNhanVienEnums.GiaoVien.ToId()) && nhanVien.NhanVien_ViTris.Count == 1) ?
+            //                    1 : 2;
+            //        var chiPhiMoi = thongKeData?.ChiPhi ?? nhanVien.BasicSalary;
+            //        var soGioDay = thongKeData?.SoGioDay ?? 0;
+            //        var soGioKem = thongKeData?.SoGioKem ?? 0;
+            //        var soHocVien = thongKeData?.SoHocVien ?? 0;
+            //        bool daLuu = thongKeData?.DaLuu ?? false;
+            //        var ngayLamViec = thongKeData?.NgayLamViec ?? nhanVien.NgayLamViec.Name;
+            //        var soNgayLam = thongKeData?.SoNgayLam ?? TongNgayLam(nhanVien.NgayLamViec.Name, month, year, null);
 
-                    var soNgayLamVoSau = thongKeData?.SoNgayLamVoSau ??
-                            ((nhanVien.NgayBatDau.Month == month &&
-                             nhanVien.NgayBatDau.Year == year &&
-                             nhanVien.NgayKetThuc != null &&
-                             nhanVien.NgayKetThuc.Value.Month == month &&
-                             nhanVien.NgayKetThuc.Value.Year == year)
-                             ?
-                             TongNgayLamVoSau(nhanVien.NgayLamViec.Name, month, year, nhanVien.NgayBatDau, nhanVien.NgayKetThuc) :
-                             (nhanVien.NgayBatDau.Month == month && nhanVien.NgayBatDau.Year == year)
-                             ?
-                             TongNgayLamVoSau(nhanVien.NgayLamViec.Name, month, year, nhanVien.NgayBatDau, null) :
-                             TongNgayLam(nhanVien.NgayLamViec.Name, month, year, nhanVien.NgayKetThuc));
+            //        var soNgayLamVoSau = thongKeData?.SoNgayLamVoSau ??
+            //                ((nhanVien.NgayBatDau.Month == month &&
+            //                 nhanVien.NgayBatDau.Year == year &&
+            //                 nhanVien.NgayKetThuc != null &&
+            //                 nhanVien.NgayKetThuc.Value.Month == month &&
+            //                 nhanVien.NgayKetThuc.Value.Year == year)
+            //                 ?
+            //                 TongNgayLamVoSau(nhanVien.NgayLamViec.Name, month, year, nhanVien.NgayBatDau, nhanVien.NgayKetThuc) :
+            //                 (nhanVien.NgayBatDau.Month == month && nhanVien.NgayBatDau.Year == year)
+            //                 ?
+            //                 TongNgayLamVoSau(nhanVien.NgayLamViec.Name, month, year, nhanVien.NgayBatDau, null) :
+            //                 TongNgayLam(nhanVien.NgayLamViec.Name, month, year, nhanVien.NgayKetThuc));
 
-                    var dailySalary = thongKeData?.DailySalary ?? /*(Math.Ceiling(*/(nhanVien.BasicSalary / TongNgayLam(nhanVien.NgayLamViec.Name, month, year, null)) /*/ 10000) * 10000)*/;
-                    var soNgayNghi = thongKeData?.SoNgayNghi ?? 0;
-                    var ghiChu = thongKeData?.GhiChu ?? string.Empty;
+            //        var dailySalary = thongKeData?.DailySalary ?? /*(Math.Ceiling(*/(nhanVien.BasicSalary / TongNgayLam(nhanVien.NgayLamViec.Name, month, year, null)) /*/ 10000) * 10000)*/;
+            //        var soNgayNghi = thongKeData?.SoNgayNghi ?? 0;
+            //        var ghiChu = thongKeData?.GhiChu ?? string.Empty;
 
-                    if (soNgayLam > soNgayLamVoSau && dailySalary > 0)
-                    {
-                        salary_Expense = /*(Math.Ceiling(*/(dailySalary * soNgayLamVoSau)/* / 10000) * 10000)*/;
-                        chiPhiMoi = salary_Expense;
-                    }
-                    chiPhiMoi = (Math.Ceiling(chiPhiMoi / 10000) * 10000);
+            //        if (soNgayLam > soNgayLamVoSau && dailySalary > 0)
+            //        {
+            //            salary_Expense = /*(Math.Ceiling(*/(dailySalary * soNgayLamVoSau)/* / 10000) * 10000)*/;
+            //            chiPhiMoi = salary_Expense;
+            //        }
+            //        chiPhiMoi = (Math.Ceiling(chiPhiMoi / 10000) * 10000);
 
-                    return _entityConverter.ToChiPhiModel(
-                        nhanVien,
-                        salary_Expense,
-                        teachingRate,
-                        tutoringRate,
-                        hoaHong,
-                        bonus,
-                        minus,
-                        loaiChiPhi,
-                        chiPhiMoi,
-                        soGioDay,
-                        soGioKem,
-                        soHocVien,
-                        daLuu,
-                        ngayLamViec,
-                        soNgayLam,
-                        soNgayLamVoSau,
-                        dailySalary,
-                        soNgayNghi,
-                        ghiChu);
-                })
-                .ToList();
+            //        return _entityConverter.ToChiPhiModel(
+            //            nhanVien,
+            //            salary_Expense,
+            //            teachingRate,
+            //            tutoringRate,
+            //            hoaHong,
+            //            bonus,
+            //            minus,
+            //            loaiChiPhi,
+            //            chiPhiMoi,
+            //            soGioDay,
+            //            soGioKem,
+            //            soHocVien,
+            //            daLuu,
+            //            ngayLamViec,
+            //            soNgayLam,
+            //            soNgayLamVoSau,
+            //            dailySalary,
+            //            soNgayNghi,
+            //            ghiChu);
+            //    })
+            //    .ToList();
 
             var chiPhiList = await _context.ChiPhiCoDinhs
                 .Include(x => x.ThongKe_ChiPhis)
@@ -150,7 +150,7 @@ namespace Up.Repositoties
                 .ToList();
 
             List<ChiPhiModel> model = new List<ChiPhiModel>();
-            model.AddRange(giaoVien);
+            //model.AddRange(giaoVien);
             model.AddRange(chiPhi);
 
             return new TinhChiPhiViewModel

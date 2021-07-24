@@ -85,12 +85,13 @@ namespace Up.Services
             return await _thuThachRepository.GetThuThachByKhoaHocIdsAsync(khoaHocIds);
         }
 
-        public async Task LuuKetQuaAsync(ResultInputModel input)
+        public async Task<int> LuuKetQuaAsync(ResultInputModel input)
         {
             var latestLanThi = await _thuThachRepository.GetLatestLanThi(input.HocVienId, input.ThuThachId);
             input.LanThi = latestLanThi + 1;
 
             await _thuThachRepository.LuuKetQuaAsync(input);
+            return input.LanThi;
         }
 
         public async Task<ThuThachViewModel> UpdateThuThachAsync(UpdateThuThachInputModel input, string loggedEmployee)

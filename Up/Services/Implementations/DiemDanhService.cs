@@ -35,7 +35,7 @@
 
         public async Task<bool> DiemDanhTatCaAsync(DiemDanhHocVienInput input, string loggedEmployee)
         {
-            if (input.LopHocId == null || input.IsOff == null || input.NgayDiemDanh == null)
+            if (input.LopHocId == null || input.NgayDiemDanh == null)
                 throw new Exception("Lỗi khi Điểm Danh!!!");
 
             if (await _diemDanhRepository.CheckDaDiemDanhAsync(input.LopHocId, input.NgayDiemDanh))
@@ -46,7 +46,7 @@
 
         public async Task<bool> DiemDanhTungHocVienAsync(DiemDanhHocVienInput input, string loggedEmployee)
         {
-            if (input.LopHocId == null || input.HocVienId == null || input.IsOff == null || input.NgayDiemDanh == null)
+            if (input.LopHocId == null || input.HocVienId == null || input.NgayDiemDanh == null)
                 throw new Exception("Lỗi khi Điểm Danh!!!");
 
             return await _diemDanhRepository.DiemDanhTungHocVienAsync(input, loggedEmployee);

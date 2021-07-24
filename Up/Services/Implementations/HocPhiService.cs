@@ -205,7 +205,9 @@ namespace Up.Services
                     var hocPhiThangTruoc = (preHocPhi / preSoNgayHoc) * (soNgayHocThucTeThangTruoc - soNgayNamTrongThoiHanHocPhiTronGoiThangTruoc);
                     var khuyenMaiThangTruocValue = (khuyenMaiThangTruoc / 100.0) * hocPhiThangTruoc;
                     var hocPhiSauKhuyenMaiThangTruoc = hocPhiThangTruoc - khuyenMaiThangTruocValue;
-                    var hocPhiMoiNgaySauKhuyenMai = soNgayHocThucTeThangTruoc == 0 ? 0 : hocPhiSauKhuyenMaiThangTruoc / (soNgayHocThucTeThangTruoc - soNgayNamTrongThoiHanHocPhiTronGoiThangTruoc);
+                    var hocPhiMoiNgaySauKhuyenMai = soNgayHocThucTeThangTruoc == 0 ? 
+                    0 : 
+                    hocPhiSauKhuyenMaiThangTruoc / (soNgayHocThucTeThangTruoc > soNgayNamTrongThoiHanHocPhiTronGoiThangTruoc ? soNgayHocThucTeThangTruoc - soNgayNamTrongThoiHanHocPhiTronGoiThangTruoc : soNgayHocThucTeThangTruoc);
 
                     //List<DateTime> ngayDuocNghiDate = new List<DateTime>();
                     //foreach (var ngayNghi in item.SoNgayDuocNghi)
@@ -324,7 +326,19 @@ namespace Up.Services
                 }
 
             }
-            return (result, soNgayBu, isInTronGoi, ngayDuocNghiDate.Count);
+
+            if (!hocPhis.Any() || hocPhis.All(x => x.IsDisabled))
+                if (ngayBatDau != null && soNgayDuocNghi != null)
+                {
+                    foreach (var ngayNghi in soNgayDuocNghi)
+                    {
+                        if (ngayNghi >= ngayBatDau)
+                        {
+                            ngayDuocNghiDate.Add(ngayNghi);
+                        }
+                    }
+                }
+            return (result, soNgayBu, isInTronGoi, ngayDuocNghiDate.Distinct().Count());
         }
 
         private void ResetValue(HocVienViewModel item)

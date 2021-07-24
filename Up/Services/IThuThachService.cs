@@ -24,6 +24,6 @@ namespace Up.Services
 
         Task<List<CauHoiViewModel>> GetCauHoiAsync(Guid thuThachId);
 
-        Task LuuKetQuaAsync(ResultInputModel input);
+        Task<int> LuuKetQuaAsync(ResultInputModel input);
     }
 }

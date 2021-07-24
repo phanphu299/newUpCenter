@@ -50,6 +50,7 @@ namespace Up.Repositoties
         public async Task<int> GetLatestLanThi(Guid hocVienId, Guid thuThachId)
         {
             var result = await _context.ChallengeResults
+                                        .OrderByDescending(x => x.CreatedDate)
                                         .FirstOrDefaultAsync(x => x.ThuThachId == thuThachId && x.HocVienId == hocVienId);
             if (result == null) return 0;
 
