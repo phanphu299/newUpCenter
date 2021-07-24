@@ -1,0 +1,18 @@
+﻿<v-flex xs12 sm3>
+    <v-select v-model="selectedLopHoc"
+              :items="lopHocItems"
+              item-text="name"
+              attach
+              return-object
+              chips
+              label="Chọn Lớp Học"
+              v-on:change="onGetKetQua">
+        <template v-slot:selection="data">
+            <v-chip :selected="data.selected"
+                    color="green"
+                    text-color="white">
+                <span>{{ data.item.name }}</span>
+            </v-chip>
+        </template>
+    </v-select>
+</v-flex>

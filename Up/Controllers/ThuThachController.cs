@@ -41,6 +41,23 @@ namespace Up.Controllers
             return View();
         }
 
+        [ServiceFilter(typeof(Read_ThuThach))]
+        public async Task<IActionResult> IndexKetQua()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            ViewBag.CanContribute = await _thuThachService.CanContributeAsync(User);
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetKetQuaAsync(Guid lopHocId)
+        {
+            var model = await _thuThachService.GetKetQuaAsync(lopHocId);
+            return Json(model);
+        }
+
         [ServiceFilter(typeof(Read_ThuThach_Export))]
         public async Task<IActionResult> ExportIndex()
         {

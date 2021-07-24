@@ -313,5 +313,22 @@ namespace Up.Repositoties
 
             return trigram.ToUpper();
         }
+
+        public async Task<List<HocVienViewModel>> GetHocVienKetQuaAsync(Guid lopHocId)
+        {
+            var hocViens = await _context.HocViens
+                                        .Include(x => x.HocVien_LopHocs)
+                                        .ThenInclude(x => x.LopHoc)
+                                        .Include(x => x.HocVien_NgayHocs)
+                                        .Include(x => x.ChallengeResults)
+                                        .ThenInclude(x => x.ThuThach)
+                                        .Where(x => !x.IsDisabled && x.HocVien_LopHocs.Any(m => m.LopHocId == lopHocId)) 
+                                        .AsNoTracking()
+                                        .ToListAsync();
+
+            return hocViens
+                .Select(hocvien => _entityConverter.ToHocVienKetQuaViewModel(hocvien))
+                .ToList();
+        }
     }
 }

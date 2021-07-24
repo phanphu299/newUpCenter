@@ -1,0 +1,14 @@
+﻿<v-data-table :headers="headers"
+              :search="search"
+              :items="hocVienItems">
+    <template slot="items" slot-scope="props">
+        <td>{{ props.index + 1 }}</td>
+        <td>{{ props.item.fullName }}</td>
+        <td>{{ props.item.trigram }}</td>
+        <td>
+            <ul v-if="props.item.passedChallenge.length > 0" v-for="thuthach in props.item.passedChallenge">
+                <li>{{ thuthach }}</li>
+            </ul>
+        </td>
+    </template>
+</v-data-table>

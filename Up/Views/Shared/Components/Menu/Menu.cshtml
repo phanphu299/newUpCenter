@@ -180,6 +180,16 @@
                                     </li>
                                 }
 
+                                @if (Model.CanViewThuThach || Model.CanViewCauHoi)
+                                {
+                                    <li>
+                                        <a asp-area="" asp-controller="ThuThach" asp-action="IndexKetQua">
+                                            <i class="material-icons">keyboard_arrow_right</i>
+                                            <span> Kiểm Tra Kết Quả</span>
+                                        </a>
+                                    </li>
+                                }
+
                             </ul>
                         </div>
                     </li>

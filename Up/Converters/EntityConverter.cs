@@ -60,6 +60,19 @@ namespace Up.Converters
             };
         }
 
+        public HocVienViewModel ToHocVienKetQuaViewModel(HocVien hocVien)
+        {
+            return new HocVienViewModel
+            {
+                FullName = hocVien.FullName,
+                Trigram = hocVien.Trigram,
+                PassedChallenge = hocVien.ChallengeResults
+                                        .Where(x => x.IsPass && !x.ThuThach.IsDisabled)
+                                        .Select(x => x.ThuThach.Name)
+                                        .Distinct()
+            };
+        }
+
         public HocVienLightViewModel ToHocVienLightViewModel(HocVien hocVien)
         {
             return new HocVienLightViewModel
