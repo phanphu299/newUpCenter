@@ -129,6 +129,7 @@ var vue = new Vue({
 
         async onSubmit() {
             var that = this;
+            that.score = 0;
             this.submitLoading = true;
             var dapAnDungs = this.cauHoiItems.map((item, index) => {
                 return {
@@ -204,7 +205,8 @@ var vue = new Vue({
                     }
                 })
                 .then(function (response) {
-                    that.forceFileDownloadPdf(response, that.hocVien.fullName);
+                    var today = new Date();
+                    that.forceFileDownloadPdf(response, that.selectedThuThach.name + "_" + that.hocVien.fullName + "_" + today.getDate() + "_" + today.getMonth() + "_" + today.getFullYear());
 
                     that.submitLoading = false;
                     that.showExam = false;
@@ -219,7 +221,7 @@ var vue = new Vue({
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', 'challenge_result_' + name + '.pdf'); //or any other extension
+            link.setAttribute('download', name + '.pdf'); //or any other extension
             document.body.appendChild(link);
             link.click();
         },

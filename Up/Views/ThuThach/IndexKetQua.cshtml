@@ -8,10 +8,7 @@
             <v-card>
                 <v-card-title>
                     <v-layout wrap>
-                        @if (ViewBag.CanContribute)
-                        {
-                            <partial name="_KetQuaDropdownList" />
-                        }
+                        <partial name="_KetQuaDropdownList" />
 
                         <v-container fluid v-if="hocVienItems.length > 0">
                             <v-text-field v-model="search"

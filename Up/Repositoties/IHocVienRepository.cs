@@ -16,7 +16,7 @@ namespace Up.Repositoties
 
         Task<List<HocVienViewModel>> GetHocVienAsync();
 
-        Task<List<HocVienViewModel>> GetHocVienKetQuaAsync(Guid lopHocId);
+        Task<List<HocVienViewModel>> GetHocVienKetQuaAsync(Guid lopHocId, int month, int year);
 
         Task<List<HocVienViewModel>> GetAllHocVienAsync();
 

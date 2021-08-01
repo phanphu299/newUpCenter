@@ -72,7 +72,7 @@ namespace Up.Controllers
                 DateTime.Now.ToString("MMMM dd, yyyy h:mm tt"),
                 model.LanThi.ToString(),
                 model.Score.ToString(),
-                model.IsPass.ToString()
+                model.IsPass ? "Pass" : "Fail"
             };
 
             var pdf = SetupPdf(TemplateGenerator.GetChallengeResultTemplate(model.Results), args);

@@ -68,9 +68,17 @@ namespace Up.Services
                 .ToList();
         }
 
-        public async Task<List<HocVienViewModel>> GetKetQuaAsync(Guid lopHocId)
+        public async Task<List<HocVienViewModel>> GetKetQuaAsync(Guid lopHocId, int month, int year)
         {
-            return await _hocvienRepository.GetHocVienKetQuaAsync(lopHocId);
+            var result = await _hocvienRepository.GetHocVienKetQuaAsync(lopHocId, month, year);
+            int index = 1;
+            foreach (var item in result)
+            {
+                item.Stt = index;
+                index++;
+            }
+
+            return result;
         }
 
         public async Task<List<ThuThachViewModel>> GetThuThachAsync()

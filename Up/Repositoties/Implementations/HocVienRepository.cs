@@ -314,7 +314,7 @@ namespace Up.Repositoties
             return trigram.ToUpper();
         }
 
-        public async Task<List<HocVienViewModel>> GetHocVienKetQuaAsync(Guid lopHocId)
+        public async Task<List<HocVienViewModel>> GetHocVienKetQuaAsync(Guid lopHocId, int month, int year)
         {
             var hocViens = await _context.HocViens
                                         .Include(x => x.HocVien_LopHocs)
@@ -322,7 +322,9 @@ namespace Up.Repositoties
                                         .Include(x => x.HocVien_NgayHocs)
                                         .Include(x => x.ChallengeResults)
                                         .ThenInclude(x => x.ThuThach)
-                                        .Where(x => !x.IsDisabled && x.HocVien_LopHocs.Any(m => m.LopHocId == lopHocId)) 
+                                        .Where(x => !x.IsDisabled && x.HocVien_LopHocs.Any(m => m.LopHocId == lopHocId))
+                                        .Where(x => x.HocVien_NgayHocs.Any(m => m.LopHocId == lopHocId && (m.NgayKetThuc == null || (m.NgayKetThuc.Value.Month >= month && m.NgayKetThuc.Value.Year == year) || m.NgayKetThuc.Value.Year > year)))
+                                        .Where(x => x.HocVien_NgayHocs.Any(m => m.LopHocId == lopHocId && (m.NgayBatDau.Month <= month && m.NgayBatDau.Year == year) || m.NgayBatDau.Year < year))
                                         .AsNoTracking()
                                         .ToListAsync();
 

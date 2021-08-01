@@ -2,7 +2,7 @@
               :search="search"
               :items="hocVienItems">
     <template slot="items" slot-scope="props">
-        <td>{{ props.index + 1 }}</td>
+        <td>{{ props.item.stt }}</td>
         <td>{{ props.item.fullName }}</td>
         <td>{{ props.item.trigram }}</td>
         <td>

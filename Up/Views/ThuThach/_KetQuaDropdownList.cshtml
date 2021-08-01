@@ -16,3 +16,19 @@
         </template>
     </v-select>
 </v-flex>
+
+<v-flex xs12 sm3>
+    <v-select :items="itemThang"
+              v-model="selectedThang"
+              chips
+              label="Chọn Tháng"
+              v-on:change="onGetKetQua"></v-select>
+</v-flex>
+
+<v-flex xs12 sm3>
+    <v-select :items="itemNam"
+              v-model="selectedNam"
+              chips
+              label="Chọn Năm"
+              v-on:change="onGetKetQua"></v-select>
+</v-flex>

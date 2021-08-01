@@ -52,9 +52,9 @@ namespace Up.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetKetQuaAsync(Guid lopHocId)
+        public async Task<IActionResult> GetKetQuaAsync(Guid lopHocId, int month, int year)
         {
-            var model = await _thuThachService.GetKetQuaAsync(lopHocId);
+            var model = await _thuThachService.GetKetQuaAsync(lopHocId, month, year);
             return Json(model);
         }
 
