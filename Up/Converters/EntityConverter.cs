@@ -650,7 +650,7 @@ namespace Up.Converters
                 GhiChu = input.GhiChu,
                 DaDong = input.DaDong,
                 DaNo = input.DaNo,
-                TronGoi = input.TronGoi
+                TronGoi = input.TronGoi,
             };
         }
 

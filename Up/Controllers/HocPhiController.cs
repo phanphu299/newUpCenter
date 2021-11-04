@@ -204,6 +204,7 @@ namespace Up.Controllers
                 item.NgayDong = _ngayDong;
                 item.DaDong = false;
                 item.DaNo = false;
+                item.HocPhi = item.HocPhiMoi;
 
                 await _thongKe_DoanhThuHocPhiService.ThemThongKe_DoanhThuHocPhiAsync(item, currentUser.Email);
             }

@@ -19,5 +19,6 @@ namespace Up.Models
         public bool TronGoi { get; set; }
         public int month { get; set; }
         public int year { get; set; }
+        public double HocPhiMoi { get; set; }
     }
 }

@@ -3,7 +3,7 @@
 var vue = new Vue({
     el: '#ChallengeIndex',
     data: {
-        title: 'Wellcome to UP Challenges',
+        title: 'Welcome to UP Challenges',
         messageText: '',
         color: '',
         timeout: 3000,
