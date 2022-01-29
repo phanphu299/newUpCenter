@@ -25,5 +25,7 @@ namespace Up.Repositoties
         Task<Guid> UpdateHocPhiTronGoiAsync(UpdateHocPhiTronGoiInputModel input, string loggedEmployee);
 
         Task<List<HocPhiTronGoiViewModel>> GetHocPhiTronGoiAsync(Guid hocVienId, Guid lopHocId);
+
+        List<HocPhiTronGoiViewModel> GetHocPhiTronGoi(Guid hocVienId, Guid lopHocId);
     }
 }

@@ -306,7 +306,7 @@
         public async Task<IActionResult> ExportDiemDanh(Guid LopHocId, int month, int year)
         {
             var model = await _diemDanhService.GetDiemDanhByLopHoc(LopHocId, month, year);
-            var stream = GenerateExcelFile(model.ToList(), month, year, LopHocId);
+            var stream = await GenerateExcelFileAsync(model.ToList(), month, year, LopHocId);
             string excelName = $"UserList.xlsx";
             return File(stream, Constants.ContentType, excelName);
         }
@@ -324,12 +324,12 @@
             return c.ToString();
         }
 
-        private System.IO.MemoryStream GenerateExcelFile(List<DiemDanhViewModel> model, int month, int year, Guid LopHocId)
+        private async Task<System.IO.MemoryStream> GenerateExcelFileAsync(List<DiemDanhViewModel> model, int month, int year, Guid LopHocId)
         {
             var stream = new System.IO.MemoryStream();
             using (ExcelPackage package = new ExcelPackage(stream))
             {
-                string lopHocName = _lopHocService.GetLopHocDetailAsync(LopHocId).Result.Name;
+                string lopHocName = (await _lopHocService.GetLopHocDetailAsync(LopHocId)).Name;
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Diem Danh " + lopHocName);
                 var groupedModel = model.GroupBy(x => x.HocVien).Select(x => new ThongKeModel
                 {
@@ -343,7 +343,7 @@
                 }).ToList();
                 int totalRows = groupedModel.Count;
 
-                var soNgayHoc = _diemDanhService.SoNgayHocAsync(LopHocId, month, year).Result;
+                var soNgayHoc = await _diemDanhService.SoNgayHocAsync(LopHocId, month, year);
                 string column = Number2String(soNgayHoc.Count + 3, true);
 
                 worksheet.Cells["A1:" + column + "1"].Merge = true;

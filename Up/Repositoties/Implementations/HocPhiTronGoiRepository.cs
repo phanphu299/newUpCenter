@@ -97,6 +97,21 @@ namespace Up.Repositoties
             return hocPhis.Select(hocPhi => _entityConverter.ToHocPhiTronGoiViewModel(hocPhi)).ToList();
         }
 
+        public List<HocPhiTronGoiViewModel> GetHocPhiTronGoi(Guid hocVienId, Guid lopHocId)
+        {
+            var hocPhis = _context.HocPhiTronGois
+                .Include(x => x.HocVien)
+                .Include(x => x.HocPhiTronGoi_LopHocs)
+                    .ThenInclude(x => x.LopHoc)
+                .Where(x => !x.IsRemoved &&
+                             x.HocVienId == hocVienId &&
+                             x.HocPhiTronGoi_LopHocs.Any(m => m.LopHocId == lopHocId))
+                .AsNoTracking()
+                .ToList();
+
+            return hocPhis.Select(hocPhi => _entityConverter.ToHocPhiTronGoiViewModel(hocPhi)).ToList();
+        }
+
         public async Task<HocPhiTronGoiViewModel> GetHocPhiTronGoiDetailAsync(Guid id)
         {
             var hocPhi = await _context.HocPhiTronGois

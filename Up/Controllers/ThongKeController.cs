@@ -139,8 +139,7 @@
                 }
             }
 
-            var chiPhi = _thongKeService.GetChiPhiAsync()
-                .Result
+            var chiPhi = (await _thongKeService.GetChiPhiAsync())
                 .GroupBy(p => p.NgayChiPhi.Month)
                                 .Select(g => new ThongKeModel
                                 {

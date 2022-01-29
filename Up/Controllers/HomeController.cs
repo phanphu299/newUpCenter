@@ -14,6 +14,12 @@ namespace Up.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public IActionResult Index2()
+        {
+            return Redirect("https://aromatic-rake-993.notion.site/UP-English-by-Mr-Qu-n-3802d369500847b5b660d551f92dc460");
+        }
+
         [Authorize(Roles = Constants.Admin)]
         public IActionResult Privacy()
         {

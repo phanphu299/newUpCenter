@@ -66,12 +66,12 @@ namespace Up.Services
             {
                 Email = user.Email,
                 Id = user.Id,
-                Roles = _userManager.GetRolesAsync(user).Result,
+                Roles = await _userManager.GetRolesAsync(user),
                 RoleIds = _context.UserRoles.Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToList()
             };
         }
 
-        public async Task<bool> ChangePasswordAsync(string UserId, string NewPassword = "M@tkhau@123")
+        public async Task<bool> ChangePasswordAsync(string UserId, string NewPassword = Constants.Default_Reset_Password)
         {
             var user = await _userManager.FindByIdAsync(UserId);
             if (user == null)
@@ -127,13 +127,13 @@ namespace Up.Services
                         Email = Email
                     };
 
-                    IdentityResult result = _userManager.CreateAsync(user, "M@tkhau@123").Result;
+                    IdentityResult result = await _userManager.CreateAsync(user, Constants.Default_Reset_Password);
                     if (result.Succeeded)
                         return new AccountInfo
                         {
                             Id = user.Id,
                             Email = user.Email,
-                            Roles = _userManager.GetRolesAsync(user).Result
+                            Roles = await _userManager.GetRolesAsync(user)
                         };
                     else
                         return null;
@@ -201,7 +201,7 @@ namespace Up.Services
                 {
                     Email = item.Email,
                     Id = item.Id,
-                    Roles = _userManager.GetRolesAsync(item).Result
+                    Roles = await _userManager.GetRolesAsync(item)
                 });
             }
 
@@ -232,7 +232,7 @@ namespace Up.Services
                 {
                     Email = item.Email,
                     Id = item.Id,
-                    Roles = _userManager.GetRolesAsync(item).Result,
+                    Roles = await _userManager.GetRolesAsync(item),
                     RoleIds = _context.UserRoles.Where(x => x.UserId == item.Id).Select(x => x.RoleId).ToList()
                 });
             }

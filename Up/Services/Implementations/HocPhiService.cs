@@ -201,7 +201,7 @@ namespace Up.Services
                     var soNgayHocThucTeThangTruoc = preSoNgayHoc > soNgayHocVienVaoSauThangTruoc ?
                                                                             soNgayHocVienVaoSauThangTruoc - soNgayConLaiSauKhiNghiThangTruoc : preSoNgayHoc - soNgayConLaiSauKhiNghiThangTruoc;
 
-                    var (soNgayNamTrongThoiHanHocPhiTronGoiThangTruoc, notUsed, notUsed2, notUsed3) = TinhSoNgayNamTrongThoiHanHocPhiTronGoi(item.HocVienId, lopHocId, month, year).Result;
+                    var (soNgayNamTrongThoiHanHocPhiTronGoiThangTruoc, notUsed, notUsed2, notUsed3) = TinhSoNgayNamTrongThoiHanHocPhiTronGoi(item.HocVienId, lopHocId, month, year);
                     var hocPhiThangTruoc = (preHocPhi / preSoNgayHoc) * (soNgayHocThucTeThangTruoc - soNgayNamTrongThoiHanHocPhiTronGoiThangTruoc);
                     var khuyenMaiThangTruocValue = (khuyenMaiThangTruoc / 100.0) * hocPhiThangTruoc;
                     var hocPhiSauKhuyenMaiThangTruoc = hocPhiThangTruoc - khuyenMaiThangTruocValue;
@@ -232,7 +232,7 @@ namespace Up.Services
                     var soNgayHocThucTeThangNay = soNgayHocCurrent > soNgayHocVienVaoSau ?
                                                                             soNgayHocVienVaoSau - soNgayConLaiSauKhiNghi : soNgayHocCurrent - soNgayConLaiSauKhiNghi;
 
-                    var (soNgayNamTrongThoiHanHocPhiTronGoi, buTronGoi, isInTronGoi, ngayDuocNghi) = TinhSoNgayNamTrongThoiHanHocPhiTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear, item.SoNgayDuocNghi, item.NgayBatDau_Date).Result;
+                    var (soNgayNamTrongThoiHanHocPhiTronGoi, buTronGoi, isInTronGoi, ngayDuocNghi) = TinhSoNgayNamTrongThoiHanHocPhiTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear, item.SoNgayDuocNghi, item.NgayBatDau_Date);
 
                     var hocPhiThangNay = (hocPhiCurrent / soNgayHocCurrent) * (soNgayHocThucTeThangNay - soNgayNamTrongThoiHanHocPhiTronGoi);
                     var khuyenMaiThangNay = (khuyenMai / 100.0) * hocPhiThangNay;
@@ -283,9 +283,15 @@ namespace Up.Services
             return items.OrderBy(x => x.Stt).ToList();
         }
 
-        private async Task<(int, int, bool, int)> TinhSoNgayNamTrongThoiHanHocPhiTronGoi(Guid hocVienId, Guid lopHocId, int month, int year, IEnumerable<DateTime> soNgayDuocNghi = null, DateTime? ngayBatDau = null)
+        private (int, int, bool, int) TinhSoNgayNamTrongThoiHanHocPhiTronGoi(
+            Guid hocVienId,
+            Guid lopHocId,
+            int month,
+            int year, 
+            IEnumerable<DateTime> soNgayDuocNghi = null,
+            DateTime? ngayBatDau = null)
         {
-            var hocPhis = await _hocPhiTronGoiRepository.GetHocPhiTronGoiAsync(hocVienId, lopHocId);
+            var hocPhis = _hocPhiTronGoiRepository.GetHocPhiTronGoi(hocVienId, lopHocId);
 
             var ngayHocs = _hocPhiRepository.TinhSoNgayHoc(lopHocId, month, year);
 

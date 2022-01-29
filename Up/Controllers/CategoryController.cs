@@ -833,8 +833,8 @@
 
             var currentUser = await _userManager.GetUserAsync(User);
 
-            if (currentUser.UserName != "huynhquan.nguyen@gmail.com")
-                model = model.Where(x => x.CreatedBy != "huynhquan.nguyen@gmail.com")
+            if (currentUser.UserName != Constants.Admin_Email)
+                model = model.Where(x => x.CreatedBy != Constants.Admin_Email)
                     .ToList();
 
             return Json(model);

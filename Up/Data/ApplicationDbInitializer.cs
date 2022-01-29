@@ -8,15 +8,15 @@ namespace Up.Data
     {
         public static void SeedUsers(UserManager<IdentityUser> userManager)
         {
-            if (userManager.FindByEmailAsync("huynhquan.nguyen@gmail.com").Result == null)
+            if (userManager.FindByEmailAsync(Constants.Admin_Email).Result == null)
             {
                 IdentityUser user = new IdentityUser
                 {
-                    UserName = "huynhquan.nguyen@gmail.com",
-                    Email = "huynhquan.nguyen@gmail.com"
+                    UserName = Constants.Admin_Email,
+                    Email = Constants.Admin_Email
                 };
 
-                IdentityResult result = userManager.CreateAsync(user, "P@ssword@123").Result;
+                IdentityResult result = userManager.CreateAsync(user, Constants.Default_Password).Result;
 
                 if (result.Succeeded)
                 {
@@ -25,10 +25,10 @@ namespace Up.Data
             }
             else
             {
-                var isAdmin = userManager.IsInRoleAsync(userManager.FindByEmailAsync("huynhquan.nguyen@gmail.com").Result, Constants.Admin);
+                var isAdmin = userManager.IsInRoleAsync(userManager.FindByEmailAsync(Constants.Admin_Email).Result, Constants.Admin);
                 if (!isAdmin.Result)
                 {
-                    userManager.AddToRoleAsync(userManager.FindByEmailAsync("huynhquan.nguyen@gmail.com").Result, Constants.Admin).Wait();
+                    userManager.AddToRoleAsync(userManager.FindByEmailAsync(Constants.Admin_Email).Result, Constants.Admin).Wait();
                 }
 
             }

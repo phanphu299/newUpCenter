@@ -183,19 +183,19 @@
         }
 
         [HttpGet]
-        public IActionResult Export()
+        public async Task<IActionResult> Export()
         {
-            var stream = GenerateExcelFile();
+            var stream = await GenerateExcelFileAsync();
             string excelName = $"UserList.xlsx";
             return File(stream, Constants.ContentType, excelName);
         }
 
-        private MemoryStream GenerateExcelFile()
+        private async Task<MemoryStream> GenerateExcelFileAsync()
         {
             var stream = new MemoryStream();
             using (ExcelPackage package = new ExcelPackage(stream))
             {
-                var hocVien = _hocVienService.GetAllHocVienAsync().Result;
+                var hocVien = await _hocVienService.GetAllHocVienAsync();
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Vien");
                 int totalRows = hocVien.Where(x => !string.IsNullOrWhiteSpace(x.Phone)).ToList().Count;
 
@@ -332,14 +332,14 @@
         }
 
         [HttpGet]
-        public IActionResult ExportTemplate(Guid LopHocId)
+        public async Task<IActionResult> ExportTemplate(Guid LopHocId)
         {
-            var stream = GenerateTemplateExcelFile(LopHocId);
+            var stream = await GenerateTemplateExcelFileAsync(LopHocId);
             string excelName = $"UserList.xlsx";
             return File(stream, Constants.ContentType, excelName);
         }
 
-        private MemoryStream GenerateTemplateExcelFile(Guid LopHocId)
+        private async Task<MemoryStream> GenerateTemplateExcelFileAsync(Guid LopHocId)
         {
             var stream = new MemoryStream();
             using (ExcelPackage package = new ExcelPackage(stream))
@@ -394,7 +394,7 @@
                 modelTable.Style.Border.Right.Style = ExcelBorderStyle.Thin;
                 modelTable.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
 
-                var quanHe = _quanHeService.GetQuanHeAsync().Result;
+                var quanHe = await _quanHeService.GetQuanHeAsync();
                 int totalRowsQuanHe = quanHe.Count;
 
                 var modelCellsQuanHe = worksheet.Cells["O5"];

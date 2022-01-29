@@ -264,19 +264,19 @@ namespace Up.Controllers
         }
 
         [HttpPut]
-        public IActionResult Export([FromBody] TinhHocPhiViewModel model)
+        public async Task<IActionResult> Export([FromBody] TinhHocPhiViewModel model)
         {
-            var stream = GenerateExcelFile(model);
+            var stream = await GenerateExcelFileAsync(model);
             string excelName = $"UserList.xlsx";
             return File(stream, Constants.ContentType, excelName);
         }
 
-        private System.IO.MemoryStream GenerateExcelFile(TinhHocPhiViewModel model)
+        private async Task<MemoryStream> GenerateExcelFileAsync(TinhHocPhiViewModel model)
         {
-            var stream = new System.IO.MemoryStream();
+            var stream = new MemoryStream();
             using (ExcelPackage package = new ExcelPackage(stream))
             {
-                string lopHocName = _lopHocService.GetLopHocDetailAsync(model.LopHocId).Result.Name;
+                string lopHocName = (await _lopHocService.GetLopHocDetailAsync(model.LopHocId)).Name;
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Hoc Phi " + lopHocName);
                 int totalRows = model.HocVienList.Count;
 

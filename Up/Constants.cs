@@ -16,5 +16,9 @@
         public const string TK_HocVienNghiNhieu = "TK_HocVienNghiNhieu";
         public const string TK_BienLai = "TK_BienLai";
         public const string ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+        public const string Admin_Email = "huynhquan.nguyen@gmail.com";
+        public const string Default_Password = "P@ssword@123";
+        public const string Default_Reset_Password = "M@tkhau@123";
     }
 }
