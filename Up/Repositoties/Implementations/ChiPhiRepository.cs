@@ -94,16 +94,16 @@ namespace Up.Repositoties
             //                 TongNgayLamVoSau(nhanVien.NgayLamViec.Name, month, year, nhanVien.NgayBatDau, null) :
             //                 TongNgayLam(nhanVien.NgayLamViec.Name, month, year, nhanVien.NgayKetThuc));
 
-            //        var dailySalary = thongKeData?.DailySalary ?? /*(Math.Ceiling(*/(nhanVien.BasicSalary / TongNgayLam(nhanVien.NgayLamViec.Name, month, year, null)) /*/ 1000) * 10000)*/;
+            //        var dailySalary = thongKeData?.DailySalary ?? /*(Math.Ceiling(*/(nhanVien.BasicSalary / TongNgayLam(nhanVien.NgayLamViec.Name, month, year, null)) /*/ 1000) * 1000)*/;
             //        var soNgayNghi = thongKeData?.SoNgayNghi ?? 0;
             //        var ghiChu = thongKeData?.GhiChu ?? string.Empty;
 
             //        if (soNgayLam > soNgayLamVoSau && dailySalary > 0)
             //        {
-            //            salary_Expense = /*(Math.Ceiling(*/(dailySalary * soNgayLamVoSau)/* / 1000) * 10000)*/;
+            //            salary_Expense = /*(Math.Ceiling(*/(dailySalary * soNgayLamVoSau)/* / 1000) * 1000)*/;
             //            chiPhiMoi = salary_Expense;
             //        }
-            //        chiPhiMoi = (Math.Ceiling(chiPhiMoi / 1000) * 10000);
+            //        chiPhiMoi = (Math.Ceiling(chiPhiMoi / 1000) * 1000);
 
             //        return _entityConverter.ToChiPhiModel(
             //            nhanVien,

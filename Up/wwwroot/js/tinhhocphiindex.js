@@ -97,7 +97,7 @@
                 item.hocPhiMoi = item.hocPhiMoi - (item.lastMinus * 1.0);
             }
 
-            item.hocPhiMoi = (Math.ceil(item.hocPhiMoi / 1000) * 10000);
+            item.hocPhiMoi = (Math.ceil(item.hocPhiMoi / 1000) * 1000);
         },
 
         async onBonusHocPhi(value, item) {
@@ -192,8 +192,8 @@
                             that.hocVienList[i].year = that.selectedNam;
                             that.hocVienList[i].month = that.selectedThang;
                             that.hocVienList[i].lopHocId = that.selectedLopHoc.lopHocId;
-                            that.hocVienList[i].hocPhiMoi = (Math.ceil(that.hocVienList[i].hocPhiMoi / 1000) * 10000);
-                            that.hocVienList[i].hocPhiFixed = (Math.ceil(that.hocVienList[i].hocPhiFixed / 1000) * 10000);
+                            that.hocVienList[i].hocPhiMoi = (Math.ceil(that.hocVienList[i].hocPhiMoi / 1000) * 1000);
+                            that.hocVienList[i].hocPhiFixed = (Math.ceil(that.hocVienList[i].hocPhiFixed / 1000) * 1000);
                         }
 
                         that.selectedLastHocPhi = that.selectedHocPhi;
