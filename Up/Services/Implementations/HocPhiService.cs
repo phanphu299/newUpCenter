@@ -240,7 +240,7 @@ namespace Up.Services
                     var truHocPhiDoOffThangTruoc = hocPhiMoiNgaySauKhuyenMai * ngayDuocNghi;
 
                     var calculatedGiaSach = item.GiaSach != null ? item.GiaSach.Select(x => x.Gia).Sum() : 0;
-                    var final = hocPhiSauKhuyenMai - truHocPhiDoOffThangTruoc + item.Bonus - item.Minus + calculatedGiaSach + item.TienNo;
+                    var final = Math.Floor(hocPhiSauKhuyenMai - truHocPhiDoOffThangTruoc + item.Bonus - item.Minus + calculatedGiaSach + item.TienNo);
 
                     #endregion
 
