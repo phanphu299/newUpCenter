@@ -234,13 +234,13 @@ namespace Up.Services
 
                     var (soNgayNamTrongThoiHanHocPhiTronGoi, buTronGoi, isInTronGoi, ngayDuocNghi) = TinhSoNgayNamTrongThoiHanHocPhiTronGoi(item.HocVienId, lopHocId, currentMonth, currentYear, item.SoNgayDuocNghi, item.NgayBatDau_Date);
 
-                    var hocPhiThangNay = (hocPhiCurrent / soNgayHocCurrent) * (soNgayHocThucTeThangNay - soNgayNamTrongThoiHanHocPhiTronGoi);
+                    var hocPhiThangNay = Math.Floor((hocPhiCurrent / soNgayHocCurrent) * (soNgayHocThucTeThangNay - soNgayNamTrongThoiHanHocPhiTronGoi));
                     var khuyenMaiThangNay = (khuyenMai / 100.0) * hocPhiThangNay;
                     var hocPhiSauKhuyenMai = hocPhiThangNay - khuyenMaiThangNay;
                     var truHocPhiDoOffThangTruoc = hocPhiMoiNgaySauKhuyenMai * ngayDuocNghi;
 
                     var calculatedGiaSach = item.GiaSach != null ? item.GiaSach.Select(x => x.Gia).Sum() : 0;
-                    var final = Math.Floor(hocPhiSauKhuyenMai - truHocPhiDoOffThangTruoc + item.Bonus - item.Minus + calculatedGiaSach + item.TienNo);
+                    var final = hocPhiSauKhuyenMai - truHocPhiDoOffThangTruoc + item.Bonus - item.Minus + calculatedGiaSach + item.TienNo;
 
                     #endregion
 
